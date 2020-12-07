@@ -1,0 +1,15 @@
+{
+  "extends": ["stylelint-config-standard", "stylelint-config-recommended"],
+  "ignoreFiles": ["config/locale/templates/notification.html"],
+  "rules": {
+    "block-no-empty": null,
+    "color-no-invalid-hex": true,
+    "declaration-colon-space-after": "always",
+    "no-descending-specificity": null,
+    "indentation": ["tab", {
+      "except": ["value"]
+    }],
+    "max-empty-lines": 2,
+    "unit-whitelist": ["em", "rem", "%", "s", "px", "deg"]
+  }
+}
