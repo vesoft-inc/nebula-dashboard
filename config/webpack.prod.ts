@@ -1,6 +1,6 @@
-import CleanWebpackPlugin from 'clean-webpack-plugin';
-import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import path from 'path';
+import {CleanWebpackPlugin} from 'clean-webpack-plugin';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import UglifyJsPlugin from 'uglifyjs-webpack-plugin';
 import webpack from 'webpack';
 import ManifestPlugin from 'webpack-manifest-plugin';
@@ -56,9 +56,7 @@ const publicConfig = {
       },
     }),
 
-    new CleanWebpackPlugin(['public/*.*'], {
-      root: path.join(__dirname, '../'),
-    }),
+    new CleanWebpackPlugin(),
 
     new MiniCssExtractPlugin({
       filename: '[name].[hash].css',

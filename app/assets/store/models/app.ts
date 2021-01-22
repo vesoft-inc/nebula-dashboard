@@ -1,14 +1,18 @@
 import { createModel } from '@rematch/core';
-
-import service from '#assets/config/service';
+import cookies from 'js-cookie';
+import service from '@assets/config/service';
 
 interface IState {
   version: string;
+  username: string;
+  password: string;
 }
 
 export const app = createModel({
   state: {
     version: '',
+    username: cookies.get('nu'),
+    password: cookies.get('np'),
   },
   reducers: {
     update: (state: IState, payload: any) => {

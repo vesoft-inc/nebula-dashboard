@@ -1,8 +1,8 @@
-import { message, message as AntMessage } from 'antd';
+import { message as AntdMessage } from 'antd';
 import axios from 'axios';
 import intl from 'react-intl-universal';
 
-import { store } from '#assets/store';
+import { store } from '@assets/store';
 
 const service = axios.create();
 
@@ -17,7 +17,7 @@ service.interceptors.response.use(
     const { code=0, message } = response.data;
     // if connection refused, login again
     if (code === -1 && message && message.includes('connection refused')) {
-      AntMessage.warning(intl.get('warning.connectError'));
+      AntdMessage.warning(intl.get('warning.connectError'));
       store.dispatch({
         type: 'nebula/clearConfig',
       });
@@ -25,7 +25,7 @@ service.interceptors.response.use(
     return response.data;
   },
   (error: any) => {
-    message.error(
+    AntdMessage.error(
       `${intl.get('common.requestError')}: ${error.response.status} ${
         error.response.statusText
       }`,

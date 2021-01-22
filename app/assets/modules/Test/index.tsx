@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import './index.less';
-import { IDispatch } from '#assets/store';
+import { IDispatch } from '@assets/store';
 
 interface IState {
   options: any[];
@@ -21,7 +21,7 @@ const mapState = () => ({})
 interface IProps extends ReturnType<typeof mapState>,
   ReturnType<typeof mapDispatch> {
 
-  }
+}
 
 class Test extends React.Component<IProps, IState> {
   componentDidMount() {

@@ -1,5 +1,5 @@
 import { Context } from 'egg';
-import httpProxy from 'http-proxy-middleware';
+import { createProxyMiddleware } from 'http-proxy-middleware';
 import k2c from 'koa2-connect';
 
 export default () => {
@@ -8,7 +8,7 @@ export default () => {
   return async function proxyHandler(ctx: Context, next: any) {
     if (metricsProxyPath.test(ctx.request.url)) {
       const importProxy = k2c(
-        httpProxy({
+        createProxyMiddleware({
           target: 'http://localhost:9090',
           pathRewrite: {
             '/api-metrics': '/api/v1',

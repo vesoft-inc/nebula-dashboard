@@ -1,6 +1,6 @@
 import { createModel } from '@rematch/core';
 import _ from 'lodash';
-import service from '#assets/config/service';
+import service from '@assets/config/service';
 
 interface IState {
 

@@ -1,7 +1,8 @@
-import HtmlWebpackPlugin from 'html-webpack-plugin';
 import path from 'path';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
 import webpack from 'webpack';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+import AntdDayjsWebpackPlugin from 'antd-dayjs-webpack-plugin';
 
 const commonConfig = {
   entry: {
@@ -30,7 +31,12 @@ const commonConfig = {
           {
             loader: 'less-loader',
             options: {
-              javascriptEnabled: true,
+              lessOptions: {
+                modifyVars: {
+                  'primary-color': '#4372FF',
+                },
+                javascriptEnabled: true,
+              },
             },
           },
         ],
@@ -68,11 +74,12 @@ const commonConfig = {
       },
     }),
     new webpack.HashedModuleIdsPlugin(),
+    new AntdDayjsWebpackPlugin()
   ],
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
     alias: {
-      '#assets': path.join(__dirname, '../app/assets/'),
+      '@assets': path.join(__dirname, '../app/assets/'),
       // fix this: https://github.com/react-component/table/issues/368
       'react-dom': '@hot-loader/react-dom'
     },
