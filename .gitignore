@@ -35,3 +35,4 @@ docker/data
 docker/tmp
 .travis.yml
 appveyor.yml
+vendors/node_exporter-*

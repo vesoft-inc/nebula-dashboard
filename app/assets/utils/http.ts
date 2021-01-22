@@ -14,7 +14,7 @@ service.interceptors.request.use(config => {
 
 service.interceptors.response.use(
   (response: any) => {
-    const { code, message } = response.data;
+    const { code=0, message } = response.data;
     // if connection refused, login again
     if (code === -1 && message && message.includes('connection refused')) {
       AntMessage.warning(intl.get('warning.connectError'));

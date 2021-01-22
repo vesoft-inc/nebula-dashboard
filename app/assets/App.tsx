@@ -13,7 +13,7 @@ import {
 
 import './App.less';
 
-const Latency = loadable(() => import('#assets/modules/Latency'));
+const Test = loadable(() => import('#assets/modules/Test'));
 
 const { Header, Content } = Layout;
 
@@ -27,8 +27,8 @@ class App extends React.Component<IProps> {
           <Header />
           <Content>
             <Switch>
-              <Route path="/latency" component={Latency} />
-              <Redirect to="/latency" />
+              <Route path="/test" component={Test} />
+              <Redirect to="/test" />
             </Switch>
           </Content>
         </Layout>
