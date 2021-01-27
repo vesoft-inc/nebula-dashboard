@@ -1,0 +1,25 @@
+.machine-dashboard {
+	padding: 0 10px 20px 20px;
+	height: 100%;
+	overflow-y: auto;
+
+	.dashboard-card {
+		margin: 10px 10px 0 0;
+	}
+}
+
+.average-card {
+	position: relative;
+
+	> .nebula-chart-area {
+		position: absolute;
+		width: 100%;
+		top: 0;
+		left: 0;
+	}
+
+	> .nebula-chart-gauge {
+		position: relative;
+		z-index: 100;
+	}
+}

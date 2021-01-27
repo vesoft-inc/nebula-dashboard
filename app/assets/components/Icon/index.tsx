@@ -1,13 +1,14 @@
-import React from 'react'
+import React, { SVGProps } from 'react'
 import './index.less'
-interface IProps {
+interface IProps extends SVGProps<any> {
   icon: string;
   className?: string;
 }
+
 const Icon = (props: IProps) => {
-  const { icon, className } = props 
+  const { icon, className, ...others } = props 
   return (
-    <svg className={`icon ${className ? className : ''}`} aria-hidden="true">
+    <svg className={`icon ${className ? className : ''}`} aria-hidden="true" {...others} >
       <use xlinkHref={icon}></use>
     </svg>
   )

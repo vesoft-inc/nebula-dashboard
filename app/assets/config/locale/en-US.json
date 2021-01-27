@@ -20,5 +20,19 @@
   "rules": {
     "usernameRequired": "Username Required",
     "passwordRequired": "Password Required"
+  },
+  "dashboard": {
+    "average": {
+      "cpu": "CPU Average",
+      "disk": "Disk Average",
+      "memory": "Memory Average",
+      "flow": "Flow Average"
+    },
+    "detail": {
+      "cpu": "CPU Detail",
+      "memory": "Memory Detail",
+      "disk": "Disk Detail",
+      "flow": "Flow Detail"
+    }
   }
 }

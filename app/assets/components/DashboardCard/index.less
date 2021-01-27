@@ -1,0 +1,40 @@
+.dashboard-card {
+	background: #fff;
+
+	> .header {
+		position: relative;
+
+		> h3 {
+			padding: 8px 12px;
+			font-size: 18px;
+		}
+
+		> .icon-zoom {
+			position: absolute;
+			cursor: pointer;
+			top: 16px;
+			right: 16px;
+		}
+	}
+
+	> .content {
+		text-align: center;
+	}
+}
+
+.dashboard-card-fullscreen {
+	// reset the default width set
+	width: 80% !important;
+
+	.header {
+		> h3 {
+			text-align: center;
+			font-size: 24px;
+		}
+	}
+
+	.content {
+		margin-top: 24px;
+		text-align: center;
+	}
+}

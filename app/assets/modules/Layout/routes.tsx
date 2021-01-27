@@ -2,6 +2,7 @@ import { lazy } from 'react';
 import intl from 'react-intl-universal';
 
 const Test = lazy(() => import('@assets/modules/Test'));
+const MachineDashboard = lazy(() => import('@assets/modules/MachineDashboard'));
 
 export const MenuList = [{
   key: 'dashboard',
@@ -11,6 +12,7 @@ export const MenuList = [{
     key: 'machine',
     title: intl.get('common.machine'),
     icon: '#iconnav-machine',
+    path: '/machine-dashboard'
   },{
     key: 'service',
     title: intl.get('common.service'),
@@ -48,4 +50,9 @@ export const RoutesList = [
     component: Test,
     exact: true,
   },
+  {
+    path: '/machine-dashboard',
+    component: MachineDashboard,
+    exact: true,
+  }
 ];

@@ -20,5 +20,19 @@
   "rules": {
     "usernameRequired": "请输入用户名",
     "passwordRequired": "请输入密码"
+  },
+  "dashboard": {
+    "average": {
+      "cpu": "CPU 平均负载",
+      "disk": "磁盘 平均负载",
+      "memory": "内存 平均负载",
+      "flow": "平均流量"
+    },
+    "detail": {
+      "cpu": "CPU 监控",
+      "memory": "内存监控",
+      "disk": "磁盘监控",
+      "flow": "流量监控"
+    }
   }
 }

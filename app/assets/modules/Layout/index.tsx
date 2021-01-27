@@ -38,7 +38,7 @@ class Layouts extends React.Component<IProps, IState> {
           </SubMenu>)
         }
         return (<Menu.Item key={item.key} icon={<Icon className="menu-icon" icon={item.icon} />} title={item.title}>
-          <Link to="/">{item.title}</Link>
+          <Link to={item.path || '/'}>{item.title}</Link>
         </Menu.Item>)
       })
     }
