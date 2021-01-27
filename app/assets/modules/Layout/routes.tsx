@@ -1,8 +1,8 @@
 import { lazy } from 'react';
 import intl from 'react-intl-universal';
 
-const Test = lazy(() => import('@assets/modules/Test'));
 const MachineDashboard = lazy(() => import('@assets/modules/MachineDashboard'));
+const ServiceOverview = lazy(() => import('@assets/modules/ServiceOverview'));
 
 export const MenuList = [{
   key: 'dashboard',
@@ -16,16 +16,16 @@ export const MenuList = [{
   },{
     key: 'service',
     title: intl.get('common.service'),
-    icon: '#iconnav-srevise',
+    icon: '#iconnav-service',
   }]
 },{
   key: 'serviceManagement',
   title: intl.get('common.serviceManagement'),
-  icon: '#iconnav-sreverControl',
+  icon: '#iconnav-serverControl',
   children: [{
     key: 'serviceInfo',
     title: intl.get('common.serviceInfo'),
-    icon: '#iconnav-sreverInfo',
+    icon: '#iconnav-serverInfo',
   },{
     key: 'partitionInfo',
     title: intl.get('common.partitionInfo'),
@@ -46,8 +46,8 @@ export const MenuList = [{
 }]
 export const RoutesList = [
   {
-    path: '/test',
-    component: Test,
+    path: '/service',
+    component: ServiceOverview,
     exact: true,
   },
   {

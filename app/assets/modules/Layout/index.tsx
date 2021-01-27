@@ -89,7 +89,7 @@ class Layouts extends React.Component<IProps, IState> {
         </Sider>
         <Layout>
           <Header />
-          <Content>
+          <Content className="page-content">
             <Switch>
               {RoutesList.map(route => <Route path={route.path} component={route.component} key={route.path} />)}
             </Switch>

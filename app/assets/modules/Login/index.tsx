@@ -45,7 +45,7 @@ const ConfigServerForm = () => {
         </Form>
         <div className="footer">
           <span className="version">{intl.get('common.version')}：v1.1.0</span>
-          <LanguageSelect />
+          <LanguageSelect showIcon={true} />
         </div>
       </div>
     </div>

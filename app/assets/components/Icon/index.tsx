@@ -8,7 +8,7 @@ interface IProps extends SVGProps<any> {
 const Icon = (props: IProps) => {
   const { icon, className, ...others } = props 
   return (
-    <svg className={`icon ${className ? className : ''}`} aria-hidden="true" {...others} >
+    <svg className={`icon ${className ? className : ''}`} aria-hidden="true" {...others}>
       <use xlinkHref={icon}></use>
     </svg>
   )
