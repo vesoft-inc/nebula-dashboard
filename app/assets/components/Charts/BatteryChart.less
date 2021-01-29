@@ -1,0 +1,43 @@
+.nebula-battery {
+	display: flex;
+	text-align: left;
+
+	> .wrap {
+		flex: 1;
+
+		> .description {
+			padding: 8px 0;
+			display: flex;
+
+			> span {
+				flex: 1;
+			}
+
+			> span:last-child {
+				text-align: right;
+			}
+		}
+
+		> .battery {
+			display: flex;
+
+			> .battery-cell {
+				display: inline-block;
+				flex: 1;
+				height: 43px;
+				border-radius: 2px;
+				background: #ecf0ff;
+			}
+
+			> .battery-cell + .battery-cell {
+				margin-left: 4px;
+			}
+		}
+	}
+
+	> p {
+		padding: 38px 10px 0 10px;
+		line-height: 43px;
+		width: 60px;
+	}
+}

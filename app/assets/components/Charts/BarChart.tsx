@@ -82,7 +82,7 @@ class BarChart extends React.Component {
 
   render() {
     return (
-      <div className="nebula-chart nebula-chart-bar" style={{ padding: 20 }} ref={this.chartRef}>
+      <div className="nebula-chart nebula-chart-bar" ref={this.chartRef}>
       </div>
     )
   }

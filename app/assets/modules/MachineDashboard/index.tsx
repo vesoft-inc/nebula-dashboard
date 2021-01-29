@@ -5,6 +5,7 @@ import intl from 'react-intl-universal';
 import CPUAverage from './Cards/CPUAverage';
 import CPUDetail from './Cards/CPUDetail';
 import DiskAverage from './Cards/DiskAverage';
+import DiskDetail from './Cards/DiskDetail';
 import FlowAverage from './Cards/FlowAverage';
 import MemoryAverage from './Cards/MemoryAverage';
 import './index.less';
@@ -56,8 +57,8 @@ class MachineDashboard extends React.Component {
             </DashboardCard>
           </Col>
           <Col span={6}>
-            <DashboardCard title={intl.get('dashboard.detail.cpu')}>
-              <CPUDetail></CPUDetail>
+            <DashboardCard title={intl.get('dashboard.detail.disk')}>
+              <DiskDetail></DiskDetail>
             </DashboardCard>
           </Col>
         </Row>
