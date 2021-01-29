@@ -1,6 +1,8 @@
 import { Col, Row } from 'antd'
 import React from 'react'
 import Icon from '@assets/components/Icon'
+import AreaChart from '@assets/components/Charts/AreaChart'
+import intl from 'react-intl-universal'
 import './index.less'
 interface IProps {
   data: {
@@ -20,7 +22,7 @@ class OverviewCell extends React.PureComponent<IProps> {
       <div className="title">
         <div className="name">
           <Icon icon="#iconservice-status" className={mode} />
-          <span>服务状态</span>
+          <span>{intl.get('service.serviceStatus')}</span>
         </div>
       </div>
       <div className="flex status-row">
@@ -33,23 +35,25 @@ class OverviewCell extends React.PureComponent<IProps> {
         </div>
         <div className="status-overview">
           <div className="status-item">
-            <span className="green status">正常</span>
+            <span className="green status">{intl.get('service.normal')}</span>
             <span>{normal}</span>
           </div>
           <div className="status-item">
-            <span className="yellow status">超负荷</span>
+            <span className="yellow status">{intl.get('service.overload')}</span>
             <span>{overload}</span>
           </div>
           <div className="status-item">
-            <span className="red status">异常</span>
+            <span className="red status">{intl.get('service.abnormal')}</span>
             <span>{abnormal}</span>
           </div>
         </div>
       </div>
       <div className="flex qps-row">
-        <div className="chart-qps"></div>
+        <div className="chart-qps">
+          <AreaChart />
+        </div>
         <div className="qps">
-          <span className="qps-header">平均 QPS</span>
+          <span className="qps-header">{intl.get('service.averageQps')}</span>
           <span className="qps-value">{averageQps}</span>
         </div>
       </div>

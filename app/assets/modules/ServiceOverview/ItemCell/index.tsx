@@ -1,6 +1,8 @@
 import { Col, Row } from 'antd'
 import React from 'react'
 import Icon from '@assets/components/Icon'
+import AreaChart from '@assets/components/Charts/AreaChart'
+import intl from 'react-intl-universal'
 import './index.less'
 interface IProps {
   data: {
@@ -30,19 +32,21 @@ class ItemCell extends React.PureComponent<IProps> {
           <div className="status">
             {status === 'normal' && <>
               <Icon icon="#iconnormal" className="green" />
-              <span className="green">正常</span>
+              <span className="green">{intl.get('service.normal')}</span>
             </>}
             {status === 'overload' && <>
               <Icon icon="#iconoverload" className="yellow" />
-              <span className="yellow">超负荷</span>
+              <span className="yellow">{intl.get('service.overload')}</span>
             </>}
             {status === 'abnormal' && <>
               <Icon icon="#iconabnormal" className="red" />
-              <span className="red">异常</span>
+              <span className="red">{intl.get('service.abnormal')}</span>
             </>}
           </div>
         </div>
-        <div className="chart-item"></div>
+        <div className="chart-item">
+          <AreaChart />
+        </div>
         <Row className="chart-data">
           {Object.keys(info).map(label => (
             <Col span="12" key={label}>

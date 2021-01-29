@@ -15,7 +15,10 @@
     "partitionInfo": "Partition Info",
     "config": "Config",
     "snapshot": "Snapshot",
-    "longTermTask": "Long-term Task"
+    "longTermTask": "Long-term Task",
+    "metric": "指标",
+    "lineChart": "Line Chart",
+    "barChart": "Bar Chart"
   },
   "rules": {
     "usernameRequired": "Username Required",
@@ -34,5 +37,14 @@
       "disk": "Disk Detail",
       "flow": "Flow Detail"
     }
+  },
+  "service": {
+    "serviceStatus": "Service Status",
+    "normal": "Normal",
+    "overload": "Overload",
+    "abnormal": "Abnormal",
+    "averageQps": "Average QPS",
+    "leaderNumber": "Leader 数量",
+    "leaderDistribute": "Leader 分布"
   }
 }

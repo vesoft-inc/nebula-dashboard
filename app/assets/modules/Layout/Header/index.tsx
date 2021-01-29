@@ -13,12 +13,16 @@ interface IState {
   collapsed: boolean;
 }
 
-class Layouts extends React.Component<IProps, IState> {
+class Layouts extends React.PureComponent<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = {
       collapsed: false
     }
+  }
+
+  handleClick = (value) => {
+    this.props.history.push(value);
   }
 
   render() {
@@ -44,6 +48,22 @@ class Layouts extends React.Component<IProps, IState> {
         <Link to={route.path}>{route.breadcrumbName}</Link>
       );
     }
+    const SelectOptions = [{
+      label: '服务概况',
+      value: '/service-dashboard'
+    },{
+      label: '服务指标详情',
+      value: '/service-dashboard/server-metrics'
+    },{
+      label: '版本详情',
+      value: '/service-dashboard/version-statistics'
+    },{
+      label: 'Leader分布',
+      value: '/service-dashboard/leader-distribution'
+    },{
+      label: 'Partition分布',
+      value: '/service-dashboard/partition-distribution'
+    },]
     return (
       <PageHeader
         className="page-header"
@@ -51,10 +71,8 @@ class Layouts extends React.Component<IProps, IState> {
         breadcrumb={{ itemRender, routes }}
         extra={<div className="view-info">
           <span>查看信息:</span>
-          <Select defaultValue="lucy" style={{ width: 120 }}>
-            <Option value="jack">Jack</Option>
-            <Option value="lucy">Lucy</Option>
-            <Option value="Yiminghe">yiminghe</Option>
+          <Select defaultValue="服务概况" style={{ width: 120 }} onChange={this.handleClick}>
+            {SelectOptions.map(item => <Option value={item.value} key={item.value}>{item.label}</Option>)}
           </Select>
         </div>}
       />

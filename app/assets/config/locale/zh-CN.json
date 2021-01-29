@@ -15,7 +15,10 @@
     "partitionInfo": "分区信息",
     "config": "配置",
     "snapshot": "快照",
-    "longTermTask": "长时任务"
+    "longTermTask": "长时任务",
+    "metric": "指标",
+    "lineChart": "折线图",
+    "barChart": "柱状图"
   },
   "rules": {
     "usernameRequired": "请输入用户名",
@@ -34,5 +37,14 @@
       "disk": "磁盘监控",
       "flow": "流量监控"
     }
+  },
+  "service": {
+    "serviceStatus": "服务状态",
+    "normal": "正常",
+    "overload": "超负荷",
+    "abnormal": "异常",
+    "averageQps": "平均 QPS",
+    "leaderNumber": "Leader 数量",
+    "leaderDistribute": "Leader 分布"
   }
 }

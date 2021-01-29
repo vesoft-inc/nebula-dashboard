@@ -34,6 +34,10 @@ p {
 
 	> .ant-layout {
 		height: 100%;
+
+		.page-content {
+			overflow: scroll;
+		}
 	}
 }
 
@@ -101,4 +105,22 @@ p {
 
 .flex {
 	display: flex;
+}
+
+.ant-select {
+	min-width: 134px;
+	text-align: center;
+}
+
+.header {
+	height: 75px;
+	padding: 20px 30px;
+	border-bottom: 1px solid #d9d9d9;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+
+	> span:first-child {
+		font-size: 18px;
+	}
 }

@@ -3,13 +3,17 @@ import intl from 'react-intl-universal';
 
 const MachineDashboard = lazy(() => import('@assets/modules/MachineDashboard'));
 const ServiceOverview = lazy(() => import('@assets/modules/ServiceOverview'));
+const ServerMetrics = lazy(() => import('@assets/modules/ServerMetrics'));
+const VersionStatistic = lazy(() => import('@assets/modules/VersionStatistic'));
+const LeaderDistribution = lazy(() => import('@assets/modules/LeaderDistribution'));
+const PartitionDistribution = lazy(() => import('@assets/modules/PartitionDistribution'));
 
 export const MenuList = [{
   key: 'dashboard',
   title: intl.get('common.dashboard'),
   icon: '#iconnav-dashboard',
   children: [{
-    key: 'machine',
+    key: 'machine-dashboard',
     title: intl.get('common.machine'),
     icon: '#iconnav-machine',
     path: '/machine-dashboard'
@@ -17,6 +21,7 @@ export const MenuList = [{
     key: 'service',
     title: intl.get('common.service'),
     icon: '#iconnav-service',
+    path: '/service-dashboard'
   }]
 },{
   key: 'serviceManagement',
@@ -46,13 +51,33 @@ export const MenuList = [{
 }]
 export const RoutesList = [
   {
-    path: '/service',
+    path: '/machine-dashboard',
+    component: MachineDashboard,
+    exact: true,
+  },
+  {
+    path: '/service-dashboard',
     component: ServiceOverview,
     exact: true,
   },
   {
-    path: '/machine-dashboard',
-    component: MachineDashboard,
+    path: '/service-dashboard/server-metrics',
+    component: ServerMetrics,
     exact: true,
-  }
+  },
+  {
+    path: '/service-dashboard/version-statistics',
+    component: VersionStatistic,
+    exact: true,
+  },
+  {
+    path: '/service-dashboard/leader-distribution',
+    component: LeaderDistribution,
+    exact: true,
+  },
+  {
+    path: '/service-dashboard/partition-distribution',
+    component: PartitionDistribution,
+    exact: true,
+  },
 ];

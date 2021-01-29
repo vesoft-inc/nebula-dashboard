@@ -6,6 +6,7 @@ import LanguageSelect from '@assets/components/LanguageSelect'
 import intl from 'react-intl-universal';
 import {
   Link,
+  Redirect,
   Route,
   RouteComponentProps,
   Switch,
@@ -20,13 +21,15 @@ const { SubMenu } = Menu;
 type IProps = RouteComponentProps;
 interface IState {
   collapsed: boolean;
+  activeMenu: string;
 }
 
 class Layouts extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = {
-      collapsed: false
+      collapsed: false,
+      activeMenu: props.location.pathname.split('/')[1] || '',
     }
   }
   renderMenu = (list) => {
@@ -52,7 +55,7 @@ class Layouts extends React.Component<IProps, IState> {
   }
 
   render() {
-    const { collapsed } = this.state;
+    const { collapsed, activeMenu } = this.state;
     return (
       <Layout className="nebula-stat">
         <Sider className="nebula-sider" trigger={null} 
@@ -69,7 +72,7 @@ class Layouts extends React.Component<IProps, IState> {
             mode="inline" 
             inlineIndent={20}
             defaultOpenKeys={['dashboard']}
-            defaultSelectedKeys={['machine']}>
+            defaultSelectedKeys={[activeMenu]}>
             {this.renderMenu(MenuList)}
           </Menu>
           <div className="sidebar-footer">
@@ -87,11 +90,12 @@ class Layouts extends React.Component<IProps, IState> {
             </div>
           </div>
         </Sider>
-        <Layout>
+        <Layout className="page-content">
           <Header />
-          <Content className="page-content">
+          <Content className="main-content">
             <Switch>
-              {RoutesList.map(route => <Route path={route.path} component={route.component} key={route.path} />)}
+              {RoutesList.map(route => <Route path={route.path} component={route.component} key={route.path} exact={route.exact} />)}
+              <Redirect from="/" to="/machine-dashboard" />
             </Switch>
           </Content>
         </Layout>

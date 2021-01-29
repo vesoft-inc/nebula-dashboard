@@ -36,7 +36,7 @@ class ServiceOverview extends React.Component<IProps, IState> {
     const { title, icon, mode, data } = this.props;
     const { displayMode } = this.state;
     return (<div className="service-content">
-      <ServiceHeader title={title} icon={icon} mode={mode} displayMode={displayMode} changeDisplayMode={this.changeDisplayMode} />
+      <ServiceHeader title={title} icon={icon} mode={mode} displayMode={displayMode} changeDisplayMode={this.changeDisplayMode} multipleMode={true} />
       <div className="service-list">
         <div className={displayMode === 'wrap' ? 'wrap' : 'grid'}>
           <OverviewCell mode={mode} data={data.overviewInfos} />

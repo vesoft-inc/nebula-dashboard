@@ -30,7 +30,7 @@ class App extends React.Component<IProps> {
     const lang = document.documentElement.getAttribute('lang');
 
     if (match) {
-      cookies.set('locale', match[1] === 'en' ? 'EN_US' : 'ZH_CN');
+      cookies.set('locale', match[1] === 'EN_US' ? 'EN_US' : 'ZH_CN');
     } else {
       cookies.set('locale', lang === 'en' ? 'EN_US' : 'ZH_CN');
     }
