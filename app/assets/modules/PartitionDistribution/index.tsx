@@ -44,7 +44,7 @@ class PartitionDistribution extends React.Component<IProps, IState> {
       leaderDistribute: 'space1:33，space2:33'
     },]
     return (<div className="partition-distribution">
-      <div className="header">
+      <div className="common-header">
         <span>Partition Leader 分布</span>
         <div className="select-space">
           <span>Space:</span>

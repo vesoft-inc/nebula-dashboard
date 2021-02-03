@@ -45,6 +45,12 @@
     "abnormal": "异常",
     "averageQps": "平均 QPS",
     "leaderNumber": "Leader 数量",
-    "leaderDistribute": "Leader 分布"
+    "leaderDistribute": "Leader 分布",
+    "all":"全部",
+    "type":"服务类型",
+    "total":"总计",
+    "spaces":"图空间",
+    "services":"服务",
+    "partition":"分区"
   }
 }

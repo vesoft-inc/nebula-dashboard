@@ -15,7 +15,7 @@ interface IState {
 class ServerMetrics extends React.Component<IProps, IState> {
   render() {
     return (<div className="server-metrics">
-      <div className="header">
+      <div className="common-header">
         <span>Graph QPS</span>
         <div className="service-select">
           <div className="select-item">

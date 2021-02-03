@@ -1,0 +1,57 @@
+.service-info {
+	background: #fff;
+	height: 100%;
+
+	.ant-table-wrapper {
+		padding: 20px;
+	}
+
+	.ant-table {
+		font-size: 12px;
+		color: #595959;
+		font-weight: 400;
+
+		.module {
+			display: inline-block;
+			text-align: center;
+			width: 70px;
+			height: 25px;
+			line-height: 25px;
+			border-radius: 2px;
+		}
+
+		.storage {
+			background: #fdeaf4;
+		}
+
+		.graph {
+			background: #ecf0ff;
+		}
+
+		.meta {
+			background: #e2f8f7;
+		}
+
+		.ant-table-thead {
+			.ant-table-filter-column-title {
+				flex: none;
+				padding-right: 10px;
+			}
+
+			.ant-table-filter-trigger-container {
+				position: static;
+
+				svg {
+					width: 14px;
+					height: 14px;
+				}
+
+				.ant-table-filter-trigger {
+					display: flex;
+					align-items: center;
+					justify-content: center;
+				}
+			}
+		}
+	}
+}

@@ -7,6 +7,11 @@ const ServerMetrics = lazy(() => import('@assets/modules/ServerMetrics'));
 const VersionStatistic = lazy(() => import('@assets/modules/VersionStatistic'));
 const LeaderDistribution = lazy(() => import('@assets/modules/LeaderDistribution'));
 const PartitionDistribution = lazy(() => import('@assets/modules/PartitionDistribution'));
+const ServiceInfo = lazy(() => import('@assets/modules/ServiceManage/ServiceInfo'));
+const PartitionInfo = lazy(() => import('@assets/modules/ServiceManage/PartitionInfo'));
+const ConfigInfo = lazy(() => import('@assets/modules/ServiceManage/ConfigInfo'));
+const Snapshot = lazy(() => import('@assets/modules/ServiceManage/Snapshot'));
+const LongTermTask = lazy(() => import('@assets/modules/ServiceManage/LongTermTask'));
 
 export const MenuList = [{
   key: 'dashboard',
@@ -31,22 +36,27 @@ export const MenuList = [{
     key: 'serviceInfo',
     title: intl.get('common.serviceInfo'),
     icon: '#iconnav-serverInfo',
+    path: '/service-info'
   },{
     key: 'partitionInfo',
     title: intl.get('common.partitionInfo'),
     icon: '#iconnav-partitionInfo',
+    path: '/partition-info'
   },{
     key: 'config',
     title: intl.get('common.config'),
     icon: '#iconnav-configuration',
+    path: '/config-info'
   },{
     key: 'snapshot',
     title: intl.get('common.snapshot'),
     icon: '#iconnav-snapshot',
+    path: '/snapshot'
   },{
     key: 'longTermTask',
     title: intl.get('common.longTermTask'),
     icon: '#iconnav-timeConsuming',
+    path: '/long-term-task'
   }]
 }]
 export const RoutesList = [
@@ -80,4 +90,29 @@ export const RoutesList = [
     component: PartitionDistribution,
     exact: true,
   },
+  {
+    path: '/service-info',
+    component: ServiceInfo,
+    exact: true,
+  },
+  {
+    path: '/partition-info',
+    component: PartitionInfo,
+    exact: true,
+  },
+  {
+    path: '/config-info',
+    component: ConfigInfo,
+    exact: true,
+  },
+  {
+    path: '/snapshot',
+    component: Snapshot,
+    exact: true,
+  },
+  {
+    path: '/long-term-task',
+    component: LongTermTask,
+    exact: true,
+  }
 ];
