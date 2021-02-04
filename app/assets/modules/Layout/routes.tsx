@@ -12,6 +12,10 @@ const PartitionInfo = lazy(() => import('@assets/modules/ServiceManage/Partition
 const ConfigInfo = lazy(() => import('@assets/modules/ServiceManage/ConfigInfo'));
 const Snapshot = lazy(() => import('@assets/modules/ServiceManage/Snapshot'));
 const LongTermTask = lazy(() => import('@assets/modules/ServiceManage/LongTermTask'));
+const CPUDetail = lazy(() => import('@assets/modules/MachineDashboard/Detail/CPUDetail'));
+const DiskDetail = lazy(() => import('@assets/modules/MachineDashboard/Detail/DiskDetail'));
+const FlowDetail = lazy(() => import('@assets/modules/MachineDashboard/Detail/FlowDetail'));
+const MemoryDetail = lazy(() => import('@assets/modules/MachineDashboard/Detail/FlowDetail'));
 
 export const MenuList = [{
   key: 'dashboard',
@@ -64,6 +68,26 @@ export const RoutesList = [
     path: '/machine-dashboard',
     component: MachineDashboard,
     exact: true,
+  },
+  {
+    path: '/machine-dashboard/cpu',
+    component: CPUDetail,
+    exact: true
+  },
+  {
+    path: '/machine-dashboard/disk',
+    component: DiskDetail,
+    exact: true
+  },
+  {
+    path: '/machine-dashboard/memory',
+    component: MemoryDetail,
+    exact: true
+  },
+  {
+    path: '/machine-dashboard/flow',
+    component: FlowDetail,
+    exact: true
   },
   {
     path: '/service-dashboard',

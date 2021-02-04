@@ -1,10 +1,13 @@
 import React from 'react';
 import { Chart } from '@antv/g2';
+import { ChartCfg } from '@antv/g2/lib/interface';
 
 interface IProps {
+  renderChart?: (chartInstance: Chart) => void;
+  options?: Partial<ChartCfg>
 }
 
-class AreaChart extends React.Component<IProps> {
+class LineChart extends React.Component<IProps> {
   chartRef: any;
   chartInstance: Chart;
   constructor(props: IProps) {
@@ -14,6 +17,9 @@ class AreaChart extends React.Component<IProps> {
 
   componentDidMount() {
     this.renderChart();
+    if (this.props.renderChart) {
+      this.props.renderChart(this.chartInstance);
+    }
   }
 
   renderChart = () => {
@@ -64,7 +70,9 @@ class AreaChart extends React.Component<IProps> {
       .color('type')
       .size(1);
     this.chartInstance.line().position('time*value');
-    this.chartInstance.render();
+    if (!this.props.renderChart) {
+      this.chartInstance.render();
+    }
   }
 
   render() {
@@ -75,4 +83,4 @@ class AreaChart extends React.Component<IProps> {
   }
 }
 
-export default AreaChart;
+export default LineChart;

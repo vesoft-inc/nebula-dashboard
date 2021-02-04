@@ -1,7 +1,7 @@
 import { Col, Row } from 'antd'
 import React from 'react'
 import Icon from '@assets/components/Icon'
-import AreaChart from '@assets/components/Charts/AreaChart'
+import LineChart from '@assets/components/Charts/LineChart'
 import intl from 'react-intl-universal'
 import './index.less'
 interface IProps {
@@ -45,7 +45,7 @@ class ItemCell extends React.PureComponent<IProps> {
           </div>
         </div>
         <div className="chart-item">
-          <AreaChart />
+          <LineChart />
         </div>
         <Row className="chart-data">
           {Object.keys(info).map(label => (

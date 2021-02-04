@@ -1,25 +1,17 @@
 import React from 'react';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import Icon from '../Icon';
-import Modal from '../Modal';
 import './index.less';
 
-interface IProps {
+interface IProps extends RouteComponentProps{
   title: string;
   children: any;
+  viewPath: string;
 }
 
-class DashboardCard extends React.Component<IProps> {
-  modalHandler: any;
-  handleFullScreen = () => {
-    if (this.modalHandler) {
-      this.modalHandler.show();
-    }
-  }
-
-  handleCancelFullScreen = () => {
-    if (this.modalHandler) {
-      this.modalHandler.hide();
-    }
+class DashboardCard extends React.PureComponent<IProps> {
+  handleViewDetail = () => {
+    this.props.history.push(this.props.viewPath);
   }
 
   render() {
@@ -27,21 +19,13 @@ class DashboardCard extends React.Component<IProps> {
     return <div className="dashboard-card">
       <div className="header">
         <h3>{title}</h3>
-        <Icon className="icon-zoom" icon="#iconzoom" onClick={this.handleFullScreen}></Icon>
+        <Icon className="icon-zoom" icon="#iconzoom" onClick={this.handleViewDetail}></Icon>
       </div>
       <div className="content">
         {children}
       </div>
-      <Modal className="dashboard-card-fullscreen" handlerRef={handler => this.modalHandler=handler} footer={null}>
-        <div className="header">
-          <h3>{title}</h3>
-        </div>
-        <div className="content">
-          {children}
-        </div>
-      </Modal>
     </div>
   }
 }
 
-export default DashboardCard;
+export default withRouter(DashboardCard);

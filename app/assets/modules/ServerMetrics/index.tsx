@@ -1,7 +1,7 @@
 import { Select } from 'antd';
 import React from 'react'
 import intl from 'react-intl-universal';
-import AreaChart from '@assets/components/Charts/AreaChart'
+import LineChart from '@assets/components/Charts/LineChart'
 
 import './index.less'
 const { Option } = Select;
@@ -44,7 +44,7 @@ class ServerMetrics extends React.Component<IProps, IState> {
           </Select>
         </div>
         <div className="chart">
-          <AreaChart />
+          <LineChart />
         </div>
       </div>
     </div>)

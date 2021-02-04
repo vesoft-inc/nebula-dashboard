@@ -2,7 +2,7 @@ import { Select } from 'antd'
 import React from 'react'
 
 import './index.less'
-import AreaChart from '@assets/components/Charts/AreaChart'
+import LineChart from '@assets/components/Charts/LineChart'
 
 const { Option } = Select;
 interface IProps {
@@ -34,7 +34,7 @@ class DataStatistic extends React.Component<IProps> {
         </div>
       </div>
       <div className="statistics-content">
-        <AreaChart />
+        <LineChart />
       </div>
     </div>)
   }

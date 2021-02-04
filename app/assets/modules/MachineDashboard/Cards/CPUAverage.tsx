@@ -1,4 +1,4 @@
-import AreaChart from '@assets/components/Charts/AreaChart';
+import LineChart from '@assets/components/Charts/LineChart';
 import GaugeChart from '@assets/components/Charts/GaugeChart';
 import React from 'react';
 
@@ -7,7 +7,7 @@ class CPUAverage extends React.Component {
     return (
       <div className="cpu-average average-card">
         <GaugeChart percent={30}></GaugeChart>
-        <AreaChart></AreaChart>
+        <LineChart></LineChart>
       </div>
     )
   }

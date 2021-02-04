@@ -58,13 +58,13 @@ class BatteryChart extends React.Component {
         unit: 'GB',
       },
       {
-        name: 'instance-01',
+        name: 'instance-02',
         value: 150,
         capacity: 400,
         unit: 'GB',
       },
       {
-        name: 'instance-01',
+        name: 'instance-03',
         value: 300,
         capacity: 300,
         unit: 'GB',

@@ -24,7 +24,7 @@
     "usernameRequired": "Username Required",
     "passwordRequired": "Password Required"
   },
-  "dashboard": {
+  "device": {
     "average": {
       "cpu": "CPU Average",
       "disk": "Disk Average",
@@ -52,5 +52,11 @@
     "spaces":"Spaces",
     "services":"Services",
     "partition":"Partition"
+  },
+  "component": {
+    "dashboardDetail": {
+      "pastHour": "The Past Hour",
+      "pastDay": "The Past Day"
+    }
   }
 }

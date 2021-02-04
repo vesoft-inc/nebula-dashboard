@@ -24,7 +24,7 @@
     "usernameRequired": "请输入用户名",
     "passwordRequired": "请输入密码"
   },
-  "dashboard": {
+  "device": {
     "average": {
       "cpu": "CPU 平均负载",
       "disk": "磁盘 平均负载",
@@ -52,5 +52,11 @@
     "spaces":"图空间",
     "services":"服务",
     "partition":"分区"
+  },
+  "component": {
+    "dashboardDetail": {
+      "pastHour": "过去1小时",
+      "pastDay": "过去1天"
+    }
   }
 }
