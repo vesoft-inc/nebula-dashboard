@@ -14,17 +14,17 @@ class DashboardCard extends React.PureComponent<IProps> {
     this.props.history.push(this.props.viewPath);
   }
 
-  render() {
+  render () {
     const { title, children } = this.props;
     return <div className="dashboard-card">
       <div className="header">
         <h3>{title}</h3>
-        <Icon className="icon-zoom" icon="#iconzoom" onClick={this.handleViewDetail}></Icon>
+        <Icon className="icon-zoom" icon="#iconzoom" onClick={this.handleViewDetail} />
       </div>
       <div className="content">
         {children}
       </div>
-    </div>
+    </div>;
   }
 }
 

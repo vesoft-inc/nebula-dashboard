@@ -12,7 +12,7 @@ interface IProps {
 }
 
 class LongTermTask extends React.Component<IProps, IState> {
-  constructor(props: IProps) {
+  constructor (props: IProps) {
     super(props);
     this.state = {
       data: [
@@ -57,50 +57,50 @@ class LongTermTask extends React.Component<IProps, IState> {
           stopTime: '12/02/20 09:41:5',
         },
       ]
-    }
+    };
   }
 
-  renderTooltip=text=>{
+  renderTooltip=text => {
     return <Tooltip placement="top" title={text} > 
       <Icon icon="#iconhelp"/>
-    </Tooltip>
+    </Tooltip>;
   }
 
-  render() {
+  render () {
     const {data } = this.state;
     const columns =[
       {
         title: 'Job ID',
         dataIndex: 'jobId',
-        filterDropdown: (<div></div>), 
+        filterDropdown: (<div />), 
         filterIcon: this.renderTooltip('文案未定'),
       },
       {
         title: 'Command',
         dataIndex: 'command',
-        filterDropdown: (<div></div>), 
+        filterDropdown: (<div />), 
         filterIcon: this.renderTooltip('文案未定'),
       },
       {
         title: 'Status',
         dataIndex: 'status',
         render: status => <span className={`${status.toLowerCase()}`}>{status}</span>,
-        filterDropdown: (<div></div>), 
+        filterDropdown: (<div />), 
         filterIcon: this.renderTooltip('文案未定'),
       },
       {
         title: 'Start Time',
         dataIndex: 'startTime',
-        filterDropdown: (<div></div>), 
+        filterDropdown: (<div />), 
         filterIcon: this.renderTooltip('文案未定'),
       },
       {
         title: 'Stop Time',
         dataIndex: 'stopTime',
-        filterDropdown: (<div></div>), 
+        filterDropdown: (<div />), 
         filterIcon: this.renderTooltip('文案未定'),
       },
-    ]
+    ];
     return (
       <div className="service-info" >
         <Table 

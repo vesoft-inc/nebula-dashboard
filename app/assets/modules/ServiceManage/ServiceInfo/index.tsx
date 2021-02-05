@@ -13,7 +13,7 @@ interface IProps {
 }
 
 class ServiceInfo extends React.Component<IProps, IState> {
-  constructor(props: IProps) {
+  constructor (props: IProps) {
     super(props);
     this.state = {
       data: [
@@ -51,69 +51,69 @@ class ServiceInfo extends React.Component<IProps, IState> {
           leaderDistribution:'god:1'
         },
       ]
-    }
+    };
   }
 
-  renderTooltip=text=>{
+  renderTooltip=text => {
     return <Tooltip placement="top" title={text} > 
       <Icon icon="#iconhelp"/>
-    </Tooltip>
+    </Tooltip>;
   }
 
-  render() {
+  render () {
     const {data} = this.state;
     const columns =[
       {
         title: 'IP',
         dataIndex: 'ip',
-        filterDropdown: (<div></div>), 
+        filterDropdown: (<div />), 
         filterIcon: this.renderTooltip('文案未定'),
       },
       {
         title: 'Port',
         dataIndex: 'port',
-        filterDropdown: (<div></div>), 
+        filterDropdown: (<div />), 
         filterIcon: this.renderTooltip('文案未定'),
       },
       {
         title: 'Status',
         dataIndex: 'status',
-        render:status =><span className={status}>{status}</span>,
-        filterDropdown: (<div></div>), 
+        render:status => <span className={status}>{status}</span>,
+        filterDropdown: (<div />), 
         filterIcon: this.renderTooltip('文案未定'),
       },
       {
         title: 'Module',
         dataIndex: 'module',
         render:module => <span className={`module ${module.toLowerCase()}`}>{module}</span>,
-        filterDropdown: (<div></div>), 
+        filterDropdown: (<div />), 
         filterIcon: this.renderTooltip('文案未定'),
       },
       {
         title: 'Git Info Sha',
         dataIndex: 'git',
-        filterDropdown: (<div></div>), 
+        filterDropdown: (<div />), 
         filterIcon: this.renderTooltip('文案未定'),
       },
       {
         title: 'Leader Count ',
         dataIndex: 'leaderCount',
-        filterDropdown: (<div></div>), 
+        filterDropdown: (<div />), 
         filterIcon: this.renderTooltip('文案未定'),
       },
       {
         title: 'Partition Distribution',
         dataIndex: 'partitionDistribution',
-        filterDropdown: (<div></div>), 
+        filterDropdown: (<div />), 
         filterIcon: this.renderTooltip('文案未定'),
       },
       {
         title: 'Leader Distribution',
         dataIndex: 'leaderDistribution',
-        filterDropdown: (<div></div>), 
+        filterDropdown: (<div />), 
         filterIcon: this.renderTooltip('文案未定'),
       },
-    ]
+    ];
     return (
       <div className="service-info" >
         <div className="common-header">

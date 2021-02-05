@@ -1,8 +1,8 @@
 import { Layout, Menu } from 'antd';
 import React from 'react';
-import nebulaLogo from '@assets/static/images/nebula_logo.png'
-import Icon from '@assets/components/Icon'
-import LanguageSelect from '@assets/components/LanguageSelect'
+import nebulaLogo from '@assets/static/images/nebula_logo.png';
+import Icon from '@assets/components/Icon';
+import LanguageSelect from '@assets/components/LanguageSelect';
 import intl from 'react-intl-universal';
 import {
   Link,
@@ -12,9 +12,9 @@ import {
   Switch,
   withRouter,
 } from 'react-router-dom';
-import { MenuList, RoutesList } from './routes'
-import './index.less'
-import Header from './Header'
+import { MenuList, RoutesList } from './routes';
+import './index.less';
+import Header from './Header';
 const { Sider, Content } = Layout;
 const { SubMenu } = Menu;
 
@@ -25,12 +25,12 @@ interface IState {
 }
 
 class Layouts extends React.Component<IProps, IState> {
-  constructor(props: IProps) {
+  constructor (props: IProps) {
     super(props);
     this.state = {
       collapsed: false,
       activeMenu: props.location.pathname.split('/')[1] || '',
-    }
+    };
   }
   renderMenu = (list) => {
     if(list && list.length > 0) {
@@ -38,12 +38,12 @@ class Layouts extends React.Component<IProps, IState> {
         if(item.children && item.children.length > 0) {
           return (<SubMenu key={item.key} icon={<Icon className="menu-icon anticon" icon={item.icon} />} title={item.title}>
             {this.renderMenu(item.children)}
-          </SubMenu>)
+          </SubMenu>);
         }
         return (<Menu.Item key={item.key} icon={<Icon className="menu-icon" icon={item.icon} />} title={item.title}>
           <Link to={item.path || '/'}>{item.title}</Link>
-        </Menu.Item>)
-      })
+        </Menu.Item>);
+      });
     }
   }
 
@@ -51,10 +51,10 @@ class Layouts extends React.Component<IProps, IState> {
     const { collapsed } = this.state;
     this.setState({
       collapsed: !collapsed
-    })
+    });
   }
 
-  render() {
+  render () {
     const { collapsed, activeMenu } = this.state;
     return (
       <Layout className="nebula-stat">

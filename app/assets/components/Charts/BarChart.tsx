@@ -8,12 +8,12 @@ class BarChart extends React.Component {
   chartRef: any;
   chartInstance: Chart;
 
-  constructor(props: IProps) {
+  constructor (props: IProps) {
     super(props);
     this.chartRef = React.createRef();
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.renderChart();
   }
 
@@ -75,16 +75,15 @@ class BarChart extends React.Component {
         style: {
           fill: '#595959',
         }
-      })
-    this.chartInstance.interaction('element-active')
+      });
+    this.chartInstance.interaction('element-active');
     this.chartInstance.render();
   }
 
-  render() {
+  render () {
     return (
-      <div className="nebula-chart nebula-chart-bar" ref={this.chartRef}>
-      </div>
-    )
+      <div className="nebula-chart nebula-chart-bar" ref={this.chartRef} />
+    );
   }
 }
 

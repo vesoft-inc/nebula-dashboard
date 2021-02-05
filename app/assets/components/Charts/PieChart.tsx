@@ -8,12 +8,12 @@ class PieChart extends React.Component {
   chartRef: any;
   chartInstance: Chart;
 
-  constructor(props: IProps) {
+  constructor (props: IProps) {
     super(props);
     this.chartRef = React.createRef();
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.renderChart();
   }
 
@@ -53,20 +53,19 @@ class PieChart extends React.Component {
             const shape = element.shape;
             return {
               matrix: Util.zoom(shape, 1.1),
-            }
+            };
           }
         }
-      })
+      });
       
-    this.chartInstance.interaction('element-single-selected')
+    this.chartInstance.interaction('element-single-selected');
     this.chartInstance.render();
   }
 
-  render() {
+  render () {
     return (
-      <div className="nebula-chart nebula-chart-pie" style={{ padding: 20 }} ref={this.chartRef}>
-      </div>
-    )
+      <div className="nebula-chart nebula-chart-pie" style={{ padding: 20 }} ref={this.chartRef} />
+    );
   }
 }
 

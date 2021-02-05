@@ -2,12 +2,12 @@ import BarChart from '@assets/components/Charts/BarChart';
 import React from 'react';
 
 class MemoryDetail extends React.Component {
-  render() {
+  render () {
     return (
       <div className="cpu-detail detail-card">
-        <BarChart></BarChart>
+        <BarChart />
       </div>
-    )
+    );
   }
 }
 

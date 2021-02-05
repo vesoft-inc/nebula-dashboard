@@ -62,7 +62,7 @@ export const MenuList = [{
     icon: '#iconnav-timeConsuming',
     path: '/long-term-task'
   }]
-}]
+}];
 export const RoutesList = [
   {
     path: '/machine-dashboard',

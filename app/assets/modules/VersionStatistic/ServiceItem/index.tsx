@@ -1,9 +1,9 @@
-import { Table } from 'antd'
-import React from 'react'
+import { Table } from 'antd';
+import React from 'react';
 import intl from 'react-intl-universal';
 
-import './index.less'
-import PieChart from '@assets/components/Charts/PieChart'
+import './index.less';
+import PieChart from '@assets/components/Charts/PieChart';
 import ServiceHeader from '../../ServiceOverview/ServiceHeader';
 
 interface IProps {
@@ -17,7 +17,7 @@ interface IState {
 
 class ServiceOverview extends React.PureComponent<IProps, IState> {
 
-  render() {
+  render () {
     const { title, icon, mode } = this.props;
     const columns = [{
       title: intl.get('common.service'),
@@ -25,7 +25,7 @@ class ServiceOverview extends React.PureComponent<IProps, IState> {
     },{
       title: intl.get('common.version'),
       dataIndex: 'version',
-    }]
+    }];
     const data = [{
       name: 'graph-db-0',
       version: '1.4.0'
@@ -44,7 +44,7 @@ class ServiceOverview extends React.PureComponent<IProps, IState> {
     },{
       name: 'graph-db-2',
       version: '1.4.0'
-    }]
+    }];
     return (<div className="version-statistic-item">
       <ServiceHeader title={title} icon={icon} mode={mode}  multipleMode={false} />
       <div className="version-content">
@@ -59,7 +59,7 @@ class ServiceOverview extends React.PureComponent<IProps, IState> {
           rowKey="id"
         />
       </div>
-    </div>)
+    </div>);
   }
 }
-export default ServiceOverview
+export default ServiceOverview;

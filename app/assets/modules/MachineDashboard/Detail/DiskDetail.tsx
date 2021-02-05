@@ -31,10 +31,10 @@ class DiskDetail extends React.Component {
     chartInstance.data(data).render();
   }
   
-  render() {
+  render () {
     return <DashboardDetail className="disk-average-detail" title={intl.get('device.detail.disk')}>
-      <LineChart options={{height: 500}} renderChart={this.renderChart}></LineChart>
-    </DashboardDetail>
+      <LineChart options={{height: 500}} renderChart={this.renderChart} />
+    </DashboardDetail>;
   }
 }
 

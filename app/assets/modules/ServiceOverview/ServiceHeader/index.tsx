@@ -1,6 +1,6 @@
-import React from 'react'
-import Icon from '@assets/components/Icon'
-import './index.less'
+import React from 'react';
+import Icon from '@assets/components/Icon';
+import './index.less';
 interface IProps {
   title: string;
   icon: string;
@@ -15,7 +15,7 @@ class ServiceHeader extends React.PureComponent<IProps> {
       this.props.changeDisplayMode(value);
     }
   }
-  render() {
+  render () {
     const { title, icon, mode, displayMode, multipleMode } = this.props;
     return (
       <div className="content-header">
@@ -31,8 +31,8 @@ class ServiceHeader extends React.PureComponent<IProps> {
           <Icon className={`btn-enlarge ${mode}`} icon="#iconzoom" />
         </div>
       </div>
-    )
+    );
   }
 }
 
-export default ServiceHeader
+export default ServiceHeader;

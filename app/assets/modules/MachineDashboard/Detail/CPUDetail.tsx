@@ -31,10 +31,10 @@ class CPUDetail extends React.Component {
     chartInstance.data(data).render();
   }
   
-  render() {
+  render () {
     return <DashboardDetail className="cpu-detail" title={intl.get('device.detail.cpu')}>
-      <LineChart options={{height: 500}} renderChart={this.renderChart}></LineChart>
-    </DashboardDetail>
+      <LineChart options={{height: 500}} renderChart={this.renderChart} />
+    </DashboardDetail>;
   }
 }
 

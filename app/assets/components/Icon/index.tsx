@@ -1,17 +1,17 @@
-import React, { SVGProps } from 'react'
-import './index.less'
+import React, { SVGProps } from 'react';
+import './index.less';
 interface IProps extends SVGProps<any> {
   icon: string;
   className?: string;
 }
 
 const Icon = (props: IProps) => {
-  const { icon, className, ...others } = props 
+  const { icon, className, ...others } = props; 
   return (
     <svg className={`icon ${className ? className : ''}`} aria-hidden="true" {...others}>
-      <use xlinkHref={icon}></use>
+      <use xlinkHref={icon} />
     </svg>
-  )
-}
+  );
+};
 
-export default Icon
+export default Icon;

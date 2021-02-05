@@ -3,13 +3,13 @@ import GaugeChart from '@assets/components/Charts/GaugeChart';
 import React from 'react';
 
 class FlowAverage extends React.Component {
-  render() {
+  render () {
     return (
       <div className="flow-average average-card">
-        <LineChart></LineChart>
-        <GaugeChart percent={60}></GaugeChart>
+        <LineChart />
+        <GaugeChart percent={60} />
       </div>
-    )
+    );
   }
 }
 

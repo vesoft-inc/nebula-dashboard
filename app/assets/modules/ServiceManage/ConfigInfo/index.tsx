@@ -13,7 +13,7 @@ interface IProps {
 }
 
 class ConfigInfo extends React.Component<IProps, IState> {
-  constructor(props: IProps) {
+  constructor (props: IProps) {
     super(props);
     this.state = {
       data: [
@@ -42,50 +42,50 @@ class ConfigInfo extends React.Component<IProps, IState> {
           module: 'Meta',
         },
       ]
-    }
+    };
   }
 
-  renderTooltip=text=>{
+  renderTooltip=text => {
     return <Tooltip placement="top" title={text} >
       <Icon icon="#iconhelp"/>
-    </Tooltip>
+    </Tooltip>;
   }
 
-  render() {
+  render () {
     const {data } = this.state;
     const columns =[
       {
         title: 'module',
         dataIndex: 'module',
         render: module => <span className={`module ${module.toLowerCase()}`}>{module}</span>,
-        filterDropdown: (<div></div>), 
+        filterDropdown: (<div />), 
         filterIcon: this.renderTooltip('文案未定'),
       },
       {
         title: 'name',
         dataIndex: 'name',
-        filterDropdown: (<div></div>), 
+        filterDropdown: (<div />), 
         filterIcon: this.renderTooltip('文案未定'),
       },
       {
         title: 'type',
         dataIndex: 'type',
-        filterDropdown: (<div></div>), 
+        filterDropdown: (<div />), 
         filterIcon: this.renderTooltip('文案未定'),
       },
       {
         title: 'mode',
         dataIndex: 'mode',
-        filterDropdown: (<div></div>), 
+        filterDropdown: (<div />), 
         filterIcon: this.renderTooltip('文案未定'),
       },
       {
         title: 'value',
         dataIndex: 'value',
-        filterDropdown: (<div></div>), 
+        filterDropdown: (<div />), 
         filterIcon: this.renderTooltip('文案未定'),
       }
-    ]
+    ];
     return (
       <div className="service-info" >
         <div className="common-header">

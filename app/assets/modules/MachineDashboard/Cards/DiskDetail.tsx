@@ -2,12 +2,12 @@ import BatteryChart from '@assets/components/Charts/BatteryChart';
 import React from 'react';
 
 class DiskDetail extends React.Component {
-  render() {
+  render () {
     return (
       <div className="disk-detail detail-card">
-        <BatteryChart></BatteryChart>
+        <BatteryChart />
       </div>
-    )
+    );
   }
 }
 

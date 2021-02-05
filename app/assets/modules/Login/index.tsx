@@ -3,9 +3,9 @@ import { Button, Checkbox, Form, Input } from 'antd';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { passwordRulesFn, usernameRulesFn } from '@assets/config/rules';
-import LanguageSelect from '@assets/components/LanguageSelect'
+import LanguageSelect from '@assets/components/LanguageSelect';
 import './index.less';
-import nebulaLogo from '@assets/static/images/nebula_logo.png'
+import nebulaLogo from '@assets/static/images/nebula_logo.png';
 const FormItem = Form.Item;
 
 const fomrItemLayout = {
@@ -21,8 +21,8 @@ const fomrItemLayout = {
 
 const ConfigServerForm = () => {
   const onConfig = (values: any) => {
-    console.log('success', values)
-  }
+    console.log('success', values);
+  };
   return (
     <div className="page-login">
       <div className="right">

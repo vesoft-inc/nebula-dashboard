@@ -17,7 +17,7 @@ const getBatteryColor = (percent) => {
   } else {
     return '#E25F5F';
   }
-}
+};
 
 const Battery = (props:IBatteryProps) => {
   const { name, value, capacity, unit } = props;
@@ -34,22 +34,22 @@ const Battery = (props:IBatteryProps) => {
       </p>
       <div className="battery">
         {
-          _.times(n).map(i => <div key={i} className="battery-cell" style={{ backgroundColor: color }}></div>)
+          _.times(n).map(i => <div key={i} className="battery-cell" style={{ backgroundColor: color }} />)
         }
-        { !!m && <div className="battery-cell"><div style={{ width: `${m / 10 * 100}%`, height: '100%', backgroundColor: color }}></div></div>}
+        { !!m && <div className="battery-cell"><div style={{ width: `${m / 10 * 100}%`, height: '100%', backgroundColor: color }} /></div>}
         {
-          _.times(10 - n -1).map(i => <div key={i} className="battery-cell"></div>)
+          _.times(10 - n -1).map(i => <div key={i} className="battery-cell" />)
         }
       </div>
     </div>
     <p>
       {percent}%
     </p>
-  </div>
-}
+  </div>;
+};
 
 class BatteryChart extends React.Component {
-  render() {
+  render () {
     const data = [
       {
         name: 'instance-01',
@@ -69,12 +69,12 @@ class BatteryChart extends React.Component {
         capacity: 300,
         unit: 'GB',
       },
-    ]
+    ];
     return <div className="nebula-chart">
       {
-        data.map(d => <Battery key={d.name} name={d.name} capacity={d.capacity} value={d.value} unit={d.unit}></Battery>)
+        data.map(d => <Battery key={d.name} name={d.name} capacity={d.capacity} value={d.value} unit={d.unit} />)
       }
-    </div>
+    </div>;
   }
 }
 

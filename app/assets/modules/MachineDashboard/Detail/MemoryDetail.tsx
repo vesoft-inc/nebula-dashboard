@@ -31,10 +31,10 @@ class MemoryDetail extends React.Component {
     chartInstance.data(data).render();
   }
   
-  render() {
+  render () {
     return <DashboardDetail className="memory-average-detail" title={intl.get('device.detail.memory')}>
-      <LineChart options={{height: 500}} renderChart={this.renderChart}></LineChart>
-    </DashboardDetail>
+      <LineChart options={{height: 500}} renderChart={this.renderChart} />
+    </DashboardDetail>;
   }
 }
 

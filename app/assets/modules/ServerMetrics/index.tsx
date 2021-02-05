@@ -1,9 +1,9 @@
 import { Select } from 'antd';
-import React from 'react'
+import React from 'react';
 import intl from 'react-intl-universal';
-import LineChart from '@assets/components/Charts/LineChart'
+import LineChart from '@assets/components/Charts/LineChart';
 
-import './index.less'
+import './index.less';
 const { Option } = Select;
 
 interface IProps {
@@ -13,7 +13,7 @@ interface IState {
 }
 
 class ServerMetrics extends React.Component<IProps, IState> {
-  render() {
+  render () {
     return (<div className="server-metrics">
       <div className="common-header">
         <span>Graph QPS</span>
@@ -47,7 +47,7 @@ class ServerMetrics extends React.Component<IProps, IState> {
           <LineChart />
         </div>
       </div>
-    </div>)
+    </div>);
   }
 }
-export default ServerMetrics
+export default ServerMetrics;

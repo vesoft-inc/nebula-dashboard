@@ -1,8 +1,8 @@
-import { Select } from 'antd'
-import React from 'react'
+import { Select } from 'antd';
+import React from 'react';
 
-import './index.less'
-import LineChart from '@assets/components/Charts/LineChart'
+import './index.less';
+import LineChart from '@assets/components/Charts/LineChart';
 
 const { Option } = Select;
 interface IProps {
@@ -12,7 +12,7 @@ interface IProps {
 }
 class DataStatistic extends React.Component<IProps> {
 
-  render() {
+  render () {
     const { title, config } = this.props;
     const _config = config || [{
       label: '过去24小时',
@@ -23,7 +23,7 @@ class DataStatistic extends React.Component<IProps> {
     },{
       label: '过去一个月',
       value: 'month'
-    },]
+    }];
     return (<div className="data-statistics">
       <div className="header">
         <span>{title}</span>
@@ -36,7 +36,7 @@ class DataStatistic extends React.Component<IProps> {
       <div className="statistics-content">
         <LineChart />
       </div>
-    </div>)
+    </div>);
   }
 }
-export default DataStatistic
+export default DataStatistic;

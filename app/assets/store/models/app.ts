@@ -23,7 +23,7 @@ export const app = createModel({
     },
   },
   effects: {
-    async asyncGetAppInfo() {
+    async asyncGetAppInfo () {
       const appInfo = await service.getAppInfo();
 
       this.update({

@@ -13,30 +13,30 @@ import MemoryDetail from './Cards/MemoryDetail';
 import './index.less';
 
 class MachineDashboard extends React.Component {
-  render() {
+  render () {
     return <div className="machine-dashboard">
       <div className="average-section">
         <Row>
           <Col span={12}>
             <DashboardCard title={intl.get('deivce.average.cpu')} viewPath="/machine-dashboard/cpu">
-              <CPUAverage></CPUAverage>
+              <CPUAverage />
             </DashboardCard>
           </Col>
           <Col span={12}>
             <DashboardCard title={intl.get('deivce.average.memory')} viewPath="/machine-dashboard/memory">
-              <MemoryAverage></MemoryAverage>
+              <MemoryAverage />
             </DashboardCard>
           </Col>
         </Row>
         <Row>
           <Col span={12}>
             <DashboardCard title={intl.get('deivce.average.disk')} viewPath="/machine-dashboard/disk">
-              <DiskAverage></DiskAverage>
+              <DiskAverage />
             </DashboardCard>
           </Col>
           <Col span={12}>
             <DashboardCard title={intl.get('deivce.average.flow')} viewPath="/machine-dashboard/flow">
-              <FlowAverage></FlowAverage>
+              <FlowAverage />
             </DashboardCard>
           </Col>
         </Row>
@@ -45,27 +45,27 @@ class MachineDashboard extends React.Component {
         <Row>
           <Col span={6}>
             <DashboardCard title={intl.get('deivce.detail.cpu')} viewPath="/machine-dashboard/cpu">
-              <CPUDetail></CPUDetail>
+              <CPUDetail />
             </DashboardCard>
           </Col>
           <Col span={6}>
             <DashboardCard title={intl.get('deivce.detail.memory')} viewPath="/machine-dashboard/memory">
-              <MemoryDetail></MemoryDetail>
+              <MemoryDetail />
             </DashboardCard>
           </Col>
           <Col span={6}>
             <DashboardCard title={intl.get('deivce.detail.disk')} viewPath="/machine-dashboard/disk">
-              <DiskDetail></DiskDetail>
+              <DiskDetail />
             </DashboardCard>
           </Col>
           <Col span={6}>
             <DashboardCard title={intl.get('deivce.detail.flow')} viewPath="/machine-dashboard/flow">
-              <FlowDetail></FlowDetail>
+              <FlowDetail />
             </DashboardCard>
           </Col>
         </Row>
       </div>
-    </div>
+    </div>;
   }
 }
 

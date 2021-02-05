@@ -5,7 +5,7 @@ import k2c from 'koa2-connect';
 export default () => {
   const metricsProxyPath = /\/api-metrics\//;
 
-  return async function proxyHandler(ctx: Context, next: any) {
+  return async function proxyHandler (ctx: Context, next: any) {
     if (metricsProxyPath.test(ctx.request.url)) {
       const importProxy = k2c(
         createProxyMiddleware({

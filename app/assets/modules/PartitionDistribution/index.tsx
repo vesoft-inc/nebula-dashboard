@@ -1,9 +1,9 @@
-import { Select, Table } from 'antd'
-import React from 'react'
+import { Select, Table } from 'antd';
+import React from 'react';
 import intl from 'react-intl-universal';
 
-import './index.less'
-import PieChart from '@assets/components/Charts/PieChart'
+import './index.less';
+import PieChart from '@assets/components/Charts/PieChart';
 
 const { Option } = Select;
 
@@ -15,7 +15,7 @@ interface IState {
 
 class PartitionDistribution extends React.Component<IProps, IState> {
 
-  render() {
+  render () {
     const columns = [{
       title: intl.get('common.service'),
       dataIndex: 'name',
@@ -25,7 +25,7 @@ class PartitionDistribution extends React.Component<IProps, IState> {
     },{
       title: intl.get('service.leaderDistribute'),
       dataIndex: 'leaderDistribute',
-    }]
+    }];
     const data = [{
       name: 'storage-db-0',
       leaderNumber: 66,
@@ -42,7 +42,7 @@ class PartitionDistribution extends React.Component<IProps, IState> {
       name: 'storage-db-0',
       leaderNumber: 66,
       leaderDistribute: 'space1:33，space2:33'
-    },]
+    }];
     return (<div className="partition-distribution">
       <div className="common-header">
         <span>Partition Leader 分布</span>
@@ -65,7 +65,7 @@ class PartitionDistribution extends React.Component<IProps, IState> {
           rowKey="id"
         />
       </div>
-    </div>)
+    </div>);
   }
 }
-export default PartitionDistribution
+export default PartitionDistribution;

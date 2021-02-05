@@ -12,7 +12,7 @@ interface IProps {
 }
 
 class Snapshot extends React.Component<IProps, IState> {
-  constructor(props: IProps) {
+  constructor (props: IProps) {
     super(props);
     this.state = {
       data: [
@@ -35,23 +35,23 @@ class Snapshot extends React.Component<IProps, IState> {
           hosts: '172.28.2.1:44500，172.28.2.2:44500，172.28.2.3:44500',
         },
       ]
-    }
+    };
   }
 
-  renderTooltip=text=>{
+  renderTooltip=text => {
     return <Tooltip placement="top" title={text} > 
       <Icon icon="#iconhelp"/>
-    </Tooltip>
+    </Tooltip>;
   }
 
-  render() {
+  render () {
     const {data } = this.state;
     const columns =[
       {
         title: 'Name',
         dataIndex: 'name',
         width:'30%',
-        filterDropdown: (<div></div>), 
+        filterDropdown: (<div />), 
         filterIcon: this.renderTooltip('文案未定'),
       },
       {
@@ -59,16 +59,16 @@ class Snapshot extends React.Component<IProps, IState> {
         dataIndex: 'status',
         width:'30%',
         render: status => <span className={`${status.toLowerCase()}`}>{status}</span>,
-        filterDropdown: (<div></div>), 
+        filterDropdown: (<div />), 
         filterIcon: this.renderTooltip('文案未定'),
       },
       {
         title: 'Hosts',
         dataIndex: 'hosts',
-        filterDropdown: (<div></div>), 
+        filterDropdown: (<div />), 
         filterIcon: this.renderTooltip('文案未定'),
       },
-    ]
+    ];
     return (
       <div className="service-info" >
         <Table 

@@ -2,13 +2,13 @@ import BarChart from '@assets/components/Charts/BarChart';
 import React from 'react';
 
 class CPUDetail extends React.Component {
-  render() {
+  render () {
     return (
       <div className="cpu-detail detail-card">
-        <BarChart></BarChart>
+        <BarChart />
       </div>
-    )
+    );
   }
 }
 
-export default CPUDetail
+export default CPUDetail;

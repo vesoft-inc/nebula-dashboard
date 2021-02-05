@@ -10,12 +10,12 @@ interface IProps {
 class LineChart extends React.Component<IProps> {
   chartRef: any;
   chartInstance: Chart;
-  constructor(props: IProps) {
+  constructor (props: IProps) {
     super(props);
     this.chartRef = React.createRef();
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.renderChart();
     if (this.props.renderChart) {
       this.props.renderChart(this.chartInstance);
@@ -45,13 +45,13 @@ class LineChart extends React.Component<IProps> {
         value: 30,
         type: 'instance1',
       },
-    ]
+    ];
     this.chartInstance = new Chart({
       container: this.chartRef.current,
       autoFit: true,
       height: 48,
       padding: [20, 20, 0, 20],
-    })
+    });
     this.chartInstance
       .data(data)
       .scale({
@@ -60,7 +60,7 @@ class LineChart extends React.Component<IProps> {
         },
       })
       .axis(false)
-      .legend(false)
+      .legend(false);
     this.chartInstance.area()
       .style({
         fill: 'l(90) 0:rgba(67,114,255,1) 1:rgba(67,114,255,0)',
@@ -75,11 +75,10 @@ class LineChart extends React.Component<IProps> {
     }
   }
 
-  render() {
+  render () {
     return (
-      <div className="nebula-chart nebula-chart-area" ref={this.chartRef}>
-      </div>
-    )
+      <div className="nebula-chart nebula-chart-area" ref={this.chartRef} />
+    );
   }
 }
 

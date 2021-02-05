@@ -1,5 +1,5 @@
-import React from 'react'
-import './index.less'
+import React from 'react';
+import './index.less';
 import OverviewCell from '../OverviewCell';
 import ItemCell from '../ItemCell';
 import ServiceHeader from '../ServiceHeader';
@@ -19,20 +19,20 @@ interface IState {
 }
 
 class ServiceOverview extends React.Component<IProps, IState> {
-  constructor(props: IProps) {
+  constructor (props: IProps) {
     super(props);
     this.state = {
       displayMode: 'wrap'
-    }
+    };
   }
 
   changeDisplayMode = (type) => {
     this.setState({
       displayMode: type
-    })
+    });
   }
 
-  render() {
+  render () {
     const { title, icon, mode, data } = this.props;
     const { displayMode } = this.state;
     return (<div className="service-content">
@@ -43,7 +43,7 @@ class ServiceOverview extends React.Component<IProps, IState> {
           {data.serviceList.map((item, i) => <ItemCell key={i} data={item} mode={mode} />)}
         </div>
       </div>
-    </div>)
+    </div>);
   }
 }
-export default ServiceOverview
+export default ServiceOverview;

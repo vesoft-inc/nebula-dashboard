@@ -1,6 +1,6 @@
 import { Select } from 'antd';
 import React, { HTMLProps } from 'react';
-import intl from 'react-intl-universal'
+import intl from 'react-intl-universal';
 
 import './index.less';
 
@@ -14,7 +14,7 @@ interface IProps extends HTMLProps<any> {
 }
 
 class DashboardDetail extends React.PureComponent<IProps> {
-  render() {
+  render () {
     const { title, children, onIntervalChange, initialInterval = 60 * 60 * 1000 } = this.props;
     const timeOptions = [
       {
@@ -25,7 +25,7 @@ class DashboardDetail extends React.PureComponent<IProps> {
         name: intl.get('component.dashboardDetail.pastDay'),
         value: 24 * 60 * 60 * 1000,
       }
-    ]
+    ];
     return <div className="dashboard-detail">
       <div className="title">
         <h3>{title}</h3>
@@ -38,8 +38,8 @@ class DashboardDetail extends React.PureComponent<IProps> {
       <div className="detail-content">
         {children}
       </div>
-    </div>
+    </div>;
   }
 }
 
-export default DashboardDetail
+export default DashboardDetail;

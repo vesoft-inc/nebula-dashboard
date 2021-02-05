@@ -32,9 +32,8 @@ class FlowDetailItem extends React.Component {
       .render();
   }
 
-  render() {
-    return (<LineChart options={{height: 36}} renderChart={this.renderChart}>
-    </LineChart>)
+  render () {
+    return (<LineChart options={{height: 36}} renderChart={this.renderChart} />);
   }
 }
 

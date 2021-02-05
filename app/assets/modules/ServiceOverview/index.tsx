@@ -1,14 +1,14 @@
-import React from 'react'
+import React from 'react';
 import ServiceTable from './ServiceTable';
 class ServiceOverview extends React.Component {
 
-  render() {
+  render () {
     const overviewInfos = {
       normal: 10,
       overload: 2,
       abnormal: 1,
       averageQps: 122
-    }
+    };
     const serviceList = [
       {
         name: 'Graph_0023',
@@ -56,12 +56,12 @@ class ServiceOverview extends React.Component {
           version: '1.1.2'
         }
       },
-    ]
+    ];
     return (<div>
       <ServiceTable title="Graph Service" icon="#iconservice-graph" mode="blue" data={{overviewInfos, serviceList}} />
       <ServiceTable title="Storage Service" icon="#iconservice-storage" mode="pink" data={{overviewInfos, serviceList}} />
       <ServiceTable title="Meta Service" icon="#iconservice-meta" mode="skyblue" data={{overviewInfos, serviceList}} />
-    </div>)
+    </div>);
   }
 }
-export default ServiceOverview
+export default ServiceOverview;

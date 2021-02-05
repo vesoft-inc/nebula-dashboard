@@ -1,9 +1,9 @@
-import { Col, Row } from 'antd'
-import React from 'react'
-import Icon from '@assets/components/Icon'
-import LineChart from '@assets/components/Charts/LineChart'
-import intl from 'react-intl-universal'
-import './index.less'
+import { Col, Row } from 'antd';
+import React from 'react';
+import Icon from '@assets/components/Icon';
+import LineChart from '@assets/components/Charts/LineChart';
+import intl from 'react-intl-universal';
+import './index.less';
 interface IProps {
   data: {
     name: string;
@@ -19,7 +19,7 @@ interface IProps {
 }
 class ItemCell extends React.PureComponent<IProps> {
 
-  render() {
+  render () {
     const { data: { name, status, info }, mode } = this.props;
     return (
       <div
@@ -56,8 +56,8 @@ class ItemCell extends React.PureComponent<IProps> {
           )}
         </Row>
       </div>
-    )
+    );
   }
 }
 
-export default ItemCell
+export default ItemCell;

@@ -31,10 +31,10 @@ class FlowDetail extends React.Component {
     chartInstance.data(data).render();
   }
   
-  render() {
+  render () {
     return <DashboardDetail className="flow-detail" title={intl.get('device.detail.flow')}>
-      <LineChart options={{height: 500}} renderChart={this.renderChart}></LineChart>
-    </DashboardDetail>
+      <LineChart options={{height: 500}} renderChart={this.renderChart} />
+    </DashboardDetail>;
   }
 }
 

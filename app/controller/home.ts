@@ -4,7 +4,7 @@ import manifestMap from '../../config/manifest.json';
 import pkg from '../../package.json';
 
 export default class HomeController extends Controller {
-  async index() {
+  async index () {
     const { ctx } = this;
     await ctx.render('index.html', {
       Env: ctx.app.env,
@@ -12,7 +12,7 @@ export default class HomeController extends Controller {
     });
   }
 
-  async getAppInfo() {
+  async getAppInfo () {
     const { ctx } = this;
 
     ctx.response.body = {

@@ -2,8 +2,8 @@ import { Select } from 'antd';
 import React from 'react';
 import { INTL_LOCALE_SELECT } from '@assets/config';
 import { LanguageContext } from '@assets/context';
-import Icon from '@assets/components/Icon'
-import './index.less'
+import Icon from '@assets/components/Icon';
+import './index.less';
 const Option = Select.Option;
 
 interface IProps {
@@ -12,7 +12,7 @@ interface IProps {
 }
 
 export default class OutputCsv extends React.PureComponent<IProps> {
-  render() {
+  render () {
     const { mode, showIcon } = this.props;
     return (
       <LanguageContext.Consumer>

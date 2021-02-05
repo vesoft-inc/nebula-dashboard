@@ -14,7 +14,7 @@ import { INTL_LOCALES } from '@assets/config';
 import './App.less';
 import { LanguageContext } from '@assets/context';
 import { updateQueryStringParameter } from '@assets/utils';
-import AuthorizedRoute from './AuthorizedRoute'
+import AuthorizedRoute from './AuthorizedRoute';
 
 const Login = lazy(() => import('@assets/modules/Login'));
 const Layouts = lazy(() => import('@assets/modules/Layout/index'));
@@ -23,7 +23,7 @@ type IProps = RouteComponentProps;
 
 class App extends React.Component<IProps> {
   currentLocale;
-  constructor(props: IProps) {
+  constructor (props: IProps) {
     super(props);
     const regx = /lang=(\w+)/g;
     const match = regx.exec(props.history.location.search);
@@ -38,7 +38,7 @@ class App extends React.Component<IProps> {
     this.currentLocale = cookies.get('locale');
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.loadIntlLocale();
   }
 
@@ -64,7 +64,7 @@ class App extends React.Component<IProps> {
     );
   };
 
-  render() {
+  render () {
     return (
       <LanguageContext.Provider
         value={{

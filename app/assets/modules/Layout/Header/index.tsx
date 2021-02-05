@@ -5,7 +5,7 @@ import {
   RouteComponentProps,
   withRouter,
 } from 'react-router-dom';
-import './index.less'
+import './index.less';
 const { Option } = Select;
 
 type IProps = RouteComponentProps;
@@ -14,18 +14,18 @@ interface IState {
 }
 
 class Layouts extends React.PureComponent<IProps, IState> {
-  constructor(props: IProps) {
+  constructor (props: IProps) {
     super(props);
     this.state = {
       collapsed: false
-    }
+    };
   }
 
   handleClick = (value) => {
     this.props.history.push(value);
   }
 
-  render() {
+  render () {
     const routes = [
       {
         path: '/index',
@@ -47,7 +47,7 @@ class Layouts extends React.PureComponent<IProps, IState> {
       ) : (
         <Link to={route.path}>{route.breadcrumbName}</Link>
       );
-    }
+    };
     const SelectOptions = [{
       label: '服务概况',
       value: '/service-dashboard'
@@ -63,7 +63,7 @@ class Layouts extends React.PureComponent<IProps, IState> {
     },{
       label: 'Partition分布',
       value: '/service-dashboard/partition-distribution'
-    },]
+    }];
     return (
       <PageHeader
         className="page-header"
