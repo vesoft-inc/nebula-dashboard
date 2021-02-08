@@ -28,7 +28,7 @@ class ServiceHeader extends React.PureComponent<IProps> {
             <Icon className={displayMode === 'wrap' ? `btn-overview ${mode} active bg-${mode}` : `btn-overview ${mode}`} icon="#iconservice-slide-a" onClick={() => this.handleClick('wrap')} />
             <Icon className={displayMode === 'grid' ? `btn-display ${mode} active bg-${mode}` : `btn-display ${mode}`} icon="#iconservice-arrange-a" onClick={() => this.handleClick('grid')}  />
           </>}
-          <Icon className={`btn-enlarge ${mode}`} icon="#iconzoom" />
+          <Icon className={`btn-enlarge ${mode}`} icon="#iconwatch" />
         </div>
       </div>
     );

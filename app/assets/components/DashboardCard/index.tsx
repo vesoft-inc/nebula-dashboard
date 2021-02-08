@@ -19,7 +19,7 @@ class DashboardCard extends React.PureComponent<IProps> {
     return <div className="dashboard-card">
       <div className="header">
         <h3>{title}</h3>
-        <Icon className="icon-zoom" icon="#iconzoom" onClick={this.handleViewDetail} />
+        <Icon className="icon-watch blue" icon="#iconwatch" onClick={this.handleViewDetail} />
       </div>
       <div className="content">
         {children}

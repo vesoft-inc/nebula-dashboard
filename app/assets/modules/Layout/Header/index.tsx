@@ -1,5 +1,6 @@
 import { PageHeader, Select } from 'antd';
 import React from 'react';
+import Icon from '@assets/components/Icon';
 import {
   Link,
   RouteComponentProps,
@@ -67,7 +68,10 @@ class Layouts extends React.PureComponent<IProps, IState> {
     return (
       <PageHeader
         className="page-header"
-        title="Title"
+        title={<>
+          <Icon className="btn-return blue" icon="#iconreturn" />
+          <span>Title</span>
+        </>}
         breadcrumb={{ itemRender, routes }}
         extra={<div className="view-info">
           <span>查看信息:</span>

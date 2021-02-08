@@ -71,7 +71,7 @@ class Layouts extends React.Component<IProps, IState> {
             theme="dark"
             mode="inline" 
             inlineIndent={20}
-            defaultOpenKeys={['dashboard']}
+            defaultOpenKeys={['dashboard', 'serviceManagement']}
             defaultSelectedKeys={[activeMenu]}>
             {this.renderMenu(MenuList)}
           </Menu>

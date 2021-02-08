@@ -27,7 +27,7 @@ export const MenuList = [{
     icon: '#iconnav-machine',
     path: '/machine-dashboard'
   },{
-    key: 'service',
+    key: 'service-dashboard',
     title: intl.get('common.service'),
     icon: '#iconnav-service',
     path: '/service-dashboard'
@@ -37,17 +37,17 @@ export const MenuList = [{
   title: intl.get('common.serviceManagement'),
   icon: '#iconnav-serverControl',
   children: [{
-    key: 'serviceInfo',
+    key: 'service-info',
     title: intl.get('common.serviceInfo'),
     icon: '#iconnav-serverInfo',
     path: '/service-info'
   },{
-    key: 'partitionInfo',
+    key: 'partition-info',
     title: intl.get('common.partitionInfo'),
     icon: '#iconnav-partitionInfo',
     path: '/partition-info'
   },{
-    key: 'config',
+    key: 'config-info',
     title: intl.get('common.config'),
     icon: '#iconnav-configuration',
     path: '/config-info'
@@ -57,7 +57,7 @@ export const MenuList = [{
     icon: '#iconnav-snapshot',
     path: '/snapshot'
   },{
-    key: 'longTermTask',
+    key: 'long-term-task',
     title: intl.get('common.longTermTask'),
     icon: '#iconnav-timeConsuming',
     path: '/long-term-task'

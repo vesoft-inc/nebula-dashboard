@@ -18,24 +18,24 @@ class MachineDashboard extends React.Component {
       <div className="average-section">
         <Row>
           <Col span={12}>
-            <DashboardCard title={intl.get('deivce.average.cpu')} viewPath="/machine-dashboard/cpu">
+            <DashboardCard title={intl.get('device.average.cpu')} viewPath="/machine-dashboard/cpu">
               <CPUAverage />
             </DashboardCard>
           </Col>
           <Col span={12}>
-            <DashboardCard title={intl.get('deivce.average.memory')} viewPath="/machine-dashboard/memory">
+            <DashboardCard title={intl.get('device.average.memory')} viewPath="/machine-dashboard/memory">
               <MemoryAverage />
             </DashboardCard>
           </Col>
         </Row>
         <Row>
           <Col span={12}>
-            <DashboardCard title={intl.get('deivce.average.disk')} viewPath="/machine-dashboard/disk">
+            <DashboardCard title={intl.get('device.average.disk')} viewPath="/machine-dashboard/disk">
               <DiskAverage />
             </DashboardCard>
           </Col>
           <Col span={12}>
-            <DashboardCard title={intl.get('deivce.average.flow')} viewPath="/machine-dashboard/flow">
+            <DashboardCard title={intl.get('device.average.flow')} viewPath="/machine-dashboard/flow">
               <FlowAverage />
             </DashboardCard>
           </Col>
@@ -44,22 +44,22 @@ class MachineDashboard extends React.Component {
       <div className="detail-section">
         <Row>
           <Col span={6}>
-            <DashboardCard title={intl.get('deivce.detail.cpu')} viewPath="/machine-dashboard/cpu">
+            <DashboardCard title={intl.get('device.detail.cpu')} viewPath="/machine-dashboard/cpu">
               <CPUDetail />
             </DashboardCard>
           </Col>
           <Col span={6}>
-            <DashboardCard title={intl.get('deivce.detail.memory')} viewPath="/machine-dashboard/memory">
+            <DashboardCard title={intl.get('device.detail.memory')} viewPath="/machine-dashboard/memory">
               <MemoryDetail />
             </DashboardCard>
           </Col>
           <Col span={6}>
-            <DashboardCard title={intl.get('deivce.detail.disk')} viewPath="/machine-dashboard/disk">
+            <DashboardCard title={intl.get('device.detail.disk')} viewPath="/machine-dashboard/disk">
               <DiskDetail />
             </DashboardCard>
           </Col>
           <Col span={6}>
-            <DashboardCard title={intl.get('deivce.detail.flow')} viewPath="/machine-dashboard/flow">
+            <DashboardCard title={intl.get('device.detail.flow')} viewPath="/machine-dashboard/flow">
               <FlowDetail />
             </DashboardCard>
           </Col>
