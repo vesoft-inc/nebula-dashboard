@@ -29,13 +29,19 @@
       "cpu": "CPU 平均负载",
       "disk": "磁盘 平均负载",
       "memory": "内存 平均负载",
-      "flow": "平均流量"
+      "flow": "平均流量",
+      "transmitFlow": "上行平均流量",
+      "receiveFlow": "下行平均流量"
     },
     "detail": {
       "cpu": "CPU 监控",
       "memory": "内存监控",
       "disk": "磁盘监控",
-      "flow": "流量监控"
+      "flow": "流量监控",
+      "up": "上行",
+      "down": "下行",
+      "average": "平均值",
+      "all": "全部"
     }
   },
   "service": {

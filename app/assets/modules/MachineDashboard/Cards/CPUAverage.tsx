@@ -1,16 +1,20 @@
-import LineChart from '@assets/components/Charts/LineChart';
-import GaugeChart from '@assets/components/Charts/GaugeChart';
-import React from 'react';
+import { connect } from 'react-redux';
+import { IRootState } from '@assets/store';
 
-class CPUAverage extends React.Component {
-  render () {
-    return (
-      <div className="cpu-average average-card">
-        <GaugeChart percent={30} />
-        <LineChart />
-      </div>
-    );
-  }
-}
+import AverageCard from '@assets/components/DashboardCard/AverageCard';
+import { getAverageStat } from '@assets/utils/dashboard';
 
-export default CPUAverage;
+
+const mapState = (state: IRootState) => {
+  const { cpuUsage } = state.machine;
+  const averageUsage = getAverageStat(cpuUsage, 'cpu-average-usage');
+  const currentAverageUsage = averageUsage.length ? averageUsage[averageUsage.length - 1].value : 0;
+
+  return {
+    averageUsage,
+    currentAverageUsage,
+    loading: !!state.loading.effects.machine.asyncGetCPUUsageRateByRange,
+  };
+};
+
+export default  connect(mapState)(AverageCard);

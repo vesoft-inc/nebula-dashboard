@@ -1,0 +1,45 @@
+.nebula-chart-space {
+	> .space-bar {
+		> .description {
+			font-size: 12px;
+			text-align: left;
+
+			> span + span {
+				margin-left: 20px;
+			}
+		}
+
+		> .wrap {
+			display: flex;
+			width: 100%;
+			margin-top: 8px;
+
+			> .bar-item {
+				height: 43px;
+				display: flex;
+
+				> .left {
+					flex: 1;
+					opacity: 0.3;
+					height: 100%;
+				}
+
+				> .right {
+					width: 5px;
+					height: 100%;
+				}
+			}
+
+			> p {
+				min-width: 67px;
+				flex: 1;
+				padding: 0 10px;
+				width: 47px;
+				line-height: 43px;
+				font-size: 18px;
+				font-weight: 400;
+				text-align: left;
+			}
+		}
+	}
+}

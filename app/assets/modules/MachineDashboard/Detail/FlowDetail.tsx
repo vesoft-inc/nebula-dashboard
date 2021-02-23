@@ -1,41 +1,190 @@
 import React from 'react';
 import DashboardDetail from '@assets/components/DashboardDetail';
 import intl from 'react-intl-universal';
+import { connect } from 'react-redux';
 import { Chart } from '@antv/g2';
+import dayjs from 'dayjs';
 import LineChart from '@assets/components/Charts/LineChart';
+import { IDispatch, IRootState } from '@assets/store';
+import { CARD_POLLING_INTERVAL, DETAIL_DEFAULT_RANGE, getAdaptiveFlowValue, getDataByType } from '@assets/utils/dashboard';
+import { uniq } from 'lodash';
 
-class FlowDetail extends React.Component {
+const mapState = (state: IRootState) => {
+  const { receiveFlow, transmitFlow } = state.machine;
+
+  if (receiveFlow.length && !receiveFlow[0].metric.instance.includes('-down')) {
+    receiveFlow.forEach(instance => {
+      instance.metric.instance = `${instance.metric.instance}-down`;
+    });
+  }
+  if (transmitFlow.length && !transmitFlow[0].metric.instance.includes('-up')) {
+    transmitFlow.forEach(instance => {
+      instance.metric.instance = `${instance.metric.instance}-up`;
+    });
+  }
+
+  return {
+    receiveFlow,
+    transmitFlow,
+  };
+};
+
+const mapDispatch = (dispatch: IDispatch) => ({
+  asyncGetFlowByRange: dispatch.machine.asyncGetFlowByRange,
+});
+
+interface IProps extends ReturnType<typeof mapState>,
+  ReturnType<typeof mapDispatch> {
+}
+
+interface IState {
+  currentInterval: number,
+  currentType: string,
+}
+class FlowDetail extends React.Component<IProps, IState> {
+  pollingTimer: any;
+  chartInstance: Chart;
+
+  constructor (props: IProps) {
+    super(props);
+    this.state = {
+      currentInterval: DETAIL_DEFAULT_RANGE,
+      currentType: localStorage.getItem('detailType') || 'all',
+    };
+  }
+
+  componentDidMount () {
+    this.pollingData();
+  }
+
+  componentWillUnmount () {
+    if (this.pollingTimer) {
+      clearTimeout(this.pollingTimer);
+    }
+  }
+
+  getData = async () => {
+    const { currentInterval } = this.state;
+    const end = Math.round(Date.now() / 1000);
+    const start = end - currentInterval;
+    await this.props.asyncGetFlowByRange({
+      start,
+      end,
+    });
+    this.updateChart();
+  }
+
+  pollingData = () => {
+    this.getData();
+    this.pollingTimer = setTimeout(this.pollingData, CARD_POLLING_INTERVAL);
+  }
+
+  handleIntervalChange = (interval) => {
+    this.setState({
+      currentInterval: interval 
+    }, this.getData);
+  }
+
+  handleTypeChange = (type) => {
+    localStorage.setItem('detailType', type);
+    this.setState({
+      currentType: type,
+    }, this.updateChart);
+  }
+
   renderChart = (chartInstance: Chart) => {
-    const data = [
-      {
-        time: '2021/1/20',
-        value: 20,
-        type: 'instance1',
-      },
-      {
-        time: '2021/1/22',
-        value: 25,
-        type: 'instance1',
-      },
-      {
-        time: '2021/1/25',
-        value: 15,
-        type: 'instance1',
-      },
-      {
-        time: '2021/1/28',
-        value: 30,
-        type: 'instance1',
-      },
-    ];
-    chartInstance.data(data).render();
+    this.chartInstance = chartInstance;
+    this.chartInstance
+      .axis('time', {
+        label: {
+          formatter: time => {
+            return dayjs(Number(time) * 1000).format('YYYY-MM-DD HH:mm:ss');
+          }
+        }
+      })
+      .axis('value', {
+        label: {
+          formatter: bps => {
+            const { value, unit } = getAdaptiveFlowValue(bps);
+            return `${value}${unit}`;
+          }
+        }
+      })
+      .legend({
+        position: 'bottom'
+      })
+      .tooltip({
+        customItems: items => {
+          const [ { value: bytes }] = items;
+          const { value, unit } = getAdaptiveFlowValue(bytes);
+          return [
+            {
+              ...items[0],
+              value: `${value} ${unit}`,
+            }
+          ];
+        },
+        title: time =>  {
+          return dayjs(Number(time) * 1000).format('YYYY-MM-DD HH:mm:ss');
+        }
+      })
+      .line()
+      .position('time*value')
+      .color('type');
+  }
+
+  updateChart = () => {
+    const { receiveFlow, transmitFlow } = this.props;
+    const { currentType } = this.state;
+    const _receiveFlow = getDataByType(receiveFlow, currentType);
+    const _transmitFlow = getDataByType(transmitFlow, currentType);
+    if (currentType === 'average') {
+      _receiveFlow.map(instance => {
+        instance.type = 'average-down';
+        return instance;
+      });
+      _transmitFlow.map(instance => {
+        instance.type = 'average-up';
+        return instance;
+      });
+    }
+    this.chartInstance
+      .changeData([..._receiveFlow, ..._transmitFlow]);
+    this.chartInstance.render();
   }
   
   render () {
-    return <DashboardDetail className="flow-detail" title={intl.get('device.detail.flow')}>
-      <LineChart options={{height: 500}} renderChart={this.renderChart} />
+    const { currentInterval, currentType } = this.state;
+    const { receiveFlow, transmitFlow } = this.props;
+    const instances = uniq([...receiveFlow, ...transmitFlow].map(instance => instance.metric.instance));
+
+    const typeOptions = [
+      {
+        name: intl.get('device.detail.all'),
+        value: 'all',
+      },
+      {
+        name: intl.get('device.detail.average'),
+        value: 'average',
+      },
+      ...instances.map(instance => ({
+        name: instance,
+        value: instance,
+      }))
+    ];
+
+    return <DashboardDetail
+      className="flow-detail"
+      title={intl.get('device.detail.flow')}
+      onIntervalChange={this.handleIntervalChange}
+      interval={currentInterval}
+      typeOptions={typeOptions}
+      currentType={currentType}
+      onTypeChange={this.handleTypeChange}
+    >
+      <LineChart options={{ padding: [10, 70, 70, 70]}} renderChart={this.renderChart} />
     </DashboardDetail>;
   }
 }
 
-export default FlowDetail;
+export default connect(mapState, mapDispatch)(FlowDetail);

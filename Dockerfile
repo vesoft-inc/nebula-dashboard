@@ -23,6 +23,6 @@ COPY --from=builder /nebula-benchmark-stat/favicon.ico /nebula-benchmark-stat/fa
 COPY --from=builder /nebula-benchmark-stat/config /nebula-benchmark-stat/config
 RUN npm install --production
 
-EXPOSE 7001
+EXPOSE 7003
 
 CMD ["npm", "run", "docker-start"]

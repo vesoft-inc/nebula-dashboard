@@ -1,12 +1,12 @@
 import React from 'react';
 import _ from 'lodash';
 import './BatteryChart.less';
+import { getDiskProperSize } from '@assets/utils/dashboard';
 
 interface IBatteryProps {
-  name: string;
-  capacity: number;
+  type: string;
+  size: number;
   value: number;
-  unit: string;
 }
 
 const getBatteryColor = (percent) => {
@@ -20,17 +20,18 @@ const getBatteryColor = (percent) => {
 };
 
 const Battery = (props:IBatteryProps) => {
-  const { name, value, capacity, unit } = props;
-  const percent = Math.round(value / capacity * 100);
-  const n = Math.floor(percent / 10);
-  const m = percent - n * 10;
-  const color = getBatteryColor(percent);
+  const { type, value, size: bytes } = props;
+  const used = getDiskProperSize(bytes / 100 * value);
+  const size = getDiskProperSize(bytes);
+  const n = Math.floor(value / 10);
+  const m = value - n * 10;
+  const color = getBatteryColor(value);
 
   return <div className="nebula-battery">
     <div className="wrap">
       <p className="description">
-        <span>{name}</span>
-        <span>{value} /{capacity} {unit}</span>
+        <span>{type}</span>
+        <span>{used} /{size}</span>
       </p>
       <div className="battery">
         {
@@ -43,36 +44,27 @@ const Battery = (props:IBatteryProps) => {
       </div>
     </div>
     <p>
-      {percent}%
+      {Math.round(value)}%
     </p>
   </div>;
 };
 
-class BatteryChart extends React.Component {
+
+interface IChartDataItem {
+  size: number,
+  type: string,
+  value: number,
+}
+
+interface IBatterChartProps {
+  data: IChartDataItem[]
+}
+class BatteryChart extends React.Component<IBatterChartProps> {
   render () {
-    const data = [
-      {
-        name: 'instance-01',
-        value: 150,
-        capacity: 200,
-        unit: 'GB',
-      },
-      {
-        name: 'instance-02',
-        value: 150,
-        capacity: 400,
-        unit: 'GB',
-      },
-      {
-        name: 'instance-03',
-        value: 300,
-        capacity: 300,
-        unit: 'GB',
-      },
-    ];
+    const { data } = this.props;
     return <div className="nebula-chart">
       {
-        data.map(d => <Battery key={d.name} name={d.name} capacity={d.capacity} value={d.value} unit={d.unit} />)
+        data.map(d => <Battery key={d.type} type={d.type} size={d.size} value={d.value} />)
       }
     </div>;
   }

@@ -36,7 +36,7 @@ export default (appInfo: EggAppInfo) => {
       debug: false,
       command:
         'webpack-dev-server --config config/webpack.dev.ts --mode development --color --progress --hot',
-      port: 8888,
+      port: 7777,
       env: {
         PUBLIC_PATH: 'http://127.0.0.1:8888',
       },
@@ -45,7 +45,7 @@ export default (appInfo: EggAppInfo) => {
 
   config.cluster = {
     listen: {
-      port: 7001,
+      port: 7003,
       hostname: '0.0.0.0',
     },
   };

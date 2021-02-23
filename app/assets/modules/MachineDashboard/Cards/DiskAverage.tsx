@@ -1,16 +1,39 @@
-import LineChart from '@assets/components/Charts/LineChart';
-import GaugeChart from '@assets/components/Charts/GaugeChart';
-import React from 'react';
+import { connect } from 'react-redux';
+import { IRootState } from '@assets/store';
+import AverageCard from '@assets/components/DashboardCard/AverageCard';
 
-class DiskAverage extends React.Component {
-  render () {
-    return (
-      <div className="disk-average average-card">
-        <LineChart />
-        <GaugeChart percent={60} />
-      </div>
-    );
+const mapDispatch = () => ({
+
+});
+
+const mapState = (state: IRootState) => {
+  const { diskUsageRate } = state.machine;
+  let averageUsage = [] as any;
+  if (diskUsageRate.length) {
+    averageUsage = diskUsageRate[0].values.map(([timestamp, _], idx) => {
+      const total = diskUsageRate.reduce((sum, cur) => {
+        sum += Number(cur.values[idx][1]);
+        return sum;
+      }, 0);
+      const average = Math.round(total / diskUsageRate.length);
+
+      return {
+        time: timestamp,
+        value: average,
+        type: 'average-disk-usage'
+      };
+    });
   }
-}
 
-export default DiskAverage;
+  const currentAverageUsage = averageUsage.length ? averageUsage[averageUsage.length - 1].value : 0;
+
+  return {
+    averageUsage,
+    currentAverageUsage,
+    loading: !!state.loading.effects.machine.asyncGetDiskUsageRateByRange
+  };
+};
+
+
+
+export default connect(mapState, mapDispatch)(AverageCard);

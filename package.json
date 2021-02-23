@@ -10,7 +10,7 @@
     "start": "egg-scripts start --daemon --title=egg-server-nebula-benchmark-stat",
     "docker-start": "egg-scripts start --title=egg-server-nebula-benchmark-stat",
     "stop": "egg-scripts stop --title=egg-server-nebula-benchmark-stat",
-    "dev": "egg-bin dev -r egg-ts-helper/register",
+    "dev": "egg-bin dev --port=7003 -r egg-ts-helper/register",
     "debug": "egg-bin debug -r egg-ts-helper/register",
     "test-local": "egg-bin test -r egg-ts-helper/register",
     "test": "npm run lint",
@@ -24,7 +24,7 @@
     "build": "webpack --config config/webpack.prod.ts"
   },
   "dependencies": {
-    "@antv/g2": "^4.1.7",
+    "@antv/g2": "^4.1.10",
     "@hot-loader/react-dom": "^17.0.1",
     "@loadable/component": "^5.13.1",
     "@rematch/core": "^1.2.0",

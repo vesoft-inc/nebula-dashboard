@@ -1,8 +1,15 @@
 import React from 'react';
 import { Chart } from '@antv/g2';
 import { ChartCfg } from '@antv/g2/lib/interface';
+import dayjs from 'dayjs';
 
-interface IProps {
+export interface IDataItem {
+  time: number,
+  value: number,
+  type?: string,
+}
+export interface IProps {
+  data?: IDataItem[]
   renderChart?: (chartInstance: Chart) => void;
   options?: Partial<ChartCfg>
 }
@@ -24,7 +31,7 @@ class LineChart extends React.Component<IProps> {
 
   renderChart = () => {
     // TODO: mock data temporary
-    const data = [
+    const defaultData = [
       {
         time: '2021/1/20',
         value: 20,
@@ -46,13 +53,19 @@ class LineChart extends React.Component<IProps> {
         type: 'instance1',
       },
     ];
+    const { data=defaultData, options } = this.props;
     this.chartInstance = new Chart({
       container: this.chartRef.current,
       autoFit: true,
-      height: 48,
-      padding: [20, 20, 0, 20],
+      padding: [20, 0, 0, 0],
+      ...options,
     });
     this.chartInstance
+      .tooltip({
+        title: time =>  {
+          return dayjs(Number(time) * 1000).format('YYYY-MM-DD HH:mm:ss');
+        }
+      })
       .data(data)
       .scale({
         value: {
@@ -61,16 +74,16 @@ class LineChart extends React.Component<IProps> {
       })
       .axis(false)
       .legend(false);
-    this.chartInstance.area()
-      .style({
-        fill: 'l(90) 0:rgba(67,114,255,1) 1:rgba(67,114,255,0)',
-      })
-      .adjust('stack')
-      .position('time*value')
-      .color('type')
-      .size(1);
-    this.chartInstance.line().position('time*value');
     if (!this.props.renderChart) {
+      this.chartInstance.line().position('time*value');
+      this.chartInstance.area()
+        .style({
+          fill: 'l(90) 0:rgba(67,114,255,1) 1:rgba(67,114,255,0)',
+        })
+        .adjust('stack')
+        .position('time*value')
+        .color('type')
+        .size(1);
       this.chartInstance.render();
     }
   }

@@ -26,7 +26,7 @@ const devConfig = {
   },
 
   devServer: {
-    port: 8888,
+    port: 7777,
     headers: { 'Access-Control-Allow-Origin': '*' },
     contentBase: path.join(__dirname, '../public'),
     historyApiFallback: true,

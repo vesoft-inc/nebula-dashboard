@@ -1,6 +1,9 @@
 .dashboard-detail {
 	background: #fff;
 	padding: 20px 30px;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
 
 	> .title {
 		display: flex;
@@ -14,10 +17,20 @@
 		> .ant-select {
 			width: 134px;
 			height: 34px;
+			font-size: 12px;
+		}
+
+		> .ant-select + .ant-select {
+			margin-left: 16px;
 		}
 	}
 
 	> .detail-content {
 		margin-top: 100px;
+		flex: 1;
+
+		> .nebula-chart {
+			height: 100%;
+		}
 	}
 }

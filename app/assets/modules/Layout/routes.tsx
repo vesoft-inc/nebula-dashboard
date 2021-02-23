@@ -15,7 +15,7 @@ const LongTermTask = lazy(() => import('@assets/modules/ServiceManage/LongTermTa
 const CPUDetail = lazy(() => import('@assets/modules/MachineDashboard/Detail/CPUDetail'));
 const DiskDetail = lazy(() => import('@assets/modules/MachineDashboard/Detail/DiskDetail'));
 const FlowDetail = lazy(() => import('@assets/modules/MachineDashboard/Detail/FlowDetail'));
-const MemoryDetail = lazy(() => import('@assets/modules/MachineDashboard/Detail/FlowDetail'));
+const MemoryDetail = lazy(() => import('@assets/modules/MachineDashboard/Detail/MemoryDetail'));
 
 export const MenuList = [{
   key: 'dashboard',

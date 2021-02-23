@@ -14,7 +14,15 @@ service.interceptors.request.use(config => {
 
 service.interceptors.response.use(
   (response: any) => {
-    const { code=0, message } = response.data;
+    const { code, message } = response.data;
+    let _code;
+    if ('code' in response.data) {
+      _code = code;
+    } else { // response from prometheus api
+      _code = response.data.status === 'success' ? 0 : -1;
+      response.data.code = _code;
+    }
+
     // if connection refused, login again
     if (code === -1 && message && message.includes('connection refused')) {
       AntdMessage.warning(intl.get('warning.connectError'));
