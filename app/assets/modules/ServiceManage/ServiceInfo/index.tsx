@@ -1,57 +1,28 @@
 import _ from 'lodash';
 import React from 'react';
-import {Radio,Table,Tooltip } from 'antd';
-import intl from 'react-intl-universal';
+import { Table,Tooltip } from 'antd';
+import { connect } from 'react-redux';
 import Icon from '@assets/components/Icon';
+import { IDispatch, IRootState } from '@assets/store';
 
 import './index.less';
 
-interface IState {
-  data: any[];
-}
-interface IProps {
+const mapState = (state: IRootState) => ({
+  loading: state.loading.effects.nebula.asyncGetServices,
+  services: state.nebula.services,
+});
+
+const mapDispatch = (dispatch: IDispatch) => ({
+  asyncGetServices: dispatch.nebula.asyncGetServices,
+});
+interface IProps extends ReturnType<typeof mapState>,
+  ReturnType<typeof mapDispatch>{
 }
 
-class ServiceInfo extends React.Component<IProps, IState> {
-  constructor (props: IProps) {
-    super(props);
-    this.state = {
-      data: [
-        {
-          id:'id1',
-          ip:'172.23.3.5',
-          port: '9699',
-          status: 'online',
-          module: 'Storage',
-          git: 'f8cbb0',
-          leaderCount: 66,
-          partitionDistribution: 'space1:33;space2:33',
-          leaderDistribution:'god:1'
-        },
-        {
-          id:'id2',
-          ip:'172.23.3.5',
-          port: '9699',
-          status: 'offline',
-          module: 'Graph',
-          git: 'f8cbb0',
-          leaderCount: 66,
-          partitionDistribution: 'space1:33;space2:33',
-          leaderDistribution:'god:1'
-        },
-        {
-          id:'id3',
-          ip:'172.23.3.5',
-          port: '9699',
-          status: 'online',
-          module: 'Meta',
-          git: 'f8cbb0',
-          leaderCount: 66,
-          partitionDistribution: 'space1:33;space2:33',
-          leaderDistribution:'god:1'
-        },
-      ]
-    };
+class ServiceInfo extends React.Component<IProps> {
+
+  componentDidMount (){
+    this.props.asyncGetServices();
   }
 
   renderTooltip=text => {
@@ -61,98 +32,63 @@ class ServiceInfo extends React.Component<IProps, IState> {
   }
 
   render () {
-    const {data} = this.state;
+    const { services } = this.props;
     const columns =[
       {
         title: 'IP',
-        dataIndex: 'ip',
+        dataIndex: 'Host',
         filterDropdown: (<div />), 
         filterIcon: this.renderTooltip('文案未定'),
       },
       {
         title: 'Port',
-        dataIndex: 'port',
+        dataIndex: 'Port',
         filterDropdown: (<div />), 
         filterIcon: this.renderTooltip('文案未定'),
       },
       {
         title: 'Status',
-        dataIndex: 'status',
-        render:status => <span className={status}>{status}</span>,
-        filterDropdown: (<div />), 
-        filterIcon: this.renderTooltip('文案未定'),
-      },
-      {
-        title: 'Module',
-        dataIndex: 'module',
-        render:module => <span className={`module ${module.toLowerCase()}`}>{module}</span>,
+        dataIndex: 'Status',
+        render:status => <span className={status.toLowerCase()}>{status}</span>,
         filterDropdown: (<div />), 
         filterIcon: this.renderTooltip('文案未定'),
       },
       {
         title: 'Git Info Sha',
-        dataIndex: 'git',
+        dataIndex: 'Git Info Sha',
         filterDropdown: (<div />), 
         filterIcon: this.renderTooltip('文案未定'),
       },
       {
         title: 'Leader Count ',
-        dataIndex: 'leaderCount',
+        dataIndex: 'Leader count',
         filterDropdown: (<div />), 
         filterIcon: this.renderTooltip('文案未定'),
       },
       {
         title: 'Partition Distribution',
-        dataIndex: 'partitionDistribution',
+        dataIndex: 'Partition distribution',
         filterDropdown: (<div />), 
         filterIcon: this.renderTooltip('文案未定'),
       },
       {
         title: 'Leader Distribution',
-        dataIndex: 'leaderDistribution',
+        dataIndex: 'Leader distribution',
         filterDropdown: (<div />), 
         filterIcon: this.renderTooltip('文案未定'),
       },
     ];
     return (
       <div className="service-info" >
-        <div className="common-header">
-          <p className="service-type">{intl.get('service.type')}:</p>
-          <Radio.Group buttonStyle="solid" className="service-info-radio">
-            <Radio.Button value="all">{intl.get('service.all')}</Radio.Button>
-            <Radio.Button value="storage">Storage</Radio.Button>
-            <Radio.Button value="graph">Graph</Radio.Button>
-            <Radio.Button value="meta">Meta</Radio.Button>
-          </Radio.Group>
-        </div>
         <Table 
-          rowKey={(record: any) => record.id} 
-          dataSource={data} 
+          rowKey={(record: any) => record.Host}
+          dataSource={services} 
           columns={columns} 
           pagination={false}
-          summary={(pageDate) => {
-            let total = 0;
-            pageDate.forEach(({ leaderCount }) => {
-              total += leaderCount;
-            });
-            return (
-              <>
-                <Table.Summary.Row>
-                  <Table.Summary.Cell index={1}>{intl.get('service.total')}</Table.Summary.Cell>
-                  <Table.Summary.Cell index={2}>-</Table.Summary.Cell>
-                  <Table.Summary.Cell index={3}>-</Table.Summary.Cell>
-                  <Table.Summary.Cell index={4}>-</Table.Summary.Cell>
-                  <Table.Summary.Cell index={5}>-</Table.Summary.Cell>
-                  <Table.Summary.Cell index={6}>{total}</Table.Summary.Cell>
-                  <Table.Summary.Cell index={7}>-</Table.Summary.Cell>
-                  <Table.Summary.Cell index={8}>-</Table.Summary.Cell>
-                </Table.Summary.Row>
-              </>
-            );
-          }}/>
+        />
       </div>
     );
   }
 }
 
-export default  ServiceInfo;
+export default connect(mapState, mapDispatch)(ServiceInfo);

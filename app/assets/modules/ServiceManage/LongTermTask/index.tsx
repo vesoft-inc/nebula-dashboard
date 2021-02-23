@@ -1,111 +1,83 @@
 import _ from 'lodash';
 import React from 'react';
 import { Table,Tooltip } from 'antd';
+import { connect } from 'react-redux';
 import Icon from '@assets/components/Icon';
+import { IDispatch, IRootState } from '@assets/store';
 
 import './index.less';
 
-interface IState {
-  data: any[];
-}
-interface IProps {
+const mapState = (state: IRootState) => ({
+  loading: state.loading.effects.nebula.asyncGetJobs,
+  jobs: state.nebula.jobs,
+});
+
+const mapDispatch = (dispatch: IDispatch) => ({
+  asyncGetJobs: dispatch.nebula.asyncGetJobs,
+});
+interface IProps extends ReturnType<typeof mapState>,
+  ReturnType<typeof mapDispatch>{
 }
 
-class LongTermTask extends React.Component<IProps, IState> {
-  constructor (props: IProps) {
-    super(props);
-    this.state = {
-      data: [
-        {
-          id:'id1',
-          jobId:'jobId',
-          command:'command',
-          status: 'FINISHED',
-          startTime: '12/02/20 09:41:5', 
-          stopTime: '12/02/20 09:41:5',
-        },
-        {
-          id:'id2',
-          jobId:'jobId',
-          command:'command',
-          status: 'RUNNING',
-          startTime: '12/02/20 09:41:5', 
-          stopTime: '12/02/20 09:41:5',
-        },
-        {
-          id:'id3',
-          jobId:'jobId',
-          command:'command',
-          status: 'QUEUE',
-          startTime: '12/02/20 09:41:5', 
-          stopTime: '12/02/20 09:41:5',
-        },
-        {
-          id:'id4',
-          jobId:'jobId',
-          command:'command',
-          status: 'FAILED',
-          startTime: '12/02/20 09:41:5', 
-          stopTime: '12/02/20 09:41:5',
-        },
-        {
-          id:'id5',
-          jobId:'jobId',
-          command:'command',
-          status: 'STOPPED',
-          startTime: '12/02/20 09:41:5', 
-          stopTime: '12/02/20 09:41:5',
-        },
-      ]
-    };
+class LongTermTask extends React.Component<IProps> {
+
+  componentDidMount (){
+    this.props.asyncGetJobs();
   }
 
-  renderTooltip=text => {
+  renderTooltip= text => {
     return <Tooltip placement="top" title={text} > 
       <Icon icon="#iconhelp"/>
     </Tooltip>;
   }
 
+  renderTime= time => {
+    return <span>{time.year/time.month/time.day}{time.hour}:{time.minute}:{time.sec}</span>;
+  }
+
   render () {
-    const {data } = this.state;
+    const { jobs,loading } = this.props;
     const columns =[
       {
         title: 'Job ID',
-        dataIndex: 'jobId',
+        dataIndex: 'Job Id',
         filterDropdown: (<div />), 
         filterIcon: this.renderTooltip('文案未定'),
       },
       {
         title: 'Command',
-        dataIndex: 'command',
+        dataIndex: 'Command',
         filterDropdown: (<div />), 
         filterIcon: this.renderTooltip('文案未定'),
       },
       {
         title: 'Status',
-        dataIndex: 'status',
+        dataIndex: 'Status',
         render: status => <span className={`${status.toLowerCase()}`}>{status}</span>,
         filterDropdown: (<div />), 
         filterIcon: this.renderTooltip('文案未定'),
       },
       {
         title: 'Start Time',
-        dataIndex: 'startTime',
+        dataIndex: 'Start Time',
+        render: time => this.renderTime(time),
         filterDropdown: (<div />), 
         filterIcon: this.renderTooltip('文案未定'),
       },
       {
         title: 'Stop Time',
-        dataIndex: 'stopTime',
+        dataIndex: 'Stop Time',
+        render: time => this.renderTime(time),
         filterDropdown: (<div />), 
         filterIcon: this.renderTooltip('文案未定'),
       },
     ];
     return (
       <div className="service-info" >
-        <Table 
-          rowKey={(record: any) => record.id} 
-          dataSource={data} 
+        <Table
+          loading={!!loading}
+          rowKey={(record: any) => record['Job Id']}
+          dataSource={jobs} 
           columns={columns} 
         />
       </div>
@@ -113,4 +85,4 @@ class LongTermTask extends React.Component<IProps, IState> {
   }
 }
 
-export default  LongTermTask;
+export default connect(mapState, mapDispatch)(LongTermTask);

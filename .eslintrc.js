@@ -293,6 +293,7 @@ module.exports = {
         ],
         semi: 1,
         'space-before-function-paren':  ["error", "always"],
+        'object-curly-spacing': ['error','always'],
         'use-isnan': 'error',
         'valid-typeof': 'off',
         'jsx-quotes': ['error', 'prefer-double'],

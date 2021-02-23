@@ -53,7 +53,7 @@
     "leaderNumber": "Leader 数量",
     "leaderDistribute": "Leader 分布",
     "all":"All",
-    "type":"Servic Type",
+    "type":"Service Type",
     "total":"Total",
     "spaces":"Spaces",
     "services":"Services",
@@ -64,5 +64,15 @@
       "pastHour": "The Past Hour",
       "pastDay": "The Past Day"
     }
+  },
+  "configServer": {
+    "connect": "Connect",
+    "host": "Host",
+    "username": "Username",
+    "password": "Password",
+    "success": "succeed",
+    "fail": "Failed",
+    "clear": "Clear Connect",
+    "title": "Config Server"
   }
 }

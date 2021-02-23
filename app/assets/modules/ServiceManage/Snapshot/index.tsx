@@ -2,40 +2,27 @@ import _ from 'lodash';
 import React from 'react';
 import { Table,Tooltip } from 'antd';
 import Icon from '@assets/components/Icon';
+import { IDispatch, IRootState } from '@assets/store';
+import { connect } from 'react-redux';
 
 import './index.less';
 
-interface IState {
-  data: any[];
-}
-interface IProps {
+const mapState = (state: IRootState) => ({
+  loading: state.loading.effects.nebula.asyncGetSnapshots,
+  snapshots: state.nebula.snapshots,
+});
+
+const mapDispatch = (dispatch: IDispatch) => ({
+  asyncGetSnapshots: dispatch.nebula.asyncGetSnapshots,
+});
+interface IProps extends ReturnType<typeof mapState>,
+  ReturnType<typeof mapDispatch>{
 }
 
-class Snapshot extends React.Component<IProps, IState> {
-  constructor (props: IProps) {
-    super(props);
-    this.state = {
-      data: [
-        {
-          id:'id1',
-          name:'name',
-          status: 'VALID',
-          hosts: '172.28.2.1:44500，172.28.2.2:44500，172.28.2.3:44500',
-        },
-        {
-          id:'id2',
-          name:'name',
-          status: 'INVALID',
-          hosts: '172.28.2.1:44500，172.28.2.2:44500，172.28.2.3:44500',
-        },
-        {
-          id:'id3',
-          name:'name',
-          status: 'INVALID',
-          hosts: '172.28.2.1:44500，172.28.2.2:44500，172.28.2.3:44500',
-        },
-      ]
-    };
+class Snapshot extends React.Component<IProps> {
+
+  componentDidMount (){
+    this.props.asyncGetSnapshots();
   }
 
   renderTooltip=text => {
@@ -45,18 +32,18 @@ class Snapshot extends React.Component<IProps, IState> {
   }
 
   render () {
-    const {data } = this.state;
+    const { snapshots,loading } = this.props;
     const columns =[
       {
         title: 'Name',
-        dataIndex: 'name',
+        dataIndex: 'Name',
         width:'30%',
         filterDropdown: (<div />), 
         filterIcon: this.renderTooltip('文案未定'),
       },
       {
         title: 'Status',
-        dataIndex: 'status',
+        dataIndex: 'Status',
         width:'30%',
         render: status => <span className={`${status.toLowerCase()}`}>{status}</span>,
         filterDropdown: (<div />), 
@@ -64,16 +51,17 @@ class Snapshot extends React.Component<IProps, IState> {
       },
       {
         title: 'Hosts',
-        dataIndex: 'hosts',
+        dataIndex: 'Hosts',
         filterDropdown: (<div />), 
         filterIcon: this.renderTooltip('文案未定'),
       },
     ];
     return (
       <div className="service-info" >
-        <Table 
-          rowKey={(record: any) => record.id} 
-          dataSource={data} 
+        <Table
+          loading={!!loading}
+          rowKey={(record: any) => record.Name}
+          dataSource={snapshots} 
           columns={columns} 
         />
       </div>
@@ -81,4 +69,4 @@ class Snapshot extends React.Component<IProps, IState> {
   }
 }
 
-export default  Snapshot;
+export default connect(mapState, mapDispatch)(Snapshot);

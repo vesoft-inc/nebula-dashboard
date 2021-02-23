@@ -58,9 +58,9 @@ class ServiceOverview extends React.Component {
       },
     ];
     return (<div>
-      <ServiceTable title="Graph Service" icon="#iconservice-graph" mode="blue" data={{overviewInfos, serviceList}} />
-      <ServiceTable title="Storage Service" icon="#iconservice-storage" mode="pink" data={{overviewInfos, serviceList}} />
-      <ServiceTable title="Meta Service" icon="#iconservice-meta" mode="skyblue" data={{overviewInfos, serviceList}} />
+      <ServiceTable title="Graph Service" icon="#iconservice-graph" mode="blue" data={{ overviewInfos, serviceList }} />
+      <ServiceTable title="Storage Service" icon="#iconservice-storage" mode="pink" data={{ overviewInfos, serviceList }} />
+      <ServiceTable title="Meta Service" icon="#iconservice-meta" mode="skyblue" data={{ overviewInfos, serviceList }} />
     </div>);
   }
 }

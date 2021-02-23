@@ -64,5 +64,15 @@
       "pastHour": "过去1小时",
       "pastDay": "过去1天"
     }
+  },
+  "configServer": {
+    "connect": "连接",
+    "host": "Host",
+    "username": "用户名",
+    "password": "密码",
+    "success": "配置成功",
+    "fail": "配置失败",
+    "clear": "清除连接",
+    "title": "配置数据库"
   }
 }

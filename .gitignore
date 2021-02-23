@@ -5,6 +5,8 @@ coverage/
 .idea/
 run/
 logs/
+# vendors local changes do not git commit
+vendors/
 .DS_Store
 .vscode
 *.swp
@@ -35,4 +37,3 @@ docker/data
 docker/tmp
 .travis.yml
 appveyor.yml
-vendors/node_exporter-*
