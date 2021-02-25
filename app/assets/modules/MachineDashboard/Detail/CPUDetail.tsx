@@ -6,7 +6,7 @@ import { Chart } from '@antv/g2';
 import dayjs from 'dayjs';
 import LineChart from '@assets/components/Charts/LineChart';
 import { IDispatch, IRootState } from '@assets/store';
-import { CARD_POLLING_INTERVAL, DETAIL_COLORS, DETAIL_DEFAULT_RANGE, getDataByType } from '@assets/utils/dashboard';
+import { CARD_POLLING_INTERVAL, DETAIL_DEFAULT_RANGE, getDataByType } from '@assets/utils/dashboard';
 import { uniq } from 'lodash';
 
 const mapState = (state: IRootState) => {
@@ -119,15 +119,6 @@ class CPUDetail extends React.Component<IProps, IState> {
       .line()
       .position('time*value')
       .color('type');
-    this.chartInstance
-      .area()
-      .style({
-        fill: `l(90) 0:${DETAIL_COLORS.SOLID} 1:${DETAIL_COLORS.TRANSPARENT}`, 
-      })
-      .adjust('stack')
-      .position('time*value')
-      .color('type')
-      .size(1);
   }
 
   updateChart = () => {
@@ -168,7 +159,7 @@ class CPUDetail extends React.Component<IProps, IState> {
       currentType={currentType}
       onTypeChange={this.handleTypeChange}
     >
-      <LineChart options={{ padding: [10, 70, 70, 70]}} renderChart={this.renderChart} />
+      <LineChart options={{ padding: [10, 70, 70, 70] }} renderChart={this.renderChart} />
     </DashboardDetail>;
   }
 }

@@ -6,8 +6,8 @@ import { Chart } from '@antv/g2';
 import dayjs from 'dayjs';
 import LineChart from '@assets/components/Charts/LineChart';
 import { IDispatch, IRootState } from '@assets/store';
-import { CARD_POLLING_INTERVAL, DETAIL_COLORS, DETAIL_DEFAULT_RANGE, getDataByType, getMemoryProperSize } from '@assets/utils/dashboard';
-import { uniq } from 'lodash';
+import { CARD_POLLING_INTERVAL, DETAIL_DEFAULT_RANGE, getDataByType, getMemoryProperSize } from '@assets/utils/dashboard';
+import { sum, uniq } from 'lodash';
 
 const mapState = (state: IRootState) => {
   const { memoryUsageRate, memorySizeStat } = state.machine;
@@ -107,7 +107,13 @@ class MemoryDetail extends React.Component<IProps, IState> {
         customItems: items => {
           const { memorySizes } = this.props;
           const [ { data: { type }, value }] = items;
-          const size = memorySizes[type];
+          let size = 0;
+          if (type === 'average') {
+            const values = Object.values(memorySizes);
+            size = sum(values) / values.length;
+          } else {
+            size = memorySizes[type];
+          }
           const used = getMemoryProperSize(size * Number(value) / 100);
           const capacity = getMemoryProperSize(size);
           return [
@@ -134,15 +140,6 @@ class MemoryDetail extends React.Component<IProps, IState> {
       .line()
       .position('time*value')
       .color('type');
-    this.chartInstance
-      .area()
-      .style({
-        fill: `l(90) 0:${DETAIL_COLORS.SOLID} 1:${DETAIL_COLORS.TRANSPARENT}`, 
-      })
-      .adjust('stack')
-      .position('time*value')
-      .color('type')
-      .size(1);
   }
 
   updateChart = () => {
@@ -183,7 +180,7 @@ class MemoryDetail extends React.Component<IProps, IState> {
       currentType={currentType}
       onTypeChange={this.handleTypeChange}
     >
-      <LineChart options={{ padding: [10, 70, 70, 70]}} renderChart={this.renderChart} />
+      <LineChart options={{ padding: [10, 70, 70, 70] }} renderChart={this.renderChart} />
     </DashboardDetail>;
   }
 }

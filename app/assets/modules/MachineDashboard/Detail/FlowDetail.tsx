@@ -182,7 +182,7 @@ class FlowDetail extends React.Component<IProps, IState> {
       currentType={currentType}
       onTypeChange={this.handleTypeChange}
     >
-      <LineChart options={{ padding: [10, 70, 70, 70]}} renderChart={this.renderChart} />
+      <LineChart options={{ padding: [10, 70, 70, 70] }} renderChart={this.renderChart} />
     </DashboardDetail>;
   }
 }

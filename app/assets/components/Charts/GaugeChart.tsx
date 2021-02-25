@@ -11,7 +11,7 @@ class GaugeChart extends React.Component<IProps> {
   render () {
     const { percent } = this.props;
     const color = getWhichColor(percent).SOLID;
-    return <Progress className="nebula-chart nebula-chart-gauge" strokeLinecap="square" strokeColor={color} type="dashboard" percent={percent} width={140} strokeWidth={20} />;
+    return <Progress className="nebula-chart nebula-chart-gauge" strokeLinecap="square" strokeColor={color} type="dashboard" percent={Math.round(percent)} width={140} strokeWidth={20} />;
   }
 }
 

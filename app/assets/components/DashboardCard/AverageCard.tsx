@@ -46,7 +46,7 @@ class AverageCard extends React.Component<IProps> {
           return [
             {
               ...items[0],
-              value: items[0].value + '%'
+              value: Number(items[0].value).toFixed(2) + '%'
             }
           ];
         },

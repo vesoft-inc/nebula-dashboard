@@ -106,7 +106,7 @@ export const getAverageStat = (data: IStatItem[], type: string) => {
         sum += Number(cur.values[idx][1]);
         return sum;
       }, 0);
-      const average = Math.round(total / data.length);
+      const average = total / data.length;
       return {
         time: timestamp,
         value: average,

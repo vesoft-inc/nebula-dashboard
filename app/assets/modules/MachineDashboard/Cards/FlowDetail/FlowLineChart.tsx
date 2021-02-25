@@ -53,7 +53,7 @@ class FlowLineChart extends React.Component<IProps> {
     const _latestReceiveFlow =  getAdaptiveFlowValue(latestReceiveFlow.value);
     const _latestTransmitFlow = getAdaptiveFlowValue(latestTransmitFlow.value);
     return <div className="flow-line-chart-wrap">
-      <LineChart options={{height: 48}} renderChart={this.renderLineChart} />
+      <LineChart options={{ height: 48 }} renderChart={this.renderLineChart} />
       <div className="flow-label">
         <p>
           <span>{intl.get('device.detail.up')}</span>

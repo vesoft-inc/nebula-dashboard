@@ -28,7 +28,7 @@ const SpaceBar = (props: ISpaceBarProps) => {
       { size && <span>{size}</span>}
     </p>
     <div className="wrap">
-      <div className="bar-item" style={{ width: `${percent}%`}} >
+      <div className="bar-item" style={{ width: `${percent}%` }} >
         <div className="left" style={{ backgroundColor: COLORS.SOLID }} />
         <div className="right" style={{ backgroundColor: COLORS.SOLID }} />
       </div>
