@@ -44,6 +44,19 @@ export const getWhichColor = (value) => {
   }
 };
 
+export const getProperValue = (type, value) => {
+  switch (type) {
+    case 'disk':
+      return getDiskProperSize(value);
+    case 'memory':
+      return getMemoryProperSize(value);
+    case 'flow':
+      return getAdaptiveFlowValue(value);
+    default:
+      return value;
+  }
+};
+
 export const getAdaptiveFlowValue = (bytes) => {
   const _bytes = isNumber(bytes) ? bytes : Number(bytes);
   const mb = 1000 * 1000;
@@ -150,4 +163,16 @@ export const getDataByType = (data: IStatItem[], type?: string) => {
   }
 
   return res;
+};
+
+export const getProperTickInterval = (period) => {
+  switch(period) {
+    // past one hour
+    case 24 * 60 * 60:
+      return 2 * 60 * 60;
+    case 60 * 60:
+      return 5 * 60;
+    default:
+      return period < 60 * 60 ? 30 : 60 * 60 * 2;
+  }
 };

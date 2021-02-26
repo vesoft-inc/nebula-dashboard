@@ -80,7 +80,6 @@ class LineChart extends React.Component<IProps> {
         .style({
           fill: 'l(90) 0:rgba(67,114,255,1) 1:rgba(67,114,255,0)',
         })
-        .adjust('stack')
         .position('time*value')
         .color('type')
         .size(1);

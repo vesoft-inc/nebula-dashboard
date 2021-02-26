@@ -3,11 +3,11 @@ import DashboardDetail from '@assets/components/DashboardDetail';
 import intl from 'react-intl-universal';
 import { connect } from 'react-redux';
 import { Chart } from '@antv/g2';
-import dayjs from 'dayjs';
 import LineChart from '@assets/components/Charts/LineChart';
 import { IDispatch, IRootState } from '@assets/store';
-import { CARD_POLLING_INTERVAL, DETAIL_DEFAULT_RANGE, getDataByType } from '@assets/utils/dashboard';
+import { CARD_POLLING_INTERVAL, DETAIL_DEFAULT_RANGE, getDataByType, getProperTickInterval } from '@assets/utils/dashboard';
 import { uniq } from 'lodash';
+import { configDetailChart, updateDetailChart } from '@assets/utils/chart';
 
 const mapState = (state: IRootState) => {
   return {
@@ -79,54 +79,24 @@ class CPUDetail extends React.Component<IProps, IState> {
   }
 
   renderChart = (chartInstance: Chart) => {
+    const { currentInterval } = this.state;
     this.chartInstance = chartInstance;
-    this.chartInstance
-      .axis('time', {
-        label: {
-          formatter: time => {
-            return dayjs(Number(time) * 1000).format('YYYY-MM-DD HH:mm:ss');
-          }
-        }
-      })
-      .axis('value', {
-        label: {
-          formatter: percent => `${percent}%`
-        }
-      })
-      .tooltip({
-        customItems: items => {
-          return [
-            {
-              ...items[0],
-              value: items[0].value + '%'
-            }
-          ];
-        },
-        title: time =>  {
-          return dayjs(Number(time) * 1000).format('YYYY-MM-DD HH:mm:ss');
-        }
-      })
-      .legend({
-        position: 'bottom',
-      })
-      .scale({
-        value: {
-          min: 0,
-          max: 100,
-          tickInterval: 25,
-        }
-      })
-      .line()
-      .position('time*value')
-      .color('type');
+    configDetailChart(chartInstance, {
+      type: 'cpu',
+      tickInterval: getProperTickInterval(currentInterval),
+      isPercentValue: true,
+    });
   }
 
   updateChart = () => {
     const { cpuUsage } = this.props;
-    const { currentType } = this.state;
+    const { currentType, currentInterval } = this.state;
     const data = getDataByType(cpuUsage, currentType);
-    this.chartInstance
-      .changeData(data);
+    updateDetailChart(this.chartInstance, {
+      type: 'cpu',
+      tickInterval: getProperTickInterval(currentInterval),
+    }).changeData(data);
+
     this.chartInstance.render();
   }
   

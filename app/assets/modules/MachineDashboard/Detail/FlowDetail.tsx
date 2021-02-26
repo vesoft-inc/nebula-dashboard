@@ -6,8 +6,9 @@ import { Chart } from '@antv/g2';
 import dayjs from 'dayjs';
 import LineChart from '@assets/components/Charts/LineChart';
 import { IDispatch, IRootState } from '@assets/store';
-import { CARD_POLLING_INTERVAL, DETAIL_DEFAULT_RANGE, getAdaptiveFlowValue, getDataByType } from '@assets/utils/dashboard';
+import { CARD_POLLING_INTERVAL, DETAIL_DEFAULT_RANGE, getAdaptiveFlowValue, getDataByType, getProperTickInterval } from '@assets/utils/dashboard';
 import { uniq } from 'lodash';
+import { LINE_CHART_COLORS } from '@assets/utils/chart';
 
 const mapState = (state: IRootState) => {
   const { receiveFlow, transmitFlow } = state.machine;
@@ -93,12 +94,22 @@ class FlowDetail extends React.Component<IProps, IState> {
   }
 
   renderChart = (chartInstance: Chart) => {
+    const { currentInterval } = this.state;
     this.chartInstance = chartInstance;
     this.chartInstance
       .axis('time', {
         label: {
           formatter: time => {
-            return dayjs(Number(time) * 1000).format('YYYY-MM-DD HH:mm:ss');
+            return dayjs(Number(time) * 1000).format('HH:mm');
+          }
+        },
+        grid: {
+          line: {
+            type: 'line',
+            style: {
+              fill: '#d9d9d9',
+              opacity: 0.5,
+            }
           }
         }
       })
@@ -128,14 +139,19 @@ class FlowDetail extends React.Component<IProps, IState> {
           return dayjs(Number(time) * 1000).format('YYYY-MM-DD HH:mm:ss');
         }
       })
+      .scale({
+        time: {
+          tickInterval: getProperTickInterval(currentInterval),
+        }
+      })
       .line()
       .position('time*value')
-      .color('type');
+      .color('type', LINE_CHART_COLORS);
   }
 
   updateChart = () => {
     const { receiveFlow, transmitFlow } = this.props;
-    const { currentType } = this.state;
+    const { currentType, currentInterval } = this.state;
     const _receiveFlow = getDataByType(receiveFlow, currentType);
     const _transmitFlow = getDataByType(transmitFlow, currentType);
     if (currentType === 'average') {
@@ -150,6 +166,11 @@ class FlowDetail extends React.Component<IProps, IState> {
     }
     this.chartInstance
       .changeData([..._receiveFlow, ..._transmitFlow]);
+    this.chartInstance.scale({
+      time: {
+        tickInterval: getProperTickInterval(currentInterval),
+      }
+    });
     this.chartInstance.render();
   }
   

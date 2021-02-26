@@ -3,11 +3,11 @@ import DashboardDetail from '@assets/components/DashboardDetail';
 import intl from 'react-intl-universal';
 import { connect } from 'react-redux';
 import { Chart } from '@antv/g2';
-import dayjs from 'dayjs';
 import LineChart from '@assets/components/Charts/LineChart';
 import { IDispatch, IRootState } from '@assets/store';
-import { CARD_POLLING_INTERVAL, DETAIL_DEFAULT_RANGE, getDataByType, getMemoryProperSize } from '@assets/utils/dashboard';
-import { sum, uniq } from 'lodash';
+import { CARD_POLLING_INTERVAL, DETAIL_DEFAULT_RANGE, getDataByType, getProperTickInterval } from '@assets/utils/dashboard';
+import { uniq } from 'lodash';
+import { configDetailChart, updateDetailChart } from '@assets/utils/chart';
 
 const mapState = (state: IRootState) => {
   const { diskUsageRate, diskSizeStat } = state.machine;
@@ -89,65 +89,28 @@ class DiskDetail extends React.Component<IProps, IState> {
   }
 
   renderChart = (chartInstance: Chart) => {
+    const { currentInterval } = this.state;
+    const { diskSizes } = this.props;
     this.chartInstance = chartInstance;
-    this.chartInstance
-      .axis('time', {
-        label: {
-          formatter: time => {
-            return dayjs(Number(time) * 1000).format('YYYY-MM-DD HH:mm:ss');
-          }
-        }
-      })
-      .axis('value', {
-        label: {
-          formatter: percent => `${percent}%`
-        }
-      })
-      .legend({
-        position: 'bottom',
-      })
-      .tooltip({
-        customItems: items => {
-          const { diskSizes } = this.props;
-          const [ { data: { type }, value }] = items;
-          let size = 0;
-          if (type === 'average') {
-            const values = Object.values(diskSizes);
-            size = sum(values) / values.length;
-          } else {
-            size = diskSizes[type];
-          }
-          const used = getMemoryProperSize(size * Number(value) / 100);
-          const capacity = getMemoryProperSize(size);
-          return [
-            {
-              ...items[0],
-              value: Number(value).toFixed(2) + '%' + ` (${used}/${capacity})`,
-            }
-          ];
-        },
-        title: time =>  {
-          return dayjs(Number(time) * 1000).format('YYYY-MM-DD HH:mm:ss');
-        }
-      })
-      .scale({
-        value: {
-          min: 0,
-          max: 100,
-          tickInterval: 25,
-        }
-      })
-      .line()
-      .position('time*value')
-      .color('type');
+    configDetailChart(this.chartInstance, {
+      type: 'disk',
+      tickInterval: getProperTickInterval(currentInterval),
+      isPercentValue: true,
+      statSizes: diskSizes,
+    });
   }
 
   updateChart = () => {
-    const { diskUsageRate } = this.props;
-    const { currentType } = this.state;
+    const { diskUsageRate, diskSizes } = this.props;
+    const { currentType, currentInterval } = this.state;
     const data = getDataByType(diskUsageRate, currentType);
-    this.chartInstance
-      .changeData(data);
+
+    updateDetailChart(this.chartInstance, {
+      tickInterval: getProperTickInterval(currentInterval),
+      type: 'disk',
+      statSizes: diskSizes,
+    }).changeData(data);
+
     this.chartInstance.render();
   }
   

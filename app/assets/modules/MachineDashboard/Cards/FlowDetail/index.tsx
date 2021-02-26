@@ -1,7 +1,7 @@
 import React from 'react';
 import { IRootState } from '@assets/store';
 import { connect } from 'react-redux';
-import _ from 'lodash';
+import { last } from 'lodash';
 import FlowLineChart from '../../Cards/FlowDetail/FlowLineChart';
 
 const mapState = (state: IRootState) => {
@@ -19,7 +19,7 @@ const mapState = (state: IRootState) => {
           type: instance.metric.instance + '-transmit-flow',
         };
       });
-      const [ timestamps, value ] =  _.last(instance.values) || [ 0, 0];
+      const [ timestamps, value ] = last(instance.values) || [ 0, 0];
       latestReceiveFlows[instance.metric.instance] = {
         time: timestamps,
         value: Number(value) * 8,
@@ -30,6 +30,7 @@ const mapState = (state: IRootState) => {
 
   if (transmitFlow.length) {
     transmitFlow.forEach(instance => {
+      flowStat[instance.metric.instance] = flowStat[instance.metric.instance] || [];
       flowStat[instance.metric.instance] = flowStat[instance.metric.instance].concat(instance.values.map(([timestamps, value]) => {
         return {
           time: timestamps,
@@ -37,7 +38,7 @@ const mapState = (state: IRootState) => {
           type: instance.metric.instance + '-receive-flow',
         };
       }));
-      const [ timestamps, value ] = _.last(instance.values) || [0, 0];
+      const [ timestamps, value ] = last(instance.values) || [0, 0];
       latestTransmitFlows[instance.metric.instance] =  {
         time: timestamps,
         value: Number(value) * 8,
