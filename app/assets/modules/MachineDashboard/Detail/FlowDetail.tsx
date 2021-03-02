@@ -146,7 +146,8 @@ class FlowDetail extends React.Component<IProps, IState> {
       })
       .line()
       .position('time*value')
-      .color('type', LINE_CHART_COLORS);
+      .color('type', LINE_CHART_COLORS)
+      .shape('smooth');
   }
 
   updateChart = () => {

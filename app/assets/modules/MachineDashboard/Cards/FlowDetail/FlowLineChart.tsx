@@ -36,7 +36,8 @@ class FlowLineChart extends React.Component<IProps> {
       .legend(false)
       .line()
       .color('type', ['#4372FF', '#3DD188'])
-      .position('time*value');
+      .position('time*value')
+      .shape('smooth');
   }
 
   componentDidUpdate () {

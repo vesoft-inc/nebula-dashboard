@@ -28,7 +28,8 @@ class AverageCard extends React.Component<IProps> {
     this.lineGeometry = this.chartInstance
       .line()
       .color(COLORS.SOLID)
-      .position('time*value');
+      .position('time*value')
+      .shape('smooth');
     this.areaGeometry = this.chartInstance
       .area()
       .style({
@@ -51,6 +52,11 @@ class AverageCard extends React.Component<IProps> {
         },
         title: time =>  {
           return dayjs(Number(time) * 1000).format('YYYY-MM-DD HH:mm:ss');
+        },
+        domStyles: {
+          'g2-tooltip': {
+            zIndex: 1000
+          }
         }
       })
       .axis(false)

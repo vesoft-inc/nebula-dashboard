@@ -2,11 +2,11 @@ import { createModel } from '@rematch/core';
 import _ from 'lodash';
 import service from '@assets/config/service';
 import { CARD_STEP } from '@assets/utils/dashboard';
-import { MAC_OS } from '@assets/utils/promQL';
+import { LINUX } from '@assets/utils/promQL';
 import { IStatRangeItem, IStatSingleItem } from '@assets/utils/interface';
 
-const PROMQL = MAC_OS;
 
+const PROMQL = LINUX;
 interface IState {
   cpuUsage: IStatRangeItem[]
   diskUsageRate: IStatRangeItem[]
