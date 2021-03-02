@@ -164,14 +164,13 @@ class FlowDetail extends React.Component<IProps, IState> {
         return instance;
       });
     }
-    this.chartInstance
-      .changeData([..._receiveFlow, ..._transmitFlow]);
     this.chartInstance.scale({
       time: {
         tickInterval: getProperTickInterval(currentInterval),
       }
     });
-    this.chartInstance.render();
+    this.chartInstance
+      .changeData([..._receiveFlow, ..._transmitFlow]);
   }
   
   render () {

@@ -12,6 +12,7 @@ const mapState = (state: IRootState) => ({
 const mapDispatch = () => ({});
 
 const AuthorizedRoute = ({ component: Component, render, ...rest }) => {
+  console.log('rest', rest);
   if (rest.username && rest.password) {
     return Component ? (
       <Route {...rest} render={props => <Component {...props} />} />

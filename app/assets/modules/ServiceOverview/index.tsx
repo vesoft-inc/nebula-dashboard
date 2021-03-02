@@ -1,67 +1,66 @@
 import React from 'react';
+import { IDispatch, IRootState } from '@assets/store';
+import { connect } from 'react-redux';
+import { SERVICE_QUERY_INTERVAL, SERVICE_QUERY_STEP } from '@assets/utils/service';
 import ServiceTable from './ServiceTable';
-class ServiceOverview extends React.Component {
 
-  render () {
-    const overviewInfos = {
-      normal: 10,
-      overload: 2,
-      abnormal: 1,
-      averageQps: 122
+const mapDispatch = (dispatch: IDispatch) => {
+  return {
+    asyncGetGraphMetrics: dispatch.service.asyncGetGraphMetrics,
+  };
+};
+
+const mapState = (state: IRootState) => {
+  return {
+    graphMetric: state.service.graphMetric,
+  };
+};
+
+interface IProps extends ReturnType<typeof mapDispatch>,
+  ReturnType<typeof mapState> {
+
+}
+
+interface IState {
+}
+
+class ServiceOverview extends React.Component<IProps, IState> {
+  pollingTimer: any;
+  constructor (props: IProps) {
+    super(props);
+    this.state = {
     };
-    const serviceList = [
-      {
-        name: 'Graph_0023',
-        status: 'normal',
-        info: {
-          qps: 111,
-          latency: '20ms',
-          error: 0,
-          version: '1.1.2'
-        }
-      },{
-        name: 'Graph_0023',
-        status: 'overload',
-        info: {
-          qps: 111,
-          latency: '20ms',
-          error: 0,
-          version: '1.1.2'
-        }
-      },{
-        name: 'Graph_0023',
-        status: 'abnormal',
-        info: {
-          qps: 111,
-          latency: '20ms',
-          error: 0,
-          version: '1.1.2'
-        }
-      },{
-        name: 'Graph_0023',
-        status: 'normal',
-        info: {
-          qps: 111,
-          latency: '20ms',
-          error: 0,
-          version: '1.1.2'
-        }
-      },{
-        name: 'Graph_0023',
-        status: 'normal',
-        info: {
-          qps: 111,
-          latency: '20ms',
-          error: 0,
-          version: '1.1.2'
-        }
-      },
-    ];
+  }
+  componentDidMount () {
+    this.pollingData();
+  }
+
+  componentWillUnmount () {
+    if (this.pollingTimer) {
+      clearTimeout(this.pollingTimer);
+    }
+  }
+
+  pollingData = () => {
+    this.asyncGetGraphMetrics();
+    this.pollingTimer = setTimeout(this.pollingData, 60000);
+  }
+
+  asyncGetGraphMetrics = async () => {
+    const end = Math.round(Date.now() / 1000);
+    await this.props.asyncGetGraphMetrics({
+      end,
+      interval: SERVICE_QUERY_INTERVAL,
+      step: SERVICE_QUERY_STEP
+    });
+  }
+  render () {
+    const { graphMetric } = this.props;
     return (<div>
-      <ServiceTable title="Graph Service" icon="#iconservice-graph" mode="blue" data={{ overviewInfos, serviceList }} />
-      <ServiceTable title="Storage Service" icon="#iconservice-storage" mode="pink" data={{ overviewInfos, serviceList }} />
-      <ServiceTable title="Meta Service" icon="#iconservice-meta" mode="skyblue" data={{ overviewInfos, serviceList }} />
+      <ServiceTable title="Graph Service" icon="#iconservice-graph" mode="blue" data={graphMetric} />
+      <ServiceTable title="Storage Service" icon="#iconservice-storage" mode="pink" data={graphMetric} />
+      <ServiceTable title="Meta Service" icon="#iconservice-meta" mode="skyblue" data={graphMetric} />
     </div>);
   }
 }
-export default ServiceOverview;
+export default connect(mapState, mapDispatch)(ServiceOverview);

@@ -1,9 +1,6 @@
 import { createModel } from '@rematch/core';
 import _ from 'lodash';
-import { message } from 'antd';
 import service from '@assets/config/service';
-import cookies from 'js-cookie';
-import intl from 'react-intl-universal';
 
 interface IState {
   configs:any[];
@@ -13,6 +10,8 @@ interface IState {
   parts:any[];
   services: any[];
 }
+
+type IServiceType = 'GRAPH' | 'STORAGE' | 'META'
 
 export const nebula = createModel({
   state: {
@@ -31,7 +30,7 @@ export const nebula = createModel({
       };
     },
   },
-  effects: {
+  effects: (dispatch: any) => ({
     async asyncGetServiceConfigs (module?:string) {
       const { code, data } = (await service.execNGQL({
         gql: module ? `SHOW CONFIGS ${module} `:'SHOW CONFIGS'
@@ -75,6 +74,12 @@ export const nebula = createModel({
         });
       }
     },
+    async asyncUseSpaces (space) {
+      const { code, data } = (await service.execNGQL({
+        gql: `USE ${space}`
+      })) as any;
+      return { code, data };
+    },
 
     async asyncGetParts (partId?:string) {
       const { code, data } = (await service.execNGQL({
@@ -85,51 +90,46 @@ export const nebula = createModel({
           parts: data.tables,
         });
       }
+      return data.tables;
     },
 
     async asyncGetServices () {
-      const { code, data: hostData } = (await service.execNGQL({
-        gql: 'SHOW HOSTS'
-      })) as any;
-      if (code === 0) {
-        let data = [];
-        const { code: storageCode, data: storageData } = (await service.execNGQL({
-          gql: 'SHOW HOSTS STORAGE'
-        })) as any;
-        if(storageCode === 0){
-          data = hostData.tables.map(host => {
-            const storage = storageData.tables.find(storage => storage.Host === host.Host);
-            return{
-              ...host,
-              ...storage,
-            };
-          });
-        }
-        this.update({
-          services: data,
+      const hostData = await dispatch.nebula.asyncGetHostsInfo();
+      let data = [];
+      if(hostData.length > 0) {
+        const storageData = await dispatch.nebula.asyncGetHostsInfo('STORAGE');
+        data = hostData.map(host => {
+          const storage = storageData.find(storage => storage.Host === host.Host);
+          return{
+            ...host,
+            ...storage,
+          };
         });
       }
+      this.update({
+        services: data,
+      });
     },
 
-    // HACK: Fixed information
-    async asyncLogin ({
-      username,
-      password
-    }){
-      const { code, message: errorMessage } = (await service.connectDB({
-        address:'192.168.10.107',
-        port:'9669',
-        username,
-        password,
+    async asyncGetHostsInfo (type?: IServiceType) {
+      const res = (await service.execNGQL({
+        gql: `SHOW HOSTS ${type || ''}`
       })) as any;
-      if (code === 0) {
-        cookies.set('nu', username);
-        cookies.set('np', password);
-        return true;
-      }else{
-        message.error(`${intl.get('configServer.fail')}: ${errorMessage}`);
-        return false;
+      let data = [];
+      if (res.code === 0 && res.data.tables) {
+        data = res.data.tables;
       }
-    }
-  },
+      return data;
+    },
+
+    async asyncGetServiceVersion (type?: IServiceType) {
+      // HACK: user git info instead of version
+      const res = await dispatch.nebula.asyncGetHostsInfo(type);
+      return res.map(item => ({
+        name: item.Host,
+        version: item['Git Info Sha']
+      }));
+    },
+
+  }),
 });

@@ -3,6 +3,8 @@ import React from 'react';
 import nebulaLogo from '@assets/static/images/nebula_logo.png';
 import Icon from '@assets/components/Icon';
 import LanguageSelect from '@assets/components/LanguageSelect';
+import { IDispatch, IRootState } from '@assets/store';
+import { connect } from 'react-redux';
 import intl from 'react-intl-universal';
 import {
   Link,
@@ -18,7 +20,21 @@ import Header from './Header';
 const { Sider, Content } = Layout;
 const { SubMenu } = Menu;
 
-type IProps = RouteComponentProps;
+const mapDispatch = (dispatch: IDispatch) => {
+  return {
+    asyncLogout: dispatch.app.asyncLogout,
+    asyncGetAppInfo: dispatch.app.asyncGetAppInfo,
+  };
+};
+
+const mapState = (state: IRootState) => ({
+  appVersion: state.app.version,
+});
+
+interface IProps extends ReturnType<typeof mapState>,
+  ReturnType<typeof mapDispatch>, 
+  RouteComponentProps{}
+
 interface IState {
   collapsed: boolean;
   activeMenu: string;
@@ -32,6 +48,14 @@ class Layouts extends React.Component<IProps, IState> {
       activeMenu: props.location.pathname.split('/')[1] || '',
     };
   }
+
+  componentDidMount () {
+    const { appVersion } = this.props;
+    if(appVersion === '') {
+      this.props.asyncGetAppInfo();
+    }
+  }
+
   renderMenu = (list) => {
     if(list && list.length > 0) {
       return list.map(item => {
@@ -56,6 +80,7 @@ class Layouts extends React.Component<IProps, IState> {
 
   render () {
     const { collapsed, activeMenu } = this.state;
+    const { appVersion } = this.props;
     return (
       <Layout className="nebula-stat">
         <Sider className="nebula-sider" trigger={null} 
@@ -76,13 +101,13 @@ class Layouts extends React.Component<IProps, IState> {
             {this.renderMenu(MenuList)}
           </Menu>
           <div className="sidebar-footer">
-            <div className="btn-logout">
+            <div className="btn-logout" onClick={this.props.asyncLogout}>
               <Icon className="menu-btn" icon="#iconnav-logout" />
               {!collapsed && <span className="text-logout">{intl.get('common.logout')}</span>}
             </div>
             <LanguageSelect mode="dark" showIcon={!collapsed} />
             <div className="row">
-              {!collapsed && <span className="version">v1.1.0</span>}
+              {!collapsed && <span className="version">{appVersion}</span>}
               <div className="btn-collapse" onClick={this.toggleMenu}>
                 {!collapsed && <Icon className="menu-collapse-icon" icon="#iconnav-fold" />}
                 {collapsed && <Icon className="menu-collapse-icon" icon="#iconnav-unfold" />}
@@ -104,4 +129,4 @@ class Layouts extends React.Component<IProps, IState> {
   }
 }
 
-export default withRouter(Layouts);
+export default connect(mapState, mapDispatch)(withRouter(Layouts));

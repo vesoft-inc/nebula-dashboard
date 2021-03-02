@@ -53,8 +53,8 @@ class Layouts extends React.PureComponent<IProps, IState> {
       label: '服务概况',
       value: '/service-dashboard'
     },{
-      label: '服务指标详情',
-      value: '/service-dashboard/server-metrics'
+      label: '时序指标',
+      value: '/service-dashboard/qps-metrics'
     },{
       label: '版本详情',
       value: '/service-dashboard/version-statistics'

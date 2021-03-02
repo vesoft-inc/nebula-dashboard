@@ -1,10 +1,14 @@
-import { Chart, Util } from '@antv/g2';
+import { Chart } from '@antv/g2';
+import { ChartCfg } from '@antv/g2/lib/interface';
+
 import React from 'react';
 
 interface IProps {
+  renderChart: (chartInstance: Chart) => void;
+  options?: Partial<ChartCfg>
 }
 
-class PieChart extends React.Component {
+class PieChart extends React.Component<IProps> {
   chartRef: any;
   chartInstance: Chart;
 
@@ -18,53 +22,21 @@ class PieChart extends React.Component {
   }
 
   renderChart = () => {
-    // TODO: mock data temporary
-    const data = [
-      { type: '1.1.4', value: 0.19 },
-      { type: '1.1.2', value: 0.21 },
-      { type: '2.0.0-nightly', value: 0.27 },
-      { type: '2.0.0-rc', value: 0.33 },
-    ];
-    
+    const { options } = this.props;
     this.chartInstance = new Chart({
       container: this.chartRef.current,
       height: 175,
       width: 500,
       padding: 'auto',
+      ...options
     });
-
-    this.chartInstance.data(data);
-
-    this.chartInstance.coordinate('theta', {
-      radius: 0.75,
-    });
-    this.chartInstance.tooltip({
-      showMarkers: false
-    });
-      
-    this.chartInstance.interval()
-      .adjust('stack')
-      .position('value')
-      .color('type', ['#063d8a', '#1770d6', '#47abfc', '#38c060'])
-      .style({ opacity: 0.4 })
-      .state({
-        active: {
-          style: (element) => {
-            const shape = element.shape;
-            return {
-              matrix: Util.zoom(shape, 1.1),
-            };
-          }
-        }
-      });
-      
-    this.chartInstance.interaction('element-single-selected');
+    this.props.renderChart(this.chartInstance);
     this.chartInstance.render();
   }
 
   render () {
     return (
-      <div className="nebula-chart nebula-chart-pie" style={{ padding: 20 }} ref={this.chartRef} />
+      <div className="nebula-chart nebula-chart-pie" style={{ textAlign: 'center' }} ref={this.chartRef} />
     );
   }
 }

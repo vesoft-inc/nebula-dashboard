@@ -22,12 +22,11 @@ service.interceptors.response.use(
       _code = response.data.status === 'success' ? 0 : -1;
       response.data.code = _code;
     }
-
     // if connection refused, login again
     if (code === -1 && message && message.includes('connection refused')) {
-      AntdMessage.warning(intl.get('warning.connectError'));
+      AntdMessage.warning(intl.get('configServer.connectError'));
       store.dispatch({
-        type: 'nebula/clearConfig',
+        type: 'app/asyncLogout',
       });
     }
     return response.data;

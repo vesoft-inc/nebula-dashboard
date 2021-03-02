@@ -49,7 +49,7 @@
     "normal": "正常",
     "overload": "超负荷",
     "abnormal": "异常",
-    "averageQps": "平均 QPS",
+    "qps": "QPS",
     "leaderNumber": "Leader 数量",
     "leaderDistribute": "Leader 分布",
     "all":"全部",
@@ -57,7 +57,9 @@
     "total":"总计",
     "spaces":"图空间",
     "services":"服务",
-    "partition":"分区"
+    "partition":"分区",
+    "partitionNum": "分区数",
+    "distribution": "分布"
   },
   "component": {
     "dashboardDetail": {
@@ -73,6 +75,7 @@
     "success": "配置成功",
     "fail": "配置失败",
     "clear": "清除连接",
-    "title": "配置数据库"
+    "title": "配置数据库",
+    "connectError": "数据库连接有误，请重新配置"
   }
 }

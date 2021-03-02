@@ -1,5 +1,6 @@
 import { Chart } from '@antv/g2';
-import LineChart, { IDataItem } from '@assets/components/Charts/LineChart';
+import LineChart from '@assets/components/Charts/LineChart';
+import { ILineChartMetric } from '@assets/utils/interface';
 import { getAdaptiveFlowValue } from '@assets/utils/dashboard';
 import React from 'react';
 import intl from 'react-intl-universal';
@@ -7,9 +8,9 @@ import dayjs from 'dayjs';
 import './FlowLineChart.less';
 
 interface IProps {
-  flowData: IDataItem[]
-  latestReceiveFlow: IDataItem
-  latestTransmitFlow: IDataItem
+  flowData: ILineChartMetric[]
+  latestReceiveFlow: ILineChartMetric
+  latestTransmitFlow: ILineChartMetric
 }
 
 class FlowLineChart extends React.Component<IProps> {
@@ -31,6 +32,8 @@ class FlowLineChart extends React.Component<IProps> {
           return dayjs(Number(time) * 1000).format('YYYY-MM-DD HH:mm:ss');
         }
       })
+      .axis(false)
+      .legend(false)
       .line()
       .color('type', ['#4372FF', '#3DD188'])
       .position('time*value');
@@ -44,7 +47,6 @@ class FlowLineChart extends React.Component<IProps> {
     const { flowData } = this.props;
     this.chartInstance
       .changeData(flowData);
-    this.chartInstance.render();
   }
 
   render () {

@@ -1,19 +1,10 @@
-import { EggAppConfig, EggAppInfo, PowerPartial } from 'egg';
 import fs from 'fs';
 import * as path from 'path';
+import { EggAppConfig, EggAppInfo, PowerPartial } from 'egg';
 
 export default (appInfo: EggAppInfo) => {
   const config = {} as PowerPartial<EggAppConfig>;
 
-  // upload path
-  config.uploadPath =
-    __dirname
-      .split('/')
-      .slice(0, __dirname.split('/').length - 1)
-      .join('/') + '/tmp/upload';
-  if (!fs.existsSync(config.uploadPath)) {
-    fs.mkdirSync(config.uploadPath, { recursive: true });
-  }
   // override config from framework / plugin
   // use for cookie sign key, should change to your own and keep security
   config.keys = appInfo.name + '_1544867050896_3341';
@@ -38,7 +29,7 @@ export default (appInfo: EggAppInfo) => {
         'webpack-dev-server --config config/webpack.dev.ts --mode development --color --progress --hot',
       port: 7777,
       env: {
-        PUBLIC_PATH: 'http://127.0.0.1:8888',
+        PUBLIC_PATH: 'http://127.0.0.1:7777',
       },
     },
   };

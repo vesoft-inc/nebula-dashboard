@@ -16,7 +16,7 @@
     "config": "Config",
     "snapshot": "Snapshot",
     "longTermTask": "Long-term Task",
-    "metric": "指标",
+    "metric": "Metric",
     "lineChart": "Line Chart",
     "barChart": "Bar Chart"
   },
@@ -49,7 +49,7 @@
     "normal": "Normal",
     "overload": "Overload",
     "abnormal": "Abnormal",
-    "averageQps": "Average QPS",
+    "qps": "QPS",
     "leaderNumber": "Leader 数量",
     "leaderDistribute": "Leader 分布",
     "all":"All",
@@ -57,7 +57,9 @@
     "total":"Total",
     "spaces":"Spaces",
     "services":"Services",
-    "partition":"Partition"
+    "partition":"Partition",
+    "partitionNum": "Partition Number",
+    "distribution": "Distribution"
   },
   "component": {
     "dashboardDetail": {
@@ -73,6 +75,7 @@
     "success": "succeed",
     "fail": "Failed",
     "clear": "Clear Connect",
-    "title": "Config Server"
+    "title": "Config Server",
+    "connectError": "Connection refused, config again"
   }
 }

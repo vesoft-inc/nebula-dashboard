@@ -108,7 +108,6 @@ class MemoryDetail extends React.Component<IProps, IState> {
       type: 'memory',
       tickInterval: getProperTickInterval(currentInterval),
     }).changeData(data);
-    this.chartInstance.render();
   }
   
   render () {

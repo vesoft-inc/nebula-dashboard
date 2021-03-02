@@ -3,7 +3,7 @@ import intl from 'react-intl-universal';
 
 const MachineDashboard = lazy(() => import('@assets/modules/MachineDashboard'));
 const ServiceOverview = lazy(() => import('@assets/modules/ServiceOverview'));
-const ServerMetrics = lazy(() => import('@assets/modules/ServerMetrics'));
+const QPSMetrics = lazy(() => import('@assets/modules/QPSMetrics'));
 const VersionStatistic = lazy(() => import('@assets/modules/VersionStatistic'));
 const LeaderDistribution = lazy(() => import('@assets/modules/LeaderDistribution'));
 const PartitionDistribution = lazy(() => import('@assets/modules/PartitionDistribution'));
@@ -95,8 +95,8 @@ export const RoutesList = [
     exact: true,
   },
   {
-    path: '/service-dashboard/server-metrics',
-    component: ServerMetrics,
+    path: '/service-dashboard/qps-metrics',
+    component: QPSMetrics,
     exact: true,
   },
   {

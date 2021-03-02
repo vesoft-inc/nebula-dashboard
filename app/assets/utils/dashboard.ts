@@ -1,11 +1,5 @@
-import { IStatItem } from '@assets/store/models';
+import { ILineChartMetric, IStatRangeItem } from '@assets/utils/interface';
 import { isNumber } from 'lodash';
-
-export interface IMetric {
-  time: number;
-  value: number;
-  type: string;
-}
 
 export const DETAIL_DEFAULT_RANGE = 60 * 60;
 export const CARD_RANGE = 10 * 60;
@@ -111,7 +105,7 @@ export const getDiskProperSize = bytes => {
   }
 };
 
-export const getAverageStat = (data: IStatItem[], type: string) => {
+export const getAverageStat = (data: IStatRangeItem[], type: string) => {
   let average = [] as any;
   if (data.length) {
     average = data[0].values.map(([timestamp, _], idx) => {
@@ -131,8 +125,8 @@ export const getAverageStat = (data: IStatItem[], type: string) => {
   return average;
 };
 
-export const getDataByType = (data: IStatItem[], type?: string) => {
-  let res = [] as IMetric[];
+export const getDataByType = (data: IStatRangeItem[], type?: string) => {
+  let res = [] as ILineChartMetric[];
   switch (type) {
     case 'all':
       data.forEach(instance => {

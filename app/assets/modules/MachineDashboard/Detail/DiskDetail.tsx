@@ -110,8 +110,6 @@ class DiskDetail extends React.Component<IProps, IState> {
       type: 'disk',
       statSizes: diskSizes,
     }).changeData(data);
-
-    this.chartInstance.render();
   }
   
   render () {

@@ -11,23 +11,23 @@
 - node.js
 
 ### 准备依赖的服务
-1. 启动一个nebula 1.x服务 (目前2.x指标还待整理中)
+1. 启动一个nebula 2.x服务
 
 2. 从nebula服务中找到对应的metrics接口，文档可参考[Metrics Exporter](https://docs.nebula-graph.io/1.1/manual-EN/3.build-develop-and-administration/7.monitor/1.metrics-exposer/)，修改 [nebula-stats-exporter](vendors/nebula-stats-exporter/config/config.yml)
 
 比如：
 ```
-version: v0.0.2
+version: v0.0.3
 nebulaItems:
   - instanceName: metad0 // 标识
     endpointIP: 10.17.101.126 // 将其换成对应IP
     endpointPort: 32839 // 找到对应metrics的端口号
-    nebulaType: metad // 确定当前填写metrics接口的类型
+    componentType: metad // 确定当前填写metrics接口的类型
 ```
 
 3. 填写好nebula exporter config.yml配置后，启动nebula-stats-exporter服务
 ```
-docker run --restart=always -p 9100:9100 -v {你的绝对路径}/nebula-dashboard/vendors/nebula-stats-exporter/config:/config megabyte875/nebula-stats-exporter:v0.0.2 --bare-metal --bare-metal-config-path=/config/config.yml
+docker run --restart=always -p 9100:9100 -v {你的绝对路径}/nebula-dashboard/vendors/nebula-stats-exporter/config:/config megabyte875/nebula-stats-exporter:v0.0.3 --bare-metal --bare-metal-config-path=/config/config.yml
 ```
 启动后，服务端口是9100
 
@@ -56,4 +56,4 @@ docker run --restart=always -p 9100:9100 -v {你的绝对路径}/nebula-dashboar
 ```
 
 7. 启动 prometheus 服务
-docker run --name=prometheus --restart=always -p 9090:9090 -v {项目目录路径}/vendors/nebula-stat-exporter/config:/etc/prometheus/ prom/prometheus
+docker run --name=prometheus --restart=always -p 9090:9090 -v {项目目录路径}/vendors/nebula-stats-exporter/config:/etc/prometheus/ prom/prometheus

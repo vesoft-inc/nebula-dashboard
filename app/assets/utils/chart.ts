@@ -1,4 +1,4 @@
-import { Chart } from '@antv/g2';
+import { Chart, Util } from '@antv/g2';
 import dayjs from 'dayjs';
 import { sum } from 'lodash';
 import { getProperValue } from './dashboard';
@@ -53,7 +53,6 @@ export const LINE_CHART_COLORS = [
   '#F4BCBC',
   '#BFBFBF',
   '#595959'
-
 ];
 
 export const configDetailChart = (chartInstance: Chart, options: {
@@ -129,3 +128,43 @@ export const updateDetailChart = (chartInstance: Chart, options: {
 
   return chartInstance;
 };
+
+export const renderPieChartTpl = (chartInstance: Chart, _options?): Chart => {
+  chartInstance.coordinate('theta', {
+    radius: 0.75,
+  });
+  chartInstance.tooltip({
+    showMarkers: false
+  });
+  chartInstance.interval()
+    .adjust('stack')
+    .position('value')
+    .color('type', PIE_CHARTS_COLORS)
+    .style({ opacity: 0.4 })
+    .state({
+      active: {
+        style: (element) => {
+          const shape = element.shape;
+          return {
+            matrix: Util.zoom(shape, 1.1),
+          };
+        }
+      }
+    });
+  chartInstance.legend({
+    position: 'right-top',
+    offsetX: -40,
+    offsetY: 25
+  }); 
+  return chartInstance;
+};
+
+export const PIE_CHARTS_COLORS = [
+  '#4372FF',
+  '#EB2F96',
+  '#0EBAD2',
+  '#29C377',
+  '#E25F5F',
+  '#F5B60D',
+  '#8C8C8C',
+];

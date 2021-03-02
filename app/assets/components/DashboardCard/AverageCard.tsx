@@ -4,10 +4,10 @@ import React from 'react';
 import { Spin } from 'antd';
 import { Chart, Geometry } from '@antv/g2';
 import dayjs from 'dayjs';
-import { IMetric, getWhichColor } from '@assets/utils/dashboard';
-
+import { getWhichColor } from '@assets/utils/dashboard';
+import { ILineChartMetric } from '@assets/utils/interface';
 interface IProps {
-  averageUsage: IMetric[];
+  averageUsage: ILineChartMetric[];
   currentAverageUsage: number;
   loading: boolean;
 }
@@ -34,7 +34,6 @@ class AverageCard extends React.Component<IProps> {
       .style({
         fill: `l(90) 0:${COLORS.SOLID} 1:${COLORS.TRANSPARENT}`,
       })
-      .adjust('stack')
       .position('time*value')
       .color(COLORS.SOLID)
       .size(1);
@@ -54,6 +53,7 @@ class AverageCard extends React.Component<IProps> {
           return dayjs(Number(time) * 1000).format('YYYY-MM-DD HH:mm:ss');
         }
       })
+      .axis(false)
       .scale('value', {
         min: 0,
         max: 100,

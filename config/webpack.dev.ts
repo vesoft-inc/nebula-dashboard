@@ -13,7 +13,7 @@ const devConfig = {
 
   output: {
     filename: '[name].js',
-    publicPath: 'http://127.0.0.1:8888/',
+    publicPath: 'http://127.0.0.1:7777/',
   },
 
   module: {
@@ -36,7 +36,7 @@ const devConfig = {
 };
 
 module.exports = merge({
-  customizeArray(_, b, key) {
+  customizeArray (_, b, key) {
     if (key === 'entry.app') {
       return b;
     }

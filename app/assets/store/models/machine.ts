@@ -3,37 +3,27 @@ import _ from 'lodash';
 import service from '@assets/config/service';
 import { CARD_STEP } from '@assets/utils/dashboard';
 import { MAC_OS } from '@assets/utils/promQL';
-
+import { IStatRangeItem, IStatSingleItem } from '@assets/utils/interface';
 
 const PROMQL = MAC_OS;
 
-export interface IStatItem {
-  metric: { instance: string },
-  values: [number, any][]
-}
-
-interface IStatSingleItem {
-  metric: { instance: string },
-  value: [number, any]
-}
-
 interface IState {
-  cpuUsage: IStatItem[]
-  diskUsageRate: IStatItem[]
-  memoryUsageRate: IStatItem[]
-  transmitFlow: IStatItem[]
-  receiveFlow: IStatItem[]
+  cpuUsage: IStatRangeItem[]
+  diskUsageRate: IStatRangeItem[]
+  memoryUsageRate: IStatRangeItem[]
+  transmitFlow: IStatRangeItem[]
+  receiveFlow: IStatRangeItem[]
   memorySizeStat: IStatSingleItem[]
   diskSizeStat: IStatSingleItem[]
 }
 
 export const machine = createModel({
   state: {
-    cpuUsage: [] as IStatItem[],
-    diskUsageRate: [] as IStatItem[],
-    memoryUsageRate: [] as IStatItem[],
-    transmitFlow: [] as IStatItem[],
-    receiveFlow: [] as IStatItem[],
+    cpuUsage: [] as IStatRangeItem[],
+    diskUsageRate: [] as IStatRangeItem[],
+    memoryUsageRate: [] as IStatRangeItem[],
+    transmitFlow: [] as IStatRangeItem[],
+    receiveFlow: [] as IStatRangeItem[],
     memorySizeStat: [] as IStatSingleItem[],
     diskSizeStat: [] as IStatSingleItem[],
   },

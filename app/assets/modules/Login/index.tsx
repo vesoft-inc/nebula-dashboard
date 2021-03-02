@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import './index.less';
 import nebulaLogo from '@assets/static/images/nebula_logo.png';
 import { RouteComponentProps } from 'react-router-dom';
-import { IDispatch } from '@assets/store';
+import { IDispatch, IRootState } from '@assets/store';
 const FormItem = Form.Item;
 
 const fomrItemLayout = {
@@ -17,11 +17,14 @@ const fomrItemLayout = {
   },
 };
 
-const mapState = () => ({
+const mapState = (state: IRootState) => ({
+  appVersion: state.app.version,
 });
 
+
 const mapDispatch = (dispatch: IDispatch) => ({
-  asyncLogin: dispatch.nebula.asyncLogin,
+  asyncLogin: dispatch.app.asyncLogin,
+  asyncGetAppInfo: dispatch.app.asyncGetAppInfo,
 });
 
 interface IProps extends ReturnType<typeof mapState>,
@@ -30,6 +33,10 @@ interface IProps extends ReturnType<typeof mapState>,
 }
 class ConfigServerForm extends React.Component<IProps> {
 
+  componentDidMount () {
+    this.props.asyncGetAppInfo();
+  }
+
   onConfig = async (values: any) => {
     const ok = await this.props.asyncLogin(values);
     if (ok) {
@@ -37,6 +44,7 @@ class ConfigServerForm extends React.Component<IProps> {
     }
   };
   render (){
+    const { appVersion } = this.props;
     return (
       <div className="page-login">
         <div className="right">
@@ -58,7 +66,7 @@ class ConfigServerForm extends React.Component<IProps> {
             </Button>
           </Form>
           <div className="footer">
-            <span className="version">{intl.get('common.version')}：v1.1.0</span>
+            <span className="version">{intl.get('common.version')}：{appVersion}</span>
             <LanguageSelect showIcon={true} />
           </div>
         </div>

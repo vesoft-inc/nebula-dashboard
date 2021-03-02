@@ -96,8 +96,6 @@ class CPUDetail extends React.Component<IProps, IState> {
       type: 'cpu',
       tickInterval: getProperTickInterval(currentInterval),
     }).changeData(data);
-
-    this.chartInstance.render();
   }
   
   render () {
