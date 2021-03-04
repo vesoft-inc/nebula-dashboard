@@ -40,7 +40,7 @@ interface IState {
   activeMenu: string;
 }
 
-class Layouts extends React.Component<IProps, IState> {
+class MainPage extends React.Component<IProps, IState> {
   constructor (props: IProps) {
     super(props);
     this.state = {
@@ -116,17 +116,21 @@ class Layouts extends React.Component<IProps, IState> {
           </div>
         </Sider>
         <Layout className="page-content">
-          <Header />
-          <Content className="main-content">
-            <Switch>
-              {RoutesList.map(route => <Route path={route.path} component={route.component} key={route.path} exact={route.exact} />)}
-              <Redirect from="/" to="/machine-dashboard" />
-            </Switch>
-          </Content>
+          <Switch>
+            {RoutesList.map(route => <Route path={route.path} render={() => {
+              return <>
+                <Header config={route.headerConfig} />
+                <Content className="main-content">
+                  <Route component={route.component} />
+                </Content>
+              </>;
+            }} key={route.path} exact={route.exact} />)}
+            <Redirect from="/*" to="/machine-dashboard" />
+          </Switch>
         </Layout>
       </Layout>
     );
   }
 }
 
-export default connect(mapState, mapDispatch)(withRouter(Layouts));
+export default connect(mapState, mapDispatch)(withRouter(MainPage));

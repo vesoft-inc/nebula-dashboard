@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect, Route } from 'react-router-dom';
+import cookies from 'js-cookie';
 
 import { IRootState } from './store';
 
@@ -12,8 +13,7 @@ const mapState = (state: IRootState) => ({
 const mapDispatch = () => ({});
 
 const AuthorizedRoute = ({ component: Component, render, ...rest }) => {
-  console.log('rest', rest);
-  if (rest.username && rest.password) {
+  if (cookies.get('nu') && cookies.get('np')) {
     return Component ? (
       <Route {...rest} render={props => <Component {...props} />} />
     ) : (

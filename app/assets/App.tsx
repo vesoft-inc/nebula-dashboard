@@ -17,7 +17,7 @@ import { updateQueryStringParameter } from '@assets/utils';
 import AuthorizedRoute from './AuthorizedRoute';
 
 const Login = lazy(() => import('@assets/modules/Login'));
-const Layouts = lazy(() => import('@assets/modules/Layout/index'));
+const MainPage = lazy(() => import('@assets/modules/MainPage/index'));
 
 type IProps = RouteComponentProps;
 
@@ -76,7 +76,7 @@ class App extends React.Component<IProps> {
           <Switch>
             <Suspense fallback={<Spin />}>
               <Route path="/Login" component={Login} />
-              <AuthorizedRoute path="/" component={Layouts} />
+              <AuthorizedRoute path="/" component={MainPage} />
             </Suspense>
           </Switch>
         </Router>
