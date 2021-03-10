@@ -57,9 +57,9 @@ class ServiceOverview extends React.Component<IProps, IState> {
   render () {
     const { graphMetric } = this.props;
     return (<div>
-      <ServiceTable title="Graph Service" icon="#iconservice-graph" mode="blue" data={graphMetric} />
-      <ServiceTable title="Storage Service" icon="#iconservice-storage" mode="pink" data={graphMetric} />
-      <ServiceTable title="Meta Service" icon="#iconservice-meta" mode="skyblue" data={graphMetric} />
+      <ServiceTable title="Graph Service" icon="#iconservice-graph" mode="blue" data={graphMetric} viewPath="/service-dashboard/qps-metrics?type=graph" />
+      <ServiceTable title="Storage Service" icon="#iconservice-storage" mode="pink" data={graphMetric} viewPath="/service-dashboard/qps-metrics?type=storage" />
+      <ServiceTable title="Meta Service" icon="#iconservice-meta" mode="skyblue" data={graphMetric} viewPath="/service-dashboard/qps-metrics?type=meta" />
     </div>);
   }
 }

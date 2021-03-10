@@ -1,0 +1,41 @@
+version: '3.4'
+services:
+  client:
+    image: vesoft/nebula-http-gateway:v2
+    environment:
+      USER: root
+    ports:
+      - 8080
+    networks:
+      - nebula-web
+  dashboard:
+    image: dashboard-test
+    ports:
+      - 7003
+    depends_on:
+      - client
+    networks:
+      - nebula-web
+  nginx:
+    image: nginx:mainline
+    environment:
+      PROMETHEUS_CLIENT: ${PROMETHEUS_CLIENT}
+    volumes:
+      - ./nginx/nginx.conf.template:/etc/nginx/nginx.conf.template
+    depends_on:
+      - dashboard
+      - client
+    networks:
+      - nebula-web
+    ports:
+      - 7003:7003
+    command: >
+            /bin/sh -c
+            "envsubst '
+            $${PROMETHEUS_CLIENT}
+            '< /etc/nginx/nginx.conf.template
+            > /etc/nginx/conf.d/nebula.conf
+            && nginx -g 'daemon off;'"
+
+networks:
+  nebula-web:

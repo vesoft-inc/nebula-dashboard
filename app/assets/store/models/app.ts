@@ -38,7 +38,7 @@ export const app = createModel({
       password
     }){
       const { code, message: errorMessage } = (await service.connectDB({
-        address:'127.0.0.1',
+        address:'192.168.10.217',
         port:9669,
         username,
         password,

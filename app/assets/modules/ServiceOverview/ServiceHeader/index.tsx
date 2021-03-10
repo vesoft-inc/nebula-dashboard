@@ -1,8 +1,10 @@
 import React from 'react';
 import Icon from '@assets/components/Icon';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import './index.less';
-interface IProps {
+interface IProps extends RouteComponentProps{
   title: string;
+  viewPath: string;
   icon: string;
   mode: string;
   multipleMode: boolean;
@@ -15,6 +17,11 @@ class ServiceHeader extends React.PureComponent<IProps> {
       this.props.changeDisplayMode(value);
     }
   }
+  handleView = () => {
+    const { viewPath } = this.props;
+    this.props.history.push(viewPath);
+  }
+
   render () {
     const { title, icon, mode, displayMode, multipleMode } = this.props;
     return (
@@ -28,11 +35,11 @@ class ServiceHeader extends React.PureComponent<IProps> {
             <Icon className={displayMode === 'wrap' ? `btn-overview ${mode} active bg-${mode}` : `btn-overview ${mode}`} icon="#iconservice-slide-a" onClick={() => this.handleClick('wrap')} />
             <Icon className={displayMode === 'grid' ? `btn-display ${mode} active bg-${mode}` : `btn-display ${mode}`} icon="#iconservice-arrange-a" onClick={() => this.handleClick('grid')}  />
           </>}
-          <Icon className={`btn-enlarge ${mode}`} icon="#iconwatch" />
+          <Icon className={`btn-enlarge ${mode}`} icon="#iconwatch" onClick={this.handleView} />
         </div>
       </div>
     );
   }
 }
 
-export default ServiceHeader;
+export default withRouter(ServiceHeader);

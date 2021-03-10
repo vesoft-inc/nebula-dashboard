@@ -37,7 +37,6 @@ interface IProps extends ReturnType<typeof mapState>,
 
 interface IState {
   collapsed: boolean;
-  activeMenu: string;
 }
 
 class MainPage extends React.Component<IProps, IState> {
@@ -45,7 +44,6 @@ class MainPage extends React.Component<IProps, IState> {
     super(props);
     this.state = {
       collapsed: false,
-      activeMenu: props.location.pathname.split('/')[1] || '',
     };
   }
 
@@ -79,8 +77,9 @@ class MainPage extends React.Component<IProps, IState> {
   }
 
   render () {
-    const { collapsed, activeMenu } = this.state;
+    const { collapsed } = this.state;
     const { appVersion } = this.props;
+    const activeMenu = this.props.location.pathname.split('/')[1] || '';
     return (
       <Layout className="nebula-stat">
         <Sider className="nebula-sider" trigger={null} 
@@ -97,7 +96,7 @@ class MainPage extends React.Component<IProps, IState> {
             mode="inline" 
             inlineIndent={20}
             defaultOpenKeys={['dashboard', 'serviceManagement']}
-            defaultSelectedKeys={[activeMenu]}>
+            selectedKeys={[activeMenu]}>
             {this.renderMenu(MenuList)}
           </Menu>
           <div className="sidebar-footer">

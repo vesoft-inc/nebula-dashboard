@@ -11,7 +11,8 @@ interface IProps extends ReturnType<typeof mapState>{
   title: string;
   icon: string;
   mode: string;
-  data: IServiceMetric
+  data: IServiceMetric;
+  viewPath: string;
 }
 
 interface IState {
@@ -40,10 +41,10 @@ class ServiceOverview extends React.Component<IProps, IState> {
   }
 
   render () {
-    const { title, icon, mode, data, loading } = this.props;
+    const { title, icon, mode, data, viewPath, loading } = this.props;
     const { displayMode } = this.state;
     return (<div className="service-content">
-      <ServiceHeader title={title} icon={icon} mode={mode} displayMode={displayMode} changeDisplayMode={this.changeDisplayMode} multipleMode={true} />
+      <ServiceHeader title={title} icon={icon} mode={mode} displayMode={displayMode} changeDisplayMode={this.changeDisplayMode} multipleMode={true} viewPath={viewPath} />
       <Spin delay={200} spinning={!!loading}>
         <div className="service-list">
           <div className={displayMode === 'wrap' ? 'wrap' : 'grid'}>

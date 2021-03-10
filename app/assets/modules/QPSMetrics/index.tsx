@@ -1,6 +1,7 @@
 import { Select, Spin } from 'antd';
 import React from 'react';
 import intl from 'react-intl-universal';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import LineChart from '@assets/components/Charts/LineChart';
 import { IDispatch, IRootState } from '@assets/store';
 import { connect } from 'react-redux';
@@ -36,7 +37,7 @@ const mapState = (state: IRootState) => {
 };
 
 interface IProps extends ReturnType<typeof mapDispatch>,
-  ReturnType<typeof mapState> {}
+  ReturnType<typeof mapState>, RouteComponentProps {}
 
 class ServerMetrics extends React.Component<IProps, IState> {
   chartInstance: Chart;
@@ -50,8 +51,15 @@ class ServerMetrics extends React.Component<IProps, IState> {
     };
   }
   componentDidMount () {
+    const { location: { search } } = this.props;
+    const regx = /type=(\w+)/g;
+    const match = regx.exec(search);
+    if(match) {
+      this.setState({
+        serviceType: match[1]
+      });
+    }
     this.pollingData();
-    
   }
 
   componentWillUnmount () {
@@ -171,4 +179,4 @@ class ServerMetrics extends React.Component<IProps, IState> {
     </div>);
   }
 }
-export default connect(mapState, mapDispatch)(ServerMetrics);
+export default connect(mapState, mapDispatch)(withRouter(ServerMetrics));
