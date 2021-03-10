@@ -4,7 +4,8 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import './index.less';
 interface IProps extends RouteComponentProps{
   title: string;
-  viewPath: string;
+  viewPath?: string;
+  showViewIcon?: boolean;
   icon: string;
   mode: string;
   multipleMode: boolean;
@@ -19,11 +20,11 @@ class ServiceHeader extends React.PureComponent<IProps> {
   }
   handleView = () => {
     const { viewPath } = this.props;
-    this.props.history.push(viewPath);
+    this.props.history.push(viewPath!);
   }
 
   render () {
-    const { title, icon, mode, displayMode, multipleMode } = this.props;
+    const { title, icon, mode, displayMode, multipleMode, showViewIcon } = this.props;
     return (
       <div className="content-header">
         <div className="left">
@@ -35,7 +36,7 @@ class ServiceHeader extends React.PureComponent<IProps> {
             <Icon className={displayMode === 'wrap' ? `btn-overview ${mode} active bg-${mode}` : `btn-overview ${mode}`} icon="#iconservice-slide-a" onClick={() => this.handleClick('wrap')} />
             <Icon className={displayMode === 'grid' ? `btn-display ${mode} active bg-${mode}` : `btn-display ${mode}`} icon="#iconservice-arrange-a" onClick={() => this.handleClick('grid')}  />
           </>}
-          <Icon className={`btn-enlarge ${mode}`} icon="#iconwatch" onClick={this.handleView} />
+          {showViewIcon && <Icon className={`btn-enlarge ${mode}`} icon="#iconwatch" onClick={this.handleView} />}
         </div>
       </div>
     );

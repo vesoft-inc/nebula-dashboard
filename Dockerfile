@@ -16,7 +16,6 @@ FROM node:12-alpine
 
 WORKDIR /nebula-dashboard
 COPY --from=builder ./nebula-dashboard/package.json /nebula-dashboard/
-COPY .npmrc /nebula-dashboard/
 COPY --from=builder /nebula-dashboard/app /nebula-dashboard/app
 COPY --from=builder /nebula-dashboard/favicon.ico /nebula-dashboard/favicon.ico
 COPY --from=builder /nebula-dashboard/config /nebula-dashboard/config

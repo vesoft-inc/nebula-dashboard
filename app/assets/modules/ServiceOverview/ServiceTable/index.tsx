@@ -44,7 +44,7 @@ class ServiceOverview extends React.Component<IProps, IState> {
     const { title, icon, mode, data, viewPath, loading } = this.props;
     const { displayMode } = this.state;
     return (<div className="service-content">
-      <ServiceHeader title={title} icon={icon} mode={mode} displayMode={displayMode} changeDisplayMode={this.changeDisplayMode} multipleMode={true} viewPath={viewPath} />
+      <ServiceHeader title={title} icon={icon} mode={mode} displayMode={displayMode} changeDisplayMode={this.changeDisplayMode} multipleMode={true} viewPath={viewPath} showViewIcon={true} />
       <Spin delay={200} spinning={!!loading}>
         <div className="service-list">
           <div className={displayMode === 'wrap' ? 'wrap' : 'grid'}>

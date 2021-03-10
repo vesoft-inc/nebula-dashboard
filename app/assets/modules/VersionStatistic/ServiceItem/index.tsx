@@ -63,7 +63,7 @@ class ServiceItem extends React.PureComponent<IProps, IState> {
     return (
       <Spin delay={200} spinning={!!loading}>
         <div className="version-statistic-item">
-          <ServiceHeader title={title} icon={icon} mode={mode}  multipleMode={false} />
+          <ServiceHeader title={title} icon={icon} mode={mode}  multipleMode={false} showViewIcon={false} />
           <div className="version-content">
             <PieChart options={{ height: 200 }} renderChart={this.renderChart} />
             <Table
