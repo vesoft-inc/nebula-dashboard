@@ -23,6 +23,7 @@ p {
 
 #app {
 	height: 100%;
+	min-width: 1440px;
 
 	> .ant-spin-nested-loading {
 		height: 100%;
@@ -172,4 +173,26 @@ p {
 			text-align: center;
 		}
 	}
+}
+
+.btn-icon-with-desc {
+	display: inline-flex;
+	align-items: center;
+	cursor: pointer;
+
+	.icon {
+		margin-left: 10px;
+		width: 16px;
+		height: 16px;
+	}
+
+	span {
+		margin-left: 9px;
+		font-size: 12px;
+		line-height: 12px;
+	}
+}
+
+.g2-tooltip {
+	text-align: left;
 }

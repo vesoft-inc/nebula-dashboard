@@ -10,7 +10,7 @@
     "dashboard": "看板",
     "machine": "机器",
     "service": "服务",
-    "serviceManagement": "服务管理",
+    "serviceManagement": "管理",
     "serviceInfo": "服务信息",
     "partitionInfo": "分区信息",
     "config": "配置",
@@ -18,21 +18,28 @@
     "longTermTask": "长时任务",
     "metric": "指标",
     "lineChart": "折线图",
-    "barChart": "柱状图"
+    "barChart": "柱状图",
+    "view": "查看",
+    "set": "设置",
+    "cancel": "取消",
+    "confirm": "确认",
+    "overview": "概览"
   },
   "rules": {
     "usernameRequired": "请输入用户名",
     "passwordRequired": "请输入密码"
   },
   "device": {
-    "average": {
-      "cpu": "CPU 平均负载",
-      "disk": "磁盘 平均负载",
-      "memory": "内存 平均负载",
-      "flow": "平均流量",
-      "transmitFlow": "上行平均流量",
-      "receiveFlow": "下行平均流量"
-    },
+    "title": "机器",
+    "overview": "概览",
+    "cpu": "CPU",
+    "disk": "磁盘",
+    "memory": "内存",
+    "load": "负载",
+    "networkIn": "下行流量",
+    "networkOut": "上行流量",
+    "transmitFlow": "上行平均流量",
+    "receiveFlow": "下行平均流量",
     "detail": {
       "cpu": "CPU 监控",
       "memory": "内存监控",
@@ -45,7 +52,7 @@
     }
   },
   "service": {
-    "serviceStatus": "服务状态",
+    "serviceStatus": "当前服务状态",
     "normal": "正常",
     "overload": "超负荷",
     "abnormal": "异常",
@@ -59,12 +66,23 @@
     "services":"服务",
     "partition":"分区",
     "partitionNum": "分区数",
-    "distribution": "分布"
+    "distribution": "分布",
+    "instance":"实例",
+    "period":"周期",
+    "metric":"指标",
+    "metricParams":"聚合方式",
+    "queryCondition":"查询条件",
+    "serviceMetricsDetails": "服务指标详情"
   },
   "component": {
     "dashboardDetail": {
-      "pastHour": "过去1小时",
-      "pastDay": "过去1天"
+      "1hour": "1小时",
+      "6hour": "6小时",
+      "12hour": "12小时",
+      "1day": "1天",
+      "3day": "3天",
+      "7day": "7天",
+      "14day": "14天"
     }
   },
   "configServer": {
@@ -77,5 +95,31 @@
     "clear": "清除连接",
     "title": "配置数据库",
     "connectError": "数据库连接有误，请重新配置"
+  },
+  "description": {
+    "module":  "待定",
+    "moduleName":  "待定",
+    "moduleType":  "待定",
+    "moduleMode":  "待定",
+    "moduleValue":  "待定",
+    "ip":  "待定",
+    "port":  "待定",
+    "status":  "待定",
+    "gitInfo":  "待定",
+    "leaderCount":  "待定",
+    "partitionDistribution":  "待定",
+    "leaderDistribution":  "待定",
+    "partitionId":  "待定",
+    "leader":  "待定",
+    "peers":  "待定",
+    "losts":  "待定",
+    "snapshotName":  "待定",
+    "snapshotStatus":  "待定",
+    "snapshotHosts":  "待定",
+    "jobId":  "待定",
+    "command":  "待定",
+    "longTermStatus":  "待定",
+    "longTermStartTime":  "待定",
+    "longTermStopTime":  "待定"
   }
 }

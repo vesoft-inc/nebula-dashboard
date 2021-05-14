@@ -1,0 +1,43 @@
+.status-panel {
+	display: inline-flex;
+	list-style: none;
+	margin-bottom: 0;
+	align-items: center;
+
+	li {
+		font-size: 12px;
+
+		span {
+			color: #000;
+			opacity: 0.7;
+			padding-left: 10px;
+			font-size: 12px;
+		}
+
+		&::before {
+			content: "";
+			display: inline-block;
+			width: 10px;
+			height: 10px;
+			border-radius: 50%;
+			margin-right: 6px;
+		}
+	}
+
+	.normal {
+		color: rgba(41, 195, 119, 1);
+		padding-right: 25px;
+
+		&::before {
+			background-color: rgba(41, 195, 119, 1);
+		}
+	}
+
+	.abnormal {
+		color: rgba(226, 95, 95, 1);
+
+		&::before {
+			background-color: rgba(226, 95, 95, 1);
+		}
+	}
+}

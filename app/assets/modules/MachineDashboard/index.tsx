@@ -5,24 +5,24 @@ import { connect } from 'react-redux';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { CARD_POLLING_INTERVAL, CARD_RANGE } from '@assets/utils/dashboard';
-import CPUAverage from './Cards/CPUAverage';
-import CPUDetail from './Cards/CPUDetail';
-import DiskAverage from './Cards/DiskAverage';
-import DiskDetail from './Cards/DiskDetail';
-import FlowAverage from './Cards/FlowAverage';
-import FlowDetail from './Cards/FlowDetail';
-import MemoryAverage from './Cards/MemoryAverage';
-import MemoryDetail from './Cards/MemoryDetail';
+import { SUPPORT_METRICS } from '@assets/utils/promQL';
+import CPUCard from './Cards/CPUCard';
 import './index.less';
+import MemoryCard from './Cards/MemoryCard';
+import DiskCard from './Cards/DiskCard';
+import LoadCard from './Cards/LoadCard';
+import NetworkOut from './Cards/NetworkOut';
+import NetworkIn from './Cards/NetworkIn';
 
 const mapDispatch = (dispatch: IDispatch) => {
   return {
-    asyncGetCPUUsageRateByRange: dispatch.machine.asyncGetCPUUsageRateByRange,
-    asyncGetDiskUsageRateByRange: dispatch.machine.asyncGetDiskUsageRateByRange,
-    asyncGetDiskSizeStat: dispatch.machine.asyncGetDiskSizeStat,
-    asyncGetMemoryUsageRateByRange: dispatch.machine.asyncGetMemoryUsageRateByRange,
+    asyncGetCPUStatByRange: dispatch.machine.asyncGetCPUStatByRange,
+    asyncGetMemoryStatByRange: dispatch.machine.asyncGetMemoryStatByRange,
     asyncGetMemorySizeStat: dispatch.machine.asyncGetMemorySizeStat,
-    asyncGetFlowByRange: dispatch.machine.asyncGetFlowByRange,
+    asyncGetDiskSizeStat: dispatch.machine.asyncGetDiskSizeStat,
+    asyncGetDiskStatByRange: dispatch.machine.asyncGetDiskStatByRange,
+    asyncGetLoadByRange: dispatch.machine.asyncGetLoadByRange,
+    asyncGetNetworkStatByRange: dispatch.machine.asyncGetNetworkStatByRange,
   };
 };
 
@@ -53,23 +53,39 @@ class MachineDashboard extends React.Component<IProps> {
   }
 
   getMachineStatus = () => {
-    const end = Math.round(Date.now() / 1000);
+    const end = Date.now();
     const start = end - CARD_RANGE;
-    this.props.asyncGetCPUUsageRateByRange({
+    this.props.asyncGetCPUStatByRange({
       start,
       end,
+      metric: SUPPORT_METRICS.cpu[0].metric,
     });
-    this.props.asyncGetDiskUsageRateByRange({
+    this.props.asyncGetMemoryStatByRange({
       start,
       end,
+      metric: SUPPORT_METRICS.memory[0].metric,
     });
-    this.props.asyncGetMemoryUsageRateByRange({
-      start,
+    this.props.asyncGetDiskStatByRange({
+      start: end - 1000,
       end,
+      metric: SUPPORT_METRICS.disk[0].metric,
     });
-    this.props.asyncGetFlowByRange({
+    this.props.asyncGetLoadByRange({
       start,
       end,
+      metric: SUPPORT_METRICS.load[0].metric,
+    });
+    this.props.asyncGetNetworkStatByRange({
+      start,
+      end,
+      metric: SUPPORT_METRICS.network[0].metric,
+      inOrOut: 'in',
+    });
+    this.props.asyncGetNetworkStatByRange({
+      start,
+      end,
+      metric: SUPPORT_METRICS.network[1].metric,
+      inOrOut: 'out',
     });
   }
 
@@ -82,56 +98,42 @@ class MachineDashboard extends React.Component<IProps> {
 
   render () {
     return <div className="machine-dashboard">
-      <div className="average-section">
-        <Row>
-          <Col span={12}>
-            <DashboardCard title={intl.get('device.average.cpu')} viewPath="/machine-dashboard/cpu" type="average">
-              <CPUAverage />
-            </DashboardCard>
-          </Col>
-          <Col span={12}>
-            <DashboardCard title={intl.get('device.average.memory')} viewPath="/machine-dashboard/memory" type="average">
-              <MemoryAverage />
-            </DashboardCard>
-          </Col>
-        </Row>
-        <Row>
-          <Col span={12}>
-            <DashboardCard title={intl.get('device.average.disk')} viewPath="/machine-dashboard/disk" type="average">
-              <DiskAverage />
-            </DashboardCard>
-          </Col>
-          <Col span={12}>
-            <DashboardCard title={intl.get('device.average.flow')} viewPath="/machine-dashboard/flow" type="average">
-              <FlowAverage />
-            </DashboardCard>
-          </Col>
-        </Row>
-      </div>
-      <div className="detail-section">
-        <Row>
-          <Col span={6}>
-            <DashboardCard title={intl.get('device.detail.cpu')} viewPath="/machine-dashboard/cpu" type="all">
-              <CPUDetail />
-            </DashboardCard>
-          </Col>
-          <Col span={6}>
-            <DashboardCard title={intl.get('device.detail.memory')} viewPath="/machine-dashboard/memory" type="all">
-              <MemoryDetail />
-            </DashboardCard>
-          </Col>
-          <Col span={6}>
-            <DashboardCard title={intl.get('device.detail.disk')} viewPath="/machine-dashboard/disk" type="all">
-              <DiskDetail />
-            </DashboardCard>
-          </Col>
-          <Col span={6}>
-            <DashboardCard title={intl.get('device.detail.flow')} viewPath="/machine-dashboard/flow" type="all">
-              <FlowDetail />
-            </DashboardCard>
-          </Col>
-        </Row>
-      </div>
+      <Row>
+        <Col span={12}>
+          <DashboardCard title={intl.get('device.cpu')} viewPath="/machine/cpu">
+            <CPUCard />
+          </DashboardCard>
+        </Col>
+        <Col span={12}>
+          <DashboardCard title={intl.get('device.memory')} viewPath="/machine/memory">
+            <MemoryCard />
+          </DashboardCard>
+        </Col>
+      </Row>
+      <Row>
+        <Col span={12}>
+          <DashboardCard title={intl.get('device.load')} viewPath="/machine/load">
+            <LoadCard />
+          </DashboardCard>
+        </Col>
+        <Col span={12}>
+          <DashboardCard title={intl.get('device.disk')} viewPath="/machine/disk">
+            <DiskCard />
+          </DashboardCard>
+        </Col>
+      </Row>
+      <Row>
+        <Col span={12}>
+          <DashboardCard title={intl.get('device.networkOut')} viewPath="/machine/network">
+            <NetworkOut />
+          </DashboardCard>
+        </Col>
+        <Col span={12}>
+          <DashboardCard title={intl.get('device.networkIn')} viewPath="/machine/network">
+            <NetworkIn />
+          </DashboardCard>
+        </Col>
+      </Row>
     </div>;
   }
 }

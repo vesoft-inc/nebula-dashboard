@@ -1,9 +1,10 @@
 import _ from 'lodash';
 import React from 'react';
-import { Table,Tooltip } from 'antd';
+import { Table } from 'antd';
 import { connect } from 'react-redux';
-import Icon from '@assets/components/Icon';
 import { IDispatch, IRootState } from '@assets/store';
+import { TitleInstruction } from '@assets/components/Instruction';
+import intl from 'react-intl-universal';
 
 import './index.less';
 
@@ -25,57 +26,37 @@ class ServiceInfo extends React.Component<IProps> {
     this.props.asyncGetServices();
   }
 
-  renderTooltip=text => {
-    return <Tooltip placement="top" title={text} > 
-      <Icon icon="#iconhelp"/>
-    </Tooltip>;
-  }
-
   render () {
     const { services } = this.props;
     const columns =[
       {
-        title: 'IP',
+        title: <TitleInstruction title="IP" description={intl.get('description.ip')} />,
         dataIndex: 'Host',
-        filterDropdown: (<div />), 
-        filterIcon: this.renderTooltip('文案未定'),
       },
       {
-        title: 'Port',
+        title: <TitleInstruction title="Port" description={intl.get('description.port')} />,
         dataIndex: 'Port',
-        filterDropdown: (<div />), 
-        filterIcon: this.renderTooltip('文案未定'),
       },
       {
-        title: 'Status',
+        title: <TitleInstruction title="Status" description={intl.get('description.status')} />,
         dataIndex: 'Status',
         render:status => <span className={status.toLowerCase()}>{status}</span>,
-        filterDropdown: (<div />), 
-        filterIcon: this.renderTooltip('文案未定'),
       },
       {
-        title: 'Git Info Sha',
+        title: <TitleInstruction title="Git Info Sha" description={intl.get('description.gitInfo')} />,
         dataIndex: 'Git Info Sha',
-        filterDropdown: (<div />), 
-        filterIcon: this.renderTooltip('文案未定'),
       },
       {
-        title: 'Leader Count ',
+        title: <TitleInstruction title="Leader Count" description={intl.get('description.leaderCount')} />,
         dataIndex: 'Leader count',
-        filterDropdown: (<div />), 
-        filterIcon: this.renderTooltip('文案未定'),
       },
       {
-        title: 'Partition Distribution',
+        title: <TitleInstruction title="Partition Distribution" description={intl.get('description.partitionDistribution')} />,
         dataIndex: 'Partition distribution',
-        filterDropdown: (<div />), 
-        filterIcon: this.renderTooltip('文案未定'),
       },
       {
-        title: 'Leader Distribution',
+        title: <TitleInstruction title="Leader Distribution" description={intl.get('description.leaderDistribution')} />,
         dataIndex: 'Leader distribution',
-        filterDropdown: (<div />), 
-        filterIcon: this.renderTooltip('文案未定'),
       },
     ];
     return (
@@ -85,6 +66,7 @@ class ServiceInfo extends React.Component<IProps> {
           dataSource={services} 
           columns={columns} 
           pagination={false}
+          tableLayout="fixed"
         />
       </div>
     );

@@ -1,51 +1,96 @@
-import { DETAIL_DEFAULT_RANGE } from '@assets/utils/dashboard';
-import { Select } from 'antd';
+import { DETAIL_DEFAULT_RANGE, TIMEOPTIONS } from '@assets/utils/dashboard';
+import { DatePicker, Form, Radio } from 'antd';
 import React, { HTMLProps } from 'react';
-import intl from 'react-intl-universal';
+import dayjs from 'dayjs';
 
 import './index.less';
-
-const Option = Select.Option;
+import { SUPPORT_METRICS } from '@assets/utils/promQL';
+import intl from 'react-intl-universal';
+import Icon from '../Icon';
+import { DashboardSelect, Option } from '../DashboardSelect';
 
 interface IProps extends HTMLProps<any> {
   children: any;
-  onIntervalChange?: (timestamps:number) => void
-  interval?: number,
+  onTimeChange?: (start:number, end:number) => void
+  startTimestamps?: number,
+  endTimestamps?: number,
   title?: string;
   typeOptions?: any[]
   currentType?: string,
+  metricOptions?: typeof SUPPORT_METRICS.cpu,
   onTypeChange?: (type: string) => void
+  currentMetricOption?: typeof SUPPORT_METRICS.cpu[0],
+  onMetricChange?: (metric: string, metricOption: any) => void
 }
 
+
+
 class DashboardDetail extends React.PureComponent<IProps> {
+  handleTimeButtonClick = e => {
+    const { onTimeChange } = this.props;
+    const endTimeStamps = Date.now();
+    const startTimeStamps = endTimeStamps - e.target.value;
+    if (onTimeChange) {
+      onTimeChange(startTimeStamps, endTimeStamps);
+    }
+  }
+
+  handleTimeRangeChange = ([startDate, endDate]) => {
+    const { onTimeChange } = this.props;
+    if (onTimeChange) {
+      onTimeChange(+startDate, +endDate);
+    }
+  }
+
   render () {
-    const { title, children, onIntervalChange, interval = DETAIL_DEFAULT_RANGE, typeOptions, currentType, onTypeChange } = this.props;
-    const timeOptions = [
-      {
-        name: intl.get('component.dashboardDetail.pastHour'),
-        value: 60 * 60,
-      },
-      {
-        name: intl.get('component.dashboardDetail.pastDay'),
-        value: 24 * 60 * 60,
-      }
-    ];
+    const now = Date.now();
+    const {
+      children,
+      typeOptions,
+      currentType,
+      onTypeChange,
+      metricOptions,
+      currentMetricOption,
+      onMetricChange,
+      startTimestamps = now - DETAIL_DEFAULT_RANGE,
+      endTimestamps = now,
+    } = this.props;
+    const interval = endTimestamps - startTimestamps;
+    const startDate = dayjs(startTimestamps);
+    const endDate = dayjs(endTimestamps);
 
     return <div className="dashboard-detail">
-      <div className="title">
-        <h3>{title}</h3>
-        {
-          typeOptions && (<Select value={currentType} onChange={onTypeChange}>
+      <div className="filter">
+        <div className="time-range left-panel">
+          <Radio.Group onChange={this.handleTimeButtonClick} size="small" value={interval}>
             {
-              typeOptions.map(option => <Option value={option.value} key={option.value}>{option.name}</Option>)
+              TIMEOPTIONS.map(option => (
+                <Radio.Button key={option.value} value={option.value}>{intl.get(`component.dashboardDetail.${option.name}`)}</Radio.Button>
+              ))
             }
-          </Select>)
-        }
-        <Select onChange={onIntervalChange} value={interval}>
+          </Radio.Group>
+          <DatePicker.RangePicker showSecond={false} format="YYYY-MM-DD HH:mm" value={[startDate, endDate] as any} showTime={true} onChange={this.handleTimeRangeChange as any} allowClear={false}/>
+        </div>
+        <div className="right-panel">
           {
-            timeOptions.map(o => <Option value={o.value} key={o.value}>{o.name}</Option>)
+            typeOptions && <Form.Item>
+              <DashboardSelect value={currentType} onChange={onTypeChange} suffixIcon={<Icon icon="#iconnav-foldTriangle" />}>
+                {
+                  typeOptions.map(option => <Option value={option.value} key={option.value}>{option.name}</Option>)
+                }
+              </DashboardSelect>
+            </Form.Item>
+          } 
+          {
+            metricOptions && <Form.Item>
+              <DashboardSelect value={currentMetricOption?.metric} onChange={onMetricChange}>
+                {
+                  metricOptions.map(option => <Option value={option.metric} key={option.metric}>{option.metric}</Option>)
+                }
+              </DashboardSelect>
+            </Form.Item>
           }
-        </Select>
+        </div>
       </div>
       <div className="detail-content">
         {children}

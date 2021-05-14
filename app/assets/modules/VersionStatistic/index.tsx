@@ -2,7 +2,7 @@ import React from 'react';
 import { IDispatch } from '@assets/store';
 import { connect } from 'react-redux';
 import { IVersionItem } from '@assets/utils/interface';
-import ServiceItem from './ServiceItem';
+import VersionItem from './VersionItem';
 
 const mapDispatch = (dispatch: IDispatch) => {
   return {
@@ -50,9 +50,9 @@ class VersionStatistic extends React.Component<IProps, IState> {
   render () {
     const { graph, storage, meta } = this.state;
     return (<div className="version-statistics">
-      <ServiceItem title="Graph Service" icon="#iconservice-graph" mode="blue" data={graph} />
-      <ServiceItem title="Storage Service" icon="#iconservice-storage" mode="pink" data={storage} />
-      <ServiceItem title="Meta Service" icon="#iconservice-meta" mode="skyblue" data={meta} />
+      <VersionItem title="Graph Service" icon="#iconservice-graph" mode="blue" data={graph} />
+      <VersionItem title="Storage Service" icon="#iconservice-storage" mode="pink" data={storage} />
+      <VersionItem title="Meta Service" icon="#iconservice-meta" mode="skyblue" data={meta} />
     </div>);
   }
 }

@@ -27,13 +27,14 @@ class LineChart extends React.Component<IProps> {
       padding: [20, 0, 0, 0],
       ...options,
     });
+    this.chartInstance.interaction('brush');
     this.props.renderChart(this.chartInstance);
     this.chartInstance.render();
   }
 
   render () {
     return (
-      <div className="nebula-chart nebula-chart-area" ref={this.chartRef} />
+      <div className="nebula-chart nebula-chart-line" ref={this.chartRef} />
     );
   }
 }

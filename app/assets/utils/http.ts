@@ -23,11 +23,13 @@ service.interceptors.response.use(
       response.data.code = _code;
     }
     // if connection refused, login again
-    if (code === -1 && message && message.includes('connection refused')) {
+    if (code === -1 && message && (message.includes('connection refused') || message.includes('an existing connection was forcibly closed'))) {
       AntdMessage.warning(intl.get('configServer.connectError'));
       store.dispatch({
         type: 'app/asyncLogout',
       });
+    } else if (code === -1 && message) {
+      AntdMessage.warning(message);
     }
     return response.data;
   },

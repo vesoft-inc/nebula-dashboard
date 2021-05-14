@@ -1,40 +1,64 @@
 .dashboard-card {
-	background: #fff;
+	padding: 5px;
 
-	> .header {
-		position: relative;
+	> .inner {
+		height: 100%;
+		background: #fff;
+		display: flex;
+		flex-direction: column;
 
-		> h3 {
-			padding: 8px 12px;
-			font-size: 18px;
+		> .header {
+			position: relative;
+			border-bottom: 1px solid #dcdcdc;
+
+			> h3 {
+				padding: 0 12px;
+				font-size: 18px;
+				line-height: 43px;
+				height: 43px;
+				margin-bottom: 0;
+			}
+
+			> .icon-watch {
+				position: absolute;
+				cursor: pointer;
+				top: 12px;
+				right: 16px;
+			}
+
+			> div {
+				position: absolute;
+				cursor: pointer;
+				top: 12px;
+				right: 16px;
+				width: 65%;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				text-align: right;
+
+				>span {
+					padding-right: 10px;
+				}
+
+				>.edit {
+					padding-right: 0;
+					font-size: 16px;
+				}
+
+				> .edit:hover {
+					color: #4372ff;
+				}
+			}
 		}
 
-		> .icon-watch {
-			position: absolute;
-			cursor: pointer;
-			top: 16px;
-			right: 16px;
-		}
-	}
-
-	> .content {
-		text-align: center;
-	}
-}
-
-.dashboard-card-fullscreen {
-	// reset the default width set
-	width: 80% !important;
-
-	.header {
-		> h3 {
+		> .content {
 			text-align: center;
-			font-size: 24px;
-		}
-	}
+			flex: 1;
 
-	.content {
-		margin-top: 24px;
-		text-align: center;
+			> .disk-detail {
+				padding-left: 20px;
+			}
+		}
 	}
 }

@@ -1,11 +1,10 @@
 import _ from 'lodash';
 import React from 'react';
-import { Radio,Table,Tooltip } from 'antd';
+import { Radio, Table } from 'antd';
 import intl from 'react-intl-universal';
 import { connect } from 'react-redux';
-import Icon from '@assets/components/Icon';
 import { IDispatch, IRootState } from '@assets/store';
-
+import { TitleInstruction } from '@assets/components/Instruction';
 import './index.less';
 
 const mapState = (state: IRootState) => ({
@@ -25,13 +24,7 @@ class ConfigInfo extends React.Component<IProps> {
     this.props.asyncGetServiceConfigs();
   }
 
-  renderTooltip=text => {
-    return <Tooltip placement="top" title={text} >
-      <Icon icon="#iconhelp"/>
-    </Tooltip>;
-  }
-
-  handleChangeModule= e => {
+  handleModuleChange= e => {
     this.props.asyncGetServiceConfigs(e.target.value);
   }
 
@@ -39,41 +32,31 @@ class ConfigInfo extends React.Component<IProps> {
     const { configs, loading }=this.props;
     const columns =[
       {
-        title: 'module',
+        title: <TitleInstruction title="Module" description={intl.get('description.module')} />,
         dataIndex: 'module',
         render: module => <span className={`module ${module.toLowerCase()}`}>{module}</span>,
-        filterDropdown: (<div />), 
-        filterIcon: this.renderTooltip('文案未定'),
       },
       {
-        title: 'name',
+        title: <TitleInstruction title="Name" description={intl.get('description.moduleName')} />,
         dataIndex: 'name',
-        filterDropdown: (<div />), 
-        filterIcon: this.renderTooltip('文案未定'),
       },
       {
-        title: 'type',
+        title: <TitleInstruction title="Type" description={intl.get('description.moduleType')} />,
         dataIndex: 'type',
-        filterDropdown: (<div />), 
-        filterIcon: this.renderTooltip('文案未定'),
       },
       {
-        title: 'mode',
+        title: <TitleInstruction title="Mode" description={intl.get('description.moduleMode')} />,
         dataIndex: 'mode',
-        filterDropdown: (<div />), 
-        filterIcon: this.renderTooltip('文案未定'),
       },
       {
-        title: 'value',
+        title: <TitleInstruction title="Value" description={intl.get('description.moduleValue')} />,
         dataIndex: 'value',
-        filterDropdown: (<div />), 
-        filterIcon: this.renderTooltip('文案未定'),
       }
     ];
     return (
       <div className="service-info service-configs" >
         <div className="common-header">
-          <Radio.Group buttonStyle="solid" className="service-radio" onChange={this.handleChangeModule}>
+          <Radio.Group buttonStyle="solid" className="service-radio" onChange={this.handleModuleChange}>
             <Radio.Button value="all">{intl.get('service.all')}</Radio.Button>
             <Radio.Button value="storage">Storage</Radio.Button>
             <Radio.Button value="graph">Graph</Radio.Button>

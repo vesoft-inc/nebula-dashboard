@@ -239,6 +239,8 @@ module.exports = {
             'error',
             'never'
         ],
+        "no-multi-spaces": ["error", { ignoreEOLComments: true }],
+        "comma-spacing": ["error"],
         'prefer-const': 'error',
         'prefer-object-spread': 'error',
         'radix': 'error',

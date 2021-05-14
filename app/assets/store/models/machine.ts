@@ -1,29 +1,33 @@
 import { createModel } from '@rematch/core';
 import _ from 'lodash';
 import service from '@assets/config/service';
-import { CARD_STEP } from '@assets/utils/dashboard';
+import { getProperStep } from '@assets/utils/dashboard';
 import { LINUX } from '@assets/utils/promQL';
 import { IStatRangeItem, IStatSingleItem } from '@assets/utils/interface';
 
 
 const PROMQL = LINUX;
 interface IState {
-  cpuUsage: IStatRangeItem[]
-  diskUsageRate: IStatRangeItem[]
-  memoryUsageRate: IStatRangeItem[]
-  transmitFlow: IStatRangeItem[]
-  receiveFlow: IStatRangeItem[]
+  cpuStat: IStatRangeItem[]
+  diskStat: IStatRangeItem[]
+  memoryStat: IStatRangeItem[]
+  loadStat: IStatRangeItem[]
+  networkOutStat: IStatRangeItem[]
+  networkInStat: IStatRangeItem[]
+  networkStat: IStatRangeItem[]
   memorySizeStat: IStatSingleItem[]
   diskSizeStat: IStatSingleItem[]
 }
 
 export const machine = createModel({
   state: {
-    cpuUsage: [] as IStatRangeItem[],
-    diskUsageRate: [] as IStatRangeItem[],
-    memoryUsageRate: [] as IStatRangeItem[],
-    transmitFlow: [] as IStatRangeItem[],
-    receiveFlow: [] as IStatRangeItem[],
+    cpuStat: [] as IStatRangeItem[],
+    diskStat: [] as IStatRangeItem[],
+    memoryStat: [] as IStatRangeItem[],
+    networkOutStat: [] as IStatRangeItem[],
+    networkInStat: [] as IStatRangeItem[],
+    networkStat: [] as IStatRangeItem[],
+    loadStat: [] as IStatRangeItem[],
     memorySizeStat: [] as IStatSingleItem[],
     diskSizeStat: [] as IStatSingleItem[],
   },
@@ -35,51 +39,59 @@ export const machine = createModel({
       };
     },
   },
-  effects: (dispatch: any) => ({
-    async asyncGetCPUUsageRateByRange (payload: {
+  effects: () => ({
+    async asyncGetCPUStatByRange (payload: {
       start: number,
       end: number,
+      metric: string,
     }) {
-      const { start, end } = payload;
+      const { start, end, metric } = payload;
+      const _start = Math.round(start / 1000);
+      const _end = Math.round(end / 1000);
+      const step = getProperStep(start, end);
       const { code, data } = (await service.execPromQLByRange({
-        query: PROMQL.CPU_USAGE_RATE,
-        start,
-        end,
-        step: CARD_STEP,
+        query: PROMQL[metric],
+        start: _start,
+        end: _end,
+        step,
       })) as any;
-      let cpuUsage = [];
+      let cpuStat = [];
       if (code === 0) {
-        cpuUsage = data.result;
+        cpuStat = data.result;
       }
       this.update({
-        cpuUsage,
+        cpuStat,
       });
     },
 
-    async asyncGetMemoryUsageRateByRange (payload: {
+    async asyncGetMemoryStatByRange (payload: {
       start: number,
       end: number,
+      metric: string,
     }) {
-      const { start, end } = payload;
+      const { start, end, metric } = payload;
+      const _start = Math.round(start / 1000);
+      const _end = Math.round(end / 1000);
+      const step = getProperStep(start, end);
       const { code, data } = (await service.execPromQLByRange({
-        query: PROMQL.MEMORY_USAGE_RATE,
-        start,
-        end,
-        step: CARD_STEP,
+        query: PROMQL[metric],
+        start: _start,
+        end: _end,
+        step,
       })) as any;
-      let memoryUsageRate = [];
+      let memoryStat = [];
       if (code === 0) {
-        memoryUsageRate = data.result;
+        memoryStat = data.result;
       }
 
       this.update({
-        memoryUsageRate
+        memoryStat
       });
     },
 
     async asyncGetMemorySizeStat () {
       const { code, data } = (await service.execPromQL({
-        query: PROMQL.MEMORY_SIZE
+        query: PROMQL.memory_size
       })) as any;
 
       let memorySizeStat = [];
@@ -93,30 +105,34 @@ export const machine = createModel({
       });
     },
 
-    async asyncGetDiskUsageRateByRange (payload: {
+    async asyncGetDiskStatByRange (payload: {
       start: number,
       end: number,
+      metric: string,
     }) {
-      const { start, end } = payload;
+      const { start, end, metric } = payload;
+      const _start = Math.round(start / 1000);
+      const _end = Math.round(end / 1000);
+      const step = getProperStep(start, end);
       const { code, data } = (await service.execPromQLByRange({
-        query: PROMQL.DISK_USAGE_RATE,
-        start,
-        end,
-        step: CARD_STEP,
+        query: PROMQL[metric],
+        start: _start,
+        end: _end,
+        step,
       })) as any;
-      let diskUsageRate = [];
+      let diskStat = [];
       if (code === 0) {
-        diskUsageRate = data.result;
+        diskStat = data.result;
       }
 
       this.update({
-        diskUsageRate
+        diskStat
       });
     },
 
     async asyncGetDiskSizeStat () {
       const { code, data } = (await service.execPromQL({
-        query: PROMQL.DISK_SIZE,
+        query: PROMQL.disk_size,
       })) as any;
       let diskSizeStat = [];
       if (code === 0) {
@@ -127,58 +143,70 @@ export const machine = createModel({
       });
     },
 
-    async asyncGetFlowByRange (payload: {
+    async asyncGetLoadByRange (payload: {
       start: number,
       end: number,
+      metric: string,
     }) {
-      dispatch.machine._asyncGetReceiveFlowByRange(payload);
-      dispatch.machine._asyncGetTransmitFlowByRange(payload);
-    },
-
-    async _asyncGetReceiveFlowByRange (payload: {
-      start: number,
-      end: number,
-    }) {
-      const { start, end } = payload;
+      const { start, end, metric } = payload;
+      const _start = Math.round(start / 1000);
+      const _end = Math.round(end / 1000);
+      const step = getProperStep(start, end);
       const { code, data } = (await service.execPromQLByRange({
-        query: PROMQL.NETWORK_FLOW_DOWN,
-        start,
-        end,
-        step: CARD_STEP
+        query: PROMQL[metric],
+        start: _start,
+        end: _end,
+        step,
       })) as any;
 
-      let receiveFlow = [];
-
+      let loadStat = [];
       if (code === 0) {
-        receiveFlow = data.result;
+        loadStat = data.result;
       }
-
       this.update({
-        receiveFlow,
+        loadStat,
       });
     },
 
-    async _asyncGetTransmitFlowByRange (payload: {
+    async asyncGetNetworkStatByRange (payload: {
       start: number,
       end: number,
+      metric: string,
+      inOrOut?: string,
     }) {
-      const { start, end } = payload;
+      const { start, end, metric, inOrOut } = payload;
+      const _start = Math.round(start / 1000);
+      const _end = Math.round(end / 1000);
+      const step = getProperStep(start, end);
       const { code, data } = (await service.execPromQLByRange({
-        query: PROMQL.NETWORK_FLOW_UP,
-        start,
-        end,
-        step: CARD_STEP
+        query: PROMQL[metric],
+        start: _start,
+        end: _end,
+        step,
       })) as any;
 
-      let transmitFlow = [];
+      let networkStat = [];
 
       if (code === 0) {
-        transmitFlow = data.result;
+        networkStat = data.result;
       }
 
-      this.update({
-        transmitFlow,
-      });
+      switch(inOrOut) {
+        case 'in':
+          this.update({
+            networkInStat: networkStat,
+          });
+          break;
+        case 'out':
+          this.update({
+            networkOutStat: networkStat,
+          });
+          break;
+        default:
+          this.update({
+            networkStat,
+          });
+      }
     }
   }),
 });

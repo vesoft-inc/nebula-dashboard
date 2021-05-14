@@ -1,4 +1,4 @@
-import { Select, Spin, Table } from 'antd';
+import { Spin, Table } from 'antd';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { IDispatch, IRootState } from '@assets/store';
@@ -6,11 +6,11 @@ import { connect } from 'react-redux';
 import PieChart from '@assets/components/Charts/PieChart';
 import { Chart } from '@antv/g2';
 import { groupBy, round, sum } from 'lodash';
-import { renderPieChartTpl } from '@assets/utils/chart';
+import { renderPieChartTpl } from '@assets/utils/chart/chart';
+import { DashboardSelect, Option } from '@assets/components/DashboardSelect';
 
 import './index.less';
 
-const { Option } = Select;
 
 const mapDispatch = (dispatch: IDispatch) => {
   return {
@@ -26,7 +26,9 @@ const mapState = (state: IRootState) => ({
 });
 
 interface IProps extends ReturnType<typeof mapState>,
-  ReturnType<typeof mapDispatch>{}
+  ReturnType<typeof mapDispatch> {
+    
+}
 
 interface IState {
   currentSpace: string,
@@ -97,7 +99,7 @@ class PartitionDistribution extends React.Component<IProps, IState> {
     const columns = [{
       title: intl.get('common.service'),
       dataIndex: 'name',
-    },{
+    }, {
       title: intl.get('service.partitionNum'),
       dataIndex: 'count',
     }];
@@ -111,15 +113,15 @@ class PartitionDistribution extends React.Component<IProps, IState> {
             <span>{currentSpace} Partition {intl.get('service.distribution')}</span>
             <div className="select-space">
               <span>Space:</span>
-              <Select value={currentSpace} onChange={this.handleSpaceChange}>
+              <DashboardSelect value={currentSpace} onChange={this.handleSpaceChange}>
                 {spaces.map((space:any) => {
                   return <Option value={space.Name} key={space.Name}>{space.Name}</Option>;
                 })}
-              </Select>
+              </DashboardSelect>
             </div>
           </div>
           <div className="leader-content">
-            <PieChart options={{ height: 286 }}  renderChart={this.renderChart} />
+            <PieChart options={{ height: 286 }} renderChart={this.renderChart} />
             <Table
               className="leader-table"
               columns={columns} 

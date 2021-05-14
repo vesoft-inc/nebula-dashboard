@@ -3,7 +3,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import { IDispatch, IRootState } from '@assets/store';
 import { Chart } from '@antv/g2';
-import { renderPieChartTpl } from '@assets/utils/chart';
+import { renderPieChartTpl } from '@assets/utils/chart/chart';
 import { connect } from 'react-redux';
 import PieChart from '@assets/components/Charts/PieChart';
 import { last, round } from 'lodash';
@@ -80,10 +80,10 @@ class LeaderDistribution extends React.Component<IProps, IState> {
     const columns = [{
       title: intl.get('common.service'),
       dataIndex: 'name',
-    },{
+    }, {
       title: intl.get('service.leaderNumber'),
       dataIndex: 'count',
-    },{
+    }, {
       title: intl.get('service.leaderDistribute'),
       dataIndex: 'distribution',
     }];

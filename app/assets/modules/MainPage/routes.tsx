@@ -1,9 +1,10 @@
 import { lazy } from 'react';
 import intl from 'react-intl-universal';
+import LoadDetail from '../MachineDashboard/Detail/LoadDetail';
 
 const MachineDashboard = lazy(() => import('@assets/modules/MachineDashboard'));
-const ServiceOverview = lazy(() => import('@assets/modules/ServiceOverview'));
-const QPSMetrics = lazy(() => import('@assets/modules/QPSMetrics'));
+const ServiceDashboard = lazy(() => import('@assets/modules/ServiceDashboard'));
+const ServiceMetrics = lazy(() => import('@assets/modules/ServiceMetrics'));
 const VersionStatistic = lazy(() => import('@assets/modules/VersionStatistic'));
 const LeaderDistribution = lazy(() => import('@assets/modules/LeaderDistribution'));
 const PartitionDistribution = lazy(() => import('@assets/modules/PartitionDistribution'));
@@ -14,197 +15,247 @@ const Snapshot = lazy(() => import('@assets/modules/ServiceManage/Snapshot'));
 const LongTermTask = lazy(() => import('@assets/modules/ServiceManage/LongTermTask'));
 const CPUDetail = lazy(() => import('@assets/modules/MachineDashboard/Detail/CPUDetail'));
 const DiskDetail = lazy(() => import('@assets/modules/MachineDashboard/Detail/DiskDetail'));
-const FlowDetail = lazy(() => import('@assets/modules/MachineDashboard/Detail/FlowDetail'));
+const NetworkDetail = lazy(() => import('@assets/modules/MachineDashboard/Detail/NetworkDetail'));
 const MemoryDetail = lazy(() => import('@assets/modules/MachineDashboard/Detail/MemoryDetail'));
 
-export const MenuList = [{
-  key: 'dashboard',
-  title: intl.get('common.dashboard'),
-  icon: '#iconnav-dashboard',
-  children: [{
-    key: 'machine-dashboard',
-    title: intl.get('common.machine'),
+export const MenuList = [
+  {
+    key: 'machine',
+    title: intl.get('device.title'),
     icon: '#iconnav-machine',
-    path: '/machine-dashboard'
-  },{
-    key: 'service-dashboard',
+    children: [
+      {
+        key: 'machine-overview',
+        title: intl.get('device.overview'),
+        icon: '#iconnav-dashboard',
+        path: '/machine/overview',
+      },
+      {
+        key: 'cpu',
+        title: intl.get('device.cpu'),
+        icon: '#iconnav-cpu',
+        path: '/machine/cpu',
+      },
+      {
+        key: 'memory',
+        title: intl.get('device.memory'),
+        icon: '#iconnav-ram',
+        path: '/machine/memory',
+      },
+      {
+        key: 'load',
+        title: intl.get('device.load'),
+        icon: '#iconnav-load',
+        path: '/machine/load',
+      },
+      {
+        key: 'disk',
+        title: intl.get('device.disk'),
+        icon: '#iconnav-disk',
+        path: '/machine/disk',
+      },
+      {
+        key: 'networkIn',
+        title: intl.get('device.networkIn'),
+        icon: '#iconnav-net',
+        path: '/machine/network',
+      }
+    ]
+  },
+  {
+    key: 'service',
     title: intl.get('common.service'),
     icon: '#iconnav-service',
-    path: '/service-dashboard'
-  }]
-},{
-  key: 'serviceManagement',
-  title: intl.get('common.serviceManagement'),
-  icon: '#iconnav-serverControl',
-  children: [{
-    key: 'service-info',
-    title: intl.get('common.serviceInfo'),
-    icon: '#iconnav-serverInfo',
-    path: '/service-info'
-  },{
-    key: 'partition-info',
-    title: intl.get('common.partitionInfo'),
-    icon: '#iconnav-partitionInfo',
-    path: '/partition-info'
-  },{
-    key: 'config-info',
-    title: intl.get('common.config'),
-    icon: '#iconnav-configuration',
-    path: '/config-info'
-  },{
-    key: 'snapshot',
-    title: intl.get('common.snapshot'),
-    icon: '#iconnav-snapshot',
-    path: '/snapshot'
-  },{
-    key: 'long-term-task',
-    title: intl.get('common.longTermTask'),
-    icon: '#iconnav-timeConsuming',
-    path: '/long-term-task'
-  }]
-}];
+    children: [{
+      key: 'service-overview',
+      title: intl.get('device.overview'),
+      icon: '#iconnav-serverdashboard',
+      path: '/service/overview'
+    }, {
+      key: 'graph-metrics',
+      title: 'Graph',
+      icon: '#iconnav-graph',
+      path: '/service/graph-metrics'
+    }, {
+      key: 'meta-metrics',
+      title: 'Meta',
+      icon: '#iconnav-meta',
+      path: '/service/meta-metrics'
+    }, {
+      key: 'storage-metrics',
+      title: 'Storage',
+      icon: '#iconnav-storage',
+      path: '/service/storage-metrics'
+    }]
+  },
+  {
+    key: 'management',
+    title: intl.get('common.serviceManagement'),
+    icon: '#iconnav-serverControl',
+    children: [{
+      key: 'service-info',
+      title: intl.get('common.serviceInfo'),
+      icon: '#iconnav-serverInfo',
+      path: '/management/service-info'
+    }, {
+      key: 'partition-info',
+      title: intl.get('common.partitionInfo'),
+      icon: '#iconnav-partitionInfo',
+      path: '/management/partition-info'
+    }, {
+      key: 'config-info',
+      title: intl.get('common.config'),
+      icon: '#iconnav-configuration',
+      path: '/management/config-info'
+    }, {
+      key: 'snapshot',
+      title: intl.get('common.snapshot'),
+      icon: '#iconnav-snapshot',
+      path: '/management/snapshot'
+    }, {
+      key: 'long-term-task',
+      title: intl.get('common.longTermTask'),
+      icon: '#iconnav-timeConsuming',
+      path: '/management/long-term-task'
+    }]
+  }];
 
-const MACHINE_VIEWS = [{
-  label: '机器概况',
-  value: '/machine-dashboard'
-},{
-  label: 'CPU详情',
-  value: '/machine-dashboard/cpu'
-},{
-  label: '磁盘详情',
-  value: '/machine-dashboard/disk'
-},{
-  label: '内存详情',
-  value: '/machine-dashboard/memory'
-},{
-  label: '流量详情',
-  value: '/machine-dashboard/flow'
-}];
 
 const SERVICE_VIEWS = [{
-  label: '服务概况',
-  value: '/service-dashboard'
-},{
-  label: '时序指标',
-  value: '/service-dashboard/qps-metrics'
-},{
-  label: '版本详情',
-  value: '/service-dashboard/version-statistics'
-},{
-  label: 'Leader分布',
-  value: '/service-dashboard/leader-distribution'
-},{
-  label: 'Partition分布',
-  value: '/service-dashboard/partition-distribution'
+  label: intl.get('common.overview'),
+  value: '/service/overview'
+}, {
+  label: intl.get('common.version'),
+  value: '/service/version-statistics'
+}, {
+  label: 'Leader',
+  value: '/service/leader-distribution'
+}, {
+  label: 'Partition',
+  value: '/service/partition-distribution'
 }];
 
 export const RoutesList = [
   {
-    path: '/machine-dashboard',
+    path: '/machine/overview',
     component: MachineDashboard,
     exact: true,
     headerConfig: {
       breadcrumb: [{
         path: '#',
         breadcrumbName: intl.get('common.dashboard'),
-      },{
-        path: '/machine-dashboard',
+      }, {
+        path: '/machine',
         breadcrumbName: intl.get('common.machine'),
       }],
       title: intl.get('common.machine'),
-      extra: MACHINE_VIEWS
     }
   },
   {
-    path: '/machine-dashboard/cpu',
+    path: '/machine/cpu',
     component: CPUDetail,
     exact: true,
     headerConfig: {
       breadcrumb: [{
         path: '#',
         breadcrumbName: intl.get('common.dashboard'),
-      },{
-        path: '/machine-dashboard',
+      }, {
+        path: '/machine',
         breadcrumbName: intl.get('common.machine'),
-      },{
-        path: '/machine-dashboard/cpu',
+      }, {
+        path: '/machine/cpu',
         breadcrumbName: 'CPU Detail',
       }],
       showBackBtn: true,
       title: 'CPU Detail',
-      extra: MACHINE_VIEWS
     }
   },
   {
-    path: '/machine-dashboard/disk',
+    path: '/machine/disk',
     component: DiskDetail,
     exact: true,
     headerConfig: {
       breadcrumb: [{
         path: '#',
         breadcrumbName: intl.get('common.dashboard'),
-      },{
-        path: '/machine-dashboard',
+      }, {
+        path: '/machine',
         breadcrumbName: intl.get('common.machine'),
-      },{
-        path: '/machine-dashboard/disk',
+      }, {
+        path: '/machine/disk',
         breadcrumbName: 'Disk Detail',
       }],
       showBackBtn: true,
       title: 'Disk Detail',
-      extra: MACHINE_VIEWS
     }
   },
   {
-    path: '/machine-dashboard/memory',
+    path: '/machine/memory',
     component: MemoryDetail,
     exact: true,
     headerConfig: {
       breadcrumb: [{
         path: '#',
         breadcrumbName: intl.get('common.dashboard'),
-      },{
-        path: '/machine-dashboard',
+      }, {
+        path: '/machine',
         breadcrumbName: intl.get('common.machine'),
-      },{
-        path: '/machine-dashboard/memory',
+      }, {
+        path: '/machine/memory',
         breadcrumbName: 'Memory Detail',
       }],
       showBackBtn: true,
       title: 'Memory Detail',
-      extra: MACHINE_VIEWS
     }
   },
   {
-    path: '/machine-dashboard/flow',
-    component: FlowDetail,
+    path: '/machine/load',
+    component: LoadDetail,
     exact: true,
     headerConfig: {
       breadcrumb: [{
         path: '#',
         breadcrumbName: intl.get('common.dashboard'),
-      },{
-        path: '/machine-dashboard',
+      }, {
+        path: '/machine',
         breadcrumbName: intl.get('common.machine'),
-      },{
-        path: '/machine-dashboard/flow',
-        breadcrumbName: 'Flow Detail',
+      }, {
+        path: '/machine/load',
+        breadcrumbName: 'Load Detail',
       }],
       showBackBtn: true,
-      title: 'Flow Detail',
-      extra: MACHINE_VIEWS
+      title: 'Load Detail',
     }
   },
   {
-    path: '/service-dashboard',
-    component: ServiceOverview,
+    path: '/machine/network',
+    component: NetworkDetail,
     exact: true,
     headerConfig: {
       breadcrumb: [{
         path: '#',
         breadcrumbName: intl.get('common.dashboard'),
-      },{
-        path: '/service-dashboard',
+      }, {
+        path: '/machine',
+        breadcrumbName: intl.get('common.machine'),
+      }, {
+        path: '/machine/network',
+        breadcrumbName: 'Network Detail',
+      }],
+      showBackBtn: true,
+      title: 'Network Detail',
+    }
+  },
+  {
+    path: '/service/overview',
+    component: ServiceDashboard,
+    exact: true,
+    headerConfig: {
+      breadcrumb: [{
+        path: '#',
+        breadcrumbName: intl.get('common.dashboard'),
+      }, {
+        path: '/service/overview',
         breadcrumbName: intl.get('common.service'),
       }],
       title: intl.get('common.service'),
@@ -212,155 +263,195 @@ export const RoutesList = [
     }
   },
   {
-    path: '/service-dashboard/qps-metrics',
-    component: QPSMetrics,
+    path: '/service/graph-metrics',
+    component: ServiceMetrics,
     exact: true,
     headerConfig: {
       breadcrumb: [{
         path: '#',
         breadcrumbName: intl.get('common.dashboard'),
-      },{
-        path: '/service-dashboard',
+      }, {
+        path: '/service/overview',
         breadcrumbName: intl.get('common.service'),
-      },{
-        path: '/service-dashboard/qps-metrics',
-        breadcrumbName: '服务指标详情',
+      }, {
+        path: '/service/graph-metrics',
+        breadcrumbName: 'Graph',
       }],
-      title: '服务指标详情',
+      title: 'Graph',
       showBackBtn: true,
       extra: SERVICE_VIEWS
     }
   },
   {
-    path: '/service-dashboard/version-statistics',
+    path: '/service/meta-metrics',
+    component: ServiceMetrics,
+    exact: true,
+    headerConfig: {
+      breadcrumb: [{
+        path: '#',
+        breadcrumbName: intl.get('common.dashboard'),
+      }, {
+        path: '/service/overview',
+        breadcrumbName: intl.get('common.service'),
+      }, {
+        path: '/service/meta-metrics',
+        breadcrumbName: 'Meta',
+      }],
+      title: 'Meta',
+      showBackBtn: true,
+      extra: SERVICE_VIEWS
+    }
+  },
+  {
+    path: '/service/storage-metrics',
+    component: ServiceMetrics,
+    exact: true,
+    headerConfig: {
+      breadcrumb: [{
+        path: '#',
+        breadcrumbName: intl.get('common.dashboard'),
+      }, {
+        path: '/service/overview',
+        breadcrumbName: intl.get('common.service'),
+      }, {
+        path: '/service/storage-metrics',
+        breadcrumbName: 'Storage',
+      }],
+      title: 'Storage',
+      showBackBtn: true,
+      extra: SERVICE_VIEWS
+    }
+  },
+  {
+    path: '/service/version-statistics',
     component: VersionStatistic,
     exact: true,
     headerConfig: {
       breadcrumb: [{
         path: '#',
         breadcrumbName: intl.get('common.dashboard'),
-      },{
-        path: '/service-dashboard',
+      }, {
+        path: '/service/overview',
         breadcrumbName: intl.get('common.service'),
-      },{
-        path: '/service-dashboard/version-statistics',
-        breadcrumbName: '服务指标详情',
+      }, {
+        path: '/service/version-statistics',
+        breadcrumbName: intl.get('service.serviceMetricsDetails'),
       }],
-      title: '服务指标详情',
+      title: intl.get('service.serviceMetricsDetails'),
       showBackBtn: true,
       extra: SERVICE_VIEWS
     }
   },
   {
-    path: '/service-dashboard/leader-distribution',
+    path: '/service/leader-distribution',
     component: LeaderDistribution,
     exact: true,
     headerConfig: {
       breadcrumb: [{
         path: '#',
         breadcrumbName: intl.get('common.dashboard'),
-      },{
-        path: '/service-dashboard',
+      }, {
+        path: '/service/overview',
         breadcrumbName: intl.get('common.service'),
-      },{
-        path: '/service-dashboard/leader-distribution',
-        breadcrumbName: '服务指标详情',
+      }, {
+        path: '/service/leader-distribution',
+        breadcrumbName: intl.get('service.serviceMetricsDetails'),
       }],
-      title: '服务指标详情',
+      title: intl.get('service.serviceMetricsDetails'),
       showBackBtn: true,
       extra: SERVICE_VIEWS
     }
   },
   {
-    path: '/service-dashboard/partition-distribution',
+    path: '/service/partition-distribution',
     component: PartitionDistribution,
     exact: true,
     headerConfig: {
       breadcrumb: [{
         path: '#',
         breadcrumbName: intl.get('common.dashboard'),
-      },{
-        path: '/service-dashboard',
+      }, {
+        path: '/service/overview',
         breadcrumbName: intl.get('common.service'),
-      },{
-        path: '/service-dashboard/partition-distribution',
-        breadcrumbName: '服务指标详情',
+      }, {
+        path: '/service/partition-distribution',
+        breadcrumbName: intl.get('service.serviceMetricsDetails'),
       }],
-      title: '服务指标详情',
+      title: intl.get('service.serviceMetricsDetails'),
       showBackBtn: true,
       extra: SERVICE_VIEWS
     }
   },
   {
-    path: '/service-info',
+    path: '/management/service-info',
     component: ServiceInfo,
     exact: true,
     headerConfig: {
       breadcrumb: [{
         path: '#',
         breadcrumbName: intl.get('common.serviceManagement'),
-      },{
-        path: '/service-info',
+      }, {
+        path: '/management/service-info',
         breadcrumbName: intl.get('common.serviceInfo'),
       }],
       title: intl.get('common.serviceInfo'),
     }
   },
   {
-    path: '/partition-info',
+    path: '/management/partition-info',
     component: PartitionInfo,
     exact: true,
     headerConfig: {
       breadcrumb: [{
         path: '#',
         breadcrumbName: intl.get('common.serviceManagement'),
-      },{
-        path: '/partition-info',
+      }, {
+        path: '/management/partition-info',
         breadcrumbName: intl.get('common.partitionInfo'),
       }],
       title: intl.get('common.partitionInfo'),
     }
   },
   {
-    path: '/config-info',
+    path: '/management/config-info',
     component: ConfigInfo,
     exact: true,
     headerConfig: {
       breadcrumb: [{
         path: '#',
         breadcrumbName: intl.get('common.serviceManagement'),
-      },{
-        path: '/config-info',
+      }, {
+        path: '/management/config-info',
         breadcrumbName: intl.get('common.config'),
       }],
       title: intl.get('common.config'),
     }
   },
   {
-    path: '/snapshot',
+    path: '/management/snapshot',
     component: Snapshot,
     exact: true,
     headerConfig: {
       breadcrumb: [{
         path: '#',
         breadcrumbName: intl.get('common.serviceManagement'),
-      },{
-        path: '/snapshot',
+      }, {
+        path: '/management/snapshot',
         breadcrumbName: intl.get('common.snapshot'),
       }],
       title: intl.get('common.snapshot'),
     }
   },
   {
-    path: '/long-term-task',
+    path: '/management/long-term-task',
     component: LongTermTask,
     exact: true,
     headerConfig: {
       breadcrumb: [{
         path: '#',
         breadcrumbName: intl.get('common.serviceManagement'),
-      },{
-        path: '/long-term-task',
+      }, {
+        path: '/management/long-term-task',
         breadcrumbName: intl.get('common.longTermTask'),
       }],
       title: intl.get('common.longTermTask'),

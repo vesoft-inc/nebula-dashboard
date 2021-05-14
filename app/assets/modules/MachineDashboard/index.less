@@ -1,35 +1,18 @@
 .machine-dashboard {
-	padding: 0 10px 20px 20px;
 	height: 100%;
 	overflow-y: auto;
+	display: flex;
+	flex-direction: column;
 
-	.dashboard-card {
-		min-height: 200px;
-		margin: 10px 10px 0 0;
+	> .ant-row {
+		flex: 1;
+
+		.dashboard-card {
+			height: 100%;
+
+			.nebula-chart-line {
+				height: 100%;
+			}
+		}
 	}
-}
-
-.average-card {
-	position: relative;
-
-	> .nebula-chart-area {
-		position: absolute;
-		width: 100%;
-		top: 0;
-		left: 0;
-		bottom: 0;
-		right: 0;
-	}
-
-	> .nebula-chart-gauge {
-		position: relative;
-		z-index: 100;
-	}
-}
-
-.detail-card {
-	min-height: 300px;
-	max-height: 500px;
-	padding: 0 17px 20px;
-	overflow: auto;
 }

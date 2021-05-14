@@ -1,10 +1,10 @@
 import _ from 'lodash';
 import React from 'react';
-import { Table,Tooltip } from 'antd';
+import { Table } from 'antd';
 import { connect } from 'react-redux';
-import Icon from '@assets/components/Icon';
 import { IDispatch, IRootState } from '@assets/store';
-
+import intl from 'react-intl-universal';
+import { TitleInstruction } from '@assets/components/Instruction';
 import './index.less';
 
 const mapState = (state: IRootState) => ({
@@ -25,51 +25,35 @@ class LongTermTask extends React.Component<IProps> {
     this.props.asyncGetJobs();
   }
 
-  renderTooltip= text => {
-    return <Tooltip placement="top" title={text} > 
-      <Icon icon="#iconhelp"/>
-    </Tooltip>;
-  }
-
   renderTime= time => {
     return <span>{time.year/time.month/time.day}{time.hour}:{time.minute}:{time.sec}</span>;
   }
 
   render () {
-    const { jobs,loading } = this.props;
+    const { jobs, loading } = this.props;
     const columns =[
       {
-        title: 'Job ID',
+        title: <TitleInstruction title="Job ID" description={intl.get('description.jobId')} />,
         dataIndex: 'Job Id',
-        filterDropdown: (<div />), 
-        filterIcon: this.renderTooltip('文案未定'),
       },
       {
-        title: 'Command',
+        title: <TitleInstruction title="Command" description={intl.get('description.command')} />,
         dataIndex: 'Command',
-        filterDropdown: (<div />), 
-        filterIcon: this.renderTooltip('文案未定'),
       },
       {
-        title: 'Status',
+        title: <TitleInstruction title="Status" description={intl.get('description.longTermStatus')} />,
         dataIndex: 'Status',
         render: status => <span className={`${status.toLowerCase()}`}>{status}</span>,
-        filterDropdown: (<div />), 
-        filterIcon: this.renderTooltip('文案未定'),
       },
       {
-        title: 'Start Time',
+        title: <TitleInstruction title="Start Time" description={intl.get('description.longTermStartTime')} />,
         dataIndex: 'Start Time',
         render: time => this.renderTime(time),
-        filterDropdown: (<div />), 
-        filterIcon: this.renderTooltip('文案未定'),
       },
       {
-        title: 'Stop Time',
+        title: <TitleInstruction title="Stop Time" description={intl.get('description.longTermStopTime')} />,
         dataIndex: 'Stop Time',
         render: time => this.renderTime(time),
-        filterDropdown: (<div />), 
-        filterIcon: this.renderTooltip('文案未定'),
       },
     ];
     return (

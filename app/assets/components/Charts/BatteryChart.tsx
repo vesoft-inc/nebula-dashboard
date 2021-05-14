@@ -1,8 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import './BatteryChart.less';
-import { getDiskProperSize } from '@assets/utils/dashboard';
-
+import { getProperByteDesc } from '@assets/utils/dashboard';
 interface IBatteryProps {
   type: string;
   size: number;
@@ -20,19 +19,20 @@ const getBatteryColor = (percent) => {
 };
 
 const Battery = (props:IBatteryProps) => {
-  const { type, value, size: bytes } = props;
-  const used = getDiskProperSize(bytes / 100 * value);
-  const size = getDiskProperSize(bytes);
-  const n = Math.floor(value / 10);
-  const m = value - n * 10;
-  const color = getBatteryColor(value);
-  const _value = value < 1 ? Number(value.toFixed(2)) : Math.round(value);
+  const { type, value, size } = props;
+  const percent = value / size * 100;
+  const n = Math.floor(percent / 10);
+  const m = percent - n * 10;
+  const color = getBatteryColor(percent);
+  const _percent = percent < 1 ? Number(percent.toFixed(2)) : Math.round(percent);
+  const { desc: valueDesc } = getProperByteDesc(value);
+  const { desc: sizeDesc } = getProperByteDesc(size);
 
   return <div className="nebula-battery">
     <div className="wrap">
       <p className="description">
         <span>{type}</span>
-        <span>{used} /{size}</span>
+        <span>{valueDesc}/{sizeDesc}</span>
       </p>
       <div className="battery">
         {
@@ -45,7 +45,7 @@ const Battery = (props:IBatteryProps) => {
       </div>
     </div>
     <p>
-      {_value}%
+      {_percent}%
     </p>
   </div>;
 };

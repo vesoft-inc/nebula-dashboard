@@ -1,4 +1,4 @@
-import { PageHeader, Select } from 'antd';
+import { PageHeader, Radio } from 'antd';
 import React from 'react';
 import Icon from '@assets/components/Icon';
 import {
@@ -7,7 +7,6 @@ import {
   withRouter,
 } from 'react-router-dom';
 import './index.less';
-const { Option } = Select;
 
 interface IProps extends RouteComponentProps {
   config: {
@@ -32,8 +31,8 @@ class Header extends React.PureComponent<IProps, IState> {
     };
   }
 
-  handleClick = (value) => {
-    this.props.history.push(value);
+  handlePageView = (e) => {
+    this.props.history.push(e.target.value);
   }
 
   handleBack = () => {
@@ -52,7 +51,8 @@ class Header extends React.PureComponent<IProps, IState> {
         <Link to={route.path}>{route.breadcrumbName}</Link>
       );
     };
-    const currentPage = extra ? extra.filter(item => item.value === this.props.location.pathname) : null;
+    const { pathname, search } =this.props.location;
+    const currentPage = extra ? extra.filter(item => item.value === pathname+search) : null;
     return (
       <PageHeader
         className="page-header"
@@ -61,12 +61,13 @@ class Header extends React.PureComponent<IProps, IState> {
           <span>{title}</span>
         </>}
         breadcrumb={{ itemRender, routes }}
-        extra={extra ? <div className="view-info">
-          <span>查看信息:</span>
-          <Select defaultValue={currentPage[0].value} style={{ width: 120 }} onChange={this.handleClick}>
-            {extra.map(item => <Option value={item.value} key={item.value}>{item.label}</Option>)}
-          </Select>
-        </div> : null}
+        extra={extra&&currentPage.length !==0 ? <Radio.Group
+          options={extra}
+          onChange={this.handlePageView}
+          value={currentPage[0].value}
+          optionType="button"
+          buttonStyle="solid"
+        /> : null}
       />
     );
   }

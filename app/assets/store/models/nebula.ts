@@ -37,7 +37,7 @@ export const nebula = createModel({
       })) as any;
       if (code === 0) {
         this.update({
-          configs: data.tables ?  data.tables : [],
+          configs: data.tables ? data.tables : [],
         });
       }
     },
@@ -48,7 +48,7 @@ export const nebula = createModel({
       })) as any;
       if (code === 0) {
         this.update({
-          snapshots: data.tables ?  data.tables : [],
+          snapshots: data.tables ? data.tables : [],
         });
       }
     },
@@ -70,7 +70,7 @@ export const nebula = createModel({
       })) as any;
       if (code === 0 && data.tables) {
         this.update({
-          spaces: data.tables ?  data.tables : [],
+          spaces: data.tables ? data.tables : [],
         });
       }
     },
@@ -130,6 +130,5 @@ export const nebula = createModel({
         version: item['Git Info Sha']
       }));
     },
-
   }),
 });

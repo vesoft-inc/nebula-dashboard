@@ -1,9 +1,10 @@
 import _ from 'lodash';
 import React from 'react';
-import { Table,Tooltip } from 'antd';
-import Icon from '@assets/components/Icon';
+import { Table } from 'antd';
 import { IDispatch, IRootState } from '@assets/store';
 import { connect } from 'react-redux';
+import intl from 'react-intl-universal';
+import { TitleInstruction } from '@assets/components/Instruction';
 
 import './index.less';
 
@@ -25,35 +26,23 @@ class Snapshot extends React.Component<IProps> {
     this.props.asyncGetSnapshots();
   }
 
-  renderTooltip=text => {
-    return <Tooltip placement="top" title={text} > 
-      <Icon icon="#iconhelp"/>
-    </Tooltip>;
-  }
-
   render () {
-    const { snapshots,loading } = this.props;
+    const { snapshots, loading } = this.props;
     const columns =[
       {
-        title: 'Name',
+        title: <TitleInstruction title="Name" description={intl.get('description.snapshotName')} />,
         dataIndex: 'Name',
         width:'30%',
-        filterDropdown: (<div />), 
-        filterIcon: this.renderTooltip('文案未定'),
       },
       {
-        title: 'Status',
+        title: <TitleInstruction title="Status" description={intl.get('description.snapshotStatus')} />,
         dataIndex: 'Status',
         width:'30%',
         render: status => <span className={`${status.toLowerCase()}`}>{status}</span>,
-        filterDropdown: (<div />), 
-        filterIcon: this.renderTooltip('文案未定'),
       },
       {
-        title: 'Hosts',
+        title: <TitleInstruction title="Hosts" description={intl.get('description.snapshotHosts')} />,
         dataIndex: 'Hosts',
-        filterDropdown: (<div />), 
-        filterIcon: this.renderTooltip('文案未定'),
       },
     ];
     return (

@@ -40,7 +40,7 @@ class ConfigServerForm extends React.Component<IProps> {
   onConfig = async (values: any) => {
     const ok = await this.props.asyncLogin(values);
     if (ok) {
-      this.props.history.push('/machine-dashboard');
+      this.props.history.push('/machine/overview');
     }
   };
   render (){

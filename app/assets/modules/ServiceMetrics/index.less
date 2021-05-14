@@ -1,0 +1,47 @@
+.service-metrics {
+	background-color: #fff;
+	height: 100%;
+
+	.common-header {
+		span {
+			text-transform: capitalize;
+		}
+	}
+
+	.container {
+		padding: 19px 30px;
+		height: calc(100% - 75px);
+		display: flex;
+		flex-direction: column;
+
+		.metrics-params-form {
+			>.ant-row:first-child {
+				justify-content: space-between;
+			}
+
+			.row-left {
+				display: flex;
+			}
+
+			.status-panel {
+				padding-left: 10px;
+			}
+
+			.metric-filter > .ant-form-item:not(:first-child) {
+				padding-left: 15px;
+			}
+		}
+
+		.nebula-chart {
+			flex: 1;
+
+			.ant-spin-container {
+				height: 100%;
+
+				.nebula-chart-line {
+					height: 100%;
+				}
+			}
+		}
+	}
+}

@@ -79,7 +79,8 @@ class MainPage extends React.Component<IProps, IState> {
   render () {
     const { collapsed } = this.state;
     const { appVersion } = this.props;
-    const activeMenu = this.props.location.pathname.split('/')[1] || '';
+    const [, activeOpenSubMenu, activeMenu] = this.props.location.pathname.split('/');
+    const activeKey = activeMenu === 'overview' ? `${activeOpenSubMenu}-${activeMenu}` : activeMenu;
     return (
       <Layout className="nebula-stat">
         <Sider className="nebula-sider" trigger={null} 
@@ -95,8 +96,8 @@ class MainPage extends React.Component<IProps, IState> {
             theme="dark"
             mode="inline" 
             inlineIndent={20}
-            defaultOpenKeys={['dashboard', 'serviceManagement']}
-            selectedKeys={[activeMenu]}>
+            defaultOpenKeys={MenuList.map(item => item.key)}
+            defaultSelectedKeys={[activeKey]}>
             {this.renderMenu(MenuList)}
           </Menu>
           <div className="sidebar-footer">
@@ -124,7 +125,7 @@ class MainPage extends React.Component<IProps, IState> {
                 </Content>
               </>;
             }} key={route.path} exact={route.exact} />)}
-            <Redirect from="/*" to="/machine-dashboard" />
+            <Redirect from="/*" to="/machine/overview" />
           </Switch>
         </Layout>
       </Layout>

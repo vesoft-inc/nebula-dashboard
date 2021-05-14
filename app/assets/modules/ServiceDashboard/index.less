@@ -1,0 +1,37 @@
+.service-table {
+	height: 100%;
+	overflow-y: auto;
+	display: flex;
+	flex-direction: column;
+
+	> .service-table-item {
+		flex: 1;
+		background: #fff;
+		margin-bottom: 30px;
+		border: 1px solid #dcdcdc;
+
+		> .ant-row {
+			height: calc(100% - 50px);
+			background: #fff;
+
+			> .ant-col {
+				padding: 10px;
+
+				.dashboard-card {
+					height: 100%;
+					border: 1px solid #dcdcdc;
+					padding: 0;
+
+					.nebula-chart-line {
+						height: 100%;
+						min-height: 200px;
+					}
+				}
+			}
+		}
+
+		> .ant-row + .ant-row {
+			margin-top: 10px;
+		}
+	}
+}
