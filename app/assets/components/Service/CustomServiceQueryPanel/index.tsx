@@ -2,8 +2,8 @@ import React from 'react';
 import Icon from '@assets/components/Icon';
 import intl from 'react-intl-universal';
 import { IServicePanelConfig, IStatRangeItem } from '@assets/utils/interface';
-import { DETAIL_DEFAULT_RANGE, getDataByType } from '@assets/utils/dashboard';
-import { SERVICE_POLLING_INTERVAL } from '@assets/utils/service';
+import { getDataByType } from '@assets/utils/dashboard';
+import { SERVICE_DEFAULT_RANGE, SERVICE_POLLING_INTERVAL } from '@assets/utils/service';
 import Card from '@assets/components/Service/ServiceCard/Card';
 import { IDispatch, IRootState } from '@assets/store';
 import { connect } from 'react-redux';
@@ -19,7 +19,8 @@ const mapDispatch = (dispatch: IDispatch) => {
 
 const mapState = (state: IRootState) => {
   return {
-    servicePanelConfig: state.service.servicePanelConfig
+    servicePanelConfig: state.service.servicePanelConfig,
+    aliasConfig: state.app.aliasConfig,
   };
 };
 
@@ -71,7 +72,7 @@ class CustomServiceQueryPanel extends React.PureComponent<IProps, IState> {
     const data = await this.props.asyncGetMetricsData({
       query: metricFunction + metricPeriod, // EXPLAIN: query like nebula_graphd_num_queries_rate_600
       metric: metricName,
-      start: end - DETAIL_DEFAULT_RANGE,
+      start: end - SERVICE_DEFAULT_RANGE,
       end,
       timeInterval: metricPeriod
     });
@@ -88,7 +89,7 @@ class CustomServiceQueryPanel extends React.PureComponent<IProps, IState> {
 
   render () {
     const { data } = this.state;
-    const { config: { metric, period, metricType } } = this.props;
+    const { config: { metric, period, metricType }, aliasConfig } = this.props;
     return <div className="dashboard-card">
       <div className="header">
         <h3>{metric}</h3>
@@ -102,7 +103,7 @@ class CustomServiceQueryPanel extends React.PureComponent<IProps, IState> {
         </div>
       </div>
       <div className="content">
-        {data.length > 0 && <Card data={getDataByType({ data, type:'all', name:'instanceName' })} loading={false}/>}
+        {data.length > 0 && <Card data={getDataByType({ data, type:'all', name:'instanceName', aliasConfig })} loading={false}/>}
       </div>
     </div>;
   }

@@ -36,6 +36,7 @@
     "disk": "Disk",
     "memory": "Memory",
     "load": "Load",
+    "network": "Network",
     "networkIn": "Network In",
     "networkOut": "Network Out",
     "transmitFlow": "Transimit Speed",

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-		<title>Nebula Test Stat</title>
+		<title>Nebula Dashboard</title>
     <style>
 		@-webkit-keyframes square-spin {
 			25% {
@@ -84,7 +84,7 @@
     {% else %}
         {{ helper.assets.getScript('app.js') | safe }}
 		{% endif %}
-		<script src="https://at.alicdn.com/t/font_2333457_0o8cwsyo0yv.js"></script>
+		{{ helper.assets.getScript('iconfont.js') | safe }}
 </body>
 
 </html>

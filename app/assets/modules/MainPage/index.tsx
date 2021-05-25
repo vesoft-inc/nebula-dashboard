@@ -24,6 +24,7 @@ const mapDispatch = (dispatch: IDispatch) => {
   return {
     asyncLogout: dispatch.app.asyncLogout,
     asyncGetAppInfo: dispatch.app.asyncGetAppInfo,
+    asyncGetAliasConfig: dispatch.app.asyncGetAliasConfig,
   };
 };
 
@@ -49,6 +50,7 @@ class MainPage extends React.Component<IProps, IState> {
 
   componentDidMount () {
     const { appVersion } = this.props;
+    this.props.asyncGetAliasConfig();
     if(appVersion === '') {
       this.props.asyncGetAppInfo();
     }
@@ -80,7 +82,10 @@ class MainPage extends React.Component<IProps, IState> {
     const { collapsed } = this.state;
     const { appVersion } = this.props;
     const [, activeOpenSubMenu, activeMenu] = this.props.location.pathname.split('/');
-    const activeKey = activeMenu === 'overview' ? `${activeOpenSubMenu}-${activeMenu}` : activeMenu;
+    let activeKey = activeMenu === 'overview' ? `${activeOpenSubMenu}-${activeMenu}` : activeMenu;
+    if(activeKey === undefined) {
+      activeKey = 'machine-overview';
+    }
     return (
       <Layout className="nebula-stat">
         <Sider className="nebula-sider" trigger={null} 

@@ -3,6 +3,7 @@ import { SERVICE_SUPPORT_METRICS } from '@assets/utils/promQL';
 
 export const SERVICE_POLLING_INTERVAL = 10 * 1000;
 export const SERVICE_QUERY_PERIOD = 10 * 60;
+export const SERVICE_DEFAULT_RANGE = 6 * 60 * 60 * 1000;
 
 export const getQPSData= (data, timeInterval) => {
   return data.result.map((item: IStatRangeItem) => {

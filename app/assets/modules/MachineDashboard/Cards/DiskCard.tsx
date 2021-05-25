@@ -6,14 +6,15 @@ import SpaceChart from '@assets/components/Charts/SpaceChart';
 
 const mapState = (state: IRootState) => {
   const { diskSizeStat, diskStat } = state.machine;
+  const { aliasConfig } = state.app;
   return {
     diskUsageDetail: diskStat.map((instance, idx) => {
       const latestValues = _.last(instance.values);
       const size = diskSizeStat.length ? Number(diskSizeStat[idx].value[1]) : 0;
-
+      const name = instance.metric.instance;
       return {
         size,
-        type: instance.metric.instance,
+        type: aliasConfig[name] || name,
         value: latestValues ? Number(latestValues[1]) : 0,
       };
     })

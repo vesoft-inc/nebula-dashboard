@@ -4,6 +4,11 @@
 	.nebula-sider {
 		position: relative;
 
+		.ant-layout-sider-children {
+			display: flex;
+			flex-direction: column;
+		}
+
 		.sidebar-header {
 			height: 80px;
 			display: flex;
@@ -25,6 +30,9 @@
 		}
 
 		.sidebar-menu {
+			overflow: auto;
+			padding-bottom: 20px;
+
 			.ant-menu-submenu-title,
 			.ant-menu-item {
 				display: flex;
@@ -62,10 +70,7 @@
 		}
 
 		.sidebar-footer {
-			position: absolute;
-			left: 0;
-			bottom: 20px;
-			padding: 0 20px;
+			padding: 0 20px 20px;
 			color: #fff;
 			font-size: 14px;
 			display: flex;

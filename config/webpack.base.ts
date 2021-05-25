@@ -3,6 +3,7 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 import webpack from 'webpack';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import AntdDayjsWebpackPlugin from 'antd-dayjs-webpack-plugin';
+import CopyPlugin from 'copy-webpack-plugin'
 
 const commonConfig = {
   entry: {
@@ -52,6 +53,18 @@ const commonConfig = {
           },
         ],
       },
+      {
+        test: /\.(woff|woff2|ttf)(\?t=\d+)?$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: "[path][name].[ext]",
+              esModule: false,
+            }
+          }
+        ],
+      },
     ],
   },
   plugins: [
@@ -73,11 +86,16 @@ const commonConfig = {
         useShortDoctype: true,
       },
     }),
+     new CopyPlugin({
+      patterns: [
+        {from: path.join(__dirname, '../app/assets/static/iconfont/iconfont.js')}
+      ]
+    }),
     new webpack.HashedModuleIdsPlugin(),
     new AntdDayjsWebpackPlugin()
   ],
   resolve: {
-    extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
+    extensions: ['.ts', '.tsx', '.js', '.jsx', '.json', '.css', '.woff', '.woff2', 'ttf'],
     alias: {
       '@assets': path.join(__dirname, '../app/assets/'),
       // fix this: https://github.com/react-component/table/issues/368

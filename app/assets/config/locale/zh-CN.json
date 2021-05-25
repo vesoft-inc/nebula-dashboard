@@ -36,6 +36,7 @@
     "disk": "磁盘",
     "memory": "内存",
     "load": "负载",
+    "network": "流量",
     "networkIn": "下行流量",
     "networkOut": "上行流量",
     "transmitFlow": "上行平均流量",

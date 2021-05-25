@@ -14,6 +14,7 @@ import StatusPanel from '@assets/components/StatusPanel';
 import { IStatRangeItem } from '@assets/utils/interface';
 import { DashboardSelect, Option } from '@assets/components/DashboardSelect';
 import dayjs from 'dayjs';
+import ServiceHeader from '@assets/components/Service/ServiceHeader';
 
 import LineChart from '@assets/components/Charts/LineChart';
 import { configDetailChart, updateDetailChart } from '@assets/utils/chart/chart';
@@ -43,7 +44,8 @@ const mapDispatch = (dispatch: IDispatch) => {
 
 const mapState = (state: IRootState) => {
   return {
-    loading: state.loading.models.service
+    loading: state.loading.models.service,
+    aliasConfig: state.app.aliasConfig
   };
 };
 
@@ -161,9 +163,10 @@ class ServiceMetrics extends React.Component<IProps, IState> {
 
   updateChart = () => {
     const { serviceType, data } = this.state;
+    const { aliasConfig } = this.props;
     const { timeRange, instance } = this.formRef.current!.getFieldsValue();
     const [startTime, endTime] = timeRange;
-    const _data = getDataByType({ data, type: instance, name: 'instanceName' });
+    const _data = getDataByType({ data, type: instance, name: 'instanceName', aliasConfig });
     updateDetailChart(this.chartInstance, {
       type: serviceType,
       tickInterval: getProperTickInterval(endTime - startTime),
@@ -203,11 +206,12 @@ class ServiceMetrics extends React.Component<IProps, IState> {
   }
   render () {
     const { serviceType, defaultFormParams, instanceList } = this.state;
-    const { loading } = this.props;
+    const { loading, aliasConfig } = this.props;
     return (<div className="service-metrics">
-      <div className="common-header">
-        <span>{serviceType} {intl.get('common.metric')}</span>
-      </div>
+      <ServiceHeader 
+        title={`${serviceType} ${intl.get('common.metric')}`} 
+        icon={`#iconnav-${serviceType}`}
+      />
       <div className="container">
         <Form
           className="metrics-params-form"
@@ -240,7 +244,7 @@ class ServiceMetrics extends React.Component<IProps, IState> {
                 <Option key="all" value="all">all</Option>
                 {
                   instanceList.map(value => (
-                    <Option key={value} value={value}>{value}</Option>
+                    <Option key={value} value={value}>{aliasConfig[value] || value}</Option>
                   ))
                 }
               </DashboardSelect>

@@ -1,4 +1,4 @@
-import { Button, Checkbox, Form, Input } from 'antd';
+import { Button, Form, Input } from 'antd';
 // import { FormInstance, FormProps } from 'antd/lib/form/Form';
 import React from 'react';
 import intl from 'react-intl-universal';
@@ -56,11 +56,8 @@ class ConfigServerForm extends React.Component<IProps> {
               <Input placeholder={intl.get('common.username')} bordered={false} />
             </FormItem>
             <FormItem name="password" rules={passwordRulesFn(intl)}>
-              <Input placeholder={intl.get('common.password')} bordered={false} />
+              <Input type="password" placeholder={intl.get('common.password')} bordered={false} />
             </FormItem>
-            <Form.Item name="remember" valuePropName="checked" className="btn-remember">
-              <Checkbox>{intl.get('common.rememberPassword')}</Checkbox>
-            </Form.Item>
             <Button className="btn-submit" type="primary" htmlType="submit">
               {intl.get('common.login')}
             </Button>

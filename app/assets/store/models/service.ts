@@ -37,8 +37,8 @@ export const service = createModel({
     }) {
       const { start, end, query, metric, timeInterval } = payload;
       const step = getProperStep(start, end);
-      const _start = Math.round(start / 1000);
-      const _end = Math.round(end / 1000);
+      const _start = start / 1000;
+      const _end = end / 1000;
       const { code, data } = (await serviceApi.execPromQLByRange({
         query,
         start: _start,
@@ -64,8 +64,8 @@ export const service = createModel({
       const { interval, end, query } = payload;
       const start = end - interval;
       const step = getProperStep(start, end);
-      const _start = Math.round(start / 1000);
-      const _end = Math.round(end / 1000);
+      const _start = start / 1000;
+      const _end = end / 1000;
       const { code, data } = (await serviceApi.execPromQLByRange({
         query,
         start: _start,

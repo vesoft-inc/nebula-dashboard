@@ -46,8 +46,8 @@ export const machine = createModel({
       metric: string,
     }) {
       const { start, end, metric } = payload;
-      const _start = Math.round(start / 1000);
-      const _end = Math.round(end / 1000);
+      const _start = start / 1000;
+      const _end = end / 1000;
       const step = getProperStep(start, end);
       const { code, data } = (await service.execPromQLByRange({
         query: PROMQL[metric],
@@ -70,8 +70,8 @@ export const machine = createModel({
       metric: string,
     }) {
       const { start, end, metric } = payload;
-      const _start = Math.round(start / 1000);
-      const _end = Math.round(end / 1000);
+      const _start = start / 1000;
+      const _end = end / 1000;
       const step = getProperStep(start, end);
       const { code, data } = (await service.execPromQLByRange({
         query: PROMQL[metric],
@@ -111,8 +111,8 @@ export const machine = createModel({
       metric: string,
     }) {
       const { start, end, metric } = payload;
-      const _start = Math.round(start / 1000);
-      const _end = Math.round(end / 1000);
+      const _start = start / 1000;
+      const _end = end / 1000;
       const step = getProperStep(start, end);
       const { code, data } = (await service.execPromQLByRange({
         query: PROMQL[metric],
@@ -149,8 +149,8 @@ export const machine = createModel({
       metric: string,
     }) {
       const { start, end, metric } = payload;
-      const _start = Math.round(start / 1000);
-      const _end = Math.round(end / 1000);
+      const _start = start / 1000;
+      const _end = end / 1000;
       const step = getProperStep(start, end);
       const { code, data } = (await service.execPromQLByRange({
         query: PROMQL[metric],
@@ -175,8 +175,8 @@ export const machine = createModel({
       inOrOut?: string,
     }) {
       const { start, end, metric, inOrOut } = payload;
-      const _start = Math.round(start / 1000);
-      const _end = Math.round(end / 1000);
+      const _start = start / 1000;
+      const _end = end / 1000;
       const step = getProperStep(start, end);
       const { code, data } = (await service.execPromQLByRange({
         query: PROMQL[metric],

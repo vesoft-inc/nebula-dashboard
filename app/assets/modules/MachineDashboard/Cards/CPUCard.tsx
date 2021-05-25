@@ -7,11 +7,11 @@ import { VALUE_TYPE } from '@assets/utils/promQL';
 
 const mapState = (state: IRootState) => {
   const { cpuStat } = state.machine;
+  const { aliasConfig } = state.app;
   return {
-    data: getDataByType({ data:cpuStat, type:'all', name: 'instance' }),
+    data: getDataByType({ data:cpuStat, type:'all', name: 'instance', aliasConfig }),
     valueType: VALUE_TYPE.percentage,
     loading: !!state.loading.effects.machine.asyncGetCPUStatByRange,
   };
 };
-
 export default connect(mapState)(LineCard);

@@ -6,9 +6,9 @@ import { VALUE_TYPE } from '@assets/utils/promQL';
 
 const mapState = (state: IRootState) => {
   const { memoryStat, memorySizeStat } = state.machine;
-
+  const { aliasConfig } = state.app;
   return {
-    data: getDataByType({ data:memoryStat, type:'all', name: 'instance' }),
+    data: getDataByType({ data:memoryStat, type:'all', name: 'instance', aliasConfig }),
     sizes: memorySizeStat,
     valueType: VALUE_TYPE.percentage,
     loading: !!state.loading.effects.machine.asyncGetMemorySizeStat &&

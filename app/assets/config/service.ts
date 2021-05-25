@@ -9,11 +9,13 @@ const execPromQL = get('/api-metrics/query');
 const execPromQLByRange = get('/api-metrics/query_range');
 
 const getAppInfo = get('/api/app');
+const getAliasConfig = get('/api/config/alias');
 
 export default {
   execNGQL,
   connectDB,
   getAppInfo,
   execPromQL,
-  execPromQLByRange
+  execPromQLByRange,
+  getAliasConfig
 };

@@ -8,6 +8,7 @@ interface IState {
   version: string;
   username: string;
   password: string;
+  aliasConfig: any;
 }
 
 export const app = createModel({
@@ -15,6 +16,7 @@ export const app = createModel({
     version: '',
     username: cookies.get('nu'),
     password: cookies.get('np'),
+    aliasConfig: {}
   },
   reducers: {
     update: (state: IState, payload: any) => {
@@ -31,6 +33,15 @@ export const app = createModel({
       this.update({
         ...appInfo,
       });
+    },
+
+    async asyncGetAliasConfig () {
+      const { code, data } = (await service.getAliasConfig()) as any;
+      if (code === 0) {
+        this.update({
+          aliasConfig: data
+        });
+      }
     },
 
     async asyncLogin ({

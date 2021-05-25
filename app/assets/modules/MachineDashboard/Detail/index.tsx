@@ -8,12 +8,18 @@ import { uniq } from 'lodash';
 import { configDetailChart, updateDetailChart } from '@assets/utils/chart/chart';
 import { IStatRangeItem } from '@assets/utils/interface';
 import { Spin } from 'antd';
-
+import { IRootState } from '@assets/store';
+import { connect } from 'react-redux';
 import './index.less';
 import { SUPPORT_METRICS, VALUE_TYPE } from '@assets/utils/promQL';
 
 
-interface IProps {
+const mapState = (state: IRootState) => {
+  return {
+    aliasConfig: state.app.aliasConfig
+  };
+};
+interface IProps extends ReturnType<typeof mapState>{
   type: string
   asyncGetDataSourceByRange: (params: {start: number, end: number, metric: string}) => void;
   dataSource: IStatRangeItem[];
@@ -106,9 +112,9 @@ class Detail extends React.Component<IProps, IState> {
   }
 
   updateChart = () => {
-    const { dataSource, type } = this.props;
+    const { dataSource, type, aliasConfig } = this.props;
     const { currentInstance, startTimestamps, endTimestamps } = this.state;
-    const data = getDataByType({ data:dataSource, type:currentInstance, name: 'instance' });
+    const data = getDataByType({ data:dataSource, type:currentInstance, name: 'instance', aliasConfig });
     updateDetailChart(this.chartInstance, {
       type,
       tickInterval: getProperTickInterval(endTimestamps - startTimestamps),
@@ -117,7 +123,7 @@ class Detail extends React.Component<IProps, IState> {
   
   render () {
     const { startTimestamps, endTimestamps, currentInstance, currentMetricOption } = this.state;
-    const { dataSource, metricOptions, loading } = this.props;
+    const { dataSource, metricOptions, loading, aliasConfig } = this.props;
     const instances = uniq(dataSource.map(instance => instance.metric.instance));
     const typeOptions = [
       {
@@ -125,7 +131,7 @@ class Detail extends React.Component<IProps, IState> {
         value: 'all',
       },
       ...instances.map(instance => ({
-        name: instance,
+        name: aliasConfig[instance] || instance,
         value: instance,
       }))
     ];
@@ -154,4 +160,4 @@ class Detail extends React.Component<IProps, IState> {
   }
 }
 
-export default Detail;
+export default connect(mapState)(Detail);

@@ -1,5 +1,4 @@
 import { ILineChartMetric, IStatRangeItem } from '@assets/utils/interface';
-
 export const DETAIL_DEFAULT_RANGE = 60 * 60 * 24 * 1000;
 export const CARD_RANGE = 60 * 60 * 24 * 1000;
 export const CARD_POLLING_INTERVAL = 10000 * 1000; 
@@ -82,14 +81,15 @@ export const getProperByteDesc = bytes => {
   };
 };
 
-export const getDataByType = (payload:{data: IStatRangeItem[], type?: string, name:string}) => {
-  const { name, type, data } =payload;
+export const getDataByType = (payload:{data: IStatRangeItem[], type?: string, name:string, aliasConfig?: any}) => {
+  const { name, type, data, aliasConfig } =payload;
   const res = [] as ILineChartMetric[];
   data.forEach(instance => {
     instance.values.forEach(([timstamps, value]) => {
-      if(type === 'all' || instance.metric[name] === type) {
+      const _name = instance.metric[name];
+      if(type === 'all' || _name === type) {
         res.push({
-          type: instance.metric[name],
+          type: aliasConfig && aliasConfig[_name] ? aliasConfig[_name] : _name,
           value: Number(value),
           time: timstamps,
         });

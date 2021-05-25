@@ -4,6 +4,24 @@ import { EggAppConfig, EggAppInfo, PowerPartial } from 'egg';
 
 export default (appInfo: EggAppInfo) => {
   const config = {} as PowerPartial<EggAppConfig>;
+  // path: /.../nebula-dashboard/static
+  config.configPath = __dirname.substr(0, __dirname.length - 6) + '/static';
+if (!fs.existsSync(config.configPath)) {
+  fs.mkdirSync(config.configPath, { recursive: true });
+}
+const file = path.join(config.configPath, 'customize.json')
+fs.access(file, fs.constants.F_OK, (err) => {
+  if(err) {
+    const content = JSON.stringify({
+      "ip:port":"your alias"
+    })
+    fs.writeFile(file, content, err => {
+      if(err) {
+        return err
+      }
+    })
+  }
+})
 
   // override config from framework / plugin
   // use for cookie sign key, should change to your own and keep security

@@ -5,15 +5,12 @@ coverage/
 .idea/
 run/
 logs/
-# vendors local changes do not git commit
-vendors/
 .DS_Store
 .vscode
 *.swp
 *.lock
 *.js
 *.map
-
 app/**/*.js
 test/**/*.js
 config/**/*.js

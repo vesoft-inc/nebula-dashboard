@@ -22,7 +22,7 @@ export default () => {
     }else if(proxyPath.test(ctx.request.url)){ // proxy to nebula-http-gateway
       const nebulaProxy = k2c(
         createProxyMiddleware({
-          target: `http://${(ctx.request.header.host as string).split(':')[0]}:8080`,
+          target: `http://${(ctx.request.header.host as string).split(':')[0]}:8090`,
           pathRewrite: {
             '/api-nebula': '/api',
           },

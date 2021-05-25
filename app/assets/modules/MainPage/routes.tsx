@@ -55,8 +55,8 @@ export const MenuList = [
         path: '/machine/disk',
       },
       {
-        key: 'networkIn',
-        title: intl.get('device.networkIn'),
+        key: 'network',
+        title: intl.get('device.network'),
         icon: '#iconnav-net',
         path: '/machine/network',
       }
