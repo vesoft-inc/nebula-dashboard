@@ -56,4 +56,4 @@ docker run --restart=always -p 9100:9100 -v {你的绝对路径}/nebula-dashboar
 ```
 
 7. 启动 prometheus 服务
-docker run --name=prometheus --restart=always -p 9090:9090 -v {项目目录路径}/vendors/nebula-stats-exporter/config:/etc/prometheus/ prom/prometheus
+docker run --name=prometheus --restart=always -p 8090:8090 -v {项目目录路径}/vendors/nebula-stats-exporter/config:/etc/prometheus/ prom/prometheus
