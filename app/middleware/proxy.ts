@@ -10,8 +10,8 @@ export default () => {
     if (metricsProxyPath.test(ctx.request.url)) {
       const importProxy = k2c(
         createProxyMiddleware({
-          // target: 'http://localhost:8090',
-          target: 'http://192.168.8.157:8090',
+          // target: 'http://localhost:8080',
+          target: 'http://192.168.8.157:8080',
           pathRewrite: {
             '/api-metrics': '/api/v1',
           },
