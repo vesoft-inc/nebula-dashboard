@@ -56,7 +56,7 @@ class ConfigInfo extends React.Component<IProps> {
     return (
       <div className="service-info service-configs" >
         <div className="common-header">
-          <Radio.Group buttonStyle="solid" className="service-radio" onChange={this.handleModuleChange}>
+          <Radio.Group buttonStyle="solid" defaultValue="all" className="service-radio" onChange={this.handleModuleChange}>
             <Radio.Button value="all">{intl.get('service.all')}</Radio.Button>
             <Radio.Button value="storage">Storage</Radio.Button>
             <Radio.Button value="graph">Graph</Radio.Button>
