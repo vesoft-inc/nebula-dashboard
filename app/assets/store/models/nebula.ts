@@ -9,6 +9,7 @@ interface IState {
   spaces: string[];
   parts:any[];
   services: any[];
+  currentSpace: string;
 }
 
 type IServiceType = 'GRAPH' | 'STORAGE' | 'META'
@@ -20,7 +21,8 @@ export const nebula = createModel({
     jobs:[],
     spaces:[],
     parts:[],
-    services:[]
+    services:[],
+    currentSpace: '',
   },
   reducers: {
     update: (state: IState, payload: any) => {

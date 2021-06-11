@@ -88,7 +88,8 @@ class PartitionDistribution extends React.Component<IProps, IState> {
         type: item.name,
         value: round(item.count / total, 2)
       }));
-      this.chartInstance.changeData(chartData);
+      this.chartInstance.data(chartData)
+        .render();
     }
   }
 

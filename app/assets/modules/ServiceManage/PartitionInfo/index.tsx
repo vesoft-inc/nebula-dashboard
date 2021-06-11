@@ -14,11 +14,16 @@ const mapState = (state: IRootState) => ({
   loading: state.loading.effects.nebula.asyncGetParts,
   spaces: state.nebula.spaces,
   parts: state.nebula.parts,
+  currentSpace:state.nebula.currentSpace,
 });
 
 const mapDispatch = (dispatch: IDispatch) => ({
   asyncGetSpaces: dispatch.nebula.asyncGetSpaces,
   asyncGetParts: dispatch.nebula.asyncGetParts,
+  updateSpace: space =>
+    dispatch.nebula.update({
+      currentSpace: space,
+    }),
 });
 interface IProps extends ReturnType<typeof mapState>,
   ReturnType<typeof mapDispatch>{
@@ -36,6 +41,7 @@ class PartitionInfo extends React.Component<IProps> {
     })) as any;
     if(code === 0){
       this.props.asyncGetParts();
+      this.props.updateSpace(space);
     }
   }
 
@@ -44,7 +50,7 @@ class PartitionInfo extends React.Component<IProps> {
   }
 
   render () {
-    const { spaces, parts, loading } = this.props;
+    const { spaces, parts, currentSpace, loading } = this.props;
     const columns =[
       {
         title: <TitleInstruction title="Module" description={intl.get('description.module')} />,
@@ -71,6 +77,7 @@ class PartitionInfo extends React.Component<IProps> {
             <span>{intl.get('service.spaces')}:</span>
             <DashboardSelect 
               className="service-select"
+              value={currentSpace||undefined}
               onChange={this.handleSpaceChange}
               style={{
                 width: 120 
