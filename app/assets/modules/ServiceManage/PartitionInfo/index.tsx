@@ -43,7 +43,10 @@ class PartitionInfo extends React.Component<IProps> {
     if(code === 0){
       this.props.asyncGetParts();
       this.props.updateSpace(space);
+<<<<<<< HEAD
       trackEvent('partition_info', 'select_space');
+=======
+>>>>>>> f65a8e5 (fix: issue  (#54))
     }
   }
 
@@ -52,9 +55,15 @@ class PartitionInfo extends React.Component<IProps> {
     trackEvent('partition_info', 'search_partitionId');
   }
 
+<<<<<<< HEAD
   render() {
     const { spaces, parts, currentSpace, loading } = this.props;
     const columns = [
+=======
+  render () {
+    const { spaces, parts, currentSpace, loading } = this.props;
+    const columns =[
+>>>>>>> f65a8e5 (fix: issue  (#54))
       {
         title: <TitleInstruction title="PartitionId" description={intl.get('description.partitionId')} />,
         dataIndex: 'Partition ID',
@@ -79,8 +88,13 @@ class PartitionInfo extends React.Component<IProps> {
           <div className="service-screen">
             <span>{intl.get('service.spaces')}:</span>
             <DashboardSelect 
+<<<<<<< HEAD
               placeholder={intl.get('service.chooseSpace')}
               value={currentSpace || undefined}
+=======
+              className="service-select"
+              value={currentSpace||undefined}
+>>>>>>> f65a8e5 (fix: issue  (#54))
               onChange={this.handleSpaceChange}
               style={{
                 width: 220 

@@ -46,6 +46,7 @@ class LineCard extends React.Component<IProps> {
     this.chartInstance.changeData(data);
   }
 
+<<<<<<< HEAD
   render() {
     const { loading, data, valueType, baseLine } = this.props;
     const { maxNum, maxNumLen } = getMaxNumAndLength({
@@ -64,6 +65,27 @@ class LineCard extends React.Component<IProps> {
         renderChart={this.renderLineChart} 
         options={{ padding: [20, 20, 60, 6 * maxNumLen + 30 ] }} 
       />
+=======
+  getMaxLength = () => {
+    const { data = [] } = this.props;
+    const maxNum = _.maxBy(data,  item=> item.value)
+    return maxNum ? maxNum.value.toString().length: 1;
+  }
+
+  render () {
+    const len = this.getMaxLength();
+    /*
+     * TODO: it now will conflict with the same request loading in detail component
+     * issue: https://github.com/vesoft-inc-private/nebula-dashboard/issues/34
+    **/
+    // const { loading } = this.props;
+    // if (loading) {
+    //   return <Spin />;
+    // }
+
+    return (
+      <LineChart renderChart={this.renderLineChart} options={{ padding: [20, 20, 60, 5 * len + 30 ] }} />
+>>>>>>> f65a8e5 (fix: issue  (#54))
     );
   }
 }
