@@ -31,7 +31,7 @@ interface IProps extends ReturnType<typeof mapState>,
 
 class PartitionInfo extends React.Component<IProps> {
 
-  componentDidMount (){
+  componentDidMount(){
     this.props.asyncGetSpaces();
   }
 
@@ -49,7 +49,7 @@ class PartitionInfo extends React.Component<IProps> {
     this.props.asyncGetParts(value);
   }
 
-  render () {
+  render() {
     const { spaces, parts, currentSpace, loading } = this.props;
     const columns =[
       {

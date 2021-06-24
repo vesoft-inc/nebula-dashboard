@@ -8,7 +8,7 @@ interface IProps {
 }
 
 class GaugeChart extends React.Component<IProps> {
-  render () {
+  render() {
     const { percent } = this.props;
     const color = getWhichColor(percent);
     const _percent = percent < 1 ? Number(percent.toFixed(2)) : Math.round(percent);

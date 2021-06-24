@@ -33,7 +33,7 @@ export const nebula = createModel({
     },
   },
   effects: (dispatch: any) => ({
-    async asyncGetServiceConfigs (module?:string) {
+    async asyncGetServiceConfigs(module?:string) {
       const { code, data } = (await service.execNGQL({
         gql: module ? `SHOW CONFIGS ${module} `:'SHOW CONFIGS'
       })) as any;
@@ -44,7 +44,7 @@ export const nebula = createModel({
       }
     },
 
-    async asyncGetSnapshots () {
+    async asyncGetSnapshots() {
       const { code, data } = (await service.execNGQL({
         gql: 'SHOW SNAPSHOTS'
       })) as any;
@@ -55,7 +55,7 @@ export const nebula = createModel({
       }
     },
 
-    async asyncGetJobs () {
+    async asyncGetJobs() {
       const { code, data } = (await service.execNGQL({
         gql: 'SHOW JOBS'
       })) as any;
@@ -66,7 +66,7 @@ export const nebula = createModel({
       }
     },
 
-    async asyncGetSpaces () {
+    async asyncGetSpaces() {
       const { code, data } = (await service.execNGQL({
         gql: 'SHOW SPACES'
       })) as any;
@@ -76,14 +76,14 @@ export const nebula = createModel({
         });
       }
     },
-    async asyncUseSpaces (space) {
+    async asyncUseSpaces(space) {
       const { code, data } = (await service.execNGQL({
         gql: `USE ${space}`
       })) as any;
       return { code, data };
     },
 
-    async asyncGetParts (partId?:string) {
+    async asyncGetParts(partId?:string) {
       const { code, data } = (await service.execNGQL({
         gql: partId ? `SHOW PARTS ${partId}`:'SHOW PARTS'
       })) as any;
@@ -95,7 +95,7 @@ export const nebula = createModel({
       return data.tables;
     },
 
-    async asyncGetServices () {
+    async asyncGetServices() {
       const hostData = await dispatch.nebula.asyncGetHostsInfo();
       let data = [];
       if(hostData.length > 0) {
@@ -113,7 +113,7 @@ export const nebula = createModel({
       });
     },
 
-    async asyncGetHostsInfo (type?: IServiceType) {
+    async asyncGetHostsInfo(type?: IServiceType) {
       const res = (await service.execNGQL({
         gql: `SHOW HOSTS ${type || ''}`
       })) as any;
@@ -124,7 +124,7 @@ export const nebula = createModel({
       return data;
     },
 
-    async asyncGetServiceVersion (type?: IServiceType) {
+    async asyncGetServiceVersion(type?: IServiceType) {
       // HACK: user git info instead of version
       const res = await dispatch.nebula.asyncGetHostsInfo(type);
       return res.map(item => ({

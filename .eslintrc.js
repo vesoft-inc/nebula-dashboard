@@ -294,7 +294,7 @@ module.exports = {
             }
         ],
         semi: 1,
-        'space-before-function-paren':  ["error", "always"],
+        'space-before-function-paren':  ["error", "never"],
         'object-curly-spacing': ['error','always'],
         'use-isnan': 'error',
         'valid-typeof': 'off',

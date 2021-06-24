@@ -7,8 +7,9 @@ import { getDataByType } from '@assets/utils/dashboard';
 
 const mapState = (state: IRootState) => {
   const { networkOutStat } = state.machine;
-  const { aliasConfig } = state.app;
+  const { aliasConfig, annotationLine } = state.app;
   return {
+    baseLineNum: annotationLine.network,
     data: getDataByType({ data:networkOutStat, type:'all', name: 'instance', aliasConfig }),
     valueType: VALUE_TYPE.byteSecond,
     loading: !!state.loading.effects.machine.asyncGetNetworkStatByRange,

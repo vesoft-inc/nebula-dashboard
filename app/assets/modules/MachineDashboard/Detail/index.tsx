@@ -16,7 +16,8 @@ import { SUPPORT_METRICS, VALUE_TYPE } from '@assets/utils/promQL';
 
 const mapState = (state: IRootState) => {
   return {
-    aliasConfig: state.app.aliasConfig
+    aliasConfig: state.app.aliasConfig,
+    annotationLine: state.app.annotationLine,
   };
 };
 interface IProps extends ReturnType<typeof mapState>{
@@ -41,7 +42,7 @@ class Detail extends React.Component<IProps, IState> {
   pollingTimer: any;
   chartInstance: Chart;
 
-  constructor (props: IProps) {
+  constructor(props: IProps) {
     super(props);
     const endTimestamps = Date.now();
     this.state = {
@@ -52,17 +53,17 @@ class Detail extends React.Component<IProps, IState> {
     };
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.pollingData();
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     if (this.pollingTimer) {
       clearTimeout(this.pollingTimer);
     }
   }
 
-  getData = async () => {
+  getData = async() => {
     const { startTimestamps, endTimestamps, currentMetricOption } = this.state;
     await this.props.asyncGetDataSourceByRange({
       start: startTimestamps,
@@ -121,9 +122,9 @@ class Detail extends React.Component<IProps, IState> {
     }).changeData(data);
   }
   
-  render () {
+  render() {
     const { startTimestamps, endTimestamps, currentInstance, currentMetricOption } = this.state;
-    const { dataSource, metricOptions, loading, aliasConfig } = this.props;
+    const { dataSource, metricOptions, loading, aliasConfig, annotationLine, type } = this.props;
     const instances = uniq(dataSource.map(instance => instance.metric.instance));
     const typeOptions = [
       {
@@ -135,7 +136,6 @@ class Detail extends React.Component<IProps, IState> {
         value: instance,
       }))
     ];
-
 
     return (
       <Spin spinning={loading} wrapperClassName="machine-detail">
@@ -153,7 +153,7 @@ class Detail extends React.Component<IProps, IState> {
           currentMetricOption={currentMetricOption}
           onMetricChange={this.handleMetricChange}
         >
-          <LineChart options={{ padding: [10, 70, 70, 70] }} renderChart={this.renderChart} />
+          <LineChart baseLineNum={annotationLine[type]} options={{ padding: [10, 70, 70, 70] }} renderChart={this.renderChart} />
         </DashboardDetail>
       </Spin>
     );

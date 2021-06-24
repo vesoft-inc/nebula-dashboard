@@ -22,11 +22,11 @@ interface IProps extends ReturnType<typeof mapState>,
 
 class Snapshot extends React.Component<IProps> {
 
-  componentDidMount (){
+  componentDidMount(){
     this.props.asyncGetSnapshots();
   }
 
-  render () {
+  render() {
     const { snapshots, loading } = this.props;
     const columns =[
       {

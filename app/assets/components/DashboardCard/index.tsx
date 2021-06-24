@@ -19,7 +19,7 @@ class DashboardCard extends React.PureComponent<IProps> {
     this.props.history.push(viewPath);
   }
 
-  render () {
+  render() {
     const { title, children } = this.props;
     return <div className="dashboard-card">
       <div className="inner">

@@ -1,10 +1,11 @@
 import React from 'react';
-import { Button, Form } from 'antd';
+import { Button, Form, Popover } from 'antd';
 import { FormInstance } from 'antd/lib/form';
 import { IDispatch, IRootState } from '@assets/store';
 import { connect } from 'react-redux';
 import { TIME_INTERVAL_OPTIONS } from '@assets/utils/dashboard';
 import { SERVICE_SUPPORT_METRICS } from '@assets/utils/promQL';
+import Icon from '@assets/components/Icon';
 import { cloneDeep } from 'lodash';
 import intl from 'react-intl-universal';
 import { DashboardSelect, Option } from '@assets/components/DashboardSelect';
@@ -58,7 +59,7 @@ class ServiceCardEdit extends React.Component<IProps> {
     localStorage.setItem('servicePanelConfig', JSON.stringify(_config));
     this.props.onClose();
   }
-  render () {
+  render() {
     const { editIndex, editType, servicePanelConfig, onClose } = this.props;
     const editItem = servicePanelConfig[editType][editIndex];
     return (
@@ -77,6 +78,9 @@ class ServiceCardEdit extends React.Component<IProps> {
               }
             </DashboardSelect>
           </Form.Item>
+          <Popover content="metric docs">
+            <Icon className="metric-info-icon blue" icon="#iconnav-serverInfo" />
+          </Popover>
           <Form.Item label={intl.get('service.metric')} name="metric">
             <DashboardSelect onChange={this.handleUpdateMetricType}>
               {
@@ -86,6 +90,7 @@ class ServiceCardEdit extends React.Component<IProps> {
               }
             </DashboardSelect>
           </Form.Item>
+
           <Form.Item
             noStyle={true}
             shouldUpdate={(prevValues, currentValues) => prevValues.metric !== currentValues.metric}

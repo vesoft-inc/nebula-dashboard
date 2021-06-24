@@ -15,7 +15,8 @@ const mapDispatch = (dispatch: IDispatch) => {
 
 const mapState = (state: IRootState) => {
   return {
-    servicePanelConfig: state.service.servicePanelConfig
+    servicePanelConfig: state.service.servicePanelConfig,
+    annotationLine: state.app.annotationLine,
   };
 };
 
@@ -31,7 +32,7 @@ interface IState {
 class ServiceDashboard extends React.Component<IProps, IState> {
   pollingTimer: any;
   modalHandler;
-  constructor (props: IProps) {
+  constructor(props: IProps) {
     super(props);
     this.state = {
       editPanelType: '',
@@ -52,29 +53,33 @@ class ServiceDashboard extends React.Component<IProps, IState> {
     }
   }
   
-  render () {
+  render() {
     const { editPanelType, editPanelIndex } = this.state;
     const { 
-      servicePanelConfig
+      servicePanelConfig,
+      annotationLine
     } = this.props;
     // TODO 配置单个面板后三个 overview 还是会触发 render
     return (
       <div className="service-table">
         <ServiceOverview 
           serviceType="graph"
-          icon="#iconnav-graph" 
+          icon="#iconnav-graph"
+          baseLineNum={annotationLine.graph}
           configs={servicePanelConfig.graph}
           onConfigPanel={this.handleConfigPanel}
         />
         <ServiceOverview 
           serviceType="storage"
           icon="#iconnav-storage" 
+          baseLineNum={annotationLine.storage}
           configs={servicePanelConfig.storage}
           onConfigPanel={this.handleConfigPanel}
         />
         <ServiceOverview 
           serviceType="meta"
-          icon="#iconnav-meta" 
+          icon="#iconnav-meta"
+          baseLineNum={annotationLine.meta}
           configs={servicePanelConfig.meta}
           onConfigPanel={this.handleConfigPanel}
         />

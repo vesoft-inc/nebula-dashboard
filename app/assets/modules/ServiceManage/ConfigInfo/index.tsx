@@ -20,7 +20,7 @@ interface IProps extends ReturnType<typeof mapState>,
 }
 class ConfigInfo extends React.Component<IProps> {
 
-  componentDidMount (){
+  componentDidMount(){
     this.props.asyncGetServiceConfigs();
   }
 
@@ -28,7 +28,7 @@ class ConfigInfo extends React.Component<IProps> {
     this.props.asyncGetServiceConfigs(e.target.value);
   }
 
-  render () {
+  render() {
     const { configs, loading }=this.props;
     const columns =[
       {

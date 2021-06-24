@@ -9,6 +9,7 @@ interface IState {
   username: string;
   password: string;
   aliasConfig: any;
+  annotationLine: any;
 }
 
 export const app = createModel({
@@ -16,7 +17,8 @@ export const app = createModel({
     version: '',
     username: cookies.get('nu'),
     password: cookies.get('np'),
-    aliasConfig: {}
+    aliasConfig: {},
+    annotationLine: {} as any
   },
   reducers: {
     update: (state: IState, payload: any) => {
@@ -27,7 +29,7 @@ export const app = createModel({
     },
   },
   effects: (dispatch: any) => ({
-    async asyncGetAppInfo () {
+    async asyncGetAppInfo() {
       const appInfo = await service.getAppInfo();
 
       this.update({
@@ -35,7 +37,16 @@ export const app = createModel({
       });
     },
 
-    async asyncGetAliasConfig () {
+    async asyncGetAnnotationLineInfo() {
+      const { code, data } = await service.getAnnotationLineConfig() as any;
+      if(code === 0){
+        this.update({
+          annotationLine:data,
+        });
+      }
+    },
+
+    async asyncGetAliasConfig() {
       const { code, data } = (await service.getAliasConfig()) as any;
       if (code === 0) {
         this.update({
@@ -44,7 +55,7 @@ export const app = createModel({
       }
     },
 
-    async asyncLogin ({
+    async asyncLogin({
       username,
       password
     }){
@@ -75,7 +86,7 @@ export const app = createModel({
       }
     },
 
-    async asyncLogout () {
+    async asyncLogout() {
       cookies.remove('nu', { path: '/' });
       cookies.remove('np', { path: '/' });
       await this.update({

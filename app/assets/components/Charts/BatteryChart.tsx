@@ -61,7 +61,7 @@ interface IBatterChartProps {
   data: IChartDataItem[]
 }
 class BatteryChart extends React.Component<IBatterChartProps> {
-  render () {
+  render() {
     const { data } = this.props;
     return <div className="nebula-chart">
       {

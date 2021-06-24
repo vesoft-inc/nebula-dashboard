@@ -20,13 +20,13 @@ interface IModalProps extends ModalProps {
   children?: any;
 }
 export default class Modal extends Component<IModalProps, IModalState> {
-  constructor (props: IModalProps) {
+  constructor(props: IModalProps) {
     super(props);
     this.state = {
       visible: false,
     };
   }
-  componentDidMount () {
+  componentDidMount() {
     if (this.props.handlerRef) {
       this.props.handlerRef({
         show: this.show,
@@ -61,7 +61,7 @@ export default class Modal extends Component<IModalProps, IModalState> {
     );
   };
 
-  render () {
+  render() {
     return (
       this.state.visible && (
         <AntModal

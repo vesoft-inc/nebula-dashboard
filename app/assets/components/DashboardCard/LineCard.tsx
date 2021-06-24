@@ -5,19 +5,29 @@ import { Chart, Geometry } from '@antv/g2';
 import { ILineChartMetric, IStatSingleItem } from '@assets/utils/interface';
 import { configDetailChart } from '@assets/utils/chart/chart';
 import { VALUE_TYPE } from '@assets/utils/promQL';
+import { getProperByteDesc } from '@assets/utils/dashboard';
+import { Spin } from 'antd';
 interface IProps {
   data: ILineChartMetric[];
   valueType: VALUE_TYPE;
   sizes?: IStatSingleItem[]
   loading: boolean;
+  baseLineNum?: number;
 }
 
 class LineCard extends React.Component<IProps> {
   chartInstance: Chart;
   areaGeometry: Geometry;
   lineGeometry: Geometry;
-  componentDidUpdate () {
-    this.updateChart();
+  componentDidUpdate() {
+    /*
+     * HACK: it now will conflict with the same request loading in detail component
+     * issue: https://github.com/vesoft-inc-private/nebula-dashboard/issues/34
+    **/
+    const { loading } = this.props;
+    if(!loading){
+      this.updateChart();
+    }
   }
 
   renderLineChart = (chartInstance: Chart) => {
@@ -28,7 +38,6 @@ class LineCard extends React.Component<IProps> {
       sizes, 
       isCard: true,
     });
-
     this.updateChart();   
   }
 
@@ -38,24 +47,36 @@ class LineCard extends React.Component<IProps> {
   }
 
   getMaxLength = () => {
-    const { data = [] } = this.props;
-    const maxNum = _.maxBy(data,  item=> item.value)
-    return maxNum ? maxNum.value.toString().length: 1;
+    const { data = [], valueType } = this.props;
+    const max = _.maxBy(data, item => item.value);
+    const maxNum = max ? max.value : 0;
+    const maxNumLen = maxNum.toString().length;
+
+    switch (valueType) {
+      case VALUE_TYPE.percentage:
+        return 5;
+      case VALUE_TYPE.byte:
+      case VALUE_TYPE.byteSecond:
+        const { value, unit } = getProperByteDesc(maxNum);
+        if (valueType === VALUE_TYPE.byteSecond) {
+          return unit.length + value.toString().length+2;
+        }
+        return unit.length + value.toString().length;
+      case VALUE_TYPE.numberSecond:
+        return maxNumLen + 2;
+      default:
+        return maxNumLen;
+    }
   }
 
-  render () {
-    const len = this.getMaxLength();
-    /*
-     * TODO: it now will conflict with the same request loading in detail component
-     * issue: https://github.com/vesoft-inc-private/nebula-dashboard/issues/34
-    **/
-    // const { loading } = this.props;
-    // if (loading) {
-    //   return <Spin />;
-    // }
+  render() {
+    const { loading, baseLineNum } = this.props;
+    if (loading) {
+      return <Spin />;
+    }
 
     return (
-      <LineChart renderChart={this.renderLineChart} options={{ padding: [20, 20, 60, 5 * len + 30 ] }} />
+      <LineChart baseLineNum={baseLineNum} renderChart={this.renderLineChart} options={{ padding: [20, 20, 60, 5 * this.getMaxLength() + 30 ] }} />
     );
   }
 }

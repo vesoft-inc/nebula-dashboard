@@ -42,7 +42,7 @@ const SpaceBar = (props: ISpaceBarProps) => {
 };
 
 class SpaceChart extends React.Component<IProps> {
-  render () {
+  render() {
     const { data } = this.props;
     return <div className="nebula-chart nebula-chart-space">
       {

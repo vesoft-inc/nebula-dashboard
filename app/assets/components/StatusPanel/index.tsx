@@ -31,14 +31,14 @@ interface IState {
 }
 class StatusPanel extends React.PureComponent<IProps, IState> {
   pollingTimer: any;
-  constructor (props: IProps) {
+  constructor(props: IProps) {
     super(props);
     this.state = {
       normal: 0,
       abnormal: 0
     };
   }
-  componentDidMount () {
+  componentDidMount() {
     this.pollingData();
   }
 
@@ -48,13 +48,13 @@ class StatusPanel extends React.PureComponent<IProps, IState> {
     this.pollingTimer = setTimeout(this.pollingData, SERVICE_POLLING_INTERVAL);
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     if (this.pollingTimer) {
       clearTimeout(this.pollingTimer);
     }
   }
 
-  asyncGetStatus = async () => {
+  asyncGetStatus = async() => {
     const { type } = this.props;
     const { normal, abnormal } = await this.props.asyncGetStatus({
       query: NEBULA_COUNT[type],
@@ -64,7 +64,7 @@ class StatusPanel extends React.PureComponent<IProps, IState> {
     this.setState({ normal, abnormal });
   } 
 
-  render () {
+  render() {
     const { normal, abnormal } = this.state;
     return (
       <ul className="status-panel">

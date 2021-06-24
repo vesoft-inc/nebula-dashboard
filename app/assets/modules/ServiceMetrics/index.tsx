@@ -1,5 +1,5 @@
-import { DatePicker, Form, Radio, Row, Spin } from 'antd';
-import { CARD_POLLING_INTERVAL, DETAIL_DEFAULT_RANGE, TIMEOPTIONS, TIME_INTERVAL_OPTIONS, getDataByType, getProperTickInterval } from '@assets/utils/dashboard';
+import { DatePicker, Form, Popover, Radio, Row, Spin } from 'antd';
+import { CARD_POLLING_INTERVAL, DETAIL_DEFAULT_RANGE, NEED_ADD_SUM_QUERYS, TIMEOPTIONS, TIME_INTERVAL_OPTIONS, getDataByType, getProperTickInterval } from '@assets/utils/dashboard';
 import { FormInstance } from 'antd/lib/form';
 import { updateQueryStringParameter } from '@assets/utils/url';
 import React from 'react';
@@ -18,6 +18,7 @@ import ServiceHeader from '@assets/components/Service/ServiceHeader';
 
 import LineChart from '@assets/components/Charts/LineChart';
 import { configDetailChart, updateDetailChart } from '@assets/utils/chart/chart';
+import Icon from '@assets/components/Icon';
 
 import './index.less';
 
@@ -33,19 +34,22 @@ interface IState {
     timeRange: dayjs.Dayjs[]
   },
   instanceList: string[],
-  data: IStatRangeItem[]
+  data: IStatRangeItem[],
+  totalData: IStatRangeItem[],
 }
 
 const mapDispatch = (dispatch: IDispatch) => {
   return {
     asyncGetMetricsData: dispatch.service.asyncGetMetricsData,
+    asyncGetMetricsSumData: dispatch.service.asyncGetMetricsSumData,
   };
 };
 
 const mapState = (state: IRootState) => {
   return {
     loading: state.loading.models.service,
-    aliasConfig: state.app.aliasConfig
+    aliasConfig: state.app.aliasConfig,
+    annotationLine: state.app.annotationLine,
   };
 };
 
@@ -56,7 +60,7 @@ class ServiceMetrics extends React.Component<IProps, IState> {
   chartInstance: Chart;
   pollingTimer: any;
   formRef = React.createRef<FormInstance>();
-  constructor (props: IProps) {
+  constructor(props: IProps) {
     super(props);
     this.state = {
       serviceType: 'graph',
@@ -70,10 +74,11 @@ class ServiceMetrics extends React.Component<IProps, IState> {
       },
       metricsValueType: SERVICE_SUPPORT_METRICS.graph[0].valueType,
       data: [],
+      totalData: [],
       instanceList: []
     };
   }
-  componentDidMount () {
+  componentDidMount() {
     this.initialConfig();
   }
 
@@ -111,16 +116,16 @@ class ServiceMetrics extends React.Component<IProps, IState> {
       }, this.pollingData);
     }
   }
-  componentDidUpdate (prevProps) {
+  componentDidUpdate(prevProps) {
     if(prevProps.location.pathname !== this.props.location.pathname) {
       this.initialConfig();
     }
   }
-  componentWillUnmount () {
+  componentWillUnmount() {
     this.clearPolling();
   }
 
-  pollingData = async () => {
+  pollingData = async() => {
     await this.asyncGetMetricsData();
     this.pollingTimer = setTimeout(this.pollingData, CARD_POLLING_INTERVAL);
   }
@@ -143,16 +148,26 @@ class ServiceMetrics extends React.Component<IProps, IState> {
     );
   }
 
-  asyncGetMetricsData = async () => {
+  asyncGetMetricsData = async() => {
     const { timeRange, metric, metricFunction, period } = this.formRef.current!.getFieldsValue();
     const [startTime, endTime] = timeRange;
-    const data = await this.props.asyncGetMetricsData({
+    let data = await this.props.asyncGetMetricsData({
       query: metricFunction+period,
       metric,
       start: startTime,
       end: endTime,
       timeInterval: period
     });
+    if(NEED_ADD_SUM_QUERYS.includes(metric)){
+      const totalData = await this.props.asyncGetMetricsSumData({
+        query: metricFunction+period,
+        metric,
+        start: startTime,
+        end: endTime,
+        timeInterval: period
+      });
+      data = data.concat(totalData);
+    }
     const instanceList = data.map(item => item.metric.instanceName);
     this.setState({
       data,
@@ -204,9 +219,9 @@ class ServiceMetrics extends React.Component<IProps, IState> {
     }
     this.resetPollingData();
   }
-  render () {
+  render() {
     const { serviceType, defaultFormParams, instanceList } = this.state;
-    const { loading, aliasConfig } = this.props;
+    const { loading, aliasConfig, annotationLine } = this.props;
     return (<div className="service-metrics">
       <ServiceHeader 
         title={`${serviceType} ${intl.get('common.metric')}`} 
@@ -258,6 +273,9 @@ class ServiceMetrics extends React.Component<IProps, IState> {
                 }
               </DashboardSelect>
             </Form.Item>
+            <Popover content="metric docs">
+              <Icon className="metric-info-icon blue" icon="#iconnav-serverInfo" />
+            </Popover>
             <Form.Item
               noStyle={true}
               shouldUpdate={(prevValues, currentValues) => prevValues.metric !== currentValues.metric}
@@ -288,8 +306,8 @@ class ServiceMetrics extends React.Component<IProps, IState> {
           </Row>
         </Form>
         <Spin spinning={!!loading} wrapperClassName="nebula-chart">
-          <LineChart renderChart={this.renderChart} options={{ padding: [20, 20, 60, 50] }} />
-        </Spin>
+          <LineChart baseLineNum={annotationLine[serviceType]} renderChart={this.renderChart} options={{ padding: [20, 20, 60, 50] }} />
+        </Spin >
       </div>
     </div>);
   }

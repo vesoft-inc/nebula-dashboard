@@ -1,7 +1,7 @@
 import { createModel } from '@rematch/core';
 import _ from 'lodash';
 import service from '@assets/config/service';
-import { getProperStep } from '@assets/utils/dashboard';
+import { NEED_ADD_SUM_QUERYS, getProperStep } from '@assets/utils/dashboard';
 import { LINUX } from '@assets/utils/promQL';
 import { IStatRangeItem, IStatSingleItem } from '@assets/utils/interface';
 
@@ -40,7 +40,7 @@ export const machine = createModel({
     },
   },
   effects: () => ({
-    async asyncGetCPUStatByRange (payload: {
+    async asyncGetCPUStatByRange(payload: {
       start: number,
       end: number,
       metric: string,
@@ -57,14 +57,24 @@ export const machine = createModel({
       })) as any;
       let cpuStat = [];
       if (code === 0) {
-        cpuStat = data.result;
+        if(NEED_ADD_SUM_QUERYS.includes(metric)){
+          cpuStat = await this.asyncGetSumDataByRange({
+            query: PROMQL[metric],
+            start: _start,
+            end: _end,
+            step,
+            data:data.result,
+          }) as any;
+        }else{
+          cpuStat = data.result;
+        }
       }
       this.update({
         cpuStat,
       });
     },
 
-    async asyncGetMemoryStatByRange (payload: {
+    async asyncGetMemoryStatByRange(payload: {
       start: number,
       end: number,
       metric: string,
@@ -80,8 +90,19 @@ export const machine = createModel({
         step,
       })) as any;
       let memoryStat = [];
+      
       if (code === 0) {
-        memoryStat = data.result;
+        if(NEED_ADD_SUM_QUERYS.includes(metric)){
+          memoryStat = await this.asyncGetSumDataByRange({
+            query: PROMQL[metric],
+            start: _start,
+            end: _end,
+            step,
+            data:data.result,
+          }) as any;
+        }else{
+          memoryStat = data.result;
+        }
       }
 
       this.update({
@@ -89,7 +110,7 @@ export const machine = createModel({
       });
     },
 
-    async asyncGetMemorySizeStat () {
+    async asyncGetMemorySizeStat() {
       const { code, data } = (await service.execPromQL({
         query: PROMQL.memory_size
       })) as any;
@@ -105,7 +126,7 @@ export const machine = createModel({
       });
     },
 
-    async asyncGetDiskStatByRange (payload: {
+    async asyncGetDiskStatByRange(payload: {
       start: number,
       end: number,
       metric: string,
@@ -122,7 +143,17 @@ export const machine = createModel({
       })) as any;
       let diskStat = [];
       if (code === 0) {
-        diskStat = data.result;
+        if(NEED_ADD_SUM_QUERYS.includes(metric)){
+          diskStat = await this.asyncGetSumDataByRange({
+            query: PROMQL[metric],
+            start: _start,
+            end: _end,
+            step,
+            data: data.result,
+          }) as any;
+        }else{
+          diskStat = data.result;
+        }
       }
 
       this.update({
@@ -130,7 +161,7 @@ export const machine = createModel({
       });
     },
 
-    async asyncGetDiskSizeStat () {
+    async asyncGetDiskSizeStat() {
       const { code, data } = (await service.execPromQL({
         query: PROMQL.disk_size,
       })) as any;
@@ -143,7 +174,7 @@ export const machine = createModel({
       });
     },
 
-    async asyncGetLoadByRange (payload: {
+    async asyncGetLoadByRange(payload: {
       start: number,
       end: number,
       metric: string,
@@ -161,14 +192,24 @@ export const machine = createModel({
 
       let loadStat = [];
       if (code === 0) {
-        loadStat = data.result;
+        if(NEED_ADD_SUM_QUERYS.includes(metric)){
+          loadStat = await this.asyncGetSumDataByRange({
+            query: PROMQL[metric],
+            start: _start,
+            end: _end,
+            step,
+            data:data.result,
+          }) as any;
+        }else{
+          loadStat = data.result;
+        }
       }
       this.update({
         loadStat,
       });
     },
 
-    async asyncGetNetworkStatByRange (payload: {
+    async asyncGetNetworkStatByRange(payload: {
       start: number,
       end: number,
       metric: string,
@@ -188,7 +229,17 @@ export const machine = createModel({
       let networkStat = [];
 
       if (code === 0) {
-        networkStat = data.result;
+        if(NEED_ADD_SUM_QUERYS.includes(metric)){
+          networkStat = await this.asyncGetSumDataByRange({
+            query: PROMQL[metric],
+            start: _start,
+            end: _end,
+            step,
+            data:data.result,
+          }) as any;
+        }else{
+          networkStat = data.result;
+        }
       }
 
       switch(inOrOut) {
@@ -207,6 +258,34 @@ export const machine = createModel({
             networkStat,
           });
       }
-    }
+    },
+
+    async  asyncGetSumDataByRange(payload: {
+      query: string,
+      start: number,
+      end: number,
+      step: number,
+      data: any[],
+    }) {
+      const { query, start, end, step, data } = payload;
+      const { code, data:dataStat } = (await service.execPromQLByRange({
+        query: `sum(${query})`,
+        start,
+        end,
+        step,
+      })) as any;
+      if(code ===0){
+        const sumData = {
+          metric:{
+            instance: 'total',
+            job: 'total'
+          }
+        } as any;
+        sumData.values = dataStat.result[0].values;
+        return data.concat(sumData);
+      }else{
+        return data;
+      }
+    },
   }),
 });

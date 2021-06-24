@@ -87,7 +87,7 @@ export const getDataByType = (payload:{data: IStatRangeItem[], type?: string, na
   data.forEach(instance => {
     instance.values.forEach(([timstamps, value]) => {
       const _name = instance.metric[name];
-      if(type === 'all' || _name === type) {
+      if((type === 'all' && _name !== 'total') || _name === type) {
         res.push({
           type: aliasConfig && aliasConfig[_name] ? aliasConfig[_name] : _name,
           value: Number(value),
@@ -140,4 +140,24 @@ export const TIMEOPTIONS = [
     name: '14day',
     value: 60 * 60 * 24 * 14 * 1000,
   },
+];
+
+export const NEED_ADD_SUM_QUERYS = [
+  // For Instanc
+  'memory_used',
+  'memory_actual_used',
+  'memory_free',
+  'disk_used',
+  'disk_free',
+  'disk_readbytes',
+  'disk_writebytes',
+  'disk_readiops',
+  'disk_writeiops',
+  'network_in_errs',
+  'network_out_errs',
+  'network_in_packets',
+  'network_out_packet',
+  // For Nebula Graph Service
+  'num_queries',
+  'num_slow_queries'
 ];

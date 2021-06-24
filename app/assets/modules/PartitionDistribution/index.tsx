@@ -41,7 +41,7 @@ interface IState {
 class PartitionDistribution extends React.Component<IProps, IState> {
 
   chartInstance: Chart;
-  constructor (props: IProps) {
+  constructor(props: IProps) {
     super(props);
     this.state = {
       currentSpace: '',
@@ -49,10 +49,10 @@ class PartitionDistribution extends React.Component<IProps, IState> {
     };
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.getSpaces();
   }
-  getSpaces = async () => {
+  getSpaces = async() => {
     await this.props.asyncGetSpaces();
     const { spaces } = this.props;
     const currentSpace = (spaces[0] as any).Name;
@@ -94,7 +94,7 @@ class PartitionDistribution extends React.Component<IProps, IState> {
   }
 
 
-  render () {
+  render() {
     const { data } = this.state;
     const { loading } = this.props;
     const columns = [{

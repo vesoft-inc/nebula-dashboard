@@ -22,11 +22,11 @@ interface IProps extends ReturnType<typeof mapState>,
 
 class ServiceInfo extends React.Component<IProps> {
 
-  componentDidMount (){
+  componentDidMount(){
     this.props.asyncGetServices();
   }
 
-  render () {
+  render() {
     const { services } = this.props;
     const columns =[
       {

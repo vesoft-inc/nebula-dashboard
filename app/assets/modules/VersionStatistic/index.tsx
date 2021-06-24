@@ -23,7 +23,7 @@ interface IState {
 }
 
 class VersionStatistic extends React.Component<IProps, IState> {
-  constructor (props: IProps) {
+  constructor(props: IProps) {
     super(props);
     this.state = {
       graph: [],
@@ -32,11 +32,11 @@ class VersionStatistic extends React.Component<IProps, IState> {
     };
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.getVersion();
   }
   
-  getVersion = async () => {
+  getVersion = async() => {
     const graph = await this.props.asyncGetServiceVersion('GRAPH');
     const storage = await this.props.asyncGetServiceVersion('STORAGE');
     const meta = await this.props.asyncGetServiceVersion('META');
@@ -47,7 +47,7 @@ class VersionStatistic extends React.Component<IProps, IState> {
     });
   }
 
-  render () {
+  render() {
     const { graph, storage, meta } = this.state;
     return (<div className="version-statistics">
       <VersionItem title="Graph Service" icon="#iconservice-graph" mode="blue" data={graph} />

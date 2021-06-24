@@ -38,7 +38,7 @@ interface IProps extends ReturnType<typeof mapDispatch>,
 class MachineDashboard extends React.Component<IProps> {
   pollingTimer: any;
 
-  componentDidMount () {
+  componentDidMount() {
     this.props.asyncGetMemorySizeStat();
     this.props.asyncGetDiskSizeStat();
 
@@ -46,7 +46,7 @@ class MachineDashboard extends React.Component<IProps> {
     this.pollingMachineStatus();
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     if (this.pollingTimer) {
       clearTimeout(this.pollingTimer);
     }
@@ -96,7 +96,7 @@ class MachineDashboard extends React.Component<IProps> {
     }, CARD_POLLING_INTERVAL);
   }
 
-  render () {
+  render() {
     return <div className="machine-dashboard">
       <Row>
         <Col span={12}>

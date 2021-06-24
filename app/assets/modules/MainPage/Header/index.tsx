@@ -24,7 +24,7 @@ interface IState {
 }
 
 class Header extends React.PureComponent<IProps, IState> {
-  constructor (props: IProps) {
+  constructor(props: IProps) {
     super(props);
     this.state = {
       collapsed: false
@@ -41,7 +41,7 @@ class Header extends React.PureComponent<IProps, IState> {
     this.props.history.push(path);
   }
 
-  render () {
+  render() {
     const { breadcrumb: routes, title, showBackBtn, extra } = this.props.config;
     const itemRender = (route, _params, routes, _paths) => {
       const last = routes.indexOf(route) === routes.length - 1;

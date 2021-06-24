@@ -12,12 +12,12 @@ class PieChart extends React.Component<IProps> {
   chartRef: any;
   chartInstance: Chart;
 
-  constructor (props: IProps) {
+  constructor(props: IProps) {
     super(props);
     this.chartRef = React.createRef();
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.renderChart();
   }
 
@@ -34,7 +34,7 @@ class PieChart extends React.Component<IProps> {
     this.chartInstance.render();
   }
 
-  render () {
+  render() {
     return (
       <div className="nebula-chart nebula-chart-pie" style={{ textAlign: 'center' }} ref={this.chartRef} />
     );

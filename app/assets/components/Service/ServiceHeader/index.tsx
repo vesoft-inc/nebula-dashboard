@@ -6,7 +6,7 @@ interface IProps {
   icon: string;
 }
 class ServiceHeader extends React.PureComponent<IProps> {
-  render () {
+  render() {
     const { title, icon } = this.props;
     return (
       <div className="service-content-header">

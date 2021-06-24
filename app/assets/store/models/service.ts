@@ -28,7 +28,40 @@ export const service = createModel({
     },
   },
   effects: () => ({
-    async asyncGetMetricsData (payload: {
+    async asyncGetMetricsSumData(payload: {
+      query:string,
+      metric: string,
+      start: number,
+      end: number,
+      timeInterval: number,
+    }) {
+      const { start, end, query, metric, timeInterval } = payload;
+      const step = getProperStep(start, end);
+      const _start = start / 1000;
+      const _end = end / 1000;
+      const { code, data } = (await serviceApi.execPromQLByRange({
+        query:`sum(${query})`,
+        start: _start,
+        end: _end,
+        step,
+      })) as any;
+      const sumData = {
+        metric:{
+          instanceName: 'total',
+          instance: 'total',
+        }
+      } as any;
+      if (code === 0) {
+        if(metric === SERVICE_SUPPORT_METRICS.graph[0].metric || metric===SERVICE_SUPPORT_METRICS.graph[1].metric){
+          sumData.values = getQPSData(data, timeInterval)[0].values;
+        }else{
+          sumData.values = data.result[0].values;
+        }
+      }
+      return sumData;
+    },
+
+    async asyncGetMetricsData(payload: {
       query:string,
       metric: string,
       start: number,
@@ -56,7 +89,7 @@ export const service = createModel({
       return stat;
     },
 
-    async asyncGetStatus (payload: {
+    async asyncGetStatus(payload: {
       interval: number,
       end: number,
       query: string,

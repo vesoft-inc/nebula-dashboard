@@ -29,7 +29,7 @@ const mapState = (state: IRootState) => {
 
 class VersionItem extends React.PureComponent<IProps, IState> {
   chartInstance: Chart;
-  componentDidUpdate () {
+  componentDidUpdate() {
     this.updateChart();
   }
 
@@ -50,7 +50,7 @@ class VersionItem extends React.PureComponent<IProps, IState> {
     this.chartInstance.changeData(chartData);
   }
 
-  render () {
+  render() {
     const { title, icon, data, loading } = this.props;
     const columns = [{
       title: intl.get('common.service'),

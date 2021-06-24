@@ -10,6 +10,7 @@ const execPromQLByRange = get('/api-metrics/query_range');
 
 const getAppInfo = get('/api/app');
 const getAliasConfig = get('/api/config/alias');
+const getAnnotationLineConfig = get('/api/config/annotation_line');
 
 export default {
   execNGQL,
@@ -17,5 +18,6 @@ export default {
   getAppInfo,
   execPromQL,
   execPromQLByRange,
-  getAliasConfig
+  getAliasConfig,
+  getAnnotationLineConfig
 };

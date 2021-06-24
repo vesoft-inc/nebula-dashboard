@@ -34,16 +34,16 @@ interface IState {
 
 class LeaderDistribution extends React.Component<IProps, IState> {
   chartInstance: Chart;
-  constructor (props: IProps) {
+  constructor(props: IProps) {
     super(props);
     this.state = {
       data: [],
     };
   }
-  componentDidMount () {
+  componentDidMount() {
     this.getStorageInfo();
   }
-  getStorageInfo = async () => {
+  getStorageInfo = async() => {
     const res = await this.props.asyncGetHostsInfo();
     const data = res.map((item: any) => ({
       name: item.Host,
@@ -74,7 +74,7 @@ class LeaderDistribution extends React.Component<IProps, IState> {
   }
 
   
-  render () {
+  render() {
     const { data } = this.state;
     const { loading } = this.props;
     const columns = [{

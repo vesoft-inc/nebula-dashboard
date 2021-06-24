@@ -21,7 +21,7 @@ interface IProps extends ReturnType<typeof mapState>,
 
 class LongTermTask extends React.Component<IProps> {
 
-  componentDidMount (){
+  componentDidMount(){
     this.props.asyncGetJobs();
   }
 
@@ -29,7 +29,7 @@ class LongTermTask extends React.Component<IProps> {
     return <span>{time.year/time.month/time.day}{time.hour}:{time.minute}:{time.sec}</span>;
   }
 
-  render () {
+  render() {
     const { jobs, loading } = this.props;
     const columns =[
       {

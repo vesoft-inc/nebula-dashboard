@@ -7,8 +7,10 @@ import SpaceChart from '@assets/components/Charts/SpaceChart';
 const mapState = (state: IRootState) => {
   const { diskSizeStat, diskStat } = state.machine;
   const { aliasConfig } = state.app;
+  
   return {
-    diskUsageDetail: diskStat.map((instance, idx) => {
+    // According to type, only the detail increases total
+    diskUsageDetail: diskStat.filter(item => item.metric.instance !== 'total').map((instance, idx) => {
       const latestValues = _.last(instance.values);
       const size = diskSizeStat.length ? Number(diskSizeStat[idx].value[1]) : 0;
       const name = instance.metric.instance;
@@ -26,7 +28,7 @@ interface IProps extends ReturnType<typeof mapState> {
 }
 
 class DiskCard extends React.Component<IProps> {
-  render () {
+  render() {
     const { diskUsageDetail } = this.props;
     return (
       <div className="disk-detail detail-card">

@@ -4,10 +4,12 @@ import intl from 'react-intl-universal';
 import { IServicePanelConfig, IStatRangeItem } from '@assets/utils/interface';
 import { getDataByType } from '@assets/utils/dashboard';
 import { SERVICE_DEFAULT_RANGE, SERVICE_POLLING_INTERVAL } from '@assets/utils/service';
+import { METRICS_DESCRIPTION } from '@assets/utils/metric';
 import Card from '@assets/components/Service/ServiceCard/Card';
 import { IDispatch, IRootState } from '@assets/store';
 import { connect } from 'react-redux';
 import { isEqual } from 'lodash';
+import { Popover } from 'antd';
 
 import './index.less';
 
@@ -27,7 +29,8 @@ const mapState = (state: IRootState) => {
 interface IProps extends ReturnType<typeof mapDispatch>,
   ReturnType<typeof mapState> {
   onConfigPanel: () => void;
-  config: IServicePanelConfig
+  config: IServicePanelConfig;
+  baseLineNum?: number;
 }
 
 interface IState {
@@ -35,24 +38,24 @@ interface IState {
 }
 class CustomServiceQueryPanel extends React.PureComponent<IProps, IState> {
   pollingTimer: any;
-  constructor (props: IProps) {
+  constructor(props: IProps) {
     super(props);
     this.state = {
       data: [],
     };
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.pollingData();
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     if (this.pollingTimer) {
       clearTimeout(this.pollingTimer);
     }
   }
 
-  componentDidUpdate ( prevProps) {
+  componentDidUpdate( prevProps) {
     if(!isEqual(prevProps.config, this.props.config)) {
       this.resetPollingData();
     }
@@ -65,7 +68,7 @@ class CustomServiceQueryPanel extends React.PureComponent<IProps, IState> {
     this.pollingData();
   }
 
-  getMetricsData = async () => {
+  getMetricsData = async() => {
     const { config } = this.props;
     const { metric: metricName, period: metricPeriod, metricFunction } = config;
     const end = Date.now();
@@ -87,15 +90,15 @@ class CustomServiceQueryPanel extends React.PureComponent<IProps, IState> {
   }
 
 
-  render () {
+  render() {
     const { data } = this.state;
-    const { config: { metric, period, metricType }, aliasConfig } = this.props;
+    const { config: { metric, period, metricType }, aliasConfig, baseLineNum } = this.props;
     return <div className="dashboard-card">
       <div className="header">
-        <h3>{metric}</h3>
+        <Popover placement="bottomLeft" content={METRICS_DESCRIPTION[metric]}><h3>{metric}</h3></Popover>
         <div>
-          <span>{intl.get('service.period')}: {period}</span> 
-          <span>{intl.get('service.metricParams')}: {metricType}</span>
+          <span>{intl.get('service.period')}: <span>{period}</span></span> 
+          <span>{intl.get('service.metricParams')}: <span>{metricType}</span></span>
           <div className="btn-icon-with-desc blue" onClick={this.props.onConfigPanel} >
             <Icon icon="#iconSetup" />
             <span>{intl.get('common.set')}</span>
@@ -103,7 +106,7 @@ class CustomServiceQueryPanel extends React.PureComponent<IProps, IState> {
         </div>
       </div>
       <div className="content">
-        {data.length > 0 && <Card data={getDataByType({ data, type:'all', name:'instanceName', aliasConfig })} loading={false}/>}
+        {data.length > 0 && <Card baseLineNum={baseLineNum} data={getDataByType({ data, type:'all', name:'instanceName', aliasConfig })} loading={false}/>}
       </div>
     </div>;
   }

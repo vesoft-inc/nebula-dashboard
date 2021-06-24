@@ -25,6 +25,7 @@ const mapDispatch = (dispatch: IDispatch) => {
     asyncLogout: dispatch.app.asyncLogout,
     asyncGetAppInfo: dispatch.app.asyncGetAppInfo,
     asyncGetAliasConfig: dispatch.app.asyncGetAliasConfig,
+    asyncGetAnnotationLineInfo: dispatch.app.asyncGetAnnotationLineInfo,
   };
 };
 
@@ -41,16 +42,17 @@ interface IState {
 }
 
 class MainPage extends React.Component<IProps, IState> {
-  constructor (props: IProps) {
+  constructor(props: IProps) {
     super(props);
     this.state = {
       collapsed: false,
     };
   }
 
-  componentDidMount () {
+  componentDidMount() {
     const { appVersion } = this.props;
     this.props.asyncGetAliasConfig();
+    this.props.asyncGetAnnotationLineInfo();
     if(appVersion === '') {
       this.props.asyncGetAppInfo();
     }
@@ -78,7 +80,7 @@ class MainPage extends React.Component<IProps, IState> {
     });
   }
 
-  render () {
+  render() {
     const { collapsed } = this.state;
     const { appVersion } = this.props;
     const [, activeOpenSubMenu, activeMenu] = this.props.location.pathname.split('/');

@@ -1,4 +1,4 @@
-export function updateQueryStringParameter (uri, key, value) {
+export function updateQueryStringParameter(uri, key, value) {
   const re = new RegExp('([?&])' + key + '=.*?(&|$)', 'i');
   const separator = uri.indexOf('?') !== -1 ? '&' : '?';
   if (uri.match(re)) {

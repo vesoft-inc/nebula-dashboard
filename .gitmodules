@@ -1,3 +1,0 @@
-[submodule "vendors/nebula-http-gateway"]
-	path = vendors/nebula-http-gateway
-	url = git@github.com:vesoft-inc-private/nebula-http-gateway.git

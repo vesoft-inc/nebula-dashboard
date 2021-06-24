@@ -8,10 +8,13 @@ import Icon from '@assets/components/Icon';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import intl from 'react-intl-universal';
 import _ from 'lodash';
+import './index.less';
+
 interface IProps extends RouteComponentProps {
   serviceType: string;
   icon: string;
   configs: IServicePanelConfig[],
+  baseLineNum?:number,
   onConfigPanel: (serviceType: string, index: number)=>void;
 }
 
@@ -21,11 +24,12 @@ class ServiceOverview extends React.PureComponent<IProps> {
     this.props.history.push(`/service/${serviceType}-metrics`);
   }
 
-  render () {
+  render() {
     const { 
       serviceType, 
       icon, 
-      configs
+      configs,
+      baseLineNum
     } = this.props;
     return (
       <div className="service-table-item">
@@ -43,6 +47,7 @@ class ServiceOverview extends React.PureComponent<IProps> {
           {configs.map((config, index) => <Col span={12} key={index}>
             <CustomServiceQueryPanel 
               config={config}
+              baseLineNum={baseLineNum}
               onConfigPanel={() => this.props.onConfigPanel(serviceType, index)}
             />
           </Col>)}

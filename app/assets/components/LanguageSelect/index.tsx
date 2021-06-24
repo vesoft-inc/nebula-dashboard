@@ -12,7 +12,7 @@ interface IProps {
 }
 
 export default class OutputCsv extends React.PureComponent<IProps> {
-  render () {
+  render() {
     const { mode, showIcon } = this.props;
     return (
       <LanguageContext.Consumer>

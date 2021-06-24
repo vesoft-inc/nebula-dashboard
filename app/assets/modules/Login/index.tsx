@@ -33,17 +33,17 @@ interface IProps extends ReturnType<typeof mapState>,
 }
 class ConfigServerForm extends React.Component<IProps> {
 
-  componentDidMount () {
+  componentDidMount() {
     this.props.asyncGetAppInfo();
   }
 
-  onConfig = async (values: any) => {
+  onConfig = async(values: any) => {
     const ok = await this.props.asyncLogin(values);
     if (ok) {
       this.props.history.push('/machine/overview');
     }
   };
-  render (){
+  render(){
     const { appVersion } = this.props;
     return (
       <div className="page-login">
