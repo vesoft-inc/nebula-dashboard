@@ -5,10 +5,14 @@ import { ChartCfg } from '@antv/g2/lib/interface';
 export interface IProps {
   renderChart: (chartInstance: Chart) => void;
   options?: Partial<ChartCfg>
+<<<<<<< HEAD
   tickInterval?: number
   baseLine?: number
   yAxisMaximum?:number
   isDefaultScale?: boolean
+=======
+  baseLineNum?: number
+>>>>>>> 8b2e53a (mod: fix issue & chore nebula-stats-exporter (#55))
 }
 
 class LineChart extends React.Component<IProps> {
@@ -77,17 +81,28 @@ class LineChart extends React.Component<IProps> {
   }
 
   renderChart = () => {
+<<<<<<< HEAD
     const { options, baseLine } = this.props;
+=======
+    const { options, baseLineNum } = this.props;
+>>>>>>> 8b2e53a (mod: fix issue & chore nebula-stats-exporter (#55))
     this.chartInstance = new Chart({
       container: this.chartRef.current,
       autoFit: true,
       padding: [20, 0, 0, 0],
       ...options,
     });
+<<<<<<< HEAD
     if(baseLine){
       this.chartInstance.annotation().line({
         start: ['min', baseLine],
         end: ['max', baseLine],
+=======
+    if(baseLineNum){
+      this.chartInstance.annotation().line({
+        start: ['min', baseLineNum],
+        end: ['max', baseLineNum],
+>>>>>>> 8b2e53a (mod: fix issue & chore nebula-stats-exporter (#55))
         style: {
           stroke: '#e6522b',
           lineWidth: 1,
@@ -95,7 +110,10 @@ class LineChart extends React.Component<IProps> {
         },
       });
     }
+<<<<<<< HEAD
     this.showScaleByBaseLine();
+=======
+>>>>>>> 8b2e53a (mod: fix issue & chore nebula-stats-exporter (#55))
     this.chartInstance.interaction('brush');
     this.props.renderChart(this.chartInstance);
     this.chartInstance.render();

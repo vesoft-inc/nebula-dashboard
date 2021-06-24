@@ -8,13 +8,17 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { trackPageView } from '@assets/utils/stat';
 import intl from 'react-intl-universal';
 import _ from 'lodash';
+<<<<<<< HEAD:app/assets/modules/ServiceDashboard/ServiceOverview/index.tsx
 import CustomServiceQueryPanel from './CustomServiceQueryPanel';
+=======
+>>>>>>> 8b2e53a (mod: fix issue & chore nebula-stats-exporter (#55)):app/assets/components/Service/ServiceOverview/index.tsx
 import './index.less';
 
 interface IProps extends RouteComponentProps {
   serviceType: string;
   icon: string;
   configs: IServicePanelConfig[],
+  baseLineNum?:number,
   onConfigPanel: (serviceType: string, index: number)=>void;
   getStatus: (payload)=> void;
 }
@@ -31,7 +35,11 @@ class ServiceOverview extends React.PureComponent<IProps> {
       serviceType, 
       icon, 
       configs,
+<<<<<<< HEAD:app/assets/modules/ServiceDashboard/ServiceOverview/index.tsx
       getStatus,
+=======
+      baseLineNum
+>>>>>>> 8b2e53a (mod: fix issue & chore nebula-stats-exporter (#55)):app/assets/components/Service/ServiceOverview/index.tsx
     } = this.props;
     return (
       <div className="service-table-item">
@@ -49,6 +57,7 @@ class ServiceOverview extends React.PureComponent<IProps> {
           {configs.map((config, index) => <Col span={12} key={index}>
             <CustomServiceQueryPanel 
               config={config}
+              baseLineNum={baseLineNum}
               onConfigPanel={() => this.props.onConfigPanel(serviceType, index)}
             />
           </Col>)}

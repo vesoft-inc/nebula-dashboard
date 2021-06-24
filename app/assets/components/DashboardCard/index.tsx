@@ -23,7 +23,11 @@ class DashboardCard extends React.PureComponent<IProps> {
   }
 
   render() {
+<<<<<<< HEAD
     const { title, children, onConfigPanel } = this.props;
+=======
+    const { title, children } = this.props;
+>>>>>>> 8b2e53a (mod: fix issue & chore nebula-stats-exporter (#55))
     return <div className="dashboard-card">
       <div className="inner">
         <div className="header">

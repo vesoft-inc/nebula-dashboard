@@ -13,6 +13,10 @@ export const METRICS_DESCRIPTION = {
   get_neighbors_latency_us: 'get_neighbors_latency_us description',
   heartbeat_latency_us: 'heartbeat_latency_us description',
   num_heartbeats: 'num_heartbeats description',
+<<<<<<< HEAD
 };
 
 export const METRIC_SERVICE_TYPES = ['graph', 'storage', 'meta'];
+=======
+};
+>>>>>>> 8b2e53a (mod: fix issue & chore nebula-stats-exporter (#55))

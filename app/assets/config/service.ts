@@ -9,7 +9,11 @@ const execPromQL = get('/api-metrics/query');
 const execPromQLByRange = get('/api-metrics/query_range');
 
 const getAppInfo = get('/api/app');
+<<<<<<< HEAD
 const getCustomConfig = get('/api/config/custom');
+=======
+const getAliasConfig = get('/api/config/alias');
+>>>>>>> 8b2e53a (mod: fix issue & chore nebula-stats-exporter (#55))
 const getAnnotationLineConfig = get('/api/config/annotation_line');
 
 export default {
@@ -18,6 +22,10 @@ export default {
   getAppInfo,
   execPromQL,
   execPromQLByRange,
+<<<<<<< HEAD
   getCustomConfig,
+=======
+  getAliasConfig,
+>>>>>>> 8b2e53a (mod: fix issue & chore nebula-stats-exporter (#55))
   getAnnotationLineConfig
 };

@@ -26,7 +26,12 @@ const mapDispatch = (dispatch: IDispatch) => {
   return {
     asyncLogout: dispatch.app.asyncLogout,
     asyncGetAppInfo: dispatch.app.asyncGetAppInfo,
+<<<<<<< HEAD
     asyncGetCustomConfig: dispatch.app.asyncGetCustomConfig,
+=======
+    asyncGetAliasConfig: dispatch.app.asyncGetAliasConfig,
+    asyncGetAnnotationLineInfo: dispatch.app.asyncGetAnnotationLineInfo,
+>>>>>>> 8b2e53a (mod: fix issue & chore nebula-stats-exporter (#55))
   };
 };
 
@@ -52,7 +57,12 @@ class MainPage extends React.Component<IProps, IState> {
 
   componentDidMount() {
     const { appVersion } = this.props;
+<<<<<<< HEAD
     this.props.asyncGetCustomConfig();
+=======
+    this.props.asyncGetAliasConfig();
+    this.props.asyncGetAnnotationLineInfo();
+>>>>>>> 8b2e53a (mod: fix issue & chore nebula-stats-exporter (#55))
     if(appVersion === '') {
       this.props.asyncGetAppInfo();
     }

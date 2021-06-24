@@ -4,6 +4,7 @@ import intl from 'react-intl-universal';
 import { IServicePanelConfig, IStatRangeItem } from '@assets/utils/interface';
 import { getDataByType } from '@assets/utils/dashboard';
 import { SERVICE_DEFAULT_RANGE, SERVICE_POLLING_INTERVAL } from '@assets/utils/service';
+import { METRICS_DESCRIPTION } from '@assets/utils/metric';
 import Card from '@assets/components/Service/ServiceCard/Card';
 import { IDispatch, IRootState } from '@assets/store';
 import { connect } from 'react-redux';
@@ -28,7 +29,11 @@ interface IProps extends ReturnType<typeof mapDispatch>,
   ReturnType<typeof mapState> {
   onConfigPanel: () => void;
   config: IServicePanelConfig;
+<<<<<<< HEAD:app/assets/modules/ServiceDashboard/ServiceOverview/CustomServiceQueryPanel/index.tsx
   aliasConfig: any;
+=======
+  baseLineNum?: number;
+>>>>>>> 8b2e53a (mod: fix issue & chore nebula-stats-exporter (#55)):app/assets/components/Service/CustomServiceQueryPanel/index.tsx
 }
 
 interface IState {
@@ -66,7 +71,7 @@ class CustomServiceQueryPanel extends React.Component<IProps, IState> {
     this.pollingData();
   }
 
-  getMetricsData = async () => {
+  getMetricsData = async() => {
     const { config } = this.props;
     const { period: metricPeriod, metricFunction } = config;
     const end = Date.now();
@@ -85,12 +90,22 @@ class CustomServiceQueryPanel extends React.Component<IProps, IState> {
     this.pollingTimer = setTimeout(this.pollingData, SERVICE_POLLING_INTERVAL);
   }
 
+<<<<<<< HEAD:app/assets/modules/ServiceDashboard/ServiceOverview/CustomServiceQueryPanel/index.tsx
   render() {
     const { data } = this.state;
     const { config: { metric, period, metricType, baseLine }, aliasConfig } = this.props;
     return <div className="service-card">
       <div className="header">
         <Popover placement="bottomLeft" content={intl.get(`metric_description.${metric}`)}>{metric}</Popover>
+=======
+
+  render() {
+    const { data } = this.state;
+    const { config: { metric, period, metricType }, aliasConfig, baseLineNum } = this.props;
+    return <div className="dashboard-card">
+      <div className="header">
+        <Popover placement="bottomLeft" content={METRICS_DESCRIPTION[metric]}><h3>{metric}</h3></Popover>
+>>>>>>> 8b2e53a (mod: fix issue & chore nebula-stats-exporter (#55)):app/assets/components/Service/CustomServiceQueryPanel/index.tsx
         <div>
           <span>{intl.get('service.period')}: <span>{period}</span></span> 
           <span>{intl.get('service.metricParams')}: <span>{metricType}</span></span>
@@ -101,7 +116,11 @@ class CustomServiceQueryPanel extends React.Component<IProps, IState> {
         </div>
       </div>
       <div className="content">
+<<<<<<< HEAD:app/assets/modules/ServiceDashboard/ServiceOverview/CustomServiceQueryPanel/index.tsx
         {data.length > 0 && <Card baseLine={baseLine} data={getDataByType({ data, type:'all', name:'instanceName', aliasConfig })} loading={false}/>}
+=======
+        {data.length > 0 && <Card baseLineNum={baseLineNum} data={getDataByType({ data, type:'all', name:'instanceName', aliasConfig })} loading={false}/>}
+>>>>>>> 8b2e53a (mod: fix issue & chore nebula-stats-exporter (#55)):app/assets/components/Service/CustomServiceQueryPanel/index.tsx
       </div>
     </div>;
   }

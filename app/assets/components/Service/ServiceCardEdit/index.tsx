@@ -1,8 +1,13 @@
 import React from 'react';
+<<<<<<< HEAD
 import { Button, Form, InputNumber } from 'antd';
+=======
+import { Button, Form, Popover } from 'antd';
+>>>>>>> 8b2e53a (mod: fix issue & chore nebula-stats-exporter (#55))
 import { FormInstance } from 'antd/lib/form';
 import { TIME_INTERVAL_OPTIONS } from '@assets/utils/dashboard';
 import { SERVICE_SUPPORT_METRICS } from '@assets/utils/promQL';
+import Icon from '@assets/components/Icon';
 import { cloneDeep } from 'lodash';
 import intl from 'react-intl-universal';
 import { DashboardSelect, Option } from '@assets/components/DashboardSelect';
@@ -49,8 +54,13 @@ class ServiceCardEdit extends React.Component<IProps> {
     this.props.onClose();
   }
   render() {
+<<<<<<< HEAD
     const { editIndex, editType, panelConfig, onClose } = this.props;
     const editItem = panelConfig[editType][editIndex];
+=======
+    const { editIndex, editType, servicePanelConfig, onClose } = this.props;
+    const editItem = servicePanelConfig[editType][editIndex];
+>>>>>>> 8b2e53a (mod: fix issue & chore nebula-stats-exporter (#55))
     return (
       <div className="service-card-edit">
         <Form
@@ -67,7 +77,13 @@ class ServiceCardEdit extends React.Component<IProps> {
               }
             </DashboardSelect>
           </Form.Item>
+<<<<<<< HEAD
           <MetricPopover list={SERVICE_SUPPORT_METRICS[editType]}/>
+=======
+          <Popover content="metric docs">
+            <Icon className="metric-info-icon blue" icon="#iconnav-serverInfo" />
+          </Popover>
+>>>>>>> 8b2e53a (mod: fix issue & chore nebula-stats-exporter (#55))
           <Form.Item label={intl.get('service.metric')} name="metric">
             <DashboardSelect onChange={this.handleUpdateMetricType}>
               {

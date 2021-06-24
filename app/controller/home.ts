@@ -22,9 +22,29 @@ export default class HomeController extends Controller {
     };
   }
 
+<<<<<<< HEAD
   async getCustomizeConfig() {
+=======
+  async getAliasConfig() {
+>>>>>>> 8b2e53a (mod: fix issue & chore nebula-stats-exporter (#55))
     const { ctx } = this;
     const data = await fs.readFileSync(path.join(__dirname, '../../static/custom.json'), 'utf8');
+    if(data) {
+      ctx.response.body = {
+        code: 0,
+        data: JSON.parse(data)
+      };
+    } else {
+      ctx.response.body = {
+        code: -1,
+        data: null
+      };
+    }
+  }
+
+  async getAnnotationLineConfig() {
+    const { ctx } = this;
+    const data = await fs.readFileSync(path.join(__dirname, '../../static/annotationLine.json'), 'utf8');
     if(data) {
       ctx.response.body = {
         code: 0,

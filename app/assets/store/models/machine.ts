@@ -154,6 +154,7 @@ export const machine = createModel({
         }else{
           diskStat = data.result;
         }
+<<<<<<< HEAD
         diskStat = diskStat.map((stat:any) => {
           if(stat.metric.device){
             return{
@@ -167,6 +168,8 @@ export const machine = createModel({
             return stat;
           }
         });
+=======
+>>>>>>> 8b2e53a (mod: fix issue & chore nebula-stats-exporter (#55))
       }
 
       this.update({
@@ -287,12 +290,20 @@ export const machine = createModel({
         end,
         step,
       })) as any;
+<<<<<<< HEAD
       if(code === 0 && dataStat.result.length !== 0){
+=======
+      if(code ===0){
+>>>>>>> 8b2e53a (mod: fix issue & chore nebula-stats-exporter (#55))
         const sumData = {
           metric:{
             instance: 'total',
             job: 'total'
+<<<<<<< HEAD
           },
+=======
+          }
+>>>>>>> 8b2e53a (mod: fix issue & chore nebula-stats-exporter (#55))
         } as any;
         sumData.values = dataStat.result[0].values;
         return data.concat(sumData);

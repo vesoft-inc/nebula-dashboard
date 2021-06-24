@@ -40,9 +40,14 @@ class ConfigServerForm extends React.Component<IProps> {
     this.props.asyncGetCustomConfig();
   }
 
+<<<<<<< HEAD
   onConfig = async (values: any) => {
     const { connection } = this.props;
     const ok = await this.props.asyncLogin({ ip: connection.ip, port:  connection.port, ...values });
+=======
+  onConfig = async(values: any) => {
+    const ok = await this.props.asyncLogin(values);
+>>>>>>> 8b2e53a (mod: fix issue & chore nebula-stats-exporter (#55))
     if (ok) {
       this.props.history.push('/machine/overview');
     }

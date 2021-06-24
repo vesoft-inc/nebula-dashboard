@@ -50,6 +50,7 @@ interface IState {
 }
 class MachineDashboard extends React.Component<IProps, IState> {
   pollingTimer: any;
+<<<<<<< HEAD
   modalHandler;
   constructor(props: IProps) {
     super(props);
@@ -57,6 +58,9 @@ class MachineDashboard extends React.Component<IProps, IState> {
       editPanelType: '',
     };
   }
+=======
+
+>>>>>>> 8b2e53a (mod: fix issue & chore nebula-stats-exporter (#55))
   componentDidMount() {
     this.props.asyncGetMemorySizeStat();
     this.props.asyncGetDiskSizeStat();
@@ -134,6 +138,7 @@ class MachineDashboard extends React.Component<IProps, IState> {
     }, CARD_POLLING_INTERVAL);
   }
 
+<<<<<<< HEAD
   getValueType=(type) => {
     switch (type) {
       case MACHINE_TYPE.cpu:
@@ -151,6 +156,9 @@ class MachineDashboard extends React.Component<IProps, IState> {
 
   render() {
     const { editPanelType } = this.state;
+=======
+  render() {
+>>>>>>> 8b2e53a (mod: fix issue & chore nebula-stats-exporter (#55))
     return <div className="machine-dashboard">
       <Row>
         <Col span={12}>

@@ -1,5 +1,5 @@
 import { DETAIL_DEFAULT_RANGE, TIMEOPTIONS } from '@assets/utils/dashboard';
-import { DatePicker, Form, Radio } from 'antd';
+import { DatePicker, Form, Popover, Radio } from 'antd';
 import React, { HTMLProps } from 'react';
 import dayjs from 'dayjs';
 
@@ -44,6 +44,7 @@ class MachineDetail extends React.PureComponent<IProps> {
     }
   }
 
+<<<<<<< HEAD:app/assets/components/MachineDetail/index.tsx
   handleBaseLineEdit= () => {
     const { onBaseLineEdit } = this.props;
     if(onBaseLineEdit ){
@@ -55,6 +56,8 @@ class MachineDetail extends React.PureComponent<IProps> {
     return current < dayjs().subtract(14, 'days').endOf('day') || current > dayjs().endOf('day');
   }
 
+=======
+>>>>>>> 8b2e53a (mod: fix issue & chore nebula-stats-exporter (#55)):app/assets/components/DashboardDetail/index.tsx
   render() {
     const now = Date.now();
     const {
@@ -108,7 +111,13 @@ class MachineDetail extends React.PureComponent<IProps> {
                   metricOptions.map(option => <Option value={option.metric} key={option.metric}>{option.metric}</Option>)
                 }
               </DashboardSelect>
+<<<<<<< HEAD:app/assets/components/MachineDetail/index.tsx
               <MetricPopover list={metricOptions}/>
+=======
+              <Popover content="metric docs">
+                <Icon className="metric-info-icon blue" icon="#iconnav-serverInfo" />
+              </Popover>
+>>>>>>> 8b2e53a (mod: fix issue & chore nebula-stats-exporter (#55)):app/assets/components/DashboardDetail/index.tsx
             </Form.Item>
           }
         </div>

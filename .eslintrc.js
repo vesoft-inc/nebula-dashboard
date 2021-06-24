@@ -295,11 +295,15 @@ module.exports = {
         ],
         "space-infix-ops": "error",
         semi: 1,
+<<<<<<< HEAD
         'space-before-function-paren':  ["error", {
             "anonymous": "never",
             "named": "never",
             "asyncArrow": "always"
         }],
+=======
+        'space-before-function-paren':  ["error", "never"],
+>>>>>>> 8b2e53a (mod: fix issue & chore nebula-stats-exporter (#55))
         'object-curly-spacing': ['error','always'],
         'use-isnan': 'error',
         'valid-typeof': 'off',

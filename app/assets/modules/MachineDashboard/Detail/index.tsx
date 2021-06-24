@@ -27,11 +27,15 @@ const mapDispatch = (dispatch: IDispatch) => {
 const mapState = (state: IRootState) => {
   return {
     aliasConfig: state.app.aliasConfig,
+<<<<<<< HEAD
     cpuBaseLine: state.setting.cpuBaseLine,
     memoryBaseLine: state.setting.memoryBaseLine,
     loadBaseLine: state.setting.loadBaseLine,
     diskBaseLine: state.setting.diskBaseLine,
     networkBaseLine: state.setting.networkBaseLine,
+=======
+    annotationLine: state.app.annotationLine,
+>>>>>>> 8b2e53a (mod: fix issue & chore nebula-stats-exporter (#55))
   };
 };
 interface IProps extends ReturnType<typeof mapState>,
@@ -57,7 +61,11 @@ interface IState {
 class Detail extends React.Component<IProps, IState> {
   pollingTimer: any;
   chartInstance: Chart;
+<<<<<<< HEAD
   modalHandler;
+=======
+
+>>>>>>> 8b2e53a (mod: fix issue & chore nebula-stats-exporter (#55))
   constructor(props: IProps) {
     super(props);
     const endTimestamps = Date.now();
@@ -80,7 +88,7 @@ class Detail extends React.Component<IProps, IState> {
     }
   }
 
-  getData = async () => {
+  getData = async() => {
     const { startTimestamps, endTimestamps, currentMetricOption } = this.state;
     await this.props.asyncGetDataSourceByRange({
       start: startTimestamps,
@@ -168,8 +176,13 @@ class Detail extends React.Component<IProps, IState> {
   }
   
   render() {
+<<<<<<< HEAD
     const { maxNum, startTimestamps, endTimestamps, currentInstance, currentMetricOption } = this.state;
     const { dataSource, metricOptions, loading, aliasConfig, type } = this.props;
+=======
+    const { startTimestamps, endTimestamps, currentInstance, currentMetricOption } = this.state;
+    const { dataSource, metricOptions, loading, aliasConfig, annotationLine, type } = this.props;
+>>>>>>> 8b2e53a (mod: fix issue & chore nebula-stats-exporter (#55))
     const instances = uniq(dataSource.map(instance => instance.metric.instance));
     const typeOptions = [
       {
@@ -181,7 +194,11 @@ class Detail extends React.Component<IProps, IState> {
         value: instance,
       }))
     ];
+<<<<<<< HEAD
     const baseLine = this.props[`${type}BaseLine`];
+=======
+
+>>>>>>> 8b2e53a (mod: fix issue & chore nebula-stats-exporter (#55))
     return (
       <Spin spinning={loading} wrapperClassName="machine-detail">
         <MachineDetail
@@ -214,6 +231,7 @@ class Detail extends React.Component<IProps, IState> {
           handlerRef={handler => (this.modalHandler = handler)}
           footer={null}
         >
+<<<<<<< HEAD
           <BaseLineEdit
             valueType={currentMetricOption.valueType}
             baseLine={baseLine || 0}
@@ -221,6 +239,10 @@ class Detail extends React.Component<IProps, IState> {
             onBaseLineChange={this.handleBaseLineChange}
           />
         </Modal>
+=======
+          <LineChart baseLineNum={annotationLine[type]} options={{ padding: [10, 70, 70, 70] }} renderChart={this.renderChart} />
+        </DashboardDetail>
+>>>>>>> 8b2e53a (mod: fix issue & chore nebula-stats-exporter (#55))
       </Spin>
     );
   }

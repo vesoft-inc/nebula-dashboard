@@ -32,7 +32,11 @@ interface IProps extends ReturnType<typeof mapState>,
 
 class PartitionInfo extends React.Component<IProps> {
 
+<<<<<<< HEAD
   componentDidMount() {
+=======
+  componentDidMount(){
+>>>>>>> 8b2e53a (mod: fix issue & chore nebula-stats-exporter (#55))
     this.props.asyncGetSpaces();
   }
 

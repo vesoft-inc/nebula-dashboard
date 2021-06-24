@@ -42,6 +42,20 @@ export const nebula = createModel({
       }
     },
 
+<<<<<<< HEAD
+=======
+    async asyncGetSnapshots() {
+      const { code, data } = (await service.execNGQL({
+        gql: 'SHOW SNAPSHOTS'
+      })) as any;
+      if (code === 0) {
+        this.update({
+          snapshots: data.tables ? data.tables : [],
+        });
+      }
+    },
+
+>>>>>>> 8b2e53a (mod: fix issue & chore nebula-stats-exporter (#55))
     async asyncGetJobs() {
       const { code, data } = (await service.execNGQL({
         gql: 'SHOW JOBS'

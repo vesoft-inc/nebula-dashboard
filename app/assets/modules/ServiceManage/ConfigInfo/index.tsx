@@ -31,8 +31,13 @@ class ConfigInfo extends React.Component<IProps> {
   }
 
   render() {
+<<<<<<< HEAD
     const { configs, loading } = this.props;
     const columns = [
+=======
+    const { configs, loading }=this.props;
+    const columns =[
+>>>>>>> 8b2e53a (mod: fix issue & chore nebula-stats-exporter (#55))
       {
         title: <TitleInstruction title="Module" description={intl.get('description.module')} />,
         dataIndex: 'module',

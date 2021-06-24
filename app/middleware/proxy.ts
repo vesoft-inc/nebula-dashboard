@@ -10,6 +10,10 @@ export default () => {
     if (metricsProxyPath.test(ctx.request.url)) {
       const importProxy = k2c(
         createProxyMiddleware({
+<<<<<<< HEAD
+=======
+          // target: 'http://localhost:8090',
+>>>>>>> 8b2e53a (mod: fix issue & chore nebula-stats-exporter (#55))
           target: `http://${(ctx.request.header.host as string).split(':')[0]}:9090`,
           pathRewrite: {
             '/api-metrics': '/api/v1',

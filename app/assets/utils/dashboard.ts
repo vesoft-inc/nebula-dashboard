@@ -198,6 +198,7 @@ export const NEED_ADD_SUM_QUERYS = [
   // For Nebula Graph Service
   'num_queries',
   'num_slow_queries'
+<<<<<<< HEAD
 ];
 
 export enum MACHINE_TYPE {
@@ -249,3 +250,6 @@ export const getMaxNumAndLength = (payload:{
   }
   return { maxNum, maxNumLen };
 };
+=======
+];
+>>>>>>> 8b2e53a (mod: fix issue & chore nebula-stats-exporter (#55))

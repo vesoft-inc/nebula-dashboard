@@ -52,7 +52,14 @@ class PartitionDistribution extends React.Component<IProps, IState> {
     };
   }
 
+<<<<<<< HEAD
   async componentDidMount() {
+=======
+  componentDidMount() {
+    this.getSpaces();
+  }
+  getSpaces = async() => {
+>>>>>>> 8b2e53a (mod: fix issue & chore nebula-stats-exporter (#55))
     await this.props.asyncGetSpaces();
     const { currentSpace } = this.props;
     if(currentSpace){

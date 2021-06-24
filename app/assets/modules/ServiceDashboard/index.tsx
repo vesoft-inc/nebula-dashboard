@@ -19,8 +19,13 @@ const mapDispatch = (dispatch: IDispatch) => {
 
 const mapState = (state: IRootState) => {
   return {
+<<<<<<< HEAD
     panelConfig: state.service.panelConfig,
     aliasConfig: state.app.aliasConfig,
+=======
+    servicePanelConfig: state.service.servicePanelConfig,
+    annotationLine: state.app.annotationLine,
+>>>>>>> 8b2e53a (mod: fix issue & chore nebula-stats-exporter (#55))
   };
 };
 
@@ -60,13 +65,19 @@ class ServiceDashboard extends React.Component<IProps, IState> {
   render() {
     const { editPanelType, editPanelIndex } = this.state;
     const { 
+<<<<<<< HEAD
       panelConfig,
       updatePanelConfig,
       asyncGetStatus,
+=======
+      servicePanelConfig,
+      annotationLine
+>>>>>>> 8b2e53a (mod: fix issue & chore nebula-stats-exporter (#55))
     } = this.props;
     // TODO: Use hooks to resolve situations where render is jamming
     return (
       <div className="service-table">
+<<<<<<< HEAD
         {METRIC_SERVICE_TYPES.map(type => <ServiceOverview 
           key={type}
           serviceType={type}
@@ -75,6 +86,29 @@ class ServiceDashboard extends React.Component<IProps, IState> {
           getStatus={asyncGetStatus}
           onConfigPanel={this.handleConfigPanel}
         />)}
+=======
+        <ServiceOverview 
+          serviceType="graph"
+          icon="#iconnav-graph"
+          baseLineNum={annotationLine.graph}
+          configs={servicePanelConfig.graph}
+          onConfigPanel={this.handleConfigPanel}
+        />
+        <ServiceOverview 
+          serviceType="storage"
+          icon="#iconnav-storage" 
+          baseLineNum={annotationLine.storage}
+          configs={servicePanelConfig.storage}
+          onConfigPanel={this.handleConfigPanel}
+        />
+        <ServiceOverview 
+          serviceType="meta"
+          icon="#iconnav-meta"
+          baseLineNum={annotationLine.meta}
+          configs={servicePanelConfig.meta}
+          onConfigPanel={this.handleConfigPanel}
+        />
+>>>>>>> 8b2e53a (mod: fix issue & chore nebula-stats-exporter (#55))
         <Modal
           className="modal-show-selected"
           width="750px"
