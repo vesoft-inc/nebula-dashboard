@@ -2,7 +2,7 @@ name: Dashboard RPM Relase
 on:
   push:
     branches:
-      - nico-dev
+      - master
 jobs:
   package:
     name: build package

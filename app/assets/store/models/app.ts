@@ -3,6 +3,7 @@ import cookies from 'js-cookie';
 import service from '@assets/config/service';
 import intl from 'react-intl-universal';
 import { message } from 'antd';
+import customConfig from '@assets/config/custom';
 
 interface IState {
   version: string;
@@ -60,9 +61,8 @@ export const app = createModel({
       password
     }){
       const { code, message: errorMessage } = (await service.connectDB({
-        address: '192.168.8.157',
-        // address:'192.168.10.217',
-        port:9669,
+        address: customConfig.connection.ip,
+        port: customConfig.connection.port,
         username,
         password,
       })) as any;

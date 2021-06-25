@@ -63,14 +63,24 @@
 
 5. 部署 nebula-graph-dashboard
 - 安装包: `nebula-graph-dashboard`
+- 配置: `./app/assets/config
+  ```javascript
+  ...
+    connection: {
+      ip: '127.0.0.1', // 改成对应需要连接 nebula graph 的地址
+      port: 9669, // 改成对应nebula的端口
+    },
+  ...
+  ```
 - 启动方式:
   ```bash
   $ cd nebula-graph-dashboard
+  $ npm run build
   $ npm run start
   ```
 - 启动服务地址: http://127.0.0.1:7003
 
-6. 浏览器访问 Nebula Dashboard
+1. 浏览器访问 Nebula Dashboard
 访问 http://{{ip}}:7003
 
 
