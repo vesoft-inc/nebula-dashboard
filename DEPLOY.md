@@ -63,7 +63,7 @@
 
 5. 部署 nebula-graph-dashboard
 - 安装包: `nebula-graph-dashboard`
-- 配置: `./app/assets/config
+- 配置: `./static/custom.json
   ```javascript
   ...
     connection: {
@@ -75,7 +75,6 @@
 - 启动方式:
   ```bash
   $ cd nebula-graph-dashboard
-  $ npm run build
   $ npm run start
   ```
 - 启动服务地址: http://127.0.0.1:7003

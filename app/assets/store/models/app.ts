@@ -3,7 +3,6 @@ import cookies from 'js-cookie';
 import service from '@assets/config/service';
 import intl from 'react-intl-universal';
 import { message } from 'antd';
-import customConfig from '@assets/config/custom';
 
 interface IState {
   version: string;
@@ -18,7 +17,8 @@ export const app = createModel({
     version: '',
     username: cookies.get('nu'),
     password: cookies.get('np'),
-    aliasConfig: {},
+    aliasConfig: {} as any,
+    connection: {} as any,
     annotationLine: {} as any
   },
   reducers: {
@@ -47,22 +47,26 @@ export const app = createModel({
       }
     },
 
-    async asyncGetAliasConfig() {
-      const { code, data } = (await service.getAliasConfig()) as any;
+    async asyncGetCustomConfig() {
+      const { code, data:{ connection, alias } } = (await service.getCustomConfig()) as any;
       if (code === 0) {
         this.update({
-          aliasConfig: data
+          aliasConfig : alias,
+          connection
         });
       }
     },
 
-    async asyncLogin({
-      username,
-      password
+    async asyncLogin(payload: {
+      password:string,
+      username: string,
+      ip: string,
+      port: number,
     }){
+      const { password, username, ip, port } =payload;
       const { code, message: errorMessage } = (await service.connectDB({
-        address: customConfig.connection.ip,
-        port: customConfig.connection.port,
+        address: ip,
+        port,
         username,
         password,
       })) as any;

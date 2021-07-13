@@ -9,7 +9,7 @@ const execPromQL = get('/api-metrics/query');
 const execPromQLByRange = get('/api-metrics/query_range');
 
 const getAppInfo = get('/api/app');
-const getAliasConfig = get('/api/config/alias');
+const getCustomConfig = get('/api/config/custom');
 const getAnnotationLineConfig = get('/api/config/annotation_line');
 
 export default {
@@ -18,6 +18,6 @@ export default {
   getAppInfo,
   execPromQL,
   execPromQLByRange,
-  getAliasConfig,
+  getCustomConfig,
   getAnnotationLineConfig
 };

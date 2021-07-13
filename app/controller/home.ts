@@ -22,9 +22,9 @@ export default class HomeController extends Controller {
     };
   }
 
-  async getAliasConfig() {
+  async getCustomizeConfig() {
     const { ctx } = this;
-    const data = await fs.readFileSync(path.join(__dirname, '../../static/customize.json'), 'utf8');
+    const data = await fs.readFileSync(path.join(__dirname, '../../static/custom.json'), 'utf8');
     if(data) {
       ctx.response.body = {
         code: 0,

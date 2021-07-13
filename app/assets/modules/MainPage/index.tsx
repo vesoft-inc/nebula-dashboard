@@ -24,7 +24,7 @@ const mapDispatch = (dispatch: IDispatch) => {
   return {
     asyncLogout: dispatch.app.asyncLogout,
     asyncGetAppInfo: dispatch.app.asyncGetAppInfo,
-    asyncGetAliasConfig: dispatch.app.asyncGetAliasConfig,
+    asyncGetCustomConfig: dispatch.app.asyncGetCustomConfig,
     asyncGetAnnotationLineInfo: dispatch.app.asyncGetAnnotationLineInfo,
   };
 };
@@ -51,7 +51,7 @@ class MainPage extends React.Component<IProps, IState> {
 
   componentDidMount() {
     const { appVersion } = this.props;
-    this.props.asyncGetAliasConfig();
+    this.props.asyncGetCustomConfig();
     this.props.asyncGetAnnotationLineInfo();
     if(appVersion === '') {
       this.props.asyncGetAppInfo();

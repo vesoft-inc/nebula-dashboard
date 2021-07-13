@@ -19,12 +19,14 @@ const fomrItemLayout = {
 
 const mapState = (state: IRootState) => ({
   appVersion: state.app.version,
+  connection: state.app.connection,
 });
 
 
 const mapDispatch = (dispatch: IDispatch) => ({
   asyncLogin: dispatch.app.asyncLogin,
   asyncGetAppInfo: dispatch.app.asyncGetAppInfo,
+  asyncGetCustomConfig: dispatch.app.asyncGetCustomConfig,
 });
 
 interface IProps extends ReturnType<typeof mapState>,
@@ -35,10 +37,12 @@ class ConfigServerForm extends React.Component<IProps> {
 
   componentDidMount() {
     this.props.asyncGetAppInfo();
+    this.props.asyncGetCustomConfig();
   }
 
   onConfig = async(values: any) => {
-    const ok = await this.props.asyncLogin(values);
+    const { connection } = this.props;
+    const ok = await this.props.asyncLogin({ ip: connection.ip, port:  connection.port, ...values });
     if (ok) {
       this.props.history.push('/machine/overview');
     }

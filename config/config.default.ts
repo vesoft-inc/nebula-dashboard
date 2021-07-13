@@ -9,7 +9,7 @@ export default (appInfo: EggAppInfo) => {
 if (!fs.existsSync(config.configPath)) {
   fs.mkdirSync(config.configPath, { recursive: true });
 }
-const file = path.join(config.configPath, 'customize.json')
+const file = path.join(config.configPath, 'custom.json')
 fs.access(file, fs.constants.F_OK, (err) => {
   if(err) {
     const content = JSON.stringify({
