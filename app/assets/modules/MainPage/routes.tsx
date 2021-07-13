@@ -11,7 +11,6 @@ const PartitionDistribution = lazy(() => import('@assets/modules/PartitionDistri
 const ServiceInfo = lazy(() => import('@assets/modules/ServiceManage/ServiceInfo'));
 const PartitionInfo = lazy(() => import('@assets/modules/ServiceManage/PartitionInfo'));
 const ConfigInfo = lazy(() => import('@assets/modules/ServiceManage/ConfigInfo'));
-const Snapshot = lazy(() => import('@assets/modules/ServiceManage/Snapshot'));
 const LongTermTask = lazy(() => import('@assets/modules/ServiceManage/LongTermTask'));
 const CPUDetail = lazy(() => import('@assets/modules/MachineDashboard/Detail/CPUDetail'));
 const DiskDetail = lazy(() => import('@assets/modules/MachineDashboard/Detail/DiskDetail'));
@@ -107,11 +106,6 @@ export const MenuList = [
       title: intl.get('common.config'),
       icon: '#iconnav-configuration',
       path: '/management/config-info'
-    }, {
-      key: 'snapshot',
-      title: intl.get('common.snapshot'),
-      icon: '#iconnav-snapshot',
-      path: '/management/snapshot'
     }, {
       key: 'long-term-task',
       title: intl.get('common.longTermTask'),
@@ -425,21 +419,6 @@ export const RoutesList = [
         breadcrumbName: intl.get('common.config'),
       }],
       title: intl.get('common.config'),
-    }
-  },
-  {
-    path: '/management/snapshot',
-    component: Snapshot,
-    exact: true,
-    headerConfig: {
-      breadcrumb: [{
-        path: '#',
-        breadcrumbName: intl.get('common.serviceManagement'),
-      }, {
-        path: '/management/snapshot',
-        breadcrumbName: intl.get('common.snapshot'),
-      }],
-      title: intl.get('common.snapshot'),
     }
   },
   {

@@ -4,7 +4,6 @@ import service from '@assets/config/service';
 
 interface IState {
   configs:any[];
-  snapshots: any[];
   jobs: any[];
   spaces: string[];
   parts:any[];
@@ -17,7 +16,6 @@ type IServiceType = 'GRAPH' | 'STORAGE' | 'META'
 export const nebula = createModel({
   state: {
     configs:[],
-    snapshots:[],
     jobs:[],
     spaces:[],
     parts:[],
@@ -40,17 +38,6 @@ export const nebula = createModel({
       if (code === 0) {
         this.update({
           configs: data.tables ? data.tables : [],
-        });
-      }
-    },
-
-    async asyncGetSnapshots() {
-      const { code, data } = (await service.execNGQL({
-        gql: 'SHOW SNAPSHOTS'
-      })) as any;
-      if (code === 0) {
-        this.update({
-          snapshots: data.tables ? data.tables : [],
         });
       }
     },
