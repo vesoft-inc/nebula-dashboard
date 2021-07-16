@@ -33,7 +33,7 @@ export const nebula = createModel({
   effects: (dispatch: any) => ({
     async asyncGetServiceConfigs(module?:string) {
       const { code, data } = (await service.execNGQL({
-        gql: module ? `SHOW CONFIGS ${module} `:'SHOW CONFIGS'
+        gql: module && module !== 'all' ? `SHOW CONFIGS ${module} `:'SHOW CONFIGS'
       })) as any;
       if (code === 0) {
         this.update({
