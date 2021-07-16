@@ -1,5 +1,8 @@
 # Nebula Dashboard 部署文档（Linux)
 
+## 环境依赖
+- Node.js (>= 10.12.0)
+
 ## 下载
 ` wget https://oss-cdn.nebula-graph.com.cn/nebula-graph-dashboard/nebula-graph-dashboard-beta.tar.gz`
 

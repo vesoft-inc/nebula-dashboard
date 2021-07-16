@@ -26,7 +26,6 @@ app/public/
 !app/assets/**/*.js
 nebula-go-api/nebula-go-api
 nebula-go-api/tmp
-package-lock.json
 scripts/data/
 typings
 !typings/index.d.ts

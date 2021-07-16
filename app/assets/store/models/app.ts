@@ -7,7 +7,6 @@ import { message } from 'antd';
 interface IState {
   version: string;
   username: string;
-  password: string;
   aliasConfig: any;
   annotationLine: any;
 }
@@ -16,7 +15,6 @@ export const app = createModel({
   state: {
     version: '',
     username: cookies.get('nu'),
-    password: cookies.get('np'),
     aliasConfig: {} as any,
     connection: {} as any,
     annotationLine: {} as any
@@ -72,27 +70,22 @@ export const app = createModel({
       })) as any;
       if (code === 0) {
         cookies.set('nu', username);
-        cookies.set('np', password);
         this.update({
           username,
-          password,
         });
         return true;
       }else{
         message.error(`${intl.get('configServer.fail')}: ${errorMessage}`);
         this.update({
           username: '',
-          password: '',
         });
         cookies.remove('nu', { path: '/' });
-        cookies.remove('np', { path: '/' });
         return false;
       }
     },
 
     async asyncLogout() {
       cookies.remove('nu', { path: '/' });
-      cookies.remove('np', { path: '/' });
       await this.update({
         username: '',
         password: '',
