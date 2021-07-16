@@ -115,7 +115,7 @@ export const nebula = createModel({
       // HACK: user git info instead of version
       const res = await dispatch.nebula.asyncGetHostsInfo(type);
       return res.map(item => ({
-        name: item.Host,
+        name: `${item.Host}:${item.Port}`,
         version: item['Git Info Sha']
       }));
     },

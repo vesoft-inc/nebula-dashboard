@@ -53,7 +53,7 @@ class PartitionInfo extends React.Component<IProps> {
     const { spaces, parts, currentSpace, loading } = this.props;
     const columns =[
       {
-        title: <TitleInstruction title="Module" description={intl.get('description.module')} />,
+        title: <TitleInstruction title="PartitionId" description={intl.get('description.partitionId')} />,
         dataIndex: 'Partition ID',
       },
       {
