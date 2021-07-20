@@ -87,13 +87,13 @@
 
 
 ## 停止服务
-目前先通过 `kill -9 pid` 的方式来关停服务：
+目前先通过 `kill pid` 的方式来关停服务：
 
 ```bash
-$ kill -9 $(lsof -t -i :9200) # 停止 node-exporter 服务
-$ kill -9 $(lsof -t -i :9100) # 停止 nebula-stats-exporter 服务
-$ kill -9 $(lsof -t -i :9090) # 停止 prometheus 服务
-$ kill -9 $(lsof -t -i :8090) # 停止 nebula-http-gateway
+$ kill $(lsof -t -i :9200) # 停止 node-exporter 服务
+$ kill $(lsof -t -i :9100) # 停止 nebula-stats-exporter 服务
+$ kill $(lsof -t -i :9090) # 停止 prometheus 服务
+$ kill $(lsof -t -i :8090) # 停止 nebula-http-gateway
 $ cd nebula-graph-dashboard
 $ npm run stop # 停止 nebula-graph-dashboard
 ```

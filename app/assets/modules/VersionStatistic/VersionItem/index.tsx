@@ -47,7 +47,7 @@ class VersionItem extends React.PureComponent<IProps, IState> {
         value: round(versionList[key].length / data.length, 2)
       };
     });
-    this.chartInstance.changeData(chartData);
+    this.chartInstance.data(chartData).render();
   }
 
   render() {
