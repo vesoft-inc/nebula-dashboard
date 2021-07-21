@@ -6,10 +6,10 @@ import { getDataByType } from '@assets/utils/dashboard';
 import { VALUE_TYPE } from '@assets/utils/promQL';
 
 const mapState = (state: IRootState) => {
-  const { loadStat } = state.machine;
-  const { aliasConfig, annotationLine } = state.app;
+  const { loadStat, loadBaseLine } = state.machine;
+  const { aliasConfig } = state.app;
   return {
-    baseLineNum: annotationLine.load,
+    baseLine: loadBaseLine,
     data: getDataByType({ data:loadStat, type:'all', name: 'instance', aliasConfig }),
     valueType: VALUE_TYPE.number,
     loading: !!state.loading.effects.machine.asyncGetLoadByRange,

@@ -8,7 +8,6 @@ interface IState {
   version: string;
   username: string;
   aliasConfig: any;
-  annotationLine: any;
 }
 
 export const app = createModel({
@@ -17,7 +16,6 @@ export const app = createModel({
     username: cookies.get('nu'),
     aliasConfig: {} as any,
     connection: {} as any,
-    annotationLine: {} as any
   },
   reducers: {
     update: (state: IState, payload: any) => {
@@ -34,15 +32,6 @@ export const app = createModel({
       this.update({
         ...appInfo,
       });
-    },
-
-    async asyncGetAnnotationLineInfo() {
-      const { code, data } = await service.getAnnotationLineConfig() as any;
-      if(code === 0){
-        this.update({
-          annotationLine:data,
-        });
-      }
     },
 
     async asyncGetCustomConfig() {
@@ -62,12 +51,19 @@ export const app = createModel({
       port: number,
     }){
       const { password, username, ip, port } =payload;
-      const { code, message: errorMessage } = (await service.connectDB({
-        address: ip,
-        port,
-        username,
-        password,
-      })) as any;
+      const { code, message: errorMessage } = (await service.connectDB(
+        {
+          address: ip,
+          port,
+          username,
+          password,
+        },
+        {
+          trackEventConfig: {
+            category: 'user',
+            action: 'sign_in',
+          },
+        })) as any;
       if (code === 0) {
         cookies.set('nu', username);
         this.update({
@@ -86,10 +82,17 @@ export const app = createModel({
 
     async asyncLogout() {
       cookies.remove('nu', { path: '/' });
-      await this.update({
-        username: '',
-        password: '',
-      });
+      await this.update(
+        {
+          username: '',
+          password: '',
+        },
+        {
+          trackEventConfig: {
+            category: 'user',
+            action: 'sign_out',
+          },
+        });
       dispatch({ type: 'RESET_APP' });
     },
   })

@@ -5,7 +5,7 @@ import { ChartCfg } from '@antv/g2/lib/interface';
 export interface IProps {
   renderChart: (chartInstance: Chart) => void;
   options?: Partial<ChartCfg>
-  baseLineNum?: number
+  baseLine?: number
 }
 
 class LineChart extends React.Component<IProps> {
@@ -20,18 +20,40 @@ class LineChart extends React.Component<IProps> {
     this.renderChart();
   }
 
+  
+  componentDidUpdate(){
+    this.updateChart();
+  }
+
+  updateChart = () => {
+    const { baseLine } = this.props;
+    if(baseLine !== undefined){ // HACK: baseLine could be 0
+      this.chartInstance.annotation().clear(true);
+      this.chartInstance.annotation().line({
+        start: ['min', baseLine],
+        end: ['max', baseLine],
+        style: {
+          stroke: '#e6522b',
+          lineWidth: 1,
+          lineDash: [3, 3],
+        },
+      });
+      this.chartInstance.render();
+    }
+  }
+
   renderChart = () => {
-    const { options, baseLineNum } = this.props;
+    const { options, baseLine } = this.props;
     this.chartInstance = new Chart({
       container: this.chartRef.current,
       autoFit: true,
       padding: [20, 0, 0, 0],
       ...options,
     });
-    if(baseLineNum){
+    if(baseLine){
       this.chartInstance.annotation().line({
-        start: ['min', baseLineNum],
-        end: ['max', baseLineNum],
+        start: ['min', baseLine],
+        end: ['max', baseLine],
         style: {
           stroke: '#e6522b',
           lineWidth: 1,

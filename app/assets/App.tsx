@@ -15,6 +15,7 @@ import './App.less';
 import { LanguageContext } from '@assets/context';
 import { updateQueryStringParameter } from '@assets/utils';
 import AuthorizedRoute from './AuthorizedRoute';
+import { handleTrackEvent, trackEvent } from './utils/stat';
 
 const Login = lazy(() => import('@assets/modules/Login'));
 const MainPage = lazy(() => import('@assets/modules/MainPage/index'));
@@ -40,6 +41,11 @@ class App extends React.Component<IProps> {
 
   componentDidMount() {
     this.loadIntlLocale();
+    document.addEventListener('click', handleTrackEvent);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('click', handleTrackEvent);
   }
 
   loadIntlLocale = () => {
@@ -57,6 +63,7 @@ class App extends React.Component<IProps> {
 
   toggleLanguage = (locale: string) => {
     cookies.set('locale', locale);
+    trackEvent('navigation', 'change_language', locale);
     window.location.href = updateQueryStringParameter(
       window.location.href,
       'lang',

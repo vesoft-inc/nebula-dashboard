@@ -18,9 +18,10 @@ interface IProps extends HTMLProps<any> {
   typeOptions?: any[]
   currentType?: string,
   metricOptions?: typeof SUPPORT_METRICS.cpu,
-  onTypeChange?: (type: string) => void
   currentMetricOption?: typeof SUPPORT_METRICS.cpu[0],
-  onMetricChange?: (metric: string, metricOption: any) => void
+  onTypeChange?: (type: string) => void
+  onMetricChange?: (metric: string, metricOption: any) => void,
+  onBaseLineEdit?: () => void,
 }
 
 
@@ -42,6 +43,13 @@ class DashboardDetail extends React.PureComponent<IProps> {
     }
   }
 
+  handleBaseLineEdit= () => {
+    const { onBaseLineEdit } = this.props;
+    if(onBaseLineEdit ){
+      onBaseLineEdit();
+    }
+  }
+
   render() {
     const now = Date.now();
     const {
@@ -58,7 +66,6 @@ class DashboardDetail extends React.PureComponent<IProps> {
     const interval = endTimestamps - startTimestamps;
     const startDate = dayjs(startTimestamps);
     const endDate = dayjs(endTimestamps);
-
     return <div className="dashboard-detail">
       <div className="filter">
         <div className="time-range left-panel">
@@ -82,7 +89,7 @@ class DashboardDetail extends React.PureComponent<IProps> {
             </Form.Item>
           } 
           {
-            metricOptions && <Form.Item>
+            metricOptions && <Form.Item className="filter-in-icon">
               <DashboardSelect value={currentMetricOption?.metric} onChange={onMetricChange}>
                 {
                   metricOptions.map(option => <Option value={option.metric} key={option.metric}>{option.metric}</Option>)
@@ -93,6 +100,10 @@ class DashboardDetail extends React.PureComponent<IProps> {
               </Popover>
             </Form.Item>
           }
+        </div>
+        <div className="btn-icon-with-desc blue" onClick={this.handleBaseLineEdit} >
+          <Icon icon="#iconSetup" />
+          <span>{intl.get('common.baseLine')}</span>
         </div>
       </div>
       <div className="detail-content">

@@ -20,22 +20,60 @@ export const trackPageView = (url: string) => {
   }
 };
 
-export const trackEvent = (category: string, action: string) => {
-  if (win._hmt) {
+interface IGtag {
+  event_category: string;
+  event_label?: string;
+  value?: number;
+}
+
+export const trackEvent = (
+  category: string,
+  action: string,
+  label?: string,
+  value?: number,
+) => {
+  // google analytics
+  if (win.gtag) {
     try {
-      (window as any)._hmt.push(['_trackEvent', category, action]);
+      const params: IGtag = {
+        event_category: category,
+      };
+      if (label) {
+        params.event_label = label;
+      }
+      if (value) {
+        params.value = value;
+      }
+      win.gtag('event', action, params);
     } catch (e) {
       console.log(e);
     }
   }
+};
 
-  if (win.gtag) {
-    try {
-      win.gtag('event', action, {
-        event_category: category,
-      });
-    } catch (e) {
-      console.log(e);
+export const handleTrackEvent = event => {
+  let target;
+  if (event.target && event.target.dataset.trackCategory) {
+    target = event.target;
+  } else {
+    const _parentNode = event.target.parentNode;
+    if (_parentNode && _parentNode.dataset.trackCategory) {
+      target = _parentNode;
+    } else if (
+      _parentNode.tagName.toLowerCase() === 'svg' &&
+      _parentNode.parentNode.tagName.toLowerCase() === 'i' &&
+      _parentNode.parentNode.dataset.trackCategory
+    ) {
+      target = _parentNode.parentNode;
     }
+  }
+  if (target) {
+    const {
+      trackCategory,
+      trackAction,
+      trackLabel,
+      trackValue,
+    } = target.dataset;
+    trackEvent(trackCategory, trackAction, trackLabel, trackValue);
   }
 };

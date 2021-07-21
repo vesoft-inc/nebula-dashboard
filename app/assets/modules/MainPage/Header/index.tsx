@@ -6,6 +6,7 @@ import {
   RouteComponentProps,
   withRouter,
 } from 'react-router-dom';
+import { trackPageView } from '@assets/utils/stat';
 import './index.less';
 
 interface IProps extends RouteComponentProps {
@@ -32,6 +33,7 @@ class Header extends React.PureComponent<IProps, IState> {
   }
 
   handlePageView = (e) => {
+    trackPageView(e.target.value);
     this.props.history.push(e.target.value);
   }
 

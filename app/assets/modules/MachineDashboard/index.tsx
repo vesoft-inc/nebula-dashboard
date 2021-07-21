@@ -1,10 +1,12 @@
 import DashboardCard from '@assets/components/DashboardCard';
-import { IDispatch } from '@assets/store';
+import Modal from '@assets/components/Modal';
+import BaseLineEdit from '@assets/components/BaseLineEdit';
+import { IDispatch, IRootState } from '@assets/store';
 import { Col, Row } from 'antd';
 import { connect } from 'react-redux';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { CARD_POLLING_INTERVAL, CARD_RANGE } from '@assets/utils/dashboard';
+import { CARD_POLLING_INTERVAL, CARD_RANGE, MACHINE_TYPE, getBaseLineByUnit } from '@assets/utils/dashboard';
 import { SUPPORT_METRICS } from '@assets/utils/promQL';
 import CPUCard from './Cards/CPUCard';
 import './index.less';
@@ -23,11 +25,20 @@ const mapDispatch = (dispatch: IDispatch) => {
     asyncGetDiskStatByRange: dispatch.machine.asyncGetDiskStatByRange,
     asyncGetLoadByRange: dispatch.machine.asyncGetLoadByRange,
     asyncGetNetworkStatByRange: dispatch.machine.asyncGetNetworkStatByRange,
+    asyncUpdateBaseLine: (key, value) => dispatch.machine.update({
+      [key]: value
+    }),
   };
 };
 
-const mapState = () => {
-  return {};
+const mapState = (state: IRootState) => {
+  return {
+    cpuBaseLine: state.machine.cpuBaseLine,
+    memoryBaseLine: state.machine.memoryBaseLine,
+    networkOutBaseLine: state.machine.networkOutBaseLine,
+    networkInBaseLine: state.machine.networkInBaseLine,
+    loadBaseLine: state.machine.loadBaseLine,
+  };
 };
 
 interface IProps extends ReturnType<typeof mapDispatch>,
@@ -35,9 +46,19 @@ interface IProps extends ReturnType<typeof mapDispatch>,
 
 }
 
-class MachineDashboard extends React.Component<IProps> {
+interface IState {
+  editPanelType: string,
+}
+class MachineDashboard extends React.Component<IProps, IState> {
   pollingTimer: any;
-
+  formRef;
+  modalHandler;
+  constructor(props: IProps) {
+    super(props);
+    this.state = {
+      editPanelType: '',
+    };
+  }
   componentDidMount() {
     this.props.asyncGetMemorySizeStat();
     this.props.asyncGetDiskSizeStat();
@@ -49,6 +70,25 @@ class MachineDashboard extends React.Component<IProps> {
   componentWillUnmount() {
     if (this.pollingTimer) {
       clearTimeout(this.pollingTimer);
+    }
+  }
+
+  handleConfigPanel=(editPanelType: string) => {
+    this.setState({
+      editPanelType,
+    }, this.modalHandler.show);
+  }
+
+  handleBaseLineChange= async(value) => {
+    const { editPanelType } = this.state;
+    const { baseLine, unit } = value;
+    await this.props.asyncUpdateBaseLine(`${editPanelType}BaseLine`, getBaseLineByUnit(baseLine, unit));
+    this.modalHandler.hide();
+  }
+  
+  handleClose=() => {
+    if(this.modalHandler){
+      this.modalHandler.hide();
     }
   }
 
@@ -97,22 +137,23 @@ class MachineDashboard extends React.Component<IProps> {
   }
 
   render() {
+    const { editPanelType } = this.state;
     return <div className="machine-dashboard">
       <Row>
         <Col span={12}>
-          <DashboardCard title={intl.get('device.cpu')} viewPath="/machine/cpu">
+          <DashboardCard title={intl.get('device.cpu')} viewPath="/machine/cpu" onConfigPanel={() => this.handleConfigPanel(MACHINE_TYPE.cpu)}>
             <CPUCard />
           </DashboardCard>
         </Col>
         <Col span={12}>
-          <DashboardCard title={intl.get('device.memory')} viewPath="/machine/memory">
+          <DashboardCard title={intl.get('device.memory')} viewPath="/machine/memory" onConfigPanel={() => this.handleConfigPanel(MACHINE_TYPE.memory)}>
             <MemoryCard />
           </DashboardCard>
         </Col>
       </Row>
       <Row>
         <Col span={12}>
-          <DashboardCard title={intl.get('device.load')} viewPath="/machine/load">
+          <DashboardCard title={intl.get('device.load')} viewPath="/machine/load" onConfigPanel={() => this.handleConfigPanel(MACHINE_TYPE.load)}>
             <LoadCard />
           </DashboardCard>
         </Col>
@@ -124,16 +165,29 @@ class MachineDashboard extends React.Component<IProps> {
       </Row>
       <Row>
         <Col span={12}>
-          <DashboardCard title={intl.get('device.networkOut')} viewPath="/machine/network">
+          <DashboardCard title={intl.get('device.networkOut')} viewPath="/machine/network" onConfigPanel={() => this.handleConfigPanel(MACHINE_TYPE.networkOut)}>
             <NetworkOut />
           </DashboardCard>
         </Col>
         <Col span={12}>
-          <DashboardCard title={intl.get('device.networkIn')} viewPath="/machine/network">
+          <DashboardCard title={intl.get('device.networkIn')} viewPath="/machine/network" onConfigPanel={() => this.handleConfigPanel(MACHINE_TYPE.networkIn)}>
             <NetworkIn />
           </DashboardCard>
         </Col>
       </Row>
+      <Modal
+        className="modal-baseLine"
+        width="750px"
+        handlerRef={handler => (this.modalHandler = handler)}
+        footer={null}
+      >
+        <BaseLineEdit
+          type={editPanelType}
+          baseLine={this.props[`${editPanelType}BaseLine`]}
+          onClose={this.handleClose}
+          onBaseLineChange={this.handleBaseLineChange}
+        />
+      </Modal>
     </div>;
   }
 }

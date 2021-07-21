@@ -21,7 +21,6 @@ const mapDispatch = (dispatch: IDispatch) => {
 
 const mapState = (state: IRootState) => {
   return {
-    servicePanelConfig: state.service.servicePanelConfig,
     aliasConfig: state.app.aliasConfig,
   };
 };
@@ -30,13 +29,12 @@ interface IProps extends ReturnType<typeof mapDispatch>,
   ReturnType<typeof mapState> {
   onConfigPanel: () => void;
   config: IServicePanelConfig;
-  baseLineNum?: number;
 }
 
 interface IState {
   data: IStatRangeItem[],
 }
-class CustomServiceQueryPanel extends React.PureComponent<IProps, IState> {
+class CustomServiceQueryPanel extends React.Component<IProps, IState> {
   pollingTimer: any;
   constructor(props: IProps) {
     super(props);
@@ -89,13 +87,12 @@ class CustomServiceQueryPanel extends React.PureComponent<IProps, IState> {
     this.pollingTimer = setTimeout(this.pollingData, SERVICE_POLLING_INTERVAL);
   }
 
-
   render() {
     const { data } = this.state;
-    const { config: { metric, period, metricType }, aliasConfig, baseLineNum } = this.props;
+    const { config: { metric, period, metricType, baseLine }, aliasConfig } = this.props;
     return <div className="dashboard-card">
       <div className="header">
-        <Popover placement="bottomLeft" content={METRICS_DESCRIPTION[metric]}><h3>{metric}</h3></Popover>
+        <Popover placement="left" content={METRICS_DESCRIPTION[metric]}>{metric}</Popover>
         <div>
           <span>{intl.get('service.period')}: <span>{period}</span></span> 
           <span>{intl.get('service.metricParams')}: <span>{metricType}</span></span>
@@ -106,7 +103,7 @@ class CustomServiceQueryPanel extends React.PureComponent<IProps, IState> {
         </div>
       </div>
       <div className="content">
-        {data.length > 0 && <Card baseLineNum={baseLineNum} data={getDataByType({ data, type:'all', name:'instanceName', aliasConfig })} loading={false}/>}
+        {data.length > 0 && <Card baseLine={baseLine} data={getDataByType({ data, type:'all', name:'instanceName', aliasConfig })} loading={false}/>}
       </div>
     </div>;
   }

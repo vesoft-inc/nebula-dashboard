@@ -22,7 +22,10 @@
     "set": "设置",
     "cancel": "取消",
     "confirm": "确认",
-    "overview": "概览"
+    "overview": "概览",
+    "baseLine":"基线",
+    "editBaseLine":"编辑基线",
+    "unit":"单位"
   },
   "rules": {
     "usernameRequired": "请输入用户名",

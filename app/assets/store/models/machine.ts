@@ -17,6 +17,12 @@ interface IState {
   networkStat: IStatRangeItem[]
   memorySizeStat: IStatSingleItem[]
   diskSizeStat: IStatSingleItem[]
+  cpuBaseLine: number
+  diskBaseLine: number
+  memoryBaseLine: number
+  networkOutBaseLine: number
+  networkInBaseLine: number
+  loadBaseLine: number
 }
 
 export const machine = createModel({
@@ -30,6 +36,12 @@ export const machine = createModel({
     loadStat: [] as IStatRangeItem[],
     memorySizeStat: [] as IStatSingleItem[],
     diskSizeStat: [] as IStatSingleItem[],
+    cpuBaseLine: 0,
+    diskBaseLine: 0,
+    memoryBaseLine: 0,
+    networkOutBaseLine: 0,
+    networkInBaseLine: 0,
+    loadBaseLine: 0,
   },
   reducers: {
     update: (state: IState, payload: any) => {

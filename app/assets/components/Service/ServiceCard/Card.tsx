@@ -5,14 +5,14 @@ import { ILineChartMetric } from '@assets/utils/interface';
 interface IProps {
   data: ILineChartMetric[];
   loading: boolean;
-  baseLineNum?: number;
+  baseLine?: number;
 }
 
 class Card extends React.Component<IProps> {
   render() {
-    const { data, baseLineNum, loading } = this.props;
+    const { data, baseLine, loading } = this.props;
     return (<LineCard
-      baseLineNum={baseLineNum}
+      baseLine={baseLine}
       data = {data}
       valueType ={VALUE_TYPE.number}
       loading= {loading}

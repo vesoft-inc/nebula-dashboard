@@ -35,6 +35,36 @@ export const getProperStep = (start: number, end: number) => {
   }
 };
 
+export const renderUnit=(type) => {
+  switch (type) {
+    case MACHINE_TYPE.network:
+    case MACHINE_TYPE.networkIn:
+    case MACHINE_TYPE.networkOut:
+    case MACHINE_TYPE.disk:
+      return ['Bytes/s', 'KB/s', 'MB/s', 'GB/s', 'TB/s'];
+    case MACHINE_TYPE.memory:
+    case MACHINE_TYPE.cpu:
+      return ['%'];
+    default:
+      return [];
+  }
+};
+
+export const getBaseLineByUnit=(baseLine, unit) => {
+  switch (unit) {
+    case 'KB/s':
+      return 1000 * baseLine;
+    case 'MB/s':
+      return 1000 * 1000 * baseLine;
+    case 'GB/s':
+      return 1000 * 1000 * 1000 * baseLine;
+    case 'TB/s':
+      return 1000 * 1000 * 1000 * 1000 * baseLine;
+    default:
+      return baseLine;
+  }
+};
+
 export const getWhichColor = value => {
   if (value < THRESHOLDS.low) {
     return CARD_LOW_COLORS;
@@ -161,3 +191,13 @@ export const NEED_ADD_SUM_QUERYS = [
   'num_queries',
   'num_slow_queries'
 ];
+
+export enum MACHINE_TYPE {
+  cpu = 'cpu',
+  memory = 'memory',
+  load = 'load',
+  disk = 'disk',
+  networkOut = 'networkOut',
+  networkIn = 'networkIn',
+  network = 'network'
+}

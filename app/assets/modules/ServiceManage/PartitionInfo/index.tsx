@@ -7,6 +7,7 @@ import { IDispatch, IRootState } from '@assets/store';
 import service from '@assets/config/service';
 import { DashboardSelect, Option } from '@assets/components/DashboardSelect';
 import { TitleInstruction } from '@assets/components/Instruction';
+import { trackEvent } from '@assets/utils/stat';
 
 import './index.less';
 
@@ -42,11 +43,13 @@ class PartitionInfo extends React.Component<IProps> {
     if(code === 0){
       this.props.asyncGetParts();
       this.props.updateSpace(space);
+      trackEvent('partition_info', 'select_space');
     }
   }
 
   handleSearchPartitionId = value => {
     this.props.asyncGetParts(value);
+    trackEvent('partition_info', 'search_partitionId');
   }
 
   render() {

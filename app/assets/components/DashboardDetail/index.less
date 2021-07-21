@@ -9,6 +9,8 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: flex-end;
+		flex-wrap: wrap;
+		position: relative;
 
 		> .time-range {
 			> .ant-radio-group {
@@ -23,6 +25,7 @@
 
 			> .ant-picker-range {
 				height: 34px;
+				margin-left: 16px;
 			}
 		}
 
@@ -42,6 +45,14 @@
 				margin-left: 16px;
 			}
 
+			.filter-in-icon {
+				margin-right: 16px;
+			}
+
+			.ant-input-number {
+				margin-right: 5px;
+			}
+
 			.metric {
 				margin-right: 30px;
 			}
@@ -49,9 +60,14 @@
 			.metric-info-icon {
 				position: absolute;
 				font-size: 16px;
-				margin-top: 8px;
-				margin-left: 10px;
+				margin: 8px 10px 0 10px;
 			}
+		}
+
+		> .btn-icon-with-desc {
+			position: absolute;
+			top: 50px;
+			right: 20px;
 		}
 	}
 

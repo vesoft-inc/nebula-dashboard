@@ -5,6 +5,7 @@ import intl from 'react-intl-universal';
 import { connect } from 'react-redux';
 import { IDispatch, IRootState } from '@assets/store';
 import { TitleInstruction } from '@assets/components/Instruction';
+import { trackEvent } from '@assets/utils/stat';
 import './index.less';
 
 const mapState = (state: IRootState) => ({
@@ -25,6 +26,7 @@ class ConfigInfo extends React.Component<IProps> {
   }
 
   handleModuleChange= e => {
+    trackEvent('service-info', 'click_module');
     this.props.asyncGetServiceConfigs(e.target.value);
   }
 

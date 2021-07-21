@@ -1,12 +1,21 @@
 import { DatePicker, Form, Popover, Radio, Row, Spin } from 'antd';
-import { CARD_POLLING_INTERVAL, DETAIL_DEFAULT_RANGE, NEED_ADD_SUM_QUERYS, TIMEOPTIONS, TIME_INTERVAL_OPTIONS, getDataByType, getProperTickInterval } from '@assets/utils/dashboard';
-import { FormInstance } from 'antd/lib/form';
+import { 
+  CARD_POLLING_INTERVAL, 
+  DETAIL_DEFAULT_RANGE, 
+  NEED_ADD_SUM_QUERYS, 
+  TIMEOPTIONS, 
+  TIME_INTERVAL_OPTIONS, 
+  getBaseLineByUnit,
+  getDataByType, 
+  getProperTickInterval 
+} from '@assets/utils/dashboard';
 import { updateQueryStringParameter } from '@assets/utils/url';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { IDispatch, IRootState } from '@assets/store';
 import { connect } from 'react-redux';
+import { FormInstance } from 'antd/lib/form';
 import { SERVICE_SUPPORT_METRICS, VALUE_TYPE } from '@assets/utils/promQL';
 import { SERVICE_QUERY_PERIOD } from '@assets/utils/service';
 import { Chart } from '@antv/g2';
@@ -18,7 +27,10 @@ import ServiceHeader from '@assets/components/Service/ServiceHeader';
 
 import LineChart from '@assets/components/Charts/LineChart';
 import { configDetailChart, updateDetailChart } from '@assets/utils/chart/chart';
+import { trackEvent } from '@assets/utils/stat';
 import Icon from '@assets/components/Icon';
+import Modal from '@assets/components/Modal';
+import BaseLineEdit from '@assets/components/BaseLineEdit';
 
 import './index.less';
 
@@ -36,12 +48,16 @@ interface IState {
   instanceList: string[],
   data: IStatRangeItem[],
   totalData: IStatRangeItem[],
+  baseLine: number,
 }
 
 const mapDispatch = (dispatch: IDispatch) => {
   return {
     asyncGetMetricsData: dispatch.service.asyncGetMetricsData,
     asyncGetMetricsSumData: dispatch.service.asyncGetMetricsSumData,
+    asyncUpdateBaseLine: (key, value) => dispatch.machine.update({
+      [key]: value
+    }),
   };
 };
 
@@ -49,7 +65,6 @@ const mapState = (state: IRootState) => {
   return {
     loading: state.loading.models.service,
     aliasConfig: state.app.aliasConfig,
-    annotationLine: state.app.annotationLine,
   };
 };
 
@@ -59,6 +74,7 @@ interface IProps extends ReturnType<typeof mapDispatch>,
 class ServiceMetrics extends React.Component<IProps, IState> {
   chartInstance: Chart;
   pollingTimer: any;
+  modalHandler;
   formRef = React.createRef<FormInstance>();
   constructor(props: IProps) {
     super(props);
@@ -70,12 +86,13 @@ class ServiceMetrics extends React.Component<IProps, IState> {
         metric: SERVICE_SUPPORT_METRICS.graph[0].metric,
         metricFunction: SERVICE_SUPPORT_METRICS.graph[0].metricType[0].value,
         period: SERVICE_QUERY_PERIOD,
-        timeRange: this.getDefaultTimeRange()
+        timeRange: this.getDefaultTimeRange(),
       },
       metricsValueType: SERVICE_SUPPORT_METRICS.graph[0].valueType,
       data: [],
       totalData: [],
-      instanceList: []
+      instanceList: [],
+      baseLine: 0
     };
   }
   componentDidMount() {
@@ -205,23 +222,47 @@ class ServiceMetrics extends React.Component<IProps, IState> {
     this.formRef.current!.setFieldsValue({
       metricFunction: selectedMetrics.metricType[0].value
     });
+    trackEvent(`${serviceType}_detail`, 'select_metric_type', `from_${serviceType}_detail`);
     this.setState({ metricsValueType: selectedMetrics.valueType });
   }
 
   handleConfigUpdate = (changedValues) => {
+    const { serviceType } = this.state;
     if(changedValues.interval) {
       const timeRange = this.getDefaultTimeRange(changedValues.interval);
       this.formRef.current!.setFieldsValue({ timeRange });
+      trackEvent(`${serviceType}_detail`, 'select_interval', `from_${serviceType}_detail`);
     } else if (changedValues.timeRange) {
       this.formRef.current!.setFieldsValue({ interval: null });
+      trackEvent(`${serviceType}_detail`, 'select_time_range', `from_${serviceType}_detail`);
     } else if (changedValues.metric) {
+      trackEvent(`${serviceType}_detail`, 'select_metric_query', `from_${serviceType}_detail`);
       this.handleUpdateMetricType(changedValues.metric);
     }
     this.resetPollingData();
   }
+
+  handleBaseLineEdit=() => {
+    if(this.modalHandler){
+      this.modalHandler.show();
+    }
+  }
+
+  handleClose=() => {
+    if(this.modalHandler){
+      this.modalHandler.hide();
+    }
+  }
+
+  handleBaseLineChange= (value ) => {
+    const { baseLine, unit } = value;
+    this.setState({
+      baseLine: getBaseLineByUnit(baseLine, unit),
+    }, this.handleClose);
+  }
   render() {
-    const { serviceType, defaultFormParams, instanceList } = this.state;
-    const { loading, aliasConfig, annotationLine } = this.props;
+    const { serviceType, defaultFormParams, instanceList, baseLine } = this.state;
+    const { loading, aliasConfig } = this.props;
     return (<div className="service-metrics">
       <ServiceHeader 
         title={`${serviceType} ${intl.get('common.metric')}`} 
@@ -305,9 +346,26 @@ class ServiceMetrics extends React.Component<IProps, IState> {
             </Form.Item>
           </Row>
         </Form>
+        <div className="btn-icon-with-desc blue" onClick={this.handleBaseLineEdit} >
+          <Icon icon="#iconSetup" />
+          <span>{intl.get('common.baseLine')}</span>
+        </div>
         <Spin spinning={!!loading} wrapperClassName="nebula-chart">
-          <LineChart baseLineNum={annotationLine[serviceType]} renderChart={this.renderChart} options={{ padding: [20, 20, 60, 50] }} />
+          <LineChart baseLine={baseLine} renderChart={this.renderChart} options={{ padding: [20, 20, 60, 50] }} />
         </Spin >
+        <Modal
+          className="modal-baseLine"
+          width="750px"
+          handlerRef={handler => (this.modalHandler = handler)}
+          footer={null}
+        >
+          <BaseLineEdit
+            type={serviceType}
+            baseLine={baseLine}
+            onClose={this.handleClose}
+            onBaseLineChange={this.handleBaseLineChange}
+          />
+        </Modal>
       </div>
     </div>);
   }

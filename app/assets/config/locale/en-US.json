@@ -22,7 +22,10 @@
     "set": "Set up",
     "cancel": "Cancel",
     "confirm": "Confirm",
-    "overview": "Overview"
+    "overview": "Overview",
+    "baseLine":"Base Line",
+    "editBaseLine":"Edit Base Line",
+    "unit":"Unit"
   },
   "rules": {
     "usernameRequired": "Username Required",

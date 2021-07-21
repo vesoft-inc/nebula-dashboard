@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Form, Popover } from 'antd';
+import { Button, Form, InputNumber, Popover } from 'antd';
 import { FormInstance } from 'antd/lib/form';
 import { IDispatch, IRootState } from '@assets/store';
 import { connect } from 'react-redux';
@@ -44,7 +44,7 @@ class ServiceCardEdit extends React.Component<IProps> {
     });
   }
   handlePanelConfigUpdate = (values: any) => {
-    const { period, metric, metricFunction } = values;
+    const { period, metric, metricFunction, baseLine } = values;
     const { editType, servicePanelConfig, editIndex } = this.props;
     const metricTypeList = SERVICE_SUPPORT_METRICS[editType].filter(item => item.metric === metric)[0].metricType;
     const metricType = metricTypeList.filter(type => type.value === metricFunction)[0].key;
@@ -53,7 +53,8 @@ class ServiceCardEdit extends React.Component<IProps> {
       period,
       metric,
       metricFunction,
-      metricType
+      metricType,
+      baseLine
     };
     this.props.updatePanelConfig(_config);
     localStorage.setItem('servicePanelConfig', JSON.stringify(_config));
@@ -109,11 +110,20 @@ class ServiceCardEdit extends React.Component<IProps> {
               </Form.Item> : null;}
             }
           </Form.Item>
+          <Form.Item label={intl.get('common.baseLine')} name="baseLine">
+            <InputNumber />
+          </Form.Item>
           <div className="footer-btns">
             <Button htmlType="button" onClick={onClose}>
               {intl.get('common.cancel')}
             </Button>
-            <Button type="primary" htmlType="submit">
+            <Button 
+              data-track-category="service_card"
+              data-track-action="confirm_edit"
+              data-track-label={`from_${editType}`}
+              type="primary" 
+              htmlType="submit"
+            >
               {intl.get('common.confirm')}
             </Button>
           </div>

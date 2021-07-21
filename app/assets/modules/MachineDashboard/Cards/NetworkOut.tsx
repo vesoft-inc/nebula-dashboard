@@ -6,10 +6,10 @@ import LineCard from '@assets/components/DashboardCard/LineCard';
 import { getDataByType } from '@assets/utils/dashboard';
 
 const mapState = (state: IRootState) => {
-  const { networkOutStat } = state.machine;
-  const { aliasConfig, annotationLine } = state.app;
+  const { networkOutStat, networkOutBaseLine } = state.machine;
+  const { aliasConfig } = state.app;
   return {
-    baseLineNum: annotationLine.network,
+    baseLine: networkOutBaseLine,
     data: getDataByType({ data:networkOutStat, type:'all', name: 'instance', aliasConfig }),
     valueType: VALUE_TYPE.byteSecond,
     loading: !!state.loading.effects.machine.asyncGetNetworkStatByRange,

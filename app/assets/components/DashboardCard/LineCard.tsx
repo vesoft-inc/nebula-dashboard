@@ -12,7 +12,7 @@ interface IProps {
   valueType: VALUE_TYPE;
   sizes?: IStatSingleItem[]
   loading: boolean;
-  baseLineNum?: number;
+  baseLine?: number;
 }
 
 class LineCard extends React.Component<IProps> {
@@ -70,13 +70,13 @@ class LineCard extends React.Component<IProps> {
   }
 
   render() {
-    const { loading, baseLineNum } = this.props;
+    const { loading, baseLine } = this.props;
     if (loading) {
       return <Spin />;
     }
 
     return (
-      <LineChart baseLineNum={baseLineNum} renderChart={this.renderLineChart} options={{ padding: [20, 20, 60, 5 * this.getMaxLength() + 30 ] }} />
+      <LineChart baseLine={baseLine} renderChart={this.renderLineChart} options={{ padding: [20, 20, 60, 5 * this.getMaxLength() + 30 ] }} />
     );
   }
 }

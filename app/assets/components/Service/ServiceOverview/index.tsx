@@ -6,6 +6,7 @@ import { IServicePanelConfig } from '@assets/utils/interface';
 import StatusPanel from '@assets/components/StatusPanel';
 import Icon from '@assets/components/Icon';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { trackPageView } from '@assets/utils/stat';
 import intl from 'react-intl-universal';
 import _ from 'lodash';
 import './index.less';
@@ -14,13 +15,13 @@ interface IProps extends RouteComponentProps {
   serviceType: string;
   icon: string;
   configs: IServicePanelConfig[],
-  baseLineNum?:number,
   onConfigPanel: (serviceType: string, index: number)=>void;
 }
 
 class ServiceOverview extends React.PureComponent<IProps> {
   handleView = () => {
     const { serviceType } = this.props;
+    trackPageView(`${serviceType}_metrics`);
     this.props.history.push(`/service/${serviceType}-metrics`);
   }
 
@@ -29,7 +30,6 @@ class ServiceOverview extends React.PureComponent<IProps> {
       serviceType, 
       icon, 
       configs,
-      baseLineNum
     } = this.props;
     return (
       <div className="service-table-item">
@@ -47,7 +47,6 @@ class ServiceOverview extends React.PureComponent<IProps> {
           {configs.map((config, index) => <Col span={12} key={index}>
             <CustomServiceQueryPanel 
               config={config}
-              baseLineNum={baseLineNum}
               onConfigPanel={() => this.props.onConfigPanel(serviceType, index)}
             />
           </Col>)}

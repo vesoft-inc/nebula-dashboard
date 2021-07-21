@@ -3,6 +3,7 @@ import React from 'react';
 import nebulaLogo from '@assets/static/images/nebula_logo.png';
 import Icon from '@assets/components/Icon';
 import LanguageSelect from '@assets/components/LanguageSelect';
+import { trackPageView } from '@assets/utils/stat';
 import { IDispatch, IRootState } from '@assets/store';
 import { connect } from 'react-redux';
 import intl from 'react-intl-universal';
@@ -25,7 +26,6 @@ const mapDispatch = (dispatch: IDispatch) => {
     asyncLogout: dispatch.app.asyncLogout,
     asyncGetAppInfo: dispatch.app.asyncGetAppInfo,
     asyncGetCustomConfig: dispatch.app.asyncGetCustomConfig,
-    asyncGetAnnotationLineInfo: dispatch.app.asyncGetAnnotationLineInfo,
   };
 };
 
@@ -52,7 +52,6 @@ class MainPage extends React.Component<IProps, IState> {
   componentDidMount() {
     const { appVersion } = this.props;
     this.props.asyncGetCustomConfig();
-    this.props.asyncGetAnnotationLineInfo();
     if(appVersion === '') {
       this.props.asyncGetAppInfo();
     }
@@ -103,6 +102,7 @@ class MainPage extends React.Component<IProps, IState> {
             theme="dark"
             mode="inline" 
             inlineIndent={20}
+            onClick={ item => () => trackPageView(item.key)}
             defaultOpenKeys={MenuList.map(item => item.key)}
             defaultSelectedKeys={[activeKey]}>
             {this.renderMenu(MenuList)}
