@@ -28,6 +28,7 @@ interface IProps extends ReturnType<typeof mapDispatch>,
   ReturnType<typeof mapState> {
   onConfigPanel: () => void;
   config: IServicePanelConfig;
+  aliasConfig: any;
 }
 
 interface IState {

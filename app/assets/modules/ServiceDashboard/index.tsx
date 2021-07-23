@@ -4,18 +4,23 @@ import { connect } from 'react-redux';
 import intl from 'react-intl-universal';
 import Modal from '@assets/components/Modal';
 import ServiceCardEdit from '@assets/components/Service/ServiceCardEdit';
-import ServiceOverview from '@assets/components/Service/ServiceOverview';
+import { METRIC_SERVICE_TYPES } from '@assets/utils/metric';
+import ServiceOverview from './ServiceOverview';
 import './index.less';
 
 const mapDispatch = (dispatch: IDispatch) => {
   return {
     asyncGetStatus: dispatch.service.asyncGetStatus,
+    updatePanelConfig: (values) => dispatch.service.update({
+      panelConfig: values
+    }),
   };
 };
 
 const mapState = (state: IRootState) => {
   return {
-    servicePanelConfig: state.service.servicePanelConfig,
+    panelConfig: state.service.panelConfig,
+    aliasConfig: state.app.aliasConfig,
   };
 };
 
@@ -26,7 +31,7 @@ interface IProps extends ReturnType<typeof mapDispatch>,
 
 interface IState {
   editPanelType: string,
-  editPanelIndex: number
+  editPanelIndex: number,
 }
 class ServiceDashboard extends React.Component<IProps, IState> {
   pollingTimer: any;
@@ -35,7 +40,7 @@ class ServiceDashboard extends React.Component<IProps, IState> {
     super(props);
     this.state = {
       editPanelType: '',
-      editPanelIndex: 0
+      editPanelIndex: 0,
     };
   }
 
@@ -55,29 +60,21 @@ class ServiceDashboard extends React.Component<IProps, IState> {
   render() {
     const { editPanelType, editPanelIndex } = this.state;
     const { 
-      servicePanelConfig,
+      panelConfig,
+      updatePanelConfig,
+      asyncGetStatus,
     } = this.props;
-    // TODO 配置单个面板后三个 overview 还是会触发 render
+    // TODO: Use hooks to resolve situations where render is jamming
     return (
       <div className="service-table">
-        <ServiceOverview 
-          serviceType="graph"
-          icon="#iconnav-graph"
-          configs={servicePanelConfig.graph}
+        {METRIC_SERVICE_TYPES.map(type => <ServiceOverview 
+          key={type}
+          serviceType={type}
+          icon={`#iconnav-${type}`}
+          configs={panelConfig[type]}
+          getStatus={asyncGetStatus}
           onConfigPanel={this.handleConfigPanel}
-        />
-        <ServiceOverview 
-          serviceType="storage"
-          icon="#iconnav-storage" 
-          configs={servicePanelConfig.storage}
-          onConfigPanel={this.handleConfigPanel}
-        />
-        <ServiceOverview 
-          serviceType="meta"
-          icon="#iconnav-meta"
-          configs={servicePanelConfig.meta}
-          onConfigPanel={this.handleConfigPanel}
-        />
+        />)}
         <Modal
           className="modal-show-selected"
           width="750px"
@@ -88,7 +85,9 @@ class ServiceDashboard extends React.Component<IProps, IState> {
           <ServiceCardEdit 
             editType={editPanelType}
             editIndex={editPanelIndex}
+            panelConfig={panelConfig}
             onClose={this.handleModalClose}
+            onPanelConfigUpdate={updatePanelConfig}
           />
         </Modal>
       </div>);

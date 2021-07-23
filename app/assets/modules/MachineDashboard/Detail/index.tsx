@@ -8,7 +8,7 @@ import { uniq } from 'lodash';
 import { configDetailChart, updateDetailChart } from '@assets/utils/chart/chart';
 import { IStatRangeItem } from '@assets/utils/interface';
 import { Spin } from 'antd';
-import { IRootState } from '@assets/store';
+import { IDispatch, IRootState } from '@assets/store';
 import { connect } from 'react-redux';
 import './index.less';
 import { SUPPORT_METRICS, VALUE_TYPE } from '@assets/utils/promQL';
@@ -16,18 +16,27 @@ import { trackEvent } from '@assets/utils/stat';
 import Modal from '@assets/components/Modal';
 import BaseLineEdit from '@assets/components/BaseLineEdit';
 
+const mapDispatch = (dispatch: IDispatch) => {
+  return {
+    asyncUpdateBaseLine: (key, value) => dispatch.setting.update({
+      [key]: value
+    }),
+  };
+};
+
 const mapState = (state: IRootState) => {
   return {
     aliasConfig: state.app.aliasConfig,
-    diskBaseLine: state.machine.diskBaseLine,
-    cpuBaseLine: state.machine.cpuBaseLine,
-    memoryBaseLine: state.machine.memoryBaseLine,
-    networkOutBaseLine: state.machine.networkOutBaseLine,
-    networkInBaseLine: state.machine.networkInBaseLine,
-    loadBaseLine: state.machine.loadBaseLine,
+    diskBaseLine: state.setting.diskBaseLine,
+    cpuBaseLine: state.setting.cpuBaseLine,
+    memoryBaseLine: state.setting.memoryBaseLine,
+    networkOutBaseLine: state.setting.networkOutBaseLine,
+    networkInBaseLine: state.setting.networkInBaseLine,
+    loadBaseLine: state.setting.loadBaseLine,
   };
 };
-interface IProps extends ReturnType<typeof mapState>{
+interface IProps extends ReturnType<typeof mapState>,
+  ReturnType<typeof mapDispatch>{
   type: string
   asyncGetDataSourceByRange: (params: {start: number, end: number, metric: string}) => void;
   dataSource: IStatRangeItem[];
@@ -43,12 +52,6 @@ interface IState {
   endTimestamps: number,
   currentInstance: string,
   currentMetricOption: typeof SUPPORT_METRICS.cpu[0],
-  cpuBaseLine: number,
-  diskBaseLine: number,
-  memoryBaseLine: number,
-  networkOutBaseLine: number,
-  networkInBaseLine: number,
-  loadBaseLine: number
 }
 
 class Detail extends React.Component<IProps, IState> {
@@ -63,12 +66,6 @@ class Detail extends React.Component<IProps, IState> {
       startTimestamps: endTimestamps - DETAIL_DEFAULT_RANGE,
       currentInstance: localStorage.getItem('detailType') || 'all',
       currentMetricOption: props.metricOptions[0],
-      cpuBaseLine: 0,
-      diskBaseLine: 0,
-      memoryBaseLine: 0,
-      networkOutBaseLine: 0,
-      networkInBaseLine: 0,
-      loadBaseLine: 0,
     };
   }
 
@@ -126,12 +123,11 @@ class Detail extends React.Component<IProps, IState> {
     }
   }
 
-  handleBaseLineChange= (value) => {
-    const { type } = this.props;
+  handleBaseLineChange= async(value) => {
+    const { type, asyncUpdateBaseLine } = this.props;
     const { baseLine, unit } = value;
-    this.setState({
-      [`${type}BaseLine`]: getBaseLineByUnit(baseLine, unit)
-    } as IState, this.modalHandler.hide);
+    await asyncUpdateBaseLine(`${type}BaseLine`, getBaseLineByUnit(baseLine, unit));
+    this.modalHandler.hide();
   }
 
   renderChart = (chartInstance: Chart) => {
@@ -180,7 +176,7 @@ class Detail extends React.Component<IProps, IState> {
         value: instance,
       }))
     ];
-    const baseLine = this.state[`${type}BaseLine`];
+    const baseLine = this.props[`${type}BaseLine`];
     return (
       <Spin spinning={loading} wrapperClassName="machine-detail">
         <DashboardDetail
@@ -218,4 +214,4 @@ class Detail extends React.Component<IProps, IState> {
   }
 }
 
-export default connect(mapState,)(Detail);
+export default connect(mapState, mapDispatch)(Detail);

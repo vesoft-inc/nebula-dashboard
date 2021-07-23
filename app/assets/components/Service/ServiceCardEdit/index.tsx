@@ -1,37 +1,25 @@
 import React from 'react';
 import { Button, Form, InputNumber } from 'antd';
 import { FormInstance } from 'antd/lib/form';
-import { IDispatch, IRootState } from '@assets/store';
-import { connect } from 'react-redux';
 import { TIME_INTERVAL_OPTIONS } from '@assets/utils/dashboard';
 import { SERVICE_SUPPORT_METRICS } from '@assets/utils/promQL';
 import { cloneDeep } from 'lodash';
 import intl from 'react-intl-universal';
 import { DashboardSelect, Option } from '@assets/components/DashboardSelect';
 import { MetricPopover } from '@assets/components/MetricPopover';
+import { IServicePanelConfig } from '@assets/utils/interface';
 
 import './index.less';
-
-const mapState = (state: IRootState) => {
-  return {
-    servicePanelConfig: state.service.servicePanelConfig
-  };
-};
-
-const mapDispatch = (dispatch: IDispatch) => {
-  return {
-    updatePanelConfig: (values) => dispatch.service.update({
-      servicePanelConfig: values
-    }),
-  };
-};
-
-
-interface IProps extends ReturnType<typeof mapState>, 
-  ReturnType<typeof mapDispatch> {
+interface IProps {
   editType: string,
   editIndex: number,
+  panelConfig: {
+    graph: IServicePanelConfig[],
+    storage: IServicePanelConfig[],
+    meta: IServicePanelConfig[],
+  }
   onClose: () => void;
+  onPanelConfigUpdate:(values)=> void;
 }
 
 class ServiceCardEdit extends React.Component<IProps> {
@@ -45,10 +33,10 @@ class ServiceCardEdit extends React.Component<IProps> {
   }
   handlePanelConfigUpdate = (values: any) => {
     const { period, metric, metricFunction, baseLine } = values;
-    const { editType, servicePanelConfig, editIndex } = this.props;
+    const { editType, panelConfig, editIndex } = this.props;
     const metricTypeList = SERVICE_SUPPORT_METRICS[editType].filter(item => item.metric === metric)[0].metricType;
     const metricType = metricTypeList.filter(type => type.value === metricFunction)[0].key;
-    const _config = cloneDeep(servicePanelConfig);
+    const _config = cloneDeep(panelConfig);
     _config[editType][editIndex] = {
       period,
       metric,
@@ -56,13 +44,13 @@ class ServiceCardEdit extends React.Component<IProps> {
       metricType,
       baseLine
     };
-    this.props.updatePanelConfig(_config);
-    localStorage.setItem('servicePanelConfig', JSON.stringify(_config));
+    this.props.onPanelConfigUpdate(_config);
+    localStorage.setItem('panelConfig', JSON.stringify(_config));
     this.props.onClose();
   }
   render() {
-    const { editIndex, editType, servicePanelConfig, onClose } = this.props;
-    const editItem = servicePanelConfig[editType][editIndex];
+    const { editIndex, editType, panelConfig, onClose } = this.props;
+    const editItem = panelConfig[editType][editIndex];
     return (
       <div className="service-card-edit">
         <Form
@@ -131,4 +119,4 @@ class ServiceCardEdit extends React.Component<IProps> {
   }
 }
 
-export default connect(mapState, mapDispatch)(ServiceCardEdit);
+export default ServiceCardEdit;

@@ -4,7 +4,7 @@ import LoadDetail from '../MachineDashboard/Detail/LoadDetail';
 
 const MachineDashboard = lazy(() => import('@assets/modules/MachineDashboard'));
 const ServiceDashboard = lazy(() => import('@assets/modules/ServiceDashboard'));
-const ServiceMetrics = lazy(() => import('@assets/modules/ServiceMetrics'));
+const ServiceDetail = lazy(() => import('@assets/modules/ServiceDashboard/Detail'));
 const VersionStatistic = lazy(() => import('@assets/modules/VersionStatistic'));
 const LeaderDistribution = lazy(() => import('@assets/modules/LeaderDistribution'));
 const PartitionDistribution = lazy(() => import('@assets/modules/PartitionDistribution'));
@@ -258,7 +258,7 @@ export const RoutesList = [
   },
   {
     path: '/service/graph-metrics',
-    component: ServiceMetrics,
+    component: ServiceDetail,
     exact: true,
     headerConfig: {
       breadcrumb: [{
@@ -278,7 +278,7 @@ export const RoutesList = [
   },
   {
     path: '/service/meta-metrics',
-    component: ServiceMetrics,
+    component: ServiceDetail,
     exact: true,
     headerConfig: {
       breadcrumb: [{
@@ -298,7 +298,7 @@ export const RoutesList = [
   },
   {
     path: '/service/storage-metrics',
-    component: ServiceMetrics,
+    component: ServiceDetail,
     exact: true,
     headerConfig: {
       breadcrumb: [{

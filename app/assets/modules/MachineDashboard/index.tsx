@@ -25,7 +25,7 @@ const mapDispatch = (dispatch: IDispatch) => {
     asyncGetDiskStatByRange: dispatch.machine.asyncGetDiskStatByRange,
     asyncGetLoadByRange: dispatch.machine.asyncGetLoadByRange,
     asyncGetNetworkStatByRange: dispatch.machine.asyncGetNetworkStatByRange,
-    asyncUpdateBaseLine: (key, value) => dispatch.machine.update({
+    asyncUpdateBaseLine: (key, value) => dispatch.setting.update({
       [key]: value
     }),
   };
@@ -33,11 +33,11 @@ const mapDispatch = (dispatch: IDispatch) => {
 
 const mapState = (state: IRootState) => {
   return {
-    cpuBaseLine: state.machine.cpuBaseLine,
-    memoryBaseLine: state.machine.memoryBaseLine,
-    networkOutBaseLine: state.machine.networkOutBaseLine,
-    networkInBaseLine: state.machine.networkInBaseLine,
-    loadBaseLine: state.machine.loadBaseLine,
+    cpuBaseLine: state.setting.cpuBaseLine,
+    memoryBaseLine: state.setting.memoryBaseLine,
+    networkOutBaseLine: state.setting.networkOutBaseLine,
+    networkInBaseLine: state.setting.networkInBaseLine,
+    loadBaseLine: state.setting.loadBaseLine,
   };
 };
 
@@ -51,7 +51,6 @@ interface IState {
 }
 class MachineDashboard extends React.Component<IProps, IState> {
   pollingTimer: any;
-  formRef;
   modalHandler;
   constructor(props: IProps) {
     super(props);
@@ -83,7 +82,7 @@ class MachineDashboard extends React.Component<IProps, IState> {
     const { editPanelType } = this.state;
     const { baseLine, unit } = value;
     await this.props.asyncUpdateBaseLine(`${editPanelType}BaseLine`, getBaseLineByUnit(baseLine, unit));
-    this.modalHandler.hide();
+    this.handleClose();
   }
   
   handleClose=() => {

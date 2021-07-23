@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { ILineChartMetric, IStatRangeItem } from '@assets/utils/interface';
 export const DETAIL_DEFAULT_RANGE = 60 * 60 * 24 * 1000;
 export const CARD_RANGE = 60 * 60 * 24 * 1000;
@@ -201,3 +202,9 @@ export enum MACHINE_TYPE {
   networkIn = 'networkIn',
   network = 'network'
 }
+
+export const getDefaultTimeRange = (interval?: number) => {
+  const end = Date.now();
+  const start = interval ? end - interval : end - DETAIL_DEFAULT_RANGE;
+  return [dayjs(start), dayjs(end)];
+};

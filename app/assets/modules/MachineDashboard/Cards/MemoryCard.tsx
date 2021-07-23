@@ -5,7 +5,8 @@ import { getDataByType } from '@assets/utils/dashboard';
 import { VALUE_TYPE } from '@assets/utils/promQL';
 
 const mapState = (state: IRootState) => {
-  const { memoryStat, memorySizeStat, memoryBaseLine } = state.machine;
+  const { memoryStat, memorySizeStat } = state.machine;
+  const { memoryBaseLine } = state.setting;
   const { aliasConfig } = state.app;
   return {
     data: getDataByType({ data:memoryStat, type:'all', name: 'instance', aliasConfig }),

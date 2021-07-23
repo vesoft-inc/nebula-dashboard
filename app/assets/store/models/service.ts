@@ -8,7 +8,7 @@ import { getProperStep } from '@assets/utils/dashboard';
 
 
 interface IState {
-  servicePanelConfig: {
+  panelConfig: {
     graph: IServicePanelConfig[],
     storage: IServicePanelConfig[],
     meta: IServicePanelConfig[],
@@ -17,7 +17,7 @@ interface IState {
 
 export const service = createModel({
   state: {
-    servicePanelConfig: localStorage.getItem('servicePanelConfig') ? JSON.parse(localStorage.getItem('servicePanelConfig')!) : DEFAULT_SERVICE_PANEL_CONFIG,
+    panelConfig: localStorage.getItem('panelConfig') ? JSON.parse(localStorage.getItem('panelConfig')!) : DEFAULT_SERVICE_PANEL_CONFIG,
   },
   reducers: {
     update: (state: IState, payload: any) => {

@@ -14,3 +14,5 @@ export const METRICS_DESCRIPTION = {
   heartbeat_latency_us: 'heartbeat_latency_us description',
   num_heartbeats: 'num_heartbeats description',
 };
+
+export const METRIC_SERVICE_TYPES = ['graph', 'storage', 'meta'];

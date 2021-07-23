@@ -6,7 +6,8 @@ import LineCard from '@assets/components/DashboardCard/LineCard';
 import { getDataByType } from '@assets/utils/dashboard';
 
 const mapState = (state: IRootState) => {
-  const { networkOutStat, networkOutBaseLine } = state.machine;
+  const { networkOutStat } = state.machine;
+  const { networkOutBaseLine } = state.setting;
   const { aliasConfig } = state.app;
   return {
     baseLine: networkOutBaseLine,

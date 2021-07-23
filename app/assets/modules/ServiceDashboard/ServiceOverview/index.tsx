@@ -1,6 +1,5 @@
 import { Col, Row } from 'antd';
 import React from 'react';
-import CustomServiceQueryPanel from '@assets/components/Service/CustomServiceQueryPanel';
 import ServiceHeader from '@assets/components/Service/ServiceHeader';
 import { IServicePanelConfig } from '@assets/utils/interface';
 import StatusPanel from '@assets/components/StatusPanel';
@@ -9,6 +8,7 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { trackPageView } from '@assets/utils/stat';
 import intl from 'react-intl-universal';
 import _ from 'lodash';
+import CustomServiceQueryPanel from './CustomServiceQueryPanel';
 import './index.less';
 
 interface IProps extends RouteComponentProps {
@@ -16,6 +16,7 @@ interface IProps extends RouteComponentProps {
   icon: string;
   configs: IServicePanelConfig[],
   onConfigPanel: (serviceType: string, index: number)=>void;
+  getStatus: (payload)=> void;
 }
 
 class ServiceOverview extends React.PureComponent<IProps> {
@@ -30,6 +31,7 @@ class ServiceOverview extends React.PureComponent<IProps> {
       serviceType, 
       icon, 
       configs,
+      getStatus,
     } = this.props;
     return (
       <div className="service-table-item">
@@ -37,7 +39,7 @@ class ServiceOverview extends React.PureComponent<IProps> {
           title={`${serviceType} Service`}
           icon={icon}
         >
-          <StatusPanel type={serviceType} />
+          <StatusPanel type={serviceType} getStatus={getStatus}/>
           <div className="btn-icon-with-desc blue" onClick={this.handleView}>
             <Icon icon="#iconwatch" />
             <span>{intl.get('common.view')}</span>

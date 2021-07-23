@@ -6,7 +6,8 @@ import { getDataByType } from '@assets/utils/dashboard';
 import { VALUE_TYPE } from '@assets/utils/promQL';
 
 const mapState = (state: IRootState) => {
-  const { cpuStat, cpuBaseLine } = state.machine;
+  const { cpuStat } = state.machine;
+  const { cpuBaseLine } = state.setting;
   const { aliasConfig } = state.app;
   return {
     baseLine:cpuBaseLine,

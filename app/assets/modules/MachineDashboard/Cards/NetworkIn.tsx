@@ -6,7 +6,8 @@ import { getDataByType } from '@assets/utils/dashboard';
 import { VALUE_TYPE } from '@assets/utils/promQL';
 
 const mapState = (state: IRootState) => {
-  const { networkInStat, networkInBaseLine } = state.machine;
+  const { networkInStat } = state.machine;
+  const { networkInBaseLine } = state.setting;
   const { aliasConfig } = state.app;
   return {
     baseLine: networkInBaseLine,

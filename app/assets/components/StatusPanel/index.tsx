@@ -22,7 +22,8 @@ const mapDispatch = (dispatch: IDispatch) => {
 };
 
 interface IProps extends ReturnType<typeof mapDispatch>{
-  type: string
+  type: string,
+  getStatus: (payload)=> void;
 }
 
 interface IState {
@@ -56,11 +57,11 @@ class StatusPanel extends React.PureComponent<IProps, IState> {
 
   asyncGetStatus = async() => {
     const { type } = this.props;
-    const { normal, abnormal } = await this.props.asyncGetStatus({
+    const { normal, abnormal } = await this.props.getStatus({
       query: NEBULA_COUNT[type],
       end: Date.now(),
       interval:DETAIL_DEFAULT_RANGE,
-    });
+    }) as any;
     this.setState({ normal, abnormal });
   } 
 
