@@ -7,6 +7,7 @@ import { trackPageView } from '@assets/utils/stat';
 import { IDispatch, IRootState } from '@assets/store';
 import { connect } from 'react-redux';
 import intl from 'react-intl-universal';
+import cookies from 'js-cookie';
 import {
   Link,
   Redirect,
@@ -84,6 +85,13 @@ class MainPage extends React.Component<IProps, IState> {
     const { appVersion } = this.props;
     const [, activeOpenSubMenu, activeMenu] = this.props.location.pathname.split('/');
     let activeKey = activeMenu === 'overview' ? `${activeOpenSubMenu}-${activeMenu}` : activeMenu;
+    const locale = cookies.get('locale');
+    const mannualHref =
+      locale === 'ZH_CN'
+        ? 'https://docs.nebula-graph.com.cn/master/nebula-dashboard/1.what-is-dashboard/'
+        // TODO:modify to english mannual link
+        : 'https://docs.nebula-graph.com.cn/master/nebula-dashboard/1.what-is-dashboard/'; 
+
     if(activeKey === undefined) {
       activeKey = 'machine-overview';
     }
@@ -114,7 +122,11 @@ class MainPage extends React.Component<IProps, IState> {
             </div>
             <LanguageSelect mode="dark" showIcon={!collapsed} />
             <div className="row">
-              {!collapsed && <span className="version">{appVersion}</span>}
+              {!collapsed && <span className="version">v {appVersion}</span>}
+              {!collapsed && 
+                <a href={mannualHref} className="help" target="_blank" rel="noreferrer">
+                  {intl.get('common.help')}
+                </a>}
               <div className="btn-collapse" onClick={this.toggleMenu}>
                 {!collapsed && <Icon className="menu-collapse-icon" icon="#iconnav-fold" />}
                 {collapsed && <Icon className="menu-collapse-icon" icon="#iconnav-unfold" />}

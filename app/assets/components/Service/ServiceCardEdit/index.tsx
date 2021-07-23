@@ -1,14 +1,14 @@
 import React from 'react';
-import { Button, Form, InputNumber, Popover } from 'antd';
+import { Button, Form, InputNumber } from 'antd';
 import { FormInstance } from 'antd/lib/form';
 import { IDispatch, IRootState } from '@assets/store';
 import { connect } from 'react-redux';
 import { TIME_INTERVAL_OPTIONS } from '@assets/utils/dashboard';
 import { SERVICE_SUPPORT_METRICS } from '@assets/utils/promQL';
-import Icon from '@assets/components/Icon';
 import { cloneDeep } from 'lodash';
 import intl from 'react-intl-universal';
 import { DashboardSelect, Option } from '@assets/components/DashboardSelect';
+import { MetricPopover } from '@assets/components/MetricPopover';
 
 import './index.less';
 
@@ -79,9 +79,7 @@ class ServiceCardEdit extends React.Component<IProps> {
               }
             </DashboardSelect>
           </Form.Item>
-          <Popover content="metric docs">
-            <Icon className="metric-info-icon blue" icon="#iconnav-serverInfo" />
-          </Popover>
+          <MetricPopover list={SERVICE_SUPPORT_METRICS[editType]}/>
           <Form.Item label={intl.get('service.metric')} name="metric">
             <DashboardSelect onChange={this.handleUpdateMetricType}>
               {

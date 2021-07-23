@@ -47,10 +47,6 @@ class ConfigInfo extends React.Component<IProps> {
         dataIndex: 'type',
       },
       {
-        title: <TitleInstruction title="Mode" description={intl.get('description.moduleMode')} />,
-        dataIndex: 'mode',
-      },
-      {
         title: <TitleInstruction title="Value" description={intl.get('description.moduleValue')} />,
         dataIndex: 'value',
       }

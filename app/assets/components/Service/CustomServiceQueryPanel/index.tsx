@@ -4,7 +4,6 @@ import intl from 'react-intl-universal';
 import { IServicePanelConfig, IStatRangeItem } from '@assets/utils/interface';
 import { getDataByType } from '@assets/utils/dashboard';
 import { SERVICE_DEFAULT_RANGE, SERVICE_POLLING_INTERVAL } from '@assets/utils/service';
-import { METRICS_DESCRIPTION } from '@assets/utils/metric';
 import Card from '@assets/components/Service/ServiceCard/Card';
 import { IDispatch, IRootState } from '@assets/store';
 import { connect } from 'react-redux';
@@ -92,7 +91,7 @@ class CustomServiceQueryPanel extends React.Component<IProps, IState> {
     const { config: { metric, period, metricType, baseLine }, aliasConfig } = this.props;
     return <div className="dashboard-card">
       <div className="header">
-        <Popover placement="left" content={METRICS_DESCRIPTION[metric]}>{metric}</Popover>
+        <Popover placement="bottomLeft" content={intl.get(`metric_description.${metric}`)}>{metric}</Popover>
         <div>
           <span>{intl.get('service.period')}: <span>{period}</span></span> 
           <span>{intl.get('service.metricParams')}: <span>{metricType}</span></span>

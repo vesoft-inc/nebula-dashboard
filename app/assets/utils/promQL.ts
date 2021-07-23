@@ -223,28 +223,29 @@ export const SERVICE_SUPPORT_METRICS = {
     },
   ],
   storage:[
-    {
-      metric: 'add_edges_atomic_latency_us',
-      valueType: VALUE_TYPE.number,
-      metricType: [
-        {
-          key: 'avg',
-          value: 'nebula_storaged_add_edges_atomic_latency_us_avg_'
-        },
-        {
-          key: 'p75',
-          value: 'nebula_storaged_add_edges_atomic_latency_us_p75_'
-        },
-        {
-          key: 'p95',
-          value: 'nebula_storaged_add_edges_atomic_latency_us_p95_'
-        },
-        {
-          key: 'p99',
-          value: 'nebula_storaged_add_edges_atomic_latency_us_p99_'
-        },
-      ],
-    },
+    // Hack：atomic operaion is not guarateed in nebula now,thus it's will always return 0 unlesss user config it
+    // {
+    //   metric: 'add_edges_atomic_latency_us',
+    //   valueType: VALUE_TYPE.number,
+    //   metricType: [
+    //     {
+    //       key: 'avg',
+    //       value: 'nebula_storaged_add_edges_atomic_latency_us_avg_'
+    //     },
+    //     {
+    //       key: 'p75',
+    //       value: 'nebula_storaged_add_edges_atomic_latency_us_p75_'
+    //     },
+    //     {
+    //       key: 'p95',
+    //       value: 'nebula_storaged_add_edges_atomic_latency_us_p95_'
+    //     },
+    //     {
+    //       key: 'p99',
+    //       value: 'nebula_storaged_add_edges_atomic_latency_us_p99_'
+    //     },
+    //   ],
+    // },
     {
       metric: 'add_edges_latency_us',
       valueType: VALUE_TYPE.number,

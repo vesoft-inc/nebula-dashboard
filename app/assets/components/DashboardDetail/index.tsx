@@ -1,5 +1,5 @@
 import { DETAIL_DEFAULT_RANGE, TIMEOPTIONS } from '@assets/utils/dashboard';
-import { DatePicker, Form, Popover, Radio } from 'antd';
+import { DatePicker, Form, Radio } from 'antd';
 import React, { HTMLProps } from 'react';
 import dayjs from 'dayjs';
 
@@ -8,6 +8,7 @@ import { SUPPORT_METRICS } from '@assets/utils/promQL';
 import intl from 'react-intl-universal';
 import Icon from '../Icon';
 import { DashboardSelect, Option } from '../DashboardSelect';
+import { MetricPopover } from '../MetricPopover';
 
 interface IProps extends HTMLProps<any> {
   children: any;
@@ -95,9 +96,7 @@ class DashboardDetail extends React.PureComponent<IProps> {
                   metricOptions.map(option => <Option value={option.metric} key={option.metric}>{option.metric}</Option>)
                 }
               </DashboardSelect>
-              <Popover content="metric docs">
-                <Icon className="metric-info-icon blue" icon="#iconnav-serverInfo" />
-              </Popover>
+              <MetricPopover list={metricOptions}/>
             </Form.Item>
           }
         </div>

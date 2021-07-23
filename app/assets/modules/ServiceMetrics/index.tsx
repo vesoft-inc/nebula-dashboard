@@ -1,4 +1,4 @@
-import { DatePicker, Form, Popover, Radio, Row, Spin } from 'antd';
+import { DatePicker, Form, Radio, Row, Spin } from 'antd';
 import { 
   CARD_POLLING_INTERVAL, 
   DETAIL_DEFAULT_RANGE, 
@@ -31,6 +31,7 @@ import { trackEvent } from '@assets/utils/stat';
 import Icon from '@assets/components/Icon';
 import Modal from '@assets/components/Modal';
 import BaseLineEdit from '@assets/components/BaseLineEdit';
+import { MetricPopover } from '@assets/components/MetricPopover';
 
 import './index.less';
 
@@ -314,9 +315,7 @@ class ServiceMetrics extends React.Component<IProps, IState> {
                 }
               </DashboardSelect>
             </Form.Item>
-            <Popover content="metric docs">
-              <Icon className="metric-info-icon blue" icon="#iconnav-serverInfo" />
-            </Popover>
+            <MetricPopover list={SERVICE_SUPPORT_METRICS[serviceType]}/>
             <Form.Item
               noStyle={true}
               shouldUpdate={(prevValues, currentValues) => prevValues.metric !== currentValues.metric}
