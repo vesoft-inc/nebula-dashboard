@@ -91,9 +91,11 @@ class MainPage extends React.Component<IProps, IState> {
         ? 'https://docs.nebula-graph.com.cn/master/nebula-dashboard/1.what-is-dashboard/'
         // TODO:modify to english mannual link
         : 'https://docs.nebula-graph.com.cn/master/nebula-dashboard/1.what-is-dashboard/'; 
-
     if(activeKey === undefined) {
       activeKey = 'machine-overview';
+    }
+    if (activeKey === 'version-statistics' || activeKey === 'leader-distribution' || activeKey === 'partition-distribution'){
+      activeKey = 'service-overview';
     }
     return (
       <Layout className="nebula-stat">
@@ -112,7 +114,7 @@ class MainPage extends React.Component<IProps, IState> {
             inlineIndent={20}
             onClick={ item => () => trackPageView(item.key)}
             defaultOpenKeys={MenuList.map(item => item.key)}
-            defaultSelectedKeys={[activeKey]}>
+            selectedKeys={[activeKey]}>
             {this.renderMenu(MenuList)}
           </Menu>
           <div className="sidebar-footer">
