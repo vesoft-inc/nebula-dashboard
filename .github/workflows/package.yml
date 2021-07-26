@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: 'nico-dev'
+          ref: 'master'
           path: source/nebula-graph-dashboard
       - uses: actions/checkout@v2
         with:

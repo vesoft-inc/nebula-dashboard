@@ -12,7 +12,7 @@ export const trackPageView = (url: string) => {
     try {
       win.gtag('event', 'screen_view', {
         screen_name: url,
-        app_name: 'nebula-graph-stutio',
+        app_name: 'nebula-graph-dashboard',
       });
     } catch (e) {
       console.log(e);
