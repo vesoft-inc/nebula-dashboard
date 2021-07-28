@@ -7,7 +7,7 @@
     "typescript": true
   },
   "scripts": {
-    "start": "egg-scripts start --daemon --title=egg-server-nebula-dashboard",
+    "start": "egg-scripts start --daemon --title=egg-server-nebula-dashboard --workers=3",
     "stop": "egg-scripts stop --title=egg-server-nebula-dashboard",
     "dev": "egg-bin dev --port=7003 -r egg-ts-helper/register",
     "debug": "egg-bin debug -r egg-ts-helper/register",
