@@ -175,8 +175,9 @@ class MachineDashboard extends React.Component<IProps, IState> {
         </Col>
       </Row>
       <Modal
+        title="empty"
         className="modal-baseLine"
-        width="750px"
+        width="550px"
         handlerRef={handler => (this.modalHandler = handler)}
         footer={null}
       >

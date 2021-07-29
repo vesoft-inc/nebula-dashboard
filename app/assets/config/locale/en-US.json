@@ -76,7 +76,8 @@
     "metric":"Metric",
     "metricParams":"Metric Methods",
     "queryCondition":"Query Condition",
-    "serviceMetricsDetails": "Service Metrics Details"
+    "serviceMetricsDetails": "Service Metrics Details",
+    "chooseSpace": "Please Choose Space"
   },
   "component": {
     "dashboardDetail": {

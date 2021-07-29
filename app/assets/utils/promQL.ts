@@ -138,7 +138,7 @@ export const SERVICE_SUPPORT_METRICS = {
         {
           key: 'sum',
           value: 'nebula_graphd_num_queries_sum_'
-        },
+        }
       ],
     },
     {

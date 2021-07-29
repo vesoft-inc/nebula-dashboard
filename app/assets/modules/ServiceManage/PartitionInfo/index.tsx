@@ -32,7 +32,7 @@ interface IProps extends ReturnType<typeof mapState>,
 
 class PartitionInfo extends React.Component<IProps> {
 
-  componentDidMount(){
+  componentDidMount() {
     this.props.asyncGetSpaces();
   }
 
@@ -79,11 +79,12 @@ class PartitionInfo extends React.Component<IProps> {
           <div className="service-screen">
             <span>{intl.get('service.spaces')}:</span>
             <DashboardSelect 
+              placeholder={intl.get('service.chooseSpace')}
               className="service-select"
               value={currentSpace||undefined}
               onChange={this.handleSpaceChange}
               style={{
-                width: 120 
+                width: 220 
               }}>
               {spaces.map((space:any) => {
                 return <Option value={space.Name} key={space.Name}>{space.Name}</Option>;

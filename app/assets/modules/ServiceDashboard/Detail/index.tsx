@@ -72,23 +72,32 @@ class ServiceDetail extends React.Component<IProps, IState> {
   pollingTimer: any;
   modalHandler;
   formRef = React.createRef<FormInstance>();
+
   constructor(props: IProps) {
     super(props);
+    const { location: { pathname } } = this.props;
+    const regx = /(\w+)-metrics/g;
+    const match = regx.exec(pathname);
+    let serviceType = '';
+    if(match){
+      serviceType = match[1];
+    }
     this.state = {
       serviceType: 'graph',
-      metricsValueType: SERVICE_SUPPORT_METRICS.graph[0].valueType,
+      metricsValueType: SERVICE_SUPPORT_METRICS[serviceType][0].valueType,
       data: [],
       totalData: [],
       instanceList: [],
       baseLine: 0,
       interval: DETAIL_DEFAULT_RANGE,
       instance: 'all',
-      metric: SERVICE_SUPPORT_METRICS.graph[0].metric,
-      metricFunction: SERVICE_SUPPORT_METRICS.graph[0].metricType[0].value,
+      metric: SERVICE_SUPPORT_METRICS[serviceType][0].metric,
+      metricFunction: SERVICE_SUPPORT_METRICS[serviceType][0].metricType[0].value,
       period: SERVICE_QUERY_PERIOD,
       timeRange: getDefaultTimeRange(),
     };
   }
+
 
   componentWillUnmount() {
     this.clearPolling();
@@ -226,8 +235,9 @@ class ServiceDetail extends React.Component<IProps, IState> {
           <LineChart baseLine={baseLine} renderChart={this.renderChart} options={{ padding: [20, 20, 60, 50] }} />
         </Spin >
         <Modal
+          title="empty"
           className="modal-baseLine"
-          width="750px"
+          width="550px"
           handlerRef={handler => (this.modalHandler = handler)}
           footer={null}
         >

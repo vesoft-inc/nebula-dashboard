@@ -197,8 +197,9 @@ class Detail extends React.Component<IProps, IState> {
           <LineChart baseLine={baseLine} options={{ padding: [10, 70, 70, 70] }} renderChart={this.renderChart} />
         </DashboardDetail>
         <Modal
+          title="empty"
           className="modal-baseLine"
-          width="750px"
+          width="550px"
           handlerRef={handler => (this.modalHandler = handler)}
           footer={null}
         >

@@ -57,10 +57,10 @@ class ConfigServerForm extends React.Component<IProps> {
           <p className="form-header">{intl.get('common.account')}</p>
           <Form layout="horizontal" {...fomrItemLayout} onFinish={this.onConfig}>
             <FormItem name="username" rules={usernameRulesFn(intl)}>
-              <Input placeholder={intl.get('common.username')} bordered={false} />
+              <Input placeholder={intl.get('common.username')} bordered={false}/>
             </FormItem>
             <FormItem name="password" rules={passwordRulesFn(intl)}>
-              <Input type="password" placeholder={intl.get('common.password')} bordered={false} />
+              <Input type="password" placeholder={intl.get('common.password')} bordered={false}/>
             </FormItem>
             <Button className="btn-submit" type="primary" htmlType="submit">
               {intl.get('common.login')}
