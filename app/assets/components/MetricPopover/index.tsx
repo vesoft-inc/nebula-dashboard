@@ -11,8 +11,7 @@ export const MetricPopover = (props: { list }) => {
   const mannualHref =
     locale === 'ZH_CN'
       ? 'https://docs.nebula-graph.com.cn/master/nebula-dashboard/1.what-is-dashboard/'
-      // TODO:modify to english mannual link
-      : 'https://docs.nebula-graph.com.cn/master/nebula-dashboard/1.what-is-dashboard/'; 
+      : 'https://docs.nebula-graph.io/master/nebula-dashboard/1.what-is-dashboard/'; 
 
   return (
     <Popover

@@ -29,11 +29,13 @@ class App extends React.Component<IProps> {
     const regx = /lang=(\w+)/g;
     const match = regx.exec(props.history.location.search);
     const lang = document.documentElement.getAttribute('lang');
-
-    if (match) {
-      cookies.set('locale', match[1] === 'EN_US' ? 'EN_US' : 'ZH_CN');
-    } else {
-      cookies.set('locale', lang === 'en' ? 'EN_US' : 'ZH_CN');
+    
+    if(!cookies.get('locale')){
+      if (match) {
+        cookies.set('locale', match[1] === 'EN_US' ? 'EN_US' : 'ZH_CN');
+      } else {
+        cookies.set('locale', lang === 'en' ? 'EN_US' : 'ZH_CN');
+      }
     }
 
     this.currentLocale = cookies.get('locale');
