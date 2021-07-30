@@ -50,13 +50,7 @@ class PartitionDistribution extends React.Component<IProps, IState> {
   }
 
   componentDidMount() {
-    this.getSpaces();
-  }
-  getSpaces = async() => {
-    await this.props.asyncGetSpaces();
-    const { spaces } = this.props;
-    const currentSpace = (spaces[0] as any).Name;
-    this.handleSpaceChange(currentSpace);
+    this.props.asyncGetSpaces();
   }
 
   handleSpaceChange= async space => {
@@ -113,8 +107,14 @@ class PartitionDistribution extends React.Component<IProps, IState> {
           <div className="common-header">
             <span>{currentSpace} Partition {intl.get('service.distribution')}</span>
             <div className="select-space">
-              <span>Space:</span>
-              <DashboardSelect value={currentSpace} onChange={this.handleSpaceChange}>
+              <span>{intl.get('service.spaces')}:</span>
+              <DashboardSelect 
+                placeholder={intl.get('service.chooseSpace')}
+                value={currentSpace||undefined}
+                onChange={this.handleSpaceChange}
+                style={{
+                  width: 220 
+                }}>
                 {spaces.map((space:any) => {
                   return <Option value={space.Name} key={space.Name}>{space.Name}</Option>;
                 })}

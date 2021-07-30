@@ -53,8 +53,8 @@ class Header extends React.PureComponent<IProps, IState> {
         <Link to={route.path}>{route.breadcrumbName}</Link>
       );
     };
-    const { pathname, search } =this.props.location;
-    const currentPage = extra ? extra.filter(item => item.value === pathname+search) : null;
+    const { pathname } =this.props.location;
+    const currentPage = extra ? extra.filter(item => item.value === pathname) : null;
     return (
       <PageHeader
         className="page-header"
