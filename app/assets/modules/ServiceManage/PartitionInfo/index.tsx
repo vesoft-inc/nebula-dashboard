@@ -54,7 +54,7 @@ class PartitionInfo extends React.Component<IProps> {
 
   render() {
     const { spaces, parts, currentSpace, loading } = this.props;
-    const columns =[
+    const columns = [
       {
         title: <TitleInstruction title="PartitionId" description={intl.get('description.partitionId')} />,
         dataIndex: 'Partition ID',
@@ -70,7 +70,7 @@ class PartitionInfo extends React.Component<IProps> {
       {
         title: <TitleInstruction title="Losts" description={intl.get('description.losts')} />,
         dataIndex: 'Losts',
-        render: losts => <span>{losts||'-'}</span>,
+        render: losts => <span>{losts || '-'}</span>,
       }
     ];
     return (
@@ -81,7 +81,7 @@ class PartitionInfo extends React.Component<IProps> {
             <DashboardSelect 
               placeholder={intl.get('service.chooseSpace')}
               className="service-select"
-              value={currentSpace||undefined}
+              value={currentSpace || undefined}
               onChange={this.handleSpaceChange}
               style={{
                 width: 220 

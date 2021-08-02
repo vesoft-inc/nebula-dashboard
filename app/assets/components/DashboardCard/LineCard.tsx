@@ -59,7 +59,7 @@ class LineCard extends React.Component<IProps> {
       case VALUE_TYPE.byteSecond:
         const { value, unit } = getProperByteDesc(maxNum);
         if (valueType === VALUE_TYPE.byteSecond) {
-          return unit.length + value.toString().length+2;
+          return unit.length + value.toString().length + 2;
         }
         return unit.length + value.toString().length;
       case VALUE_TYPE.numberSecond:

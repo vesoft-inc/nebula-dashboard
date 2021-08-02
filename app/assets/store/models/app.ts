@@ -50,7 +50,7 @@ export const app = createModel({
       ip: string,
       port: number,
     }){
-      const { password, username, ip, port } =payload;
+      const { password, username, ip, port } = payload;
       const { code, message: errorMessage } = (await service.connectDB(
         {
           address: ip,

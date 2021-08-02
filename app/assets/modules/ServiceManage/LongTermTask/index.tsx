@@ -26,12 +26,12 @@ class LongTermTask extends React.Component<IProps> {
   }
 
   renderTime= time => {
-    return <span>{time.year/time.month/time.day}{time.hour}:{time.minute}:{time.sec}</span>;
+    return <span>{time.year / time.month / time.day}{time.hour}:{time.minute}:{time.sec}</span>;
   }
 
   render() {
     const { jobs, loading } = this.props;
-    const columns =[
+    const columns = [
       {
         title: <TitleInstruction title="Job ID" description={intl.get('description.jobId')} />,
         dataIndex: 'Job Id',

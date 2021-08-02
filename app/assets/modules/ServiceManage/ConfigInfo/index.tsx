@@ -31,8 +31,8 @@ class ConfigInfo extends React.Component<IProps> {
   }
 
   render() {
-    const { configs, loading }=this.props;
-    const columns =[
+    const { configs, loading } = this.props;
+    const columns = [
       {
         title: <TitleInstruction title="Module" description={intl.get('description.module')} />,
         dataIndex: 'module',
@@ -63,7 +63,7 @@ class ConfigInfo extends React.Component<IProps> {
         </div>
         <Table
           loading={!!loading}
-          rowKey={(record: any) => record.module+record.name}
+          rowKey={(record: any) => record.module + record.name}
           dataSource={configs} 
           columns={columns} 
         />

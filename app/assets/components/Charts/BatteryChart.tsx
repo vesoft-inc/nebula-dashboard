@@ -40,7 +40,7 @@ const Battery = (props:IBatteryProps) => {
         }
         { !!m && <div className="battery-cell"><div style={{ width: `${m / 10 * 100}%`, height: '100%', backgroundColor: color }} /></div>}
         {
-          _.times(10 - n -1).map(i => <div key={i} className="battery-cell" />)
+          _.times(10 - n - 1).map(i => <div key={i} className="battery-cell" />)
         }
       </div>
     </div>

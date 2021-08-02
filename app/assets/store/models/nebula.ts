@@ -33,7 +33,7 @@ export const nebula = createModel({
   effects: (dispatch: any) => ({
     async asyncGetServiceConfigs(module?:string) {
       const { code, data } = (await service.execNGQL({
-        gql: module && module !== 'all' ? `SHOW CONFIGS ${module} `:'SHOW CONFIGS'
+        gql: module && module !== 'all' ? `SHOW CONFIGS ${module} ` : 'SHOW CONFIGS'
       })) as any;
       if (code === 0) {
         this.update({
@@ -72,7 +72,7 @@ export const nebula = createModel({
 
     async asyncGetParts(partId?:string) {
       const { code, data } = (await service.execNGQL({
-        gql: partId ? `SHOW PARTS ${partId}`:'SHOW PARTS'
+        gql: partId ? `SHOW PARTS ${partId}` : 'SHOW PARTS'
       })) as any;
       if (code === 0 && data.tables) {
         this.update({

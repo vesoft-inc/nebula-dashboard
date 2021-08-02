@@ -28,7 +28,7 @@ class ServiceInfo extends React.Component<IProps> {
 
   render() {
     const { services } = this.props;
-    const columns =[
+    const columns = [
       {
         title: <TitleInstruction title="Host" description={intl.get('description.ip')} />,
         dataIndex: 'Host',

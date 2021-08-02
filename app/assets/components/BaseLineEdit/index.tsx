@@ -16,7 +16,7 @@ class BaseLineEdit extends React.Component<IProps> {
   formRef = React.createRef<FormInstance>();
   render() {
     const { baseLine, type, onClose, onBaseLineChange } = this.props;
-    const units= renderUnit(type);
+    const units = renderUnit(type);
     const initialValues = { baseLine } as any;
     if(!!units.length){
       initialValues.unit = units[0];

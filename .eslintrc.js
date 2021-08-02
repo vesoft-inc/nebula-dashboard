@@ -293,6 +293,7 @@ module.exports = {
                 ]
             }
         ],
+        "space-infix-ops": "error",
         semi: 1,
         'space-before-function-paren':  ["error", "never"],
         'object-curly-spacing': ['error','always'],

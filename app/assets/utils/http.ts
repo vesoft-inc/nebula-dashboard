@@ -84,7 +84,7 @@ const post = (api: string) => (params?: object, config = {} as any) =>
 const put = (api: string) => (params?: object, config = {}) =>
   sendRequest('put', api, params, config);
 
-const _delete = (api: string) => (params?: object, config={}) =>
+const _delete = (api: string) => (params?: object, config = {}) =>
   sendRequest('delete', api, params, config);
 
 export { get, post, put, _delete };

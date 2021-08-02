@@ -274,7 +274,7 @@ export const machine = createModel({
         end,
         step,
       })) as any;
-      if(code ===0){
+      if(code === 0){
         const sumData = {
           metric:{
             instance: 'total',

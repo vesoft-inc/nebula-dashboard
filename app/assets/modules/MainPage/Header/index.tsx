@@ -53,7 +53,7 @@ class Header extends React.PureComponent<IProps, IState> {
         <Link to={route.path}>{route.breadcrumbName}</Link>
       );
     };
-    const { pathname } =this.props.location;
+    const { pathname } = this.props.location;
     const currentPage = extra ? extra.filter(item => item.value === pathname) : null;
     return (
       <PageHeader
@@ -63,7 +63,7 @@ class Header extends React.PureComponent<IProps, IState> {
           <span>{title}</span>
         </>}
         breadcrumb={{ itemRender, routes }}
-        extra={extra&&currentPage.length !==0 ? <Radio.Group
+        extra={extra && currentPage.length !== 0 ? <Radio.Group
           options={extra}
           onChange={this.handlePageView}
           value={currentPage[0].value}

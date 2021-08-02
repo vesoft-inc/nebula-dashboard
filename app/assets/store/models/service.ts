@@ -52,7 +52,7 @@ export const service = createModel({
         }
       } as any;
       if (code === 0) {
-        if(metric === SERVICE_SUPPORT_METRICS.graph[0].metric || metric===SERVICE_SUPPORT_METRICS.graph[1].metric){
+        if(metric === SERVICE_SUPPORT_METRICS.graph[0].metric || metric === SERVICE_SUPPORT_METRICS.graph[1].metric){
           sumData.values = getQPSData(data, timeInterval)[0].values;
         }else{
           sumData.values = data.result[0].values;
@@ -80,7 +80,7 @@ export const service = createModel({
       })) as any;
       let stat = [] as any;
       if (code === 0) {
-        if(metric === SERVICE_SUPPORT_METRICS.graph[0].metric || metric===SERVICE_SUPPORT_METRICS.graph[1].metric){
+        if(metric === SERVICE_SUPPORT_METRICS.graph[0].metric || metric === SERVICE_SUPPORT_METRICS.graph[1].metric){
           stat = getQPSData(data, timeInterval);
         }else{
           stat = data.result;

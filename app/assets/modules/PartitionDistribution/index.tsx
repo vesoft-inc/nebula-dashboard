@@ -110,7 +110,7 @@ class PartitionDistribution extends React.Component<IProps, IState> {
               <span>{intl.get('service.spaces')}:</span>
               <DashboardSelect 
                 placeholder={intl.get('service.chooseSpace')}
-                value={currentSpace||undefined}
+                value={currentSpace || undefined}
                 onChange={this.handleSpaceChange}
                 style={{
                   width: 220 

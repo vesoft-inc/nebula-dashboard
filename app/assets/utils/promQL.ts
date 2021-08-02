@@ -475,7 +475,7 @@ export const LINUX = {
   network_out_packets: 'sum by(instance)(irate(node_network_transmit_packets_total{device=~"eth[0-9]*"}[1m]))',
 };
 
-export const NEBULA_COUNT ={
+export const NEBULA_COUNT = {
   graph: 'nebula_graphd_count',
   storage: 'nebula_storaged_count',
   meta: 'nebula_metad_count'
