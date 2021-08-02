@@ -1,4 +1,4 @@
-import { DatePicker, Form, Popover, Radio, Row } from 'antd';
+import { DatePicker, Form, Radio, Row } from 'antd';
 import {  
   DETAIL_DEFAULT_RANGE, 
   TIMEOPTIONS, 
@@ -17,9 +17,8 @@ import { Chart } from '@antv/g2';
 import StatusPanel from '@assets/components/StatusPanel';
 import { DashboardSelect, Option } from '@assets/components/DashboardSelect';
 import { trackEvent } from '@assets/utils/stat';
+import { MetricPopover } from '@assets/components/MetricPopover';
 import dayjs from 'dayjs';
-
-import Icon from '@assets/components/Icon';
 
 import '../index.less';
 
@@ -51,6 +50,7 @@ interface IProps extends ReturnType<typeof mapDispatch>,
   serviceType: string,
   metricsValueType: string;
   instanceList: string[];
+  onTimeChange?: (interval:number) => void
   onServiceTypeChange: (type)=> void;
   onConfigUpdate: (values)=>void; 
   onMetricsValueTypeChange: (type)=> void;
@@ -82,6 +82,13 @@ class ServicePanel extends React.Component<IProps, IState> {
   componentDidUpdate(prevProps) {
     if(prevProps.location.pathname !== this.props.location.pathname) {
       this.initialConfig();
+    }
+  }
+
+  handleTimeButtonClick = e => {
+    const { onTimeChange } = this.props;
+    if (onTimeChange) {
+      onTimeChange(e.target.value);
     }
   }
 
@@ -150,7 +157,7 @@ class ServicePanel extends React.Component<IProps, IState> {
         <Row>
           <div className="row-left">
             <Form.Item name="interval">
-              <Radio.Group size="small">
+              <Radio.Group size="small" onChange={this.handleTimeButtonClick as any}>
                 {
                   TIMEOPTIONS.map(option => (
                     <Radio.Button key={option.value} value={option.value}>{intl.get(`component.dashboardDetail.${option.name}`)}</Radio.Button>
@@ -186,9 +193,7 @@ class ServicePanel extends React.Component<IProps, IState> {
               }
             </DashboardSelect>
           </Form.Item>
-          <Popover content="metric docs">
-            <Icon className="metric-info-icon blue" icon="#iconnav-serverInfo" />
-          </Popover>
+          <MetricPopover list={SERVICE_SUPPORT_METRICS[serviceType]}/>
           <Form.Item
             noStyle={true}
             shouldUpdate={(prevValues, currentValues) => prevValues.metric !== currentValues.metric}

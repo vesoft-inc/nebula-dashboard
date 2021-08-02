@@ -179,6 +179,12 @@ class ServiceDetail extends React.Component<IProps, IState> {
     });
   }
 
+  handleIntervalChange = (interval) => {
+    this.setState({
+      timeRange:getDefaultTimeRange(interval),
+    }, this.asyncGetMetricsData);
+  }
+
   handleConfigUpdate = (changedValues) => {
     const { serviceType } = this.state;
     if(changedValues.metric){
@@ -223,6 +229,7 @@ class ServiceDetail extends React.Component<IProps, IState> {
         <Panel 
           instanceList={instanceList}
           serviceType={serviceType}
+          onTimeChange={this.handleIntervalChange}
           onServiceTypeChange={this.handleServiceTypeChange}
           onMetricsValueTypeChange={this.handleMetricsValueTypeChange}
           onConfigUpdate={this.handleConfigUpdate} 
@@ -236,7 +243,7 @@ class ServiceDetail extends React.Component<IProps, IState> {
         </Spin >
         <Modal
           title="empty"
-          className="modal-baseLine"
+          className="service-modal"
           width="550px"
           handlerRef={handler => (this.modalHandler = handler)}
           footer={null}

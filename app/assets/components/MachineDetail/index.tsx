@@ -27,7 +27,7 @@ interface IProps extends HTMLProps<any> {
 
 
 
-class DashboardDetail extends React.PureComponent<IProps> {
+class MachineDetail extends React.PureComponent<IProps> {
   handleTimeButtonClick = e => {
     const { onTimeChange } = this.props;
     const endTimeStamps = Date.now();
@@ -112,4 +112,4 @@ class DashboardDetail extends React.PureComponent<IProps> {
   }
 }
 
-export default DashboardDetail;
+export default MachineDetail;

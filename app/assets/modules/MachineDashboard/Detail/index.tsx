@@ -1,5 +1,5 @@
 import React from 'react';
-import DashboardDetail from '@assets/components/DashboardDetail';
+import MachineDetail from '@assets/components/MachineDetail';
 import intl from 'react-intl-universal';
 import { Chart } from '@antv/g2';
 import LineChart from '@assets/components/Charts/LineChart';
@@ -33,6 +33,7 @@ const mapState = (state: IRootState) => {
     networkOutBaseLine: state.setting.networkOutBaseLine,
     networkInBaseLine: state.setting.networkInBaseLine,
     loadBaseLine: state.setting.loadBaseLine,
+    networkBaseLine: state.setting.networkBaseLine,
   };
 };
 interface IProps extends ReturnType<typeof mapState>,
@@ -179,7 +180,7 @@ class Detail extends React.Component<IProps, IState> {
     const baseLine = this.props[`${type}BaseLine`];
     return (
       <Spin spinning={loading} wrapperClassName="machine-detail">
-        <DashboardDetail
+        <MachineDetail
           key={currentMetricOption.metric}
           className="cpu-detail"
           title={intl.get('device.detail.cpu')}
@@ -195,10 +196,10 @@ class Detail extends React.Component<IProps, IState> {
           onBaseLineEdit={this.handleBaseLineEdit}
         >
           <LineChart baseLine={baseLine} options={{ padding: [10, 70, 70, 70] }} renderChart={this.renderChart} />
-        </DashboardDetail>
+        </MachineDetail>
         <Modal
           title="empty"
-          className="modal-baseLine"
+          className="machine-modal"
           width="550px"
           handlerRef={handler => (this.modalHandler = handler)}
           footer={null}

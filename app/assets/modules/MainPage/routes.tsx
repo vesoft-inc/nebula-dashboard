@@ -158,10 +158,10 @@ export const RoutesList = [
         breadcrumbName: intl.get('common.machine'),
       }, {
         path: '/machine/cpu',
-        breadcrumbName: 'CPU Detail',
+        breadcrumbName: intl.get('device.cpu'),
       }],
       showBackBtn: true,
-      title: 'CPU Detail',
+      title: intl.get('device.cpu'),
     }
   },
   {
@@ -177,10 +177,10 @@ export const RoutesList = [
         breadcrumbName: intl.get('common.machine'),
       }, {
         path: '/machine/disk',
-        breadcrumbName: 'Disk Detail',
+        breadcrumbName: intl.get('device.disk'),
       }],
       showBackBtn: true,
-      title: 'Disk Detail',
+      title: intl.get('device.disk'),
     }
   },
   {
@@ -196,10 +196,10 @@ export const RoutesList = [
         breadcrumbName: intl.get('common.machine'),
       }, {
         path: '/machine/memory',
-        breadcrumbName: 'Memory Detail',
+        breadcrumbName: intl.get('device.memory'),
       }],
       showBackBtn: true,
-      title: 'Memory Detail',
+      title: intl.get('device.memory'),
     }
   },
   {
@@ -215,10 +215,10 @@ export const RoutesList = [
         breadcrumbName: intl.get('common.machine'),
       }, {
         path: '/machine/load',
-        breadcrumbName: 'Load Detail',
+        breadcrumbName: intl.get('device.load'),
       }],
       showBackBtn: true,
-      title: 'Load Detail',
+      title: intl.get('device.load'),
     }
   },
   {
@@ -234,10 +234,10 @@ export const RoutesList = [
         breadcrumbName: intl.get('common.machine'),
       }, {
         path: '/machine/network',
-        breadcrumbName: 'Network Detail',
+        breadcrumbName: intl.get('device.network'),
       }],
       showBackBtn: true,
-      title: 'Network Detail',
+      title: intl.get('device.network'),
     }
   },
   {

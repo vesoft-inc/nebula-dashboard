@@ -18,6 +18,7 @@ export const setting = createModel({
     networkOutBaseLine: undefined,
     networkInBaseLine: undefined,
     loadBaseLine: undefined,
+    networkBaseLine: undefined,
   },
   reducers: {
     update: (state: IState, payload: any) => {
