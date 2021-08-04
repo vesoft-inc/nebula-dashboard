@@ -27,12 +27,10 @@ const mapDispatch = (dispatch: IDispatch) => {
 const mapState = (state: IRootState) => {
   return {
     aliasConfig: state.app.aliasConfig,
-    diskBaseLine: state.setting.diskBaseLine,
     cpuBaseLine: state.setting.cpuBaseLine,
     memoryBaseLine: state.setting.memoryBaseLine,
-    networkOutBaseLine: state.setting.networkOutBaseLine,
-    networkInBaseLine: state.setting.networkInBaseLine,
     loadBaseLine: state.setting.loadBaseLine,
+    diskBaseLine: state.setting.diskBaseLine,
     networkBaseLine: state.setting.networkBaseLine,
   };
 };

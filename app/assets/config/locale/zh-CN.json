@@ -25,6 +25,7 @@
     "overview": "概览",
     "baseLine": "基线",
     "editBaseLine": "编辑基线",
+    "baseLineTip": "请输入大于0的值",
     "unit": "单位",
     "help": "帮助"
   },

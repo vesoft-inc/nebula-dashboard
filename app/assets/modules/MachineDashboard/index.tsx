@@ -43,7 +43,6 @@ const mapState = (state: IRootState) => {
 
 interface IProps extends ReturnType<typeof mapDispatch>,
   ReturnType<typeof mapState> {
-
 }
 
 interface IState {

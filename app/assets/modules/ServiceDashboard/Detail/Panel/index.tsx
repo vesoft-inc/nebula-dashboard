@@ -144,6 +144,10 @@ class ServicePanel extends React.Component<IProps, IState> {
     this.props.onConfigUpdate(changedValues);
   }
 
+  disabledDate(current) {
+    return current < dayjs().subtract(14, 'days').endOf('day') || current > dayjs().endOf('day'); 
+  }
+
   render() {
     const { defaultFormParams } = this.state;
     const { serviceType, aliasConfig, instanceList, asyncGetStatus } = this.props;
@@ -166,7 +170,13 @@ class ServicePanel extends React.Component<IProps, IState> {
               </Radio.Group>
             </Form.Item>
             <Form.Item name="timeRange">
-              <DatePicker.RangePicker size="small" format="YYYY-MM-DD HH:mm" showTime={true} allowClear={false} />
+              <DatePicker.RangePicker 
+                disabledDate={this.disabledDate}
+                size="small" 
+                format="YYYY-MM-DD HH:mm" 
+                showTime={true} 
+                allowClear={false} 
+              />
             </Form.Item>
           </div>
           <Form.Item label={intl.get('service.serviceStatus')}>

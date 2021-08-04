@@ -25,6 +25,7 @@
     "overview": "Overview",
     "baseLine": "Base Line",
     "editBaseLine": "Edit Base Line",
+    "baseLineTip": "Please enter a number greater than 0",
     "unit": "Unit",
     "help": "Help"
   },

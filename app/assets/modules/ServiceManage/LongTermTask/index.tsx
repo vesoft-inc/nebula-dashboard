@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { IDispatch, IRootState } from '@assets/store';
 import intl from 'react-intl-universal';
 import { TitleInstruction } from '@assets/components/Instruction';
+import dayjs from 'dayjs';
 import './index.less';
 
 const mapState = (state: IRootState) => ({
@@ -25,8 +26,8 @@ class LongTermTask extends React.Component<IProps> {
     this.props.asyncGetJobs();
   }
 
-  renderTime= time => {
-    return <span>{time.year / time.month / time.day}{time.hour}:{time.minute}:{time.sec}</span>;
+  renderTime= time => {  
+    return <span>{dayjs(time).format('YYYY-MM-DD HH:mm:ss')}</span>;
   }
 
   render() {

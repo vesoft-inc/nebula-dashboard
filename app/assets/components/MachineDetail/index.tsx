@@ -51,6 +51,10 @@ class MachineDetail extends React.PureComponent<IProps> {
     }
   }
 
+  disabledDate(current) {
+    return current < dayjs().subtract(14, 'days').endOf('day') || current > dayjs().endOf('day');
+  }
+
   render() {
     const now = Date.now();
     const {
@@ -77,12 +81,20 @@ class MachineDetail extends React.PureComponent<IProps> {
               ))
             }
           </Radio.Group>
-          <DatePicker.RangePicker showSecond={false} format="YYYY-MM-DD HH:mm" value={[startDate, endDate] as any} showTime={true} onChange={this.handleTimeRangeChange as any} allowClear={false}/>
+          <DatePicker.RangePicker 
+            disabledDate={this.disabledDate}
+            showSecond={false} 
+            format="YYYY-MM-DD HH:mm" 
+            value={[startDate, endDate] as any} 
+            showTime={true} 
+            onChange={this.handleTimeRangeChange as any} 
+            allowClear={false}
+          />
         </div>
         <div className="right-panel">
           {
             typeOptions && <Form.Item>
-              <DashboardSelect value={currentType} onChange={onTypeChange} suffixIcon={<Icon icon="#iconnav-foldTriangle" />}>
+              <DashboardSelect value={currentType} onChange={onTypeChange} >
                 {
                   typeOptions.map(option => <Option value={option.value} key={option.value}>{option.name}</Option>)
                 }

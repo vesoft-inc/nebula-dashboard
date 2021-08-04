@@ -80,7 +80,6 @@ class PartitionInfo extends React.Component<IProps> {
             <span>{intl.get('service.spaces')}:</span>
             <DashboardSelect 
               placeholder={intl.get('service.chooseSpace')}
-              className="service-select"
               value={currentSpace || undefined}
               onChange={this.handleSpaceChange}
               style={{

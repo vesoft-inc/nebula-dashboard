@@ -7,7 +7,7 @@ interface IState {
   memoryBaseLine: number|undefined,
   networkOutBaseLine: number|undefined,
   networkInBaseLine: number|undefined,
-  loadBaseLine: number|undefined
+  loadBaseLine: number|undefined,
 }
 
 export const setting = createModel({

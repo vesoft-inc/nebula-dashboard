@@ -14,6 +14,7 @@ interface IProps {
 
 class BaseLineEdit extends React.Component<IProps> {
   formRef = React.createRef<FormInstance>();
+
   render() {
     const { baseLine, type, onClose, onBaseLineChange } = this.props;
     const units = renderUnit(type);
@@ -21,16 +22,22 @@ class BaseLineEdit extends React.Component<IProps> {
     if(!!units.length){
       initialValues.unit = units[0];
     }
+
     return (
       <div className="base-line-edit">
         <Form
           initialValues={initialValues}
           onFinish={onBaseLineChange}
         >
-          <Form.Item label={intl.get('common.baseLine')} name="baseLine">
-            <InputNumber/>
+          <Form.Item 
+            label={intl.get('common.baseLine')} 
+            name="baseLine"
+            hasFeedback={true}
+            rules={[{ required: true, message: intl.get('common.baseLineTip') }]}
+          >
+            <InputNumber min={0}/>
           </Form.Item>
-          {units.length !== 0 && <Form.Item label={intl.get('common.unit')} name="unit">
+          {units.length !== 0 && <Form.Item rules={[{ required: true }]} label={intl.get('common.unit')} name="unit">
             <Select>
               {units.map(value => (<Select.Option value={value} key={value}>{value}</Select.Option>))}
             </Select>
