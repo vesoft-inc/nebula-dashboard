@@ -93,7 +93,7 @@ class PartitionInfo extends React.Component<IProps> {
           </div>
           <div className="service-screen">
             <span>{intl.get('service.partition')}:</span>
-            <Input.Search allowClear={true} onSearch={this.handleSearchPartitionId} />
+            <Input.Search allowClear={true} placeholder={intl.get('service.enterPartitionId')} onSearch={this.handleSearchPartitionId} />
           </div>
         </div>
         <Table 

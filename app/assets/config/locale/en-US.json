@@ -77,7 +77,8 @@
     "metricParams":"Metric Methods",
     "queryCondition":"Query Condition",
     "serviceMetricsDetails": "Service Metrics Details",
-    "chooseSpace": "Please Choose Space"
+    "chooseSpace": "Please Choose Space",
+    "enterPartitionId": "Please enter the partitionId"
   },
   "component": {
     "dashboardDetail": {
