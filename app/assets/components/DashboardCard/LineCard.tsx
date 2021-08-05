@@ -5,7 +5,7 @@ import { Chart, Geometry } from '@antv/g2';
 import { ILineChartMetric, IStatSingleItem } from '@assets/utils/interface';
 import { configDetailChart } from '@assets/utils/chart/chart';
 import { VALUE_TYPE } from '@assets/utils/promQL';
-import { getProperByteDesc } from '@assets/utils/dashboard';
+import { getMaxNumAndLength } from '@assets/utils/dashboard';
 import { Spin } from 'antd';
 interface IProps {
   data: ILineChartMetric[];
@@ -46,37 +46,24 @@ class LineCard extends React.Component<IProps> {
     this.chartInstance.changeData(data);
   }
 
-  getMaxLength = () => {
-    const { data = [], valueType } = this.props;
-    const max = _.maxBy(data, item => item.value);
-    const maxNum = max ? max.value : 0;
-    const maxNumLen = maxNum.toString().length;
-
-    switch (valueType) {
-      case VALUE_TYPE.percentage:
-        return 5;
-      case VALUE_TYPE.byte:
-      case VALUE_TYPE.byteSecond:
-        const { value, unit } = getProperByteDesc(maxNum);
-        if (valueType === VALUE_TYPE.byteSecond) {
-          return unit.length + value.toString().length + 2;
-        }
-        return unit.length + value.toString().length;
-      case VALUE_TYPE.numberSecond:
-        return maxNumLen + 2;
-      default:
-        return maxNumLen;
-    }
-  }
-
   render() {
-    const { loading, baseLine } = this.props;
+    const { loading, data, valueType, baseLine } = this.props;
+    const { maxNum, maxNumLen } = getMaxNumAndLength({
+      data,
+      valueType,
+      baseLine
+    });
     if (loading) {
       return <Spin />;
     }
-
     return (
-      <LineChart baseLine={baseLine} renderChart={this.renderLineChart} options={{ padding: [20, 20, 60, 5 * this.getMaxLength() + 30 ] }} />
+      <LineChart 
+        isDefaultScale={valueType === VALUE_TYPE.percentage} // VALUE_TYPE.percentage has a default Scale
+        baseLine={baseLine} 
+        yAxisMaximum={maxNum}
+        renderChart={this.renderLineChart} 
+        options={{ padding: [20, 20, 60, 6 * maxNumLen + 30 ] }} 
+      />
     );
   }
 }

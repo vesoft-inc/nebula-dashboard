@@ -3,7 +3,7 @@ import MachineDetail from '@assets/components/MachineDetail';
 import intl from 'react-intl-universal';
 import { Chart } from '@antv/g2';
 import LineChart from '@assets/components/Charts/LineChart';
-import { CARD_POLLING_INTERVAL, DETAIL_DEFAULT_RANGE, getBaseLineByUnit, getDataByType, getProperTickInterval } from '@assets/utils/dashboard';
+import { CARD_POLLING_INTERVAL, DETAIL_DEFAULT_RANGE, getBaseLineByUnit, getDataByType, getMaxNum, getProperTickInterval } from '@assets/utils/dashboard';
 import { uniq } from 'lodash';
 import { configDetailChart, updateDetailChart } from '@assets/utils/chart/chart';
 import { IStatRangeItem } from '@assets/utils/interface';
@@ -47,6 +47,7 @@ interface IProps extends ReturnType<typeof mapState>,
 }
 
 interface IState {
+  maxNum: number,
   startTimestamps: number,
   endTimestamps: number,
   currentInstance: string,
@@ -61,6 +62,7 @@ class Detail extends React.Component<IProps, IState> {
     super(props);
     const endTimestamps = Date.now();
     this.state = {
+      maxNum: 0,
       endTimestamps,
       startTimestamps: endTimestamps - DETAIL_DEFAULT_RANGE,
       currentInstance: localStorage.getItem('detailType') || 'all',
@@ -143,6 +145,9 @@ class Detail extends React.Component<IProps, IState> {
     const { dataSource, type, aliasConfig } = this.props;
     const { currentInstance, startTimestamps, endTimestamps } = this.state;
     const data = getDataByType({ data:dataSource, type:currentInstance, name: 'instance', aliasConfig });
+    this.setState({
+      maxNum: getMaxNum(data)
+    });
     updateDetailChart(this.chartInstance, {
       type,
       tickInterval: getProperTickInterval(endTimestamps - startTimestamps),
@@ -162,7 +167,7 @@ class Detail extends React.Component<IProps, IState> {
   }
   
   render() {
-    const { startTimestamps, endTimestamps, currentInstance, currentMetricOption } = this.state;
+    const { maxNum, startTimestamps, endTimestamps, currentInstance, currentMetricOption } = this.state;
     const { dataSource, metricOptions, loading, aliasConfig, type } = this.props;
     const instances = uniq(dataSource.map(instance => instance.metric.instance));
     const typeOptions = [
@@ -193,7 +198,13 @@ class Detail extends React.Component<IProps, IState> {
           onMetricChange={this.handleMetricChange}
           onBaseLineEdit={this.handleBaseLineEdit}
         >
-          <LineChart baseLine={baseLine} options={{ padding: [10, 70, 70, 70] }} renderChart={this.renderChart} />
+          <LineChart 
+            isDefaultScale={currentMetricOption.valueType === VALUE_TYPE.percentage} // VALUE_TYPE.percentage has a default Scale
+            yAxisMaximum={maxNum} 
+            tickInterval={getProperTickInterval(endTimestamps - startTimestamps)} 
+            baseLine={baseLine} options={{ padding: [10, 70, 70, 70] }} 
+            renderChart={this.renderChart} 
+          />
         </MachineDetail>
         <Modal
           title="empty"

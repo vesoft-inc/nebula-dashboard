@@ -460,10 +460,10 @@ export const LINUX = {
   // disk relative:
   disk_used: 'node_filesystem_size_bytes{mountpoint="/",fstype!="rootfs"} - node_filesystem_avail_bytes{mountpoint="/",fstype!="rootfs"}',
   disk_free: 'node_filesystem_avail_bytes{mountpoint="/",fstype!="rootfs"}',
-  disk_readbytes: 'irate(node_disk_read_bytes_total{device=~"(sd|nvme)[a-z0-9]*"}[1m])',
-  disk_writebytes: 'irate(node_disk_written_bytes_total{device=~"(sd|nvme)[a-z0-9]*"}[1m])',
-  disk_readiops: 'irate(node_disk_reads_completed_total[1m])',
-  disk_writeiops: 'irate(node_disk_writes_completed_total[1m])',
+  disk_readbytes: 'irate(node_disk_read_bytes_total{device=~"(sd|nvme|hd)[a-z0-9]*"}[1m])',
+  disk_writebytes: 'irate(node_disk_written_bytes_total{device=~"(sd|nvme|hd)[a-z0-9]*"}[1m])',
+  disk_readiops: 'irate(node_disk_reads_completed_total{device=~"(sd|nvme|hd)[a-z0-9]*"}[1m])',
+  disk_writeiops: 'irate(node_disk_writes_completed_total{device=~"(sd|nvme|hd)[a-z0-9]*"}[1m])',
   inode_utilization: '(1- (node_filesystem_files_free{mountpoint="/",fstype!="rootfs"}) / (node_filesystem_files{mountpoint="/",fstype!="rootfs"})) * 100',
 
   disk_size: 'node_filesystem_size_bytes{mountpoint="/",fstype!="rootfs"}',

@@ -58,7 +58,9 @@ class ConfigInfo extends React.Component<IProps> {
             <Radio.Button value="all">{intl.get('service.all')}</Radio.Button>
             <Radio.Button value="storage">Storage</Radio.Button>
             <Radio.Button value="graph">Graph</Radio.Button>
+            {/* TODO: Nebula 2.0.1 does not support meta modifications, support can be released in later versions
             <Radio.Button value="meta">Meta</Radio.Button>
+            */}
           </Radio.Group>
         </div>
         <Table

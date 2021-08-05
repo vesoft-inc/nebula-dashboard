@@ -6,6 +6,7 @@ import {
   getBaseLineByUnit,
   getDataByType, 
   getDefaultTimeRange,
+  getMaxNum,
   getProperTickInterval
 } from '@assets/utils/dashboard';
 import React from 'react';
@@ -36,6 +37,7 @@ interface IState {
   metricsValueType: VALUE_TYPE;
   instanceList: string[],
   data: IStatRangeItem[],
+  maxNum: number,
   totalData: IStatRangeItem[],
   baseLine: number,
   interval: number,
@@ -86,6 +88,7 @@ class ServiceDetail extends React.Component<IProps, IState> {
       serviceType: 'graph',
       metricsValueType: SERVICE_SUPPORT_METRICS[serviceType][0].valueType,
       data: [],
+      maxNum: 0,
       totalData: [],
       instanceList: [],
       baseLine: 0,
@@ -151,6 +154,9 @@ class ServiceDetail extends React.Component<IProps, IState> {
     const { aliasConfig } = this.props;
     const [startTime, endTime] = timeRange as any;
     const _data = getDataByType({ data, type: instance, name: 'instanceName', aliasConfig });
+    this.setState({
+      maxNum: getMaxNum(_data)
+    });
     updateDetailChart(this.chartInstance, {
       type: serviceType,
       tickInterval: getProperTickInterval(endTime - startTime),
@@ -218,7 +224,7 @@ class ServiceDetail extends React.Component<IProps, IState> {
     }, this.handleClose);
   }
   render() {
-    const { serviceType, baseLine, instanceList } = this.state;
+    const { maxNum, serviceType, baseLine, instanceList } = this.state;
     const { loading } = this.props;
     return (<div className="service-metrics">
       <ServiceHeader 
@@ -239,7 +245,7 @@ class ServiceDetail extends React.Component<IProps, IState> {
           <span>{intl.get('common.baseLine')}</span>
         </div>
         <Spin spinning={!!loading} wrapperClassName="nebula-chart">
-          <LineChart baseLine={baseLine} renderChart={this.renderChart} options={{ padding: [20, 20, 60, 50] }} />
+          <LineChart yAxisMaximum={maxNum} baseLine={baseLine} renderChart={this.renderChart} options={{ padding: [20, 20, 60, 50] }} />
         </Spin >
         <Modal
           title="empty"

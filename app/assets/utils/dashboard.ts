@@ -1,5 +1,8 @@
 import dayjs from 'dayjs';
 import { ILineChartMetric, IStatRangeItem } from '@assets/utils/interface';
+import { VALUE_TYPE } from '@assets/utils/promQL';
+import _ from 'lodash';
+
 export const DETAIL_DEFAULT_RANGE = 60 * 60 * 24 * 1000;
 export const CARD_RANGE = 60 * 60 * 24 * 1000;
 export const CARD_POLLING_INTERVAL = 10000 * 1000; 
@@ -207,4 +210,38 @@ export const getDefaultTimeRange = (interval?: number) => {
   const end = Date.now();
   const start = interval ? end - interval : end - DETAIL_DEFAULT_RANGE;
   return [dayjs(start), dayjs(end)];
+};
+
+export const getMaxNum = (data) => {
+  const max = _.maxBy(data, item => item.value) as any;
+  return max ? max.value : 0;
+};
+
+export const getMaxNumAndLength = (payload:{
+  data: any[];
+  valueType: string;
+  baseLine?: number;
+}) => {
+  const { data = [], valueType, baseLine } = payload;
+  const maxNum = getMaxNum(data);
+  let maxNumLen = maxNum === 0 && baseLine ? baseLine.toString().length : maxNum.toString().length;
+  switch (valueType) {
+    case VALUE_TYPE.percentage:
+      maxNumLen = 5;
+      break;
+    case VALUE_TYPE.byte:
+    case VALUE_TYPE.byteSecond:
+      const { value, unit } = getProperByteDesc(maxNum);
+      if (valueType === VALUE_TYPE.byteSecond) {
+        maxNumLen = unit.length + value.toString().length + 2;
+      }
+      maxNumLen = unit.length + value.toString().length;
+      break;
+    case VALUE_TYPE.numberSecond:
+      maxNumLen += 2;
+      break;
+    default:
+      break;
+  }
+  return { maxNum, maxNumLen };
 };
