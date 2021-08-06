@@ -30,6 +30,8 @@ mv $DASHBOARD/vendors/prometheus/ $TARGET/
 
 ### nebula dashboard relative ###
 cd $DASHBOARD
+bash ./scripts/setEventTracking.sh $1
+
 npm install --unsafe-perm
 npm run build
 npm run tsc

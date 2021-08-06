@@ -10,8 +10,8 @@ export const MetricPopover = (props: { list }) => {
   const locale = cookies.get('locale');
   const mannualHref =
     locale === 'ZH_CN'
-      ? 'https://docs.nebula-graph.com.cn/master/nebula-dashboard/1.what-is-dashboard/'
-      : 'https://docs.nebula-graph.io/master/nebula-dashboard/1.what-is-dashboard/'; 
+      ? 'https://docs.nebula-graph.com.cn/master/nebula-dashboard/6.monitor-parameter/'
+      : 'https://docs.nebula-graph.io/master/nebula-dashboard/6.monitor-parameter/'; 
 
   return (
     <Popover

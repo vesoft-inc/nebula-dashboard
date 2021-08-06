@@ -2,7 +2,7 @@
 
 ## Download && Deploy && Stop
 
-Refer：[生产部署文档](./DEPLOY.md)
+Refer：[Production Guide](./DEPLOY.md)
 
 ## Start to use
 1. Sign in
