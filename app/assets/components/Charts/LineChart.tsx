@@ -67,6 +67,12 @@ class LineChart extends React.Component<IProps> {
     if(options){
       this.chartInstance.padding = options.padding as any;
     }
+
+    if(this.chartInstance.height < 100){ //HACK: G2 Chart autoFit don't take effect , refer: https://github.com/antvis/g2/commit/92d607ec5408d1ec949ebd95209c84b04c73b944, but not work
+      const e = document.createEvent('Event')
+      e.initEvent('resize', true, true)
+      window.dispatchEvent(e)
+    }
     this.chartInstance.render();
   }
 

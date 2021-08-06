@@ -23,7 +23,7 @@
     "build": "webpack --config config/webpack.prod.ts"
   },
   "dependencies": {
-    "@antv/g2": "^4.1.10",
+    "@antv/g2": "^4.1.22",
     "@hot-loader/react-dom": "^17.0.1",
     "@loadable/component": "^5.13.1",
     "@rematch/core": "^1.2.0",
