@@ -39,7 +39,7 @@ interface IState {
   data: IStatRangeItem[],
   maxNum: number,
   totalData: IStatRangeItem[],
-  baseLine: number,
+  baseLine: number|undefined,
   interval: number,
   instance: string,
   metric: string,
@@ -91,7 +91,7 @@ class ServiceDetail extends React.Component<IProps, IState> {
       maxNum: 0,
       totalData: [],
       instanceList: [],
-      baseLine: 0,
+      baseLine: undefined,
       interval: DETAIL_DEFAULT_RANGE,
       instance: 'all',
       metric: SERVICE_SUPPORT_METRICS[serviceType][0].metric,
@@ -199,6 +199,7 @@ class ServiceDetail extends React.Component<IProps, IState> {
         metric: changedValues.metric,
         metricsValueType: selectedMetrics.valueType,
         metricFunction: selectedMetrics.metricType[0].value,
+        baseLine: undefined
       }, this.resetPollingData);
     }else{
       this.setState(changedValues, this.resetPollingData);
@@ -224,7 +225,7 @@ class ServiceDetail extends React.Component<IProps, IState> {
     }, this.handleClose);
   }
   render() {
-    const { maxNum, serviceType, baseLine, instanceList } = this.state;
+    const { metricsValueType,maxNum, serviceType, baseLine, instanceList } = this.state;
     const { loading } = this.props;
     return (<div className="service-metrics">
       <ServiceHeader 
@@ -255,8 +256,8 @@ class ServiceDetail extends React.Component<IProps, IState> {
           footer={null}
         >
           <BaseLineEdit
-            type={serviceType}
-            baseLine={baseLine}
+            valueType={metricsValueType}
+            baseLine={baseLine|| 0}
             onClose={this.handleClose}
             onBaseLineChange={this.handleBaseLineChange}
           />

@@ -8,6 +8,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import { CARD_POLLING_INTERVAL, CARD_RANGE, MACHINE_TYPE, getBaseLineByUnit } from '@assets/utils/dashboard';
 import { SUPPORT_METRICS } from '@assets/utils/promQL';
+import { VALUE_TYPE } from '@assets/utils/promQL';
 import CPUCard from './Cards/CPUCard';
 import './index.less';
 import MemoryCard from './Cards/MemoryCard';
@@ -134,6 +135,21 @@ class MachineDashboard extends React.Component<IProps, IState> {
     }, CARD_POLLING_INTERVAL);
   }
 
+  getValueType=(type)=>{
+    switch (type) {
+      case MACHINE_TYPE.cpu:
+      case MACHINE_TYPE.memory:
+        return VALUE_TYPE.percentage;
+      case MACHINE_TYPE.load:
+        return VALUE_TYPE.number;
+      case MACHINE_TYPE.networkOut:
+      case MACHINE_TYPE.networkIn:
+        return VALUE_TYPE.byteSecond;
+      default:
+        return VALUE_TYPE.number;
+    }
+  }
+
   render() {
     const { editPanelType } = this.state;
     return <div className="machine-dashboard">
@@ -181,7 +197,7 @@ class MachineDashboard extends React.Component<IProps, IState> {
         footer={null}
       >
         <BaseLineEdit
-          type={editPanelType}
+          valueType={this.getValueType(editPanelType)}
           baseLine={this.props[`${editPanelType}BaseLine`]}
           onClose={this.handleClose}
           onBaseLineChange={this.handleBaseLineChange}

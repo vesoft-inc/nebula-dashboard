@@ -42,7 +42,7 @@ class LineChart extends React.Component<IProps> {
       if(yAxisMaximum === 0 && baseLine){
         this.chartInstance.scale('value', { ticks: [0, baseLine, Math.round(baseLine * 1.5) ] });
       }else{
-        this.chartInstance.scale('value', { ticks: [] }); // If maxNum is not 0, you do not need to set scale
+        this.chartInstance.scale('value', { ticks: [] }); // If yAxisMaximum is not 0, you do not need to set scale
       }
     }
   }

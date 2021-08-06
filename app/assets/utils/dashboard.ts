@@ -41,13 +41,13 @@ export const getProperStep = (start: number, end: number) => {
 
 export const renderUnit = (type) => {
   switch (type) {
-    case MACHINE_TYPE.network:
-    case MACHINE_TYPE.networkIn:
-    case MACHINE_TYPE.networkOut:
-    case MACHINE_TYPE.disk:
+    case VALUE_TYPE.byteSecond:
       return ['Bytes/s', 'KB/s', 'MB/s', 'GB/s', 'TB/s'];
-    case MACHINE_TYPE.memory:
-    case MACHINE_TYPE.cpu:
+    case VALUE_TYPE.byte:
+      return ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+    case VALUE_TYPE.numberSecond:
+      return ['/s'];
+    case VALUE_TYPE.percentage:
       return ['%'];
     default:
       return [];
@@ -56,12 +56,16 @@ export const renderUnit = (type) => {
 
 export const getBaseLineByUnit = (baseLine, unit) => {
   switch (unit) {
+    case 'KB':
     case 'KB/s':
       return 1000 * baseLine;
+    case 'MB':
     case 'MB/s':
       return 1000 * 1000 * baseLine;
+    case 'GB':
     case 'GB/s':
       return 1000 * 1000 * 1000 * baseLine;
+    case 'TB':
     case 'TB/s':
       return 1000 * 1000 * 1000 * 1000 * baseLine;
     default:

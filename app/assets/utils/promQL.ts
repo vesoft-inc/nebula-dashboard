@@ -423,7 +423,7 @@ export const MAC_OS = {
   // cpu relative:
   cpu_utilization: '100 * (1 - sum by (instance)(increase(node_cpu_seconds_total{mode="idle"}[5m])) / sum by (instance)(increase(node_cpu_seconds_total[5m])))',
   cpu_idle: '100 * (sum by (instance)(increase(node_cpu_seconds_total{mode="idle"}[5m])) / sum by (instance)(increase(node_cpu_seconds_total[5m])))',
-  cpu_wait: '100 * (sum by (instance)(increase(node_cpu_seconds_total{mode="wait"}[5m])) / sum by (instance)(increase(node_cpu_seconds_total[5m])))',
+  cpu_wait: '100 * (sum by (instance)(increase(node_cpu_seconds_total{mode="iowait"}[5m])) / sum by (instance)(increase(node_cpu_seconds_total[5m])))',
   cpu_user: '100 * (sum by (instance)(increase(node_cpu_seconds_total{mode="user"}[5m])) / sum by (instance)(increase(node_cpu_seconds_total[5m])))',
   cpu_system: '100 * (sum by (instance)(increase(node_cpu_seconds_total{mode="system"}[5m])) / sum by (instance)(increase(node_cpu_seconds_total[5m])))',
 
@@ -441,7 +441,7 @@ export const LINUX = {
   // cpu relative:
   cpu_utilization: '100 * (1 - sum by (instance)(increase(node_cpu_seconds_total{mode="idle"}[5m])) / sum by (instance)(increase(node_cpu_seconds_total[5m])))',
   cpu_idle: '100 * (sum by (instance)(increase(node_cpu_seconds_total{mode="idle"}[5m])) / sum by (instance)(increase(node_cpu_seconds_total[5m])))',
-  cpu_wait: '100 * (sum by (instance)(increase(node_cpu_seconds_total{mode="wait"}[5m])) / sum by (instance)(increase(node_cpu_seconds_total[5m])))',
+  cpu_wait: '100 * (sum by (instance)(increase(node_cpu_seconds_total{mode="iowait"}[5m])) / sum by (instance)(increase(node_cpu_seconds_total[5m])))',
   cpu_user: '100 * (sum by (instance)(increase(node_cpu_seconds_total{mode="user"}[5m])) / sum by (instance)(increase(node_cpu_seconds_total[5m])))',
   cpu_system: '100 * (sum by (instance)(increase(node_cpu_seconds_total{mode="system"}[5m])) / sum by (instance)(increase(node_cpu_seconds_total[5m])))',
 

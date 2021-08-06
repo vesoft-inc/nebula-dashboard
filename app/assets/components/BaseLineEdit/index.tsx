@@ -7,7 +7,7 @@ import { renderUnit } from '@assets/utils/dashboard';
 import './index.less';
 interface IProps {
   baseLine: number,
-  type: string,
+  valueType: string;
   onClose: () => void;
   onBaseLineChange: (values) => void;
 }
@@ -16,8 +16,8 @@ class BaseLineEdit extends React.Component<IProps> {
   formRef = React.createRef<FormInstance>();
 
   render() {
-    const { baseLine, type, onClose, onBaseLineChange } = this.props;
-    const units = renderUnit(type);
+    const { valueType, baseLine, onClose, onBaseLineChange } = this.props;
+    const units = renderUnit(valueType);
     const initialValues = { baseLine } as any;
     if(!!units.length){
       initialValues.unit = units[0];
@@ -51,7 +51,7 @@ class BaseLineEdit extends React.Component<IProps> {
               htmlType="submit" 
               data-track-category="base_line"
               data-track-action="confirm_edit"
-              data-track-label={`from_${type}`}
+              data-track-label={`from_${valueType}`}
             >
               {intl.get('common.confirm')}
             </Button>

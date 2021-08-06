@@ -113,10 +113,11 @@ class Detail extends React.Component<IProps, IState> {
     trackEvent(`${type}_detail`, 'select_data_type', `from_${type}_detail`);
   }
 
-  handleMetricChange = (metric) => {
-    const { metricOptions, type } = this.props;
+  handleMetricChange = async (metric) => {
+    const { metricOptions, type, asyncUpdateBaseLine } = this.props;
     const metricOption = metricOptions.find(option => option.metric === metric);
     trackEvent(`${type}_detail`, 'select_metric_query', `from_${type}_detail`);
+    await asyncUpdateBaseLine(`${type}BaseLine`, undefined);
     if (metricOption) {
       this.setState({
         currentMetricOption: metricOption
@@ -152,6 +153,7 @@ class Detail extends React.Component<IProps, IState> {
       type,
       tickInterval: getProperTickInterval(endTimestamps - startTimestamps),
     }).changeData(data);
+    this.chartInstance.autoFit = true;
   }
 
   handleBaseLineEdit=() => {
@@ -214,8 +216,8 @@ class Detail extends React.Component<IProps, IState> {
           footer={null}
         >
           <BaseLineEdit
-            type={type}
-            baseLine={baseLine}
+            valueType={currentMetricOption.valueType}
+            baseLine={baseLine||0}
             onClose={this.handleClose}
             onBaseLineChange={this.handleBaseLineChange}
           />
