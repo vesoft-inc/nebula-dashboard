@@ -295,7 +295,11 @@ module.exports = {
         ],
         "space-infix-ops": "error",
         semi: 1,
-        'space-before-function-paren':  ["error", "never"],
+        'space-before-function-paren':  ["error", {
+            "anonymous": "never",
+            "named": "never",
+            "asyncArrow": "always"
+        }],
         'object-curly-spacing': ['error','always'],
         'use-isnan': 'error',
         'valid-typeof': 'off',

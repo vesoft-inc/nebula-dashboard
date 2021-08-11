@@ -36,7 +36,7 @@ class VersionStatistic extends React.Component<IProps, IState> {
     this.getVersion();
   }
   
-  getVersion = async() => {
+  getVersion = async () => {
     const graph = await this.props.asyncGetServiceVersion('GRAPH');
     const storage = await this.props.asyncGetServiceVersion('STORAGE');
     const meta = await this.props.asyncGetServiceVersion('META');

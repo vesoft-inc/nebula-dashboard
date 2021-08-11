@@ -7,8 +7,7 @@ import { connect } from 'react-redux';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { CARD_POLLING_INTERVAL, CARD_RANGE, MACHINE_TYPE, getBaseLineByUnit } from '@assets/utils/dashboard';
-import { SUPPORT_METRICS } from '@assets/utils/promQL';
-import { VALUE_TYPE } from '@assets/utils/promQL';
+import { SUPPORT_METRICS, VALUE_TYPE } from '@assets/utils/promQL';
 import CPUCard from './Cards/CPUCard';
 import './index.less';
 import MemoryCard from './Cards/MemoryCard';
@@ -78,7 +77,7 @@ class MachineDashboard extends React.Component<IProps, IState> {
     }, this.modalHandler.show);
   }
 
-  handleBaseLineChange= async(value) => {
+  handleBaseLineChange= async (value) => {
     const { editPanelType } = this.state;
     const { baseLine, unit } = value;
     await this.props.asyncUpdateBaseLine(`${editPanelType}BaseLine`, getBaseLineByUnit(baseLine, unit));
@@ -135,7 +134,7 @@ class MachineDashboard extends React.Component<IProps, IState> {
     }, CARD_POLLING_INTERVAL);
   }
 
-  getValueType=(type)=>{
+  getValueType=(type) => {
     switch (type) {
       case MACHINE_TYPE.cpu:
       case MACHINE_TYPE.memory:

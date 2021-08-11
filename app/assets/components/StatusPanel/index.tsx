@@ -55,7 +55,7 @@ class StatusPanel extends React.PureComponent<IProps, IState> {
     }
   }
 
-  asyncGetStatus = async() => {
+  asyncGetStatus = async () => {
     const { type } = this.props;
     const { normal, abnormal } = await this.props.getStatus({
       query: NEBULA_COUNT[type],

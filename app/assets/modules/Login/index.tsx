@@ -40,7 +40,7 @@ class ConfigServerForm extends React.Component<IProps> {
     this.props.asyncGetCustomConfig();
   }
 
-  onConfig = async(values: any) => {
+  onConfig = async (values: any) => {
     const { connection } = this.props;
     const ok = await this.props.asyncLogin({ ip: connection.ip, port:  connection.port, ...values });
     if (ok) {

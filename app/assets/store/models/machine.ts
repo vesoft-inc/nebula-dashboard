@@ -141,7 +141,7 @@ export const machine = createModel({
         end: _end,
         step,
       })) as any;
-      let diskStat = [];
+      let diskStat = [] as any;
       if (code === 0) {
         if(NEED_ADD_SUM_QUERYS.includes(metric)){
           diskStat = await this.asyncGetSumDataByRange({
@@ -154,6 +154,19 @@ export const machine = createModel({
         }else{
           diskStat = data.result;
         }
+        diskStat = diskStat.map((stat:any) => {
+          if(stat.metric.device){
+            return{
+              values: stat.values,
+              metric:{
+                ...stat.metric,
+                instance: `${stat.metric.instance}  (${stat.metric.device})`
+              }
+            };
+          }else{
+            return stat;
+          }
+        });
       }
 
       this.update({

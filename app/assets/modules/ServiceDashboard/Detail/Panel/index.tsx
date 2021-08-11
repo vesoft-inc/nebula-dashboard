@@ -92,7 +92,7 @@ class ServicePanel extends React.Component<IProps, IState> {
     }
   }
 
-  initialConfig = async() => {
+  initialConfig = async () => {
     const { location: { pathname }, onServiceTypeChange, onMetricsValueTypeChange } = this.props;
     const regx = /(\w+)-metrics/g;
     const match = regx.exec(pathname);

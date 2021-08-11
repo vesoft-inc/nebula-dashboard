@@ -80,7 +80,7 @@ class Detail extends React.Component<IProps, IState> {
     }
   }
 
-  getData = async() => {
+  getData = async () => {
     const { startTimestamps, endTimestamps, currentMetricOption } = this.state;
     await this.props.asyncGetDataSourceByRange({
       start: startTimestamps,
@@ -125,7 +125,7 @@ class Detail extends React.Component<IProps, IState> {
     }
   }
 
-  handleBaseLineChange= async(value) => {
+  handleBaseLineChange= async (value) => {
     const { type, asyncUpdateBaseLine } = this.props;
     const { baseLine, unit } = value;
     await asyncUpdateBaseLine(`${type}BaseLine`, getBaseLineByUnit(baseLine, unit));
@@ -217,7 +217,7 @@ class Detail extends React.Component<IProps, IState> {
         >
           <BaseLineEdit
             valueType={currentMetricOption.valueType}
-            baseLine={baseLine||0}
+            baseLine={baseLine || 0}
             onClose={this.handleClose}
             onBaseLineChange={this.handleBaseLineChange}
           />

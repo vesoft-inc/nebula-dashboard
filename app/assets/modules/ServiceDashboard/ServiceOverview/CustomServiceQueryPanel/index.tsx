@@ -66,7 +66,7 @@ class CustomServiceQueryPanel extends React.Component<IProps, IState> {
     this.pollingData();
   }
 
-  getMetricsData = async() => {
+  getMetricsData = async () => {
     const { config } = this.props;
     const { metric: metricName, period: metricPeriod, metricFunction } = config;
     const end = Date.now();

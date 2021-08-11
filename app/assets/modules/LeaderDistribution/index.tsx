@@ -43,7 +43,7 @@ class LeaderDistribution extends React.Component<IProps, IState> {
   componentDidMount() {
     this.getStorageInfo();
   }
-  getStorageInfo = async() => {
+  getStorageInfo = async () => {
     const res = await this.props.asyncGetHostsInfo();
     const data = res.map((item: any) => ({
       name: item.Host,

@@ -44,7 +44,7 @@ service.interceptors.response.use(
   },
 );
 
-const sendRequest = async(type: string, api: string, params?, config?) => {
+const sendRequest = async (type: string, api: string, params?, config?) => {
   const { trackEventConfig, ...otherConfig } = config;
   let res;
   switch (type) {

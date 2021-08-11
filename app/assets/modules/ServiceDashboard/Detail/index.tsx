@@ -106,7 +106,7 @@ class ServiceDetail extends React.Component<IProps, IState> {
     this.clearPolling();
   }
 
-  pollingData = async() => {
+  pollingData = async () => {
     await this.asyncGetMetricsData();
     this.pollingTimer = setTimeout(this.pollingData, CARD_POLLING_INTERVAL);
   }
@@ -121,7 +121,7 @@ class ServiceDetail extends React.Component<IProps, IState> {
     this.pollingData();
   }
 
-  asyncGetMetricsData = async() => {
+  asyncGetMetricsData = async () => {
     const { timeRange, metric, metricFunction, period } = this.state;
     const [startTime, endTime] = timeRange as any;
     let data = await this.props.asyncGetMetricsData({
@@ -225,7 +225,7 @@ class ServiceDetail extends React.Component<IProps, IState> {
     }, this.handleClose);
   }
   render() {
-    const { metricsValueType,maxNum, serviceType, baseLine, instanceList } = this.state;
+    const { metricsValueType, maxNum, serviceType, baseLine, instanceList } = this.state;
     const { loading } = this.props;
     return (<div className="service-metrics">
       <ServiceHeader 
@@ -257,7 +257,7 @@ class ServiceDetail extends React.Component<IProps, IState> {
         >
           <BaseLineEdit
             valueType={metricsValueType}
-            baseLine={baseLine|| 0}
+            baseLine={baseLine || 0}
             onClose={this.handleClose}
             onBaseLineChange={this.handleBaseLineChange}
           />

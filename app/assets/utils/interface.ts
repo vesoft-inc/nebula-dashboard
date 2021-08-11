@@ -1,6 +1,7 @@
 export interface IMetric {
   instance: string,
   instanceName: string,
+  device?: string
 }
 export interface IStatRangeItem {
   metric: IMetric,
