@@ -90,7 +90,7 @@ class CustomServiceQueryPanel extends React.Component<IProps, IState> {
   render() {
     const { data } = this.state;
     const { config: { metric, period, metricType, baseLine }, aliasConfig } = this.props;
-    return <div className="dashboard-card">
+    return <div className="service-card">
       <div className="header">
         <Popover placement="bottomLeft" content={intl.get(`metric_description.${metric}`)}>{metric}</Popover>
         <div>

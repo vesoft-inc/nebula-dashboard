@@ -27,7 +27,10 @@
     "editBaseLine": "编辑基线",
     "baseLineTip": "请输入大于0的值",
     "unit": "单位",
-    "help": "帮助"
+    "help": "帮助",
+    "mannual": "使用手册",
+    "forum": "求助论坛",
+    "forumLink": "https://discuss.nebula-graph.com.cn/"
   },
   "rules": {
     "usernameRequired": "请输入用户名",

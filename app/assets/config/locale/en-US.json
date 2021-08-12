@@ -27,7 +27,10 @@
     "editBaseLine": "Edit Base Line",
     "baseLineTip": "Please enter a number greater than 0",
     "unit": "Unit",
-    "help": "Help"
+    "help": "Help",
+    "mannual": "User Mannual",
+    "forum": "Forum",
+    "forumLink": "https://discuss.nebula-graph.io/"
   },
   "rules": {
     "usernameRequired": "Username Required",

@@ -65,7 +65,7 @@ class Detail extends React.Component<IProps, IState> {
       maxNum: 0,
       endTimestamps,
       startTimestamps: endTimestamps - DETAIL_DEFAULT_RANGE,
-      currentInstance: localStorage.getItem('detailType') || 'all',
+      currentInstance:  'all',
       currentMetricOption: props.metricOptions[0],
     };
   }
@@ -106,7 +106,6 @@ class Detail extends React.Component<IProps, IState> {
 
   handleInstanceChange = (instance) => {
     const { type } = this.props;
-    localStorage.setItem('detailType', instance);
     this.setState({
       currentInstance: instance,
     }, this.updateChart);

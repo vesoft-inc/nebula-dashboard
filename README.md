@@ -1,103 +1,101 @@
 # Nebula Graph Dashboard
-Nebula Dashboard is a tool that assists Nebula Graph service operation and maintenance personnel in daily service monitoring and management
-
-## Quick Start
-
-### Service Dependency
-#### Linux
-- node.js (>= 10.12.0)
-- Linux
-
-- [nebula-http-gateway](https://github.com/vesoft-inc/nebula-http-gateway) - Nebula-graph network service
-  start service at port 8090，replace http-gateway [app.conf](https://github.com/vesoft-inc/nebula-http-gateway/blob/master/conf/app.conf) with [gateway.conf](./vendors/gateway.conf)
-
-- [node-exporter](./vendors/node-exporter/) - Machine metric data service
-  Start command：`./vendors/node-exporter/node-exporter --web.listen-address=:9200`
-
-- [nebula-stats-exporter](./vendors/nebula-stats-exporter) - Nebula graph metrics data service
-  Get metrics from nebula service，documentation:[Metrics Exporter](https://docs.nebula-graph.io/1.1/manual-EN/3.build-develop-and-administration/7.monitor/1.metrics-exposer/)，modify [nebula-stats-exporter](./vendors/nebula-stats-exporter/config.yaml)
-  Example：
-  ```
-  version: v0.0.3
-  nebulaItems:
-    - instanceName: metad0 // instance name as a symble
-      endpointIP: 10.17.101.126 // metrics service IP
-      endpointPort: 32839 // metrics service Ports
-      componentType: metad // metrics service type, should be one of metad,graphd or storaged
-  ```
-  Start command：`./vendors/nebula-stats-exporter/nebula-stats-exporter  --bare-metal --bare-metal-config=./config.yaml`
-
-  
-- [prometheus](./vendors/prometheus/prometheus) - Save metrics data service
-  Modify setting：according to node-exporter 和 nebula-stats-exporter ip and port modify[prometheus.yaml](./vendors/prometheus/prometheus.yaml)
-  
-**Strongly recommend start service in Linux System**
-#### MacOS 
-- node.js (>= 10.12.0)
-- Go 1.13+ and beego
-
-- [nebula-http-gateway](https://github.com/vesoft-inc/nebula-http-gateway) 
-  refer: [nebula-http-gateway](https://github.com/vesoft-inc/nebula-http-gateway)
-  nebula-httpgate-way port should be 8090
-
-- [nebula-stats-exporter](https://github.com/vesoft-inc/nebula-stats-exporter) 
-  refer:[nebula-stats-exporter](https://github.com/vesoft-inc/nebula-stats-exporter)
-
-- node-exporter
-```
-  brew install node_exporter
-  node_exporter --web.listen-address=":9200"
-```
-
-- prometheus
-install
-```
-  brew install prometheus
-```
-  according to node-exporter and nebula-stats-exporter ip and port，modify[prometheus.yaml](./vendors/prometheus/prometheus.yaml)
-Start
-```  
-  prometheus --config.file=/usr/local/etc/prometheus.yml
-```
-
-#### Windows
-- node.js (>= 10.12.0)
-- Go 1.13+ and beego
-
-- [nebula-http-gateway](https://github.com/vesoft-inc/nebula-http-gateway) - nebula-graph network service
-  refer: [nebula-http-gateway](https://github.com/vesoft-inc/nebula-http-gateway)
-  nebula-httpgate-way port should be 8090
-
-- [nebula-stats-exporter](https://github.com/vesoft-inc/nebula-stats-exporter) - 
-  refer:[nebula-stats-exporter](https://github.com/vesoft-inc/nebula-stats-exporter)
-
-- prometheus
-  Download: https://prometheus.io/download/
-  set node-exporter port and nebula-stats-exporter port，start at prometheus directory
-```
-prometheus.exe --config.file=prometheus.yml
-```
-
-
-### Start nebula-graph-dashboard
-
-Modify nebula-graph connecting setting
-```
-connection: {
-  ip: '127.0.0.1', // change to nebula graph service ip
-  port: 9669, // change to nebula graph service port
-},
-```
-Start
-```
-$ npm install
-$ npm run dev
-```
+Nebula Graph Dashboard is a tool that assists Nebula Graph service operation and maintenance personnel in daily service monitoring and management
 
 ## Use dashboard in Production
-Refer：[Production Guide](DEPLOY.md)
+If you use dashboard in Production Env,Refer to：[Production Guide](DEPLOY.md)
 
+## Development 
+#### Prerequisites
+- Node.js (>= 10.12.0)
+- Go 1.13+ and beego
+#### Quick Start
+1. Start nebula service
+2. Start nebula-http-gateway(Nebula Graph network service)
+
+    - Download nebula-http-gateway
+    ```
+    $ git clone https://github.com/vesoft-inc/nebula-http-gateway.git
+    ```
+  
+    - Modify httpport part in the `nebula-http-gateway/conf/app.conf` under the installation directory
+    ```
+    httpport = 8090
+    ```
+    - Build
+    ```
+    $ cd /path/to/nebula-http-gateway
+    $ make
+    ```
+    - Run 
+    ```
+    $ ./nebula-httpd
+    ```
+
+3. Start node-exporter(Machine metric data service)
+    - Download [node_exporter](https://prometheus.io/download/#node_exporter) according to your environment
+    - Run 
+  
+    ```
+      $ tar -xvf node_exporter-{version}.tar.gz
+      $ cd node_exporter-{version}
+      $ ./node_exporter --web.listen-address=":9100"
+    ```
+
+4. Start nebula-stats-exporter (Nebula Graph metrics data service)
+
+    - Download nebula-stats-exporter and build
+    ```
+    $ git clone https://github.com/vesoft-inc/nebula-stats-exporter.git
+    $ cd nebula-stats-exporter
+    $ make build
+    ```
+
+    - Modify `/vendors/nebula-stats-exporter/config.yaml` under nebula-graph-dashboard directory
+    ```
+    # Example:
+    version: v0.0.3
+    nebulaItems:
+      - instanceName: metad0 // instance name as a symble
+        endpointIP: 10.17.101.126 // metrics service IP
+        endpointPort: 32839 // metrics service Ports
+        componentType: metad // metrics service type, should be one of metad,graphd or storaged
+    ```
+    - run
+    ```
+    ./nebula-stats-exporter --listen-address=":9200" --bare-metal --bare-metal-config={pwd}/nebula-graph-dashboard/vendors/nebula-stats-exporter/config.yaml &
+    ```
+
+  
+5. Start prometheus(Save metrics data service)
+    - Download [prometheus](https://prometheus.io/download/#prometheus) according to your environment
+
+    - Modify `/vendors/prometheus/prometheus.yaml` according to node-exporter and nebula-stats-exporter ip and port config
+
+    - Run
+    ```
+    $ tar -xvf prometheus-${version}.tar.gz
+    $ cd prometheus-{version}
+    $ ./prometheus --config.file={pwd}/nebula-graph-dashboard/vendors/nebula-stats-exporter/config.yaml &
+    ```
+6. Start nebula-graph-dashboard
+
+    - Modify nebula-graph connecting setting
+    setting: `./static/custom.json`
+    ```
+    connection: {
+      ip: '127.0.0.1', // change to nebula graph service ip
+      port: 9669, // change to nebula graph service port
+    },
+    ```
+    - Start
+    ```
+    $ npm install
+    $ npm run dev
+    ```
+
+**Do not run ./scripts/*.sh in development environment**
 ## Documentation 
 
-Dashboard Chinese document [on this website](https://docs.nebula-graph.com.cn/master/nebula-dashboard/1.what-is-dashboard/)
-Dashboard English document [on this website](https://docs.nebula-graph.io/master/nebula-dashboard/1.what-is-dashboard/)
++ [中文](https://docs.nebula-graph.com.cn/master/nebula-dashboard/1.what-is-dashboard/)
+
++ [English](https://docs.nebula-graph.io/master/nebula-dashboard/1.what-is-dashboard/)

@@ -1,14 +1,14 @@
-# Nebula Dashboard Production Guide（Linux)
+# Nebula Graph Dashboard Production Guide（Linux)
 
 ## Environment
 - Node.js (>= 10.12.0)
 - Linux
 
 ## Download
-` wget https://oss-cdn.nebula-graph.com.cn/nebula-graph-dashboard/nebula-graph-dashboard-beta.tar.gz`
+` wget https://oss-cdn.nebula-graph.com.cn/nebula-graph-dashboard/nebula-graph-dashboard-${version-release}.x86_64.tar.gz`
 
 ## Unpress
-`tar -xvf nebula-graph-dashboard-beta.tar.gz`
+`tar -xvf nebula-graph-dashboard-${version-release}.x86_64.tar.gz`
 
 
 ## Directory descrption
@@ -29,9 +29,9 @@ Five packages in nebula-graph-dashboard
   ```bash
   ## node-exporter should run in 
   $ cd node-exporter
-  $ nohup ./node-exporter --web.listen-address=:9200 &
+  $ nohup ./node-exporter --web.listen-address=":9100" &
   ```
-  Service address: http://127.0.0.1:9200
+  Service address: http://127.0.0.1:9100
 
 2. Nebula-stats-exporter：for nebula graph metrics
 - packages: `nebula-stats-exporter`
@@ -40,12 +40,12 @@ Five packages in nebula-graph-dashboard
   Start：
   ```bash
   $ cd nebula-stats-exporter
-  $ nohup  ./nebula-stats-exporter  --bare-metal --bare-metal-config=./config.yaml &
+  $ nohup  ./nebula-stats-exporter --listen-address=":9200" --bare-metal --bare-metal-config=./config.yaml &
   ```
-  Service address: http://127.0.0.1:9100
+  Service address: http://127.0.0.1:9200
 
 3. Prometheus
-- packages`prometheus`
+- packages `prometheus`
 - location：in the same machine with nebula-graph-dashboard
 - dependency：modify ：`./vendors/prometheus/prometheus.yml` according to node-exporter and nebula-stats-exporter service address
 - Start：
@@ -65,16 +65,14 @@ Five packages in nebula-graph-dashboard
   ```
 - Service address: http://127.0.0.1:8090
 
-5. Nebula-graph-dashboard
+5. nebula-graph-dashboard
 - packages: `nebula-graph-dashboard`
-- setting: `./static/custom.json
+- setting: `./static/custom.json`
   ```javascript
-  ...
     connection: {
       ip: '127.0.0.1', // change to running nebula graph address
       port: 9669, // change to running nebula graph port
     },
-  ...
   ```
 - Start:
   ```bash
@@ -83,7 +81,7 @@ Five packages in nebula-graph-dashboard
   ```
 - service address: http://127.0.0.1:7003
 
-1. Open Nebula Dashboard in browser
+1. Open Nebula Graph Dashboard in browser
 url: http://{{ip}}:7003
 
 
@@ -91,8 +89,8 @@ url: http://{{ip}}:7003
 Using `kill pid` ：
 
 ```bash
-$ kill $(lsof -t -i :9200) # stop node-exporter service
-$ kill $(lsof -t -i :9100) # stop nebula-stats-exporter service
+$ kill $(lsof -t -i :9200) # stop nebula-stats-exporter  service
+$ kill $(lsof -t -i :9100) # stop node-exporter service
 $ kill $(lsof -t -i :9090) # stop prometheus service
 $ kill $(lsof -t -i :8090) # stop nebula-http-gateway
 $ cd nebula-graph-dashboard

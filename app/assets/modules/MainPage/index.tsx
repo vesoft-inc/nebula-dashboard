@@ -1,4 +1,4 @@
-import { Layout, Menu } from 'antd';
+import { Dropdown, Layout, Menu } from 'antd';
 import React from 'react';
 import nebulaLogo from '@assets/static/images/nebula_logo.png';
 import Icon from '@assets/components/Icon';
@@ -126,9 +126,26 @@ class MainPage extends React.Component<IProps, IState> {
             <div className="row">
               {!collapsed && <span className="version">v {appVersion}</span>}
               {!collapsed && 
-                <a href={mannualHref} className="help" target="_blank" rel="noreferrer">
+              <Dropdown 
+                placement="topCenter"
+                overlay={
+                  <Menu>
+                    <Menu.Item>
+                      <a target="_blank" href={mannualHref} rel="noreferrer">
+                        {intl.get('common.mannual')}
+                      </a>
+                    </Menu.Item>
+                    <Menu.Item>
+                      <a target="_blank" href={intl.get('common.forumLink')} rel="noreferrer">
+                        {intl.get('common.forum')}
+                      </a>
+                    </Menu.Item>
+                  </Menu>
+                }>
+                <span className="help">
                   {intl.get('common.help')}
-                </a>}
+                </span>
+              </Dropdown>}
               <div className="btn-collapse" onClick={this.toggleMenu}>
                 {!collapsed && <Icon className="menu-collapse-icon" icon="#iconnav-fold" />}
                 {collapsed && <Icon className="menu-collapse-icon" icon="#iconnav-unfold" />}

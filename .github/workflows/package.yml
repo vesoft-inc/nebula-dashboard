@@ -22,6 +22,7 @@ jobs:
         with:
           repository: vesoft-inc/nebula-http-gateway
           path: source/nebula-http-gateway
+      ##ToDO: add nebula-stats-exporter、node-exporter and prometheus 
       - uses: actions/setup-go@v2
         with:
           go-version: '^1.13.1'
@@ -33,6 +34,6 @@ jobs:
       - name: Package
         run: bash ./source/nebula-graph-dashboard/scripts/package.sh ${{ secrets.GA_ID }}
       - name: Upload to OSS
-        run: ls -a & ossutil64 -e ${{ secrets.OSS_ENDPOINT }} -i ${{ secrets.OSS_ID }} -k ${{ secrets.OSS_SECRET }} -f cp ./  ${{ secrets.OSS_URL }} --include "nebula-graph-dashboard-beta.tar.gz" --only-current-dir -r
+        run: ls -a & ossutil64 -e ${{ secrets.OSS_ENDPOINT }} -i ${{ secrets.OSS_ID }} -k ${{ secrets.OSS_SECRET }} -f cp ./  ${{ secrets.OSS_URL }} --include "nebula-graph-dashboard-*.tar.gz" --only-current-dir -r
 
     
