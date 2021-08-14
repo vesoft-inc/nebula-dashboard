@@ -287,12 +287,12 @@ export const machine = createModel({
         end,
         step,
       })) as any;
-      if(code === 0){
+      if(code === 0 && dataStat.result.length !== 0){
         const sumData = {
           metric:{
             instance: 'total',
             job: 'total'
-          }
+          },
         } as any;
         sumData.values = dataStat.result[0].values;
         return data.concat(sumData);

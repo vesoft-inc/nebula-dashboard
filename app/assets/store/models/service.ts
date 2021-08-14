@@ -45,20 +45,22 @@ export const service = createModel({
         end: _end,
         step,
       })) as any;
-      const sumData = {
-        metric:{
-          instanceName: 'total',
-          instance: 'total',
-        }
-      } as any;
-      if (code === 0) {
+
+      if (code === 0 && data.result.length !== 0) {
+        const sumData = {
+          metric:{
+            instanceName: 'total',
+            instance: 'total',
+          },
+        } as any;
         if(metric === SERVICE_SUPPORT_METRICS.graph[0].metric || metric === SERVICE_SUPPORT_METRICS.graph[1].metric){
           sumData.values = getQPSData(data, timeInterval)[0].values;
         }else{
           sumData.values = data.result[0].values;
         }
+        return sumData;
       }
-      return sumData;
+      return [];
     },
 
     async asyncGetMetricsData(payload: {
@@ -79,7 +81,7 @@ export const service = createModel({
         step,
       })) as any;
       let stat = [] as any;
-      if (code === 0) {
+      if (code === 0 && data.result.length !== 0) {
         if(metric === SERVICE_SUPPORT_METRICS.graph[0].metric || metric === SERVICE_SUPPORT_METRICS.graph[1].metric){
           stat = getQPSData(data, timeInterval);
         }else{

@@ -17,12 +17,17 @@ const mapDispatch = (dispatch: IDispatch) => {
     asyncGetSpaces: dispatch.nebula.asyncGetSpaces,
     asyncUseSpaces: dispatch.nebula.asyncUseSpaces,
     asyncGetParts: dispatch.nebula.asyncGetParts,
+    updateSpace: space =>
+      dispatch.nebula.update({
+        currentSpace: space,
+      }),
   };
 };
 
 const mapState = (state: IRootState) => ({
   spaces: state.nebula.spaces,
   loading: state.loading.models.nebula,
+  currentSpace:state.nebula.currentSpace,
 });
 
 interface IProps extends ReturnType<typeof mapState>,
@@ -31,7 +36,6 @@ interface IProps extends ReturnType<typeof mapState>,
 }
 
 interface IState {
-  currentSpace: string,
   data: {
     name: string,
     count: number
@@ -44,7 +48,6 @@ class PartitionDistribution extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = {
-      currentSpace: '',
       data: []
     };
   }
@@ -56,9 +59,7 @@ class PartitionDistribution extends React.Component<IProps, IState> {
   handleSpaceChange= async space => {
     const { code } = await this.props.asyncUseSpaces(space);
     if(code === 0) {
-      this.setState({
-        currentSpace: space
-      });
+      this.props.updateSpace(space);
       const res = await this.props.asyncGetParts();
       const groupRes = groupBy(res, 'Leader');
       const data = Object.keys(groupRes).map(item => ({
@@ -99,8 +100,7 @@ class PartitionDistribution extends React.Component<IProps, IState> {
       dataIndex: 'count',
     }];
     
-    const { spaces } = this.props;
-    const { currentSpace } = this.state;
+    const { currentSpace, spaces } = this.props;
     return (
       <Spin delay={200} spinning={!!loading}>
         <div className="partition-distribution">
