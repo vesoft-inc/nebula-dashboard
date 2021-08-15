@@ -1,7 +1,7 @@
 # Nebula Graph Dashboard
 Nebula Graph Dashboard is a tool that assists Nebula Graph in daily service monitoring and management
 
-![](dashboard.png)
+![](introduction.png)
 
 ## Deploy in Production
 If you plan to set up dashboard in production, refer to：[production guide](DEPLOY.md)
