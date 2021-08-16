@@ -52,22 +52,30 @@ class PartitionDistribution extends React.Component<IProps, IState> {
     };
   }
 
-  componentDidMount() {
-    this.props.asyncGetSpaces();
+  async componentDidMount () {
+    await this.props.asyncGetSpaces();
+    const { currentSpace } = this.props;
+    if(currentSpace){
+      await this.getParts()
+    }
   }
 
   handleSpaceChange= async space => {
     const { code } = await this.props.asyncUseSpaces(space);
     if(code === 0) {
-      this.props.updateSpace(space);
-      const res = await this.props.asyncGetParts();
-      const groupRes = groupBy(res, 'Leader');
-      const data = Object.keys(groupRes).map(item => ({
-        name: item,
-        count: groupRes[item].length
-      }));
-      this.setState({ data }, this.updateChart);
+      await this.props.updateSpace(space);
+      await this.getParts();
     }
+  }
+
+  getParts= async () =>{
+    const res = await this.props.asyncGetParts();
+    const groupRes = groupBy(res, 'Leader');
+    const data = Object.keys(groupRes).map(item => ({
+      name: item,
+      count: groupRes[item].length
+    }));
+    this.setState({ data }, this.updateChart);
   }
 
   renderChart = (chartInstance: Chart) => {

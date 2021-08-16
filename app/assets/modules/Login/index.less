@@ -10,14 +10,18 @@
 		right: 0;
 		top: 0;
 		height: 100%;
+		min-height: 600px;
 		background-color: #fff;
 		padding: 70px 40px 0;
 		text-align: center;
-
+		display: flex;
+		flex-direction: column;
+		
 		.logo {
 			width: 128px;
 			height: 128px;
-			margin-bottom: 25px;
+			margin:0 auto 25px;
+
 		}
 
 		.title {
@@ -46,16 +50,16 @@
 		}
 
 		.footer {
-			position: fixed;
-			right: 40px;
-			bottom: 25px;
+			margin-bottom: 25px;
+			flex: 1;
 			display: flex;
-			align-items: center;
-
+			align-items: flex-end;
+			align-self: flex-end;
 			.version {
 				font-size: 14px;
 				padding-right: 15px;
 			}
 		}
+
 	}
 }
