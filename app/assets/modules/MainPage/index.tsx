@@ -86,7 +86,7 @@ class MainPage extends React.Component<IProps, IState> {
     const [, activeOpenSubMenu, activeMenu] = this.props.location.pathname.split('/');
     let activeKey = activeMenu === 'overview' ? `${activeOpenSubMenu}-${activeMenu}` : activeMenu;
     const locale = cookies.get('locale');
-    const mannualHref =
+    const manualHref =
       locale === 'ZH_CN'
         ? 'https://docs.nebula-graph.com.cn/master/nebula-dashboard/1.what-is-dashboard/'
         : 'https://docs.nebula-graph.io/master/nebula-dashboard/1.what-is-dashboard/'; 
@@ -131,8 +131,8 @@ class MainPage extends React.Component<IProps, IState> {
                 overlay={
                   <Menu>
                     <Menu.Item>
-                      <a target="_blank" href={mannualHref} rel="noreferrer">
-                        {intl.get('common.mannual')}
+                      <a target="_blank" href={manualHref} rel="noreferrer">
+                        {intl.get('common.manual')}
                       </a>
                     </Menu.Item>
                     <Menu.Item>

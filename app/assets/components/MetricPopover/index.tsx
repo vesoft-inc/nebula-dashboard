@@ -8,7 +8,7 @@ import './index.less';
 
 export const MetricPopover = (props: { list }) => {
   const locale = cookies.get('locale');
-  const mannualHref =
+  const manualHref =
     locale === 'ZH_CN'
       ? 'https://docs.nebula-graph.com.cn/master/nebula-dashboard/6.monitor-parameter/'
       : 'https://docs.nebula-graph.io/master/nebula-dashboard/6.monitor-parameter/'; 
@@ -32,7 +32,7 @@ export const MetricPopover = (props: { list }) => {
               ))}
             </div>
           </div>
-          <a href={mannualHref} className="more" target="_blank" rel="noreferrer">
+          <a href={manualHref} className="more" target="_blank" rel="noreferrer">
             {intl.get('metric_description.more')}
           </a>
         </div>

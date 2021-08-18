@@ -28,7 +28,7 @@
     "baseLineTip": "Please enter a number greater than 0",
     "unit": "Unit",
     "help": "Help",
-    "mannual": "User Mannual",
+    "manual": "User Manual",
     "forum": "Forum",
     "forumLink": "https://discuss.nebula-graph.io/"
   },
