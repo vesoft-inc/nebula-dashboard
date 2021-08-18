@@ -14,7 +14,7 @@ export const Instruction = (props: { description: string; onClick?: () => void})
 
 export const TitleInstruction = (props: {title: string; description: string; onClick?: () => void }) => {
   const { title, ...rest } = props;
-  return <div className="flex">
+  return <div className="instruction flex">
     <span>{title}</span>
     <Instruction {...rest} />
   </div>;

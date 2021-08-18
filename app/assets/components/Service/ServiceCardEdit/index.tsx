@@ -96,8 +96,8 @@ class ServiceCardEdit extends React.Component<IProps> {
               </Form.Item> : null;}
             }
           </Form.Item>
-          <Form.Item label={intl.get('common.baseLine')} name="baseLine">
-            <InputNumber />
+          <Form.Item label={intl.get('common.baseLine')} name="baseLine" >
+            <InputNumber min={0}/>
           </Form.Item>
           <div className="footer-btns">
             <Button htmlType="button" onClick={onClose}>
