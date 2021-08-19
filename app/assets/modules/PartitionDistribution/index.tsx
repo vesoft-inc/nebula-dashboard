@@ -52,11 +52,11 @@ class PartitionDistribution extends React.Component<IProps, IState> {
     };
   }
 
-  async componentDidMount () {
+  async componentDidMount() {
     await this.props.asyncGetSpaces();
     const { currentSpace } = this.props;
     if(currentSpace){
-      await this.getParts()
+      await this.getParts();
     }
   }
 
@@ -68,7 +68,7 @@ class PartitionDistribution extends React.Component<IProps, IState> {
     }
   }
 
-  getParts= async () =>{
+  getParts= async () => {
     const res = await this.props.asyncGetParts();
     const groupRes = groupBy(res, 'Leader');
     const data = Object.keys(groupRes).map(item => ({

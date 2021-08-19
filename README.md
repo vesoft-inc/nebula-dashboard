@@ -41,7 +41,7 @@ If you plan to set up dashboard in production, refer to：[production guide](DEP
           endpointPort: 32839 // metrics service Ports
           componentType: metad // metrics service type, should be one of metad,graphd or storaged
       ```
-      [More about the nebula graph metrics](https://docs.nebula-graph.com.cn/master/6.monitor-and-metrics/1.query-performance-metrics/)
+      [More about the nebula graph metrics](https://docs.nebula-graph.com.cn/2.5.0/6.monitor-and-metrics/1.query-performance-metrics/)
     - Run
       ```
       ./nebula-stats-exporter --listen-address=":9200" --bare-metal --bare-metal-config={pwd}/nebula-graph-dashboard/vendors/nebula-stats-exporter/config.yaml &
@@ -97,6 +97,4 @@ If you plan to set up dashboard in production, refer to：[production guide](DEP
 
 ## Documentation 
 
-+ [中文](https://docs.nebula-graph.com.cn/master/nebula-dashboard/1.what-is-dashboard/)
-
-+ [English](https://docs.nebula-graph.io/master/nebula-dashboard/1.what-is-dashboard/)
++ [中文](https://docs.nebula-graph.com.cn/2.5.0/nebula-dashboard/1.what-is-dashboard/)
