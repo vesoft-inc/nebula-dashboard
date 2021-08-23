@@ -47,7 +47,7 @@ Five packages in nebula-graph-dashboard
 3. Prometheus
 - packages `prometheus`
 - location：in the same machine with nebula-graph-dashboard
-- dependency：modify ：`./vendors/prometheus/prometheus.yml` according to node-exporter and nebula-stats-exporter service address
+- dependency：modify ：`./vendors/prometheus/prometheus.yaml` according to node-exporter and nebula-stats-exporter service address
 - Start：
   ```bash
   $ cd prometheus
