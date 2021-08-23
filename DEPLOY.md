@@ -19,6 +19,7 @@ Five packages in nebula-graph-dashboard
 - prometheus -------------------------------- Data saving Service
 - nebula-http-gateway ----------------------- Network Service
 
+Attention: the file under these packages is compiled under Linux environment, can only be used in Linux. If you want to use dashboard in other enviroments, please download package according to [README.md](README.md)
 
 ## Quick Start
 
