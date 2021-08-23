@@ -56,7 +56,7 @@ If you plan to set up dashboard in production, refer to：[production guide](DEP
       ```
       $ tar -xvf prometheus-${version}.tar.gz
       $ cd prometheus-{version}
-      $ ./prometheus --config.file={pwd}/nebula-graph-dashboard/vendors/nebula-stats-exporter/config.yaml &
+      $ ./prometheus --config.file={pwd}/nebula-graph-dashboard/vendors/prometheus/prometheus.yaml &
       ```
 
 4. Set up `nebula-http-gateway`
@@ -66,7 +66,7 @@ If you plan to set up dashboard in production, refer to：[production guide](DEP
       $ git clone https://github.com/vesoft-inc/nebula-http-gateway.git
       ```
   
-    - Modify httpport part in the `nebula-http-gateway/conf/app.conf` under the installation directory
+    - Modify http port in the `nebula-http-gateway/conf/app.conf` under the installation directory
       ```
       httpport = 8090
       ```
