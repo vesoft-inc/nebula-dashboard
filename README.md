@@ -34,13 +34,15 @@ If you plan to set up dashboard in production, refer to：[production guide](DEP
     - Modify `/vendors/nebula-stats-exporter/config.yaml` under nebula-graph-dashboard directory
       ```
       # Example:
-      version: v0.0.3
-      nebulaItems:
-        - instanceName: metad0 // instance name as a symble
-          endpointIP: 10.17.101.126 // metrics service IP
-          endpointPort: 32839 // metrics service Ports
-          componentType: metad // metrics service type, should be one of metad,graphd or storaged
-      ```
+      version: v0.0.4
+      clusters:
+        - name: nebula
+          - instance: 
+            -name metad0 // instance name as a symble
+              endpointIP: 10.17.101.126 // metrics service IP
+              endpointPort: 32839 // metrics service Ports
+              componentType: metad // metrics service type, should be one of metad,graphd or storaged
+            ```
       [More about the nebula graph metrics](https://docs.nebula-graph.com.cn/2.5.0/6.monitor-and-metrics/1.query-performance-metrics/)
     - Run
       ```
