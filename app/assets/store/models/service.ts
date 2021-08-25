@@ -31,7 +31,6 @@ export const service = createModel({
       query:string,
       start: number,
       end: number,
-      timeInterval: number,
     }) {
       const { start, end, query } = payload;
       const step = getProperStep(start, end);
@@ -61,7 +60,6 @@ export const service = createModel({
       query:string,
       start: number,
       end: number,
-      timeInterval: number,
     }) {
       const { start, end, query } = payload;
       const step = getProperStep(start, end);

@@ -127,15 +127,13 @@ class ServiceDetail extends React.Component<IProps, IState> {
     let data = await this.props.asyncGetMetricsData({
       query: metricFunction + period,
       start: startTime,
-      end: endTime,
-      timeInterval: period
+      end: endTime
     });
     if(NEED_ADD_SUM_QUERYS.includes(metric)){
       const totalData = await this.props.asyncGetMetricsSumData({
         query: metricFunction + period,
         start: startTime,
-        end: endTime,
-        timeInterval: period
+        end: endTime
       });
       data = data.concat(totalData);
     }
