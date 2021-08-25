@@ -2,8 +2,7 @@ import { createModel } from '@rematch/core';
 import _ from 'lodash';
 import serviceApi from '@assets/config/service';
 import { IServicePanelConfig } from '@assets/utils/interface';
-import { DEFAULT_SERVICE_PANEL_CONFIG, getQPSData } from '@assets/utils/service';
-import { SERVICE_SUPPORT_METRICS } from '@assets/utils/promQL';
+import { DEFAULT_SERVICE_PANEL_CONFIG } from '@assets/utils/service';
 import { getProperStep } from '@assets/utils/dashboard';
 
 
@@ -30,12 +29,10 @@ export const service = createModel({
   effects: () => ({
     async asyncGetMetricsSumData(payload: {
       query:string,
-      metric: string,
       start: number,
       end: number,
-      timeInterval: number,
     }) {
-      const { start, end, query, metric, timeInterval } = payload;
+      const { start, end, query } = payload;
       const step = getProperStep(start, end);
       const _start = start / 1000;
       const _end = end / 1000;
@@ -53,11 +50,7 @@ export const service = createModel({
             instance: 'total',
           },
         } as any;
-        if(metric === SERVICE_SUPPORT_METRICS.graph[0].metric || metric === SERVICE_SUPPORT_METRICS.graph[1].metric){
-          sumData.values = getQPSData(data, timeInterval)[0].values;
-        }else{
-          sumData.values = data.result[0].values;
-        }
+        sumData.values = data.result[0].values;
         return sumData;
       }
       return [];
@@ -65,12 +58,10 @@ export const service = createModel({
 
     async asyncGetMetricsData(payload: {
       query:string,
-      metric: string,
       start: number,
       end: number,
-      timeInterval: number,
     }) {
-      const { start, end, query, metric, timeInterval } = payload;
+      const { start, end, query } = payload;
       const step = getProperStep(start, end);
       const _start = start / 1000;
       const _end = end / 1000;
@@ -82,11 +73,7 @@ export const service = createModel({
       })) as any;
       let stat = [] as any;
       if (code === 0 && data.result.length !== 0) {
-        if(metric === SERVICE_SUPPORT_METRICS.graph[0].metric || metric === SERVICE_SUPPORT_METRICS.graph[1].metric){
-          stat = getQPSData(data, timeInterval);
-        }else{
           stat = data.result;
-        }
       }
       return stat;
     },
