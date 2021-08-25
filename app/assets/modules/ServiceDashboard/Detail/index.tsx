@@ -126,7 +126,6 @@ class ServiceDetail extends React.Component<IProps, IState> {
     const [startTime, endTime] = timeRange as any;
     let data = await this.props.asyncGetMetricsData({
       query: metricFunction + period,
-      metric,
       start: startTime,
       end: endTime,
       timeInterval: period
@@ -134,7 +133,6 @@ class ServiceDetail extends React.Component<IProps, IState> {
     if(NEED_ADD_SUM_QUERYS.includes(metric)){
       const totalData = await this.props.asyncGetMetricsSumData({
         query: metricFunction + period,
-        metric,
         start: startTime,
         end: endTime,
         timeInterval: period

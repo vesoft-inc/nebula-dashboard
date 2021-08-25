@@ -73,7 +73,7 @@ class LineChart extends React.Component<IProps> {
       e.initEvent('resize', true, true);
       window.dispatchEvent(e);
     }
-    this.chartInstance.render();
+    this.chartInstance.render(true);
   }
 
   renderChart = () => {

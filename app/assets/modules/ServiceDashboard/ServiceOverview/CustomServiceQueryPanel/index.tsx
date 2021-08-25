@@ -68,11 +68,10 @@ class CustomServiceQueryPanel extends React.Component<IProps, IState> {
 
   getMetricsData = async () => {
     const { config } = this.props;
-    const { metric: metricName, period: metricPeriod, metricFunction } = config;
+    const {  period: metricPeriod, metricFunction } = config;
     const end = Date.now();
     const data = await this.props.asyncGetMetricsData({
       query: metricFunction + metricPeriod, // EXPLAIN: query like nebula_graphd_num_queries_rate_600
-      metric: metricName,
       start: end - SERVICE_DEFAULT_RANGE,
       end,
       timeInterval: metricPeriod
