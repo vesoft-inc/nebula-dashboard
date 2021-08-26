@@ -5,10 +5,10 @@
 - Linux
 
 ## Download
-` wget https://oss-cdn.nebula-graph.com.cn/nebula-graph-dashboard/nebula-graph-dashboard-${version-release}.x86_64.tar.gz`
+` wget https://oss-cdn.nebula-graph.com.cn/nebula-graph-dashboard/nebula-graph-dashboard-${version}.x86_64.tar.gz`
 
 ## Unpress
-`tar -xvf nebula-graph-dashboard-${version-release}.x86_64.tar.gz`
+`tar -xvf nebula-graph-dashboard-${version}.x86_64.tar.gz`
 
 
 ## Directory descrption
