@@ -30,7 +30,6 @@ mv $DASHBOARD/vendors/prometheus/ $TARGET/
 ### Nebula Graph Dashboard relative ###
 cd $DASHBOARD
 VERSION=`cat package.json | grep '"version":' | awk 'NR==1{print $2}' | awk -F'"' '{print $2}'`
-RELEASE=`cat package.json | grep '"release":' | awk 'NR==1{print $2}' | awk -F'"' '{print $2}'`
 bash ./scripts/setEventTracking.sh $1
 
 npm install --unsafe-perm
@@ -49,4 +48,4 @@ cp $DASHBOARD/app/assets/index.html  ./app/assets/
 
 ### tar
 cd $DIR
-tar -czf nebula-graph-dashboard-$VERSION-$RELEASE.x86_64.tar.gz nebula-graph-dashboard
+tar -czf nebula-graph-dashboard-$VERSION.x86_64.tar.gz nebula-graph-dashboard
