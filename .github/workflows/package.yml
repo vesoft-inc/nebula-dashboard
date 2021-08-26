@@ -1,9 +1,8 @@
 name: Dashboard RPM Relase
 on:
-  push:
-    release:
-      types:
-        - published
+  release:
+    types:
+      - published
 jobs:
   package:
     name: build package
