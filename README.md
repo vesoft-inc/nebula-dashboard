@@ -100,3 +100,4 @@ If you plan to set up dashboard in production, refer to：[production guide](DEP
 ## Documentation 
 
 + [中文](https://docs.nebula-graph.com.cn/2.5.0/nebula-dashboard/1.what-is-dashboard/)
++ [ENGLISH](https://docs.nebula-graph.io/2.5.0/nebula-dashboard/1.what-is-dashboard/)
