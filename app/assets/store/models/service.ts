@@ -73,7 +73,7 @@ export const service = createModel({
       })) as any;
       let stat = [] as any;
       if (code === 0 && data.result.length !== 0) {
-          stat = data.result;
+        stat = data.result;
       }
       return stat;
     },

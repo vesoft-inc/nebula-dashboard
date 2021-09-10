@@ -1,8 +1,8 @@
 name: Dashboard tar Release
 on:
-  release:
-    types:
-      - published
+  push:
+    branches:
+      - master
 jobs:
   package:
     name: build package
@@ -34,6 +34,6 @@ jobs:
       - name: Package
         run: bash ./source/nebula-graph-dashboard/scripts/package.sh ${{ secrets.GA_ID }}
       - name: Upload to OSS
-        run: bash ./source/nebula-graph-dashboard/scripts/upload.sh ${{ secrets.OSS_ENDPOINT }} ${{ secrets.OSS_ID }} ${{ secrets.OSS_SECRET }} ${{ secrets.OSS_URL }}
+        run: ls -a & ossutil64 -e ${{ secrets.OSS_ENDPOINT }} -i ${{ secrets.OSS_ID }} -k ${{ secrets.OSS_SECRET }} -f cp ./  ${{ secrets.OSS_TEST_URL }} --include "nebula-graph-dashboard-*.tar.gz" --only-current-dir -r
 
     
