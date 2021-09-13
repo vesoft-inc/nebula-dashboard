@@ -97,6 +97,9 @@ If you plan to set up dashboard in production, refer to：[production guide](DEP
       $ npm run dev
       ```
 
+## Architecture
+![](./architecture.png)
+
 ## Documentation 
 
 + [中文](https://docs.nebula-graph.com.cn/2.5.0/nebula-dashboard/1.what-is-dashboard/)
