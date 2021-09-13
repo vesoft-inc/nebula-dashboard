@@ -3,6 +3,9 @@ Nebula Graph Dashboard is a tool that assists Nebula Graph in daily service moni
 
 ![](introduction.png)
 
+## Architecture
+![](./architecture.png)
+
 ## Deploy in Production
 If you plan to set up dashboard in production, refer to：[production guide](DEPLOY.md)
 
@@ -83,7 +86,6 @@ If you plan to set up dashboard in production, refer to：[production guide](DEP
       ```
 
 5. Start `nebula-graph-dashboard`
-
     - Modify nebula-graph connection setting: `./static/custom.json`
       ```
       connection: {
@@ -92,13 +94,18 @@ If you plan to set up dashboard in production, refer to：[production guide](DEP
       },
       ```
     - Start
+      If you want to deploy in development mode, do this way:
       ```
       $ npm install
       $ npm run dev
       ```
-
-## Architecture
-![](./architecture.png)
+      If you want to deploy in production mode, do this way:
+      ```
+      $ npm install
+      $ npm run build
+      $ npm run tsc
+      $ npm run start // if you want to stop, exec `npm run stop`
+      ```
 
 ## Documentation 
 
