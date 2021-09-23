@@ -12,7 +12,10 @@ const mapState = (state: IRootState) => {
     // According to type, only the detail increases total
     diskUsageDetail: diskStat.filter(item => item.metric.instance !== 'total').map((instance, idx) => {
       const latestValues = _.last(instance.values);
-      const size = diskSizeStat.length ? Number(diskSizeStat[idx].value[1]) : 0;
+      let size = 0;
+      if (diskSizeStat[idx]) {
+        size = Number(diskSizeStat[idx].value[1]);
+      }
       const name = instance.metric.instance;
       return {
         size,
