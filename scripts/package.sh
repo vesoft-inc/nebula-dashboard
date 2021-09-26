@@ -19,6 +19,7 @@ mv $DASHBOARD/vendors/gateway.conf $TARGET_GATEWAY/conf/app.conf
 mv $GATEWAY/nebula-httpd $TARGET_GATEWAY/
 
 ### nebula-stat-exporter build ###
+chmod 755 $DASHBOARD/vendors/nebula-stats-exporter/nebula-stats-exporter
 mv  $DASHBOARD/vendors/nebula-stats-exporter/ $TARGET/
 
 ### node-exporter
