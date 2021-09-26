@@ -1,6 +1,6 @@
 {
   "name": "nebula-graph-dashboard",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "nebula-dashboard",
   "private": true,
   "egg": {
