@@ -1,0 +1,77 @@
+.dashboard-card {
+	padding: 5px;
+
+	> .inner {
+		height: 100%;
+		background: #fff;
+		display: flex;
+		flex-direction: column;
+
+		> .header {
+			position: relative;
+			border-bottom: 1px solid #dcdcdc;
+			display: flex;
+			> h3 {
+				padding: 0 12px;
+				font-size: 18px;
+				line-height: 43px;
+				height: 43px;
+				margin-bottom: 0;
+			}
+
+			> .icon-watch {
+				position: absolute;
+				cursor: pointer;
+				top: 12px;
+				right: 16px;
+			}
+
+			> .icon-setup {
+				position: absolute;
+				cursor: pointer;
+				top: 12px;
+				right: 50px;
+			}
+
+			> div {
+				>span {
+					padding-right: 10px;
+				}
+
+				>.edit {
+					padding-right: 0;
+					font-size: 16px;
+				}
+
+				> .edit:hover {
+					color: #4372ff;
+				}
+			}
+			.ant-select{
+				align-self:center;
+				min-width: 80px;
+				font-size: 18px;
+				margin-top: -2px;
+				.ant-select-selector{
+					padding-left: 0;
+				}
+			}
+		}
+
+		> .content {
+			text-align: center;
+			flex: 1;
+
+			.ant-spin {
+				position: absolute;
+				left: 50%;
+				top: 50%;
+				transform: translate(-50%, 50%);
+			}
+
+			> .disk-detail {
+				padding-left: 20px;
+			}
+		}
+	}
+}

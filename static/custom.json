@@ -1,12 +1,12 @@
 {
-    "connection": {
-        "ip": "192.168.8.157",
-        "port": 9669
-    },
-    "alias": {
-        "ip:port": "instance1"
-    },
-    "chartBaseLine": {
+  "connection": {
+      "ip": "192.168.8.157",
+      "port": 9669
+  },
+  "alias": {
+      "ip:port": "instance1"
+  },
+  "chartBaseLine": {
 
-    }
+  }
 }

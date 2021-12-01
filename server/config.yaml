@@ -1,0 +1,6 @@
+port: 7003
+proxy:
+  gateway:
+    target: "192.168.8.157:8090"
+  prometheus:
+    target: "192.168.8.157:9090"
