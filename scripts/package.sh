@@ -3,10 +3,10 @@
 set -ex
 
 DIR=`pwd`
-DASHBOARD=$DIR/source/nebula-graph-dashboard
+DASHBOARD=$DIR/source/nebula-dashboard
 
 # build target dir
-TARGET=$DIR/nebula-graph-dashboard
+TARGET=$DIR/nebula-dashboard
 mkdir $TARGET
 
 ### nebula-http-gateway ###
@@ -39,14 +39,14 @@ npm run tsc
 cp -r $DASHBOARD $TARGET/
 cp $DASHBOARD/DEPLOY.md $TARGET/
 
-cd $TARGET/nebula-graph-dashboard
+cd $TARGET/nebula-dashboard
 
 # remove the no use file for deploy
-rm -rf ./.git ./app/assets/
-mkdir -p ./app/assets/
+rm -rf ./.git ./src
+# mkdir -p ./app/assets/
 # index.html need to be saved
-cp $DASHBOARD/app/assets/index.html  ./app/assets/
+# cp $DASHBOARD/app/assets/index.html  ./app/assets/
 
 ### tar
 cd $DIR
-tar -czf nebula-graph-dashboard-$VERSION.x86_64.tar.gz nebula-graph-dashboard
+tar -czf nebula-dashboard-$VERSION.x86_64.tar.gz nebula-dashboard

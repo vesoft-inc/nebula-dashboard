@@ -11,13 +11,13 @@ logs/
 *.lock
 *.js
 *.map
-app/**/*.js
+**/*.js
 test/**/*.js
 config/**/*.js
-app/**/*.map
+**/*.map
 test/**/*.map
 config/**/*.map
-app/public/
+public/
 
 !.autod.conf.js
 !.eslintrc.js
