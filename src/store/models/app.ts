@@ -1,8 +1,8 @@
 import { createModel } from '@rematch/core';
 import cookies from 'js-cookie';
-import service from '@/config/service';
 import intl from 'react-intl-universal';
 import { message } from 'antd';
+import service from '@/config/service';
 
 interface IState {
   version: string;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { trackPageView } from '@/utils/stat';
 import Icon from '../Icon';
+import { trackPageView } from '@/utils/stat';
 import './index.less';
 
 interface IProps extends RouteComponentProps {

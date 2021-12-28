@@ -1,14 +1,14 @@
 import { Col, Row } from 'antd';
 import React from 'react';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
+import intl from 'react-intl-universal';
+import _ from 'lodash';
+import CustomServiceQueryPanel from './CustomServiceQueryPanel';
 import ServiceHeader from '@/components/Service/ServiceHeader';
 import { IServicePanelConfig } from '@/utils/interface';
 import StatusPanel from '@/components/StatusPanel';
 import Icon from '@/components/Icon';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { trackPageView } from '@/utils/stat';
-import intl from 'react-intl-universal';
-import _ from 'lodash';
-import CustomServiceQueryPanel from './CustomServiceQueryPanel';
 import './index.less';
 
 interface IProps extends RouteComponentProps {

@@ -1,10 +1,10 @@
 import React from 'react';
-import { Popover } from 'antd';
+import { Form, Popover } from 'antd';
 import cookies from 'js-cookie';
 import intl from 'react-intl-universal';
 import Icon from '../Icon';
 
-import './index.less';
+import styles from './index.module.less';
 
 export const MetricPopover = (props: { list }) => {
   const locale = cookies.get('locale');
@@ -15,26 +15,24 @@ export const MetricPopover = (props: { list }) => {
 
   return (
     <Popover
-      className="dashboard-popover"
+      className={styles.dashboardPopover}
+      // trigger="click"
       content={
-        <div className="popover-metric">
-          <div className="metric-content">
-            <div className="metric">
-              {props.list.map(option => (
-                <p key={option.metric}>{option.metric}：</p>
-              ))}
-            </div>
-            <div>
-              {props.list.map(option => (
-                <p key={option.metric}>
-                  {intl.get(`metric_description.${option.metric}`)}
-                </p>
-              ))}
-            </div>
+        <div className={styles.popoverMetric}>
+          <div className={styles.metricContent}>
+            <Form className={styles.metric} labelCol={{ span: 13 }} wrapperCol={{ span: 11 }}>
+              {props.list.map(option => {
+                if(intl.get(`metric_description.${option.metric}`)){
+                  return <Form.Item key={option.metric} label={option.metric}>
+                    {intl.get(`metric_description.${option.metric}`)}
+                  </Form.Item>;
+                }
+              })}
+            </Form>
           </div>
           <a
             href={manualHref}
-            className="more"
+            className={styles.more}
             target="_blank"
             rel="noreferrer"
           >

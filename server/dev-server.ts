@@ -30,7 +30,7 @@ app.use('/api-metrics/*', createProxyMiddleware({
 }))
 
 app.use('/api-nebula/*', createProxyMiddleware({
-  target: 'http://192.168.8.157:8090',
+  target: 'http://192.168.8.240:8080',
   pathRewrite: {
     '/api-nebula': '/api',
   },

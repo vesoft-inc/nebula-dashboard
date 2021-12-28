@@ -1,37 +1,25 @@
 import { DatePicker, Form, Radio, Row } from 'antd';
+import React from 'react';
+import intl from 'react-intl-universal';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { FormInstance } from 'antd/lib/form';
+import { Chart } from '@antv/g2';
+import dayjs from 'dayjs';
 import {  
   DETAIL_DEFAULT_RANGE, 
   TIMEOPTIONS, 
   TIME_INTERVAL_OPTIONS, 
   getDefaultTimeRange
 } from '@/utils/dashboard';
-import React from 'react';
-import intl from 'react-intl-universal';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { IDispatch, IRootState } from '@/store';
-import { connect } from 'react-redux';
-import { FormInstance } from 'antd/lib/form';
-import { SERVICE_SUPPORT_METRICS } from '@/utils/promQL';
 import { SERVICE_QUERY_PERIOD } from '@/utils/service';
-import { Chart } from '@antv/g2';
 import StatusPanel from '@/components/StatusPanel';
 import { DashboardSelect, Option } from '@/components/DashboardSelect';
 import { trackEvent } from '@/utils/stat';
 import { MetricPopover } from '@/components/MetricPopover';
-import dayjs from 'dayjs';
 
 import '../index.less';
-
-interface IState {
-  defaultFormParams: {
-    interval: number,
-    instance: string,
-    metric: string,
-    metricFunction: string,
-    period: number,
-    timeRange: dayjs.Dayjs[]
-  },
-}
 
 const mapDispatch = (dispatch: IDispatch) => {
   return {
@@ -42,6 +30,8 @@ const mapDispatch = (dispatch: IDispatch) => {
 const mapState = (state: IRootState) => {
   return {
     aliasConfig: state.app.aliasConfig,
+    serviceMetric: state.serviceMetric,
+    spaces: state.nebula.spaces
   };
 };
 
@@ -49,6 +39,14 @@ interface IProps extends ReturnType<typeof mapDispatch>,
   ReturnType<typeof mapState>, RouteComponentProps {
   serviceType: string,
   metricsValueType: string;
+  defaultFormParams: {
+    interval: number,
+    instance: string,
+    metric: string,
+    metricFunction: string,
+    period: number,
+    timeRange: dayjs.Dayjs[]
+  },
   instanceList: string[];
   onTimeChange?: (interval:number) => void
   onServiceTypeChange: (type)=> void;
@@ -56,32 +54,17 @@ interface IProps extends ReturnType<typeof mapDispatch>,
   onMetricsValueTypeChange: (type)=> void;
 }
 
-class ServicePanel extends React.Component<IProps, IState> {
+class ServicePanel extends React.Component<IProps> {
   chartInstance: Chart;
   pollingTimer: any;
   modalHandler;
   formRef = React.createRef<FormInstance>();
-  constructor(props: IProps) {
-    super(props);
-    this.state = {
-      defaultFormParams: {
-        interval: DETAIL_DEFAULT_RANGE,
-        instance: 'all',
-        metric: SERVICE_SUPPORT_METRICS.graph[0].metric,
-        metricFunction: SERVICE_SUPPORT_METRICS.graph[0].metricType[0].value,
-        period: SERVICE_QUERY_PERIOD,
-        timeRange: getDefaultTimeRange(),
-      },
-    };
-  }
 
-  componentDidMount() {
-    this.initialConfig();
-  }
-
-  componentDidUpdate(prevProps) {
-    if(prevProps.location.pathname !== this.props.location.pathname) {
-      this.initialConfig();
+  componentDidUpdate() {
+    const { defaultFormParams } = this.props;
+    const { metric } = this.formRef.current?.getFieldsValue();
+    if (defaultFormParams.metric !== metric) {
+      this.formRef.current!.setFieldsValue(defaultFormParams);
     }
   }
 
@@ -93,15 +76,10 @@ class ServicePanel extends React.Component<IProps, IState> {
   }
 
   initialConfig = async () => {
-    const { location: { pathname }, onServiceTypeChange, onMetricsValueTypeChange } = this.props;
-    const regx = /(\w+)-metrics/g;
-    const match = regx.exec(pathname);
-    let serviceType = '';
-    if(match){
-      serviceType = match[1];
-    }
+    const { serviceMetric, serviceType, onServiceTypeChange, onMetricsValueTypeChange } = this.props;
     if(serviceType) {
-      const metricsList = SERVICE_SUPPORT_METRICS[serviceType];
+      const metricsList = serviceMetric[`${serviceType}d`];
+      console.log('metricsList', metricsList);
       const timeRange = getDefaultTimeRange();
       const defaultFormParams = {
         interval: DETAIL_DEFAULT_RANGE,
@@ -120,7 +98,7 @@ class ServicePanel extends React.Component<IProps, IState> {
   }
 
   handleConfigUpdate = (changedValues) => {
-    const { serviceType } = this.props;
+    const { serviceType, serviceMetric } = this.props;
     switch (true) {
       case !!changedValues.interval:
         const timeRange = getDefaultTimeRange(changedValues.interval);
@@ -132,9 +110,10 @@ class ServicePanel extends React.Component<IProps, IState> {
         trackEvent(`${serviceType}_detail`, 'select_time_range', `from_${serviceType}_detail`);
         break;
       case !!changedValues.metric:
-        const selectedMetrics = SERVICE_SUPPORT_METRICS[serviceType].filter(item => item.metric === changedValues.metric)[0];
+        const selectedMetrics = serviceMetric[`${serviceType}d`].filter(item => item.metric === changedValues.metric)[0];
         this.formRef.current!.setFieldsValue({
-          metricFunction: selectedMetrics.metricType[0].value
+          metricFunction: selectedMetrics.metricType[0].value,
+          space: '',
         });
         trackEvent(`${serviceType}_detail`, 'select_metric_type', `from_${serviceType}_detail`);
         break;
@@ -149,8 +128,7 @@ class ServicePanel extends React.Component<IProps, IState> {
   }
 
   render() {
-    const { defaultFormParams } = this.state;
-    const { serviceType, aliasConfig, instanceList, asyncGetStatus } = this.props;
+    const { defaultFormParams, serviceMetric, spaces, serviceType, aliasConfig, instanceList, asyncGetStatus } = this.props;
     return (
       <Form
         className="metrics-params-form"
@@ -197,24 +175,52 @@ class ServicePanel extends React.Component<IProps, IState> {
           <Form.Item label={intl.get('service.metric')} name="metric">
             <DashboardSelect>
               {
-                SERVICE_SUPPORT_METRICS[serviceType].map(metric => (
+                serviceMetric[`${serviceType}d`].map(metric => (
                   <Option key={metric.metric} value={metric.metric}>{metric.metric}</Option>
                 ))
               }
             </DashboardSelect>
           </Form.Item>
-          <MetricPopover list={SERVICE_SUPPORT_METRICS[serviceType]}/>
+          <MetricPopover list={serviceMetric[`${serviceType}d`]}/>
+          <Form.Item
+            noStyle={true}
+            shouldUpdate={(prevValues, currentValues) =>
+              prevValues.metric !== currentValues.metric
+            }
+          >
+            {({ getFieldValue }) => {
+              const metric = getFieldValue('metric');
+              const isSpaceMetric = serviceMetric[`${serviceType}d`].filter(
+                item => item.metric === metric,
+              )[0]?.isSpaceMetric;
+              console.log('spaces', spaces);
+              return getFieldValue('metric') && isSpaceMetric ? (
+                <Form.Item label={intl.get('service.spaces')} name="space">
+                  <DashboardSelect>
+                    <Option key="all" value="">
+                      {intl.get('common.all')}
+                    </Option>
+                    {spaces?.map(space => (
+                      <Option key={space.Name} value={space.Name}>
+                        {space.Name}
+                      </Option>
+                    ))}
+                  </DashboardSelect>
+                </Form.Item>
+              ) : null;
+            }}
+          </Form.Item>
           <Form.Item
             noStyle={true}
             shouldUpdate={(prevValues, currentValues) => prevValues.metric !== currentValues.metric}
           >
             {({ getFieldValue }) => {
               const metric = getFieldValue('metric');
-              const typeList = SERVICE_SUPPORT_METRICS[serviceType].filter(item => item.metric === metric)[0].metricType;
+              const typeList = serviceMetric[`${serviceType}d`].filter(item => item.metric === metric)[0]?.metricType;
               return metric ? <Form.Item label={intl.get('service.metricParams')} name="metricFunction">
                 <DashboardSelect>
                   {
-                    typeList.map(params => (
+                    typeList?.map(params => (
                       <Option key={params.key} value={params.value}>{params.key}</Option>
                     ))
                   }

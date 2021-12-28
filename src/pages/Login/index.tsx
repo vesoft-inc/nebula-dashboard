@@ -1,15 +1,18 @@
-import { Button, Form, Input } from 'antd';
+import { Button, Form, Input, Select } from 'antd';
 // import { FormInstance, FormProps } from 'antd/lib/form/Form';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { passwordRulesFn, usernameRulesFn } from '@/config/rules';
-import LanguageSelect from '@/components/LanguageSelect';
 import { connect } from 'react-redux';
+import cookies from 'js-cookie';
+import { RouteComponentProps } from 'react-router-dom';
+import { passwordRulesFn, usernameRulesFn, versionRulesFn } from '@/config/rules';
+import LanguageSelect from '@/components/LanguageSelect';
+import { VERSIONS } from '@/utils/dashboard';
 import './index.less';
 import nebulaLogo from '@/static/images/nebula_logo.png';
-import { RouteComponentProps } from 'react-router-dom';
 import { IDispatch, IRootState } from '@/store';
 import { LanguageContext } from '@/context';
+
 const FormItem = Form.Item;
 
 const fomrItemLayout = {
@@ -28,6 +31,10 @@ const mapDispatch: any = (dispatch: IDispatch) => ({
   asyncLogin: dispatch.app.asyncLogin,
   asyncGetAppInfo: dispatch.app.asyncGetAppInfo,
   asyncGetCustomConfig: dispatch.app.asyncGetCustomConfig,
+  updateVersion: values =>
+    dispatch.nebula.update({
+      version: values,
+    }),
 });
 
 interface IProps extends ReturnType<typeof mapState>,
@@ -45,6 +52,8 @@ class ConfigServerForm extends React.Component<IProps> {
     const { connection } = this.props;
     const ok = await this.props.asyncLogin({ ip: connection.ip, port: connection.port, ...values });
     if (ok) {
+      cookies.set('version', values.version);
+      this.props.updateVersion(values.version);
       this.props.history.push('/machine/overview');
     }
   };
@@ -63,6 +72,11 @@ class ConfigServerForm extends React.Component<IProps> {
             <FormItem name="password" rules={passwordRulesFn(intl)}>
               <Input type="password" placeholder={intl.get('common.password')} bordered={false} />
             </FormItem>
+            <FormItem name="version" rules={versionRulesFn(intl)}>
+              <Select>
+                {VERSIONS.map(version => <Select.Option value={version} key={version}>{version}</Select.Option>)}
+              </Select>
+            </FormItem>
             <Button className="btn-submit" type="primary" htmlType="submit">
               {intl.get('common.login')}
             </Button>
@@ -72,7 +86,7 @@ class ConfigServerForm extends React.Component<IProps> {
             <LanguageContext.Consumer>
               {({ currentLocale, toggleLanguage }) => (
                 <LanguageSelect
-                  showIcon
+                  showIcon={true}
                   currentLocale={currentLocale}
                   toggleLanguage={toggleLanguage}
                 />

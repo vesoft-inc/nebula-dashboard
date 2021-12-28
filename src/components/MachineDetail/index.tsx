@@ -4,11 +4,11 @@ import React, { HTMLProps } from 'react';
 import dayjs from 'dayjs';
 
 import './index.less';
-import { SUPPORT_METRICS } from '@/utils/promQL';
 import intl from 'react-intl-universal';
 import Icon from '../Icon';
 import { DashboardSelect, Option } from '../DashboardSelect';
 import { MetricPopover } from '../MetricPopover';
+import { SUPPORT_METRICS } from '@/utils/promQL';
 
 interface IProps extends HTMLProps<any> {
   children: any;
@@ -89,7 +89,7 @@ class MachineDetail extends React.PureComponent<IProps> {
               showSecond={false}
               format="YYYY-MM-DD HH:mm"
               value={[startDate, endDate] as any}
-              showTime
+              showTime={true}
               onChange={this.handleTimeRangeChange as any}
               allowClear={false}
             />

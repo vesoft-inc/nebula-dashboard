@@ -27,6 +27,7 @@ export interface IServicePanelConfig {
   period: number,
   metric: string,
   metricFunction: string,
+  space?:string,
   metricType: string,
   baseLine: number| undefined,
 }

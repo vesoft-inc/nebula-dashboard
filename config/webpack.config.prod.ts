@@ -16,7 +16,7 @@ const publicConfig: Configuration = {
     path: path.join(__dirname, '../public'),
     filename: '[name].[chunkhash].js',
     chunkFilename: '[name].[contenthash].js',
-    publicPath: path.join(__dirname, '../public'),
+    publicPath:  '/',
   },
   module: {
     rules: [

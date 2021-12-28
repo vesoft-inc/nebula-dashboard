@@ -1,6 +1,6 @@
-import { getProperByteDesc, getWhichColor } from '@/utils/dashboard';
 import React from 'react';
 import intl from 'react-intl-universal';
+import { getProperByteDesc, getWhichColor } from '@/utils/dashboard';
 import './SpaceChart.less';
 
 interface IData {
@@ -22,8 +22,8 @@ const SpaceBar = (props: ISpaceBarProps) => {
   const { name, used, size: bytes } = props;
   const percent = Math.round((used / bytes) * 100);
   const color = getWhichColor(percent);
-  const { desc: sizeDesc } = getProperByteDesc(bytes);
-  const { desc: usedDesc } = getProperByteDesc(used);
+  const { desc: sizeDesc } = getProperByteDesc(bytes, 1024);
+  const { desc: usedDesc } = getProperByteDesc(used, 1024);
   const _percent = percent < 1 ? Number(percent.toFixed(2)) : percent;
   return (
     <div className="space-bar">

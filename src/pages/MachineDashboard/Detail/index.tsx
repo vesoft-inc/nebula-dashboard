@@ -1,15 +1,15 @@
 import React from 'react';
-import MachineDetail from '@/components/MachineDetail';
 import intl from 'react-intl-universal';
 import { Chart } from '@antv/g2';
+import { uniq } from 'lodash';
+import { Spin } from 'antd';
+import { connect } from 'react-redux';
+import MachineDetail from '@/components/MachineDetail';
 import LineChart from '@/components/Charts/LineChart';
 import { CARD_POLLING_INTERVAL, DETAIL_DEFAULT_RANGE, getBaseLineByUnit, getDataByType, getMaxNum, getProperTickInterval } from '@/utils/dashboard';
-import { uniq } from 'lodash';
 import { configDetailChart, updateDetailChart } from '@/utils/chart/chart';
 import { IStatRangeItem } from '@/utils/interface';
-import { Spin } from 'antd';
 import { IDispatch, IRootState } from '@/store';
-import { connect } from 'react-redux';
 import './index.less';
 import { SUPPORT_METRICS, VALUE_TYPE } from '@/utils/promQL';
 import { trackEvent } from '@/utils/stat';
@@ -126,8 +126,9 @@ class Detail extends React.Component<IProps, IState> {
 
   handleBaseLineChange= async (value) => {
     const { type, asyncUpdateBaseLine } = this.props;
+    const { currentMetricOption } = this.state;
     const { baseLine, unit } = value;
-    await asyncUpdateBaseLine(`${type}BaseLine`, getBaseLineByUnit(baseLine, unit));
+    await asyncUpdateBaseLine(`${type}BaseLine`, getBaseLineByUnit({ baseLine, unit, valueType:currentMetricOption.valueType }));
     this.modalHandler.hide();
   }
 

@@ -93,6 +93,16 @@ If you plan to set up dashboard in production, refer to：[production guide](DEP
         port: 9669, // change to nebula graph service port
       },
       ```
+    - Modify proxy setting: `./vendors/config-release.yaml`
+      ```
+      port: 7003
+      proxy:
+        gateway:
+          target: "127.0.0.1:8090"  // change gateway service proxy
+        prometheus:
+          target: "127.0.0.1:9091"  // change prometheus service proxy
+      ```
+
     - Start
       If you want to deploy in development mode, do this way:
       ```
@@ -103,8 +113,9 @@ If you plan to set up dashboard in production, refer to：[production guide](DEP
       ```
       $ npm install
       $ npm run build
-      $ npm run tsc
-      $ npm run start // if you want to stop, exec `npm run stop`
+      $ npm run pkg
+      $ cp -r vendors/config-release.yaml ./config.yaml
+      $ ./dashboard &
       ```
 
 ## Documentation 

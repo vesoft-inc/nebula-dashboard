@@ -1,5 +1,6 @@
 import { createModel } from '@rematch/core';
 import _ from 'lodash';
+import cookies from 'js-cookie';
 import service from '@/config/service';
 
 interface IState {
@@ -9,6 +10,7 @@ interface IState {
   parts:any[];
   services: any[];
   currentSpace: string;
+  version: string;
 }
 
 type IServiceType = 'GRAPH' | 'STORAGE' | 'META'
@@ -17,10 +19,11 @@ export const nebula = createModel({
   state: {
     configs:[],
     jobs:[],
-    spaces:[],
+    spaces:[] as any,
     parts:[],
     services:[],
     currentSpace: '',
+    version: cookies.get('version') || '',
   },
   reducers: {
     update: (state: IState, payload: any) => {
@@ -63,6 +66,7 @@ export const nebula = createModel({
         });
       }
     },
+
     async asyncUseSpaces(space) {
       const { code, data } = (await service.execNGQL({
         gql: `USE ${space}`

@@ -1,12 +1,12 @@
-import LineChart from '@/components/Charts/LineChart';
 import React from 'react';
 import _ from 'lodash';
 import { Chart, Geometry } from '@antv/g2';
+import { Spin } from 'antd';
+import LineChart from '@/components/Charts/LineChart';
 import { ILineChartMetric, IStatSingleItem } from '@/utils/interface';
 import { configDetailChart } from '@/utils/chart/chart';
 import { VALUE_TYPE } from '@/utils/promQL';
 import { getMaxNumAndLength } from '@/utils/dashboard';
-import { Spin } from 'antd';
 
 interface IProps {
   data: ILineChartMetric[];

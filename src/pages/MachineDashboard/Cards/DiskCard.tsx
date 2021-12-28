@@ -1,7 +1,7 @@
-import { IRootState } from '@/store';
 import React from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
+import { IRootState } from '@/store';
 import SpaceChart from '@/components/Charts/SpaceChart';
 
 const mapState = (state: IRootState) => {

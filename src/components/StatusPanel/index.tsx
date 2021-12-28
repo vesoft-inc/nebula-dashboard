@@ -1,7 +1,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import { IDispatch } from '@/store';
 import { connect } from 'react-redux';
+import { IDispatch } from '@/store';
 import { NEBULA_COUNT } from '@/utils/promQL';
 import { DETAIL_DEFAULT_RANGE } from '@/utils/dashboard';
 import { SERVICE_POLLING_INTERVAL } from '@/utils/service';

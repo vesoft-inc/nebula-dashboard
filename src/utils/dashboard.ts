@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
+import _ from 'lodash';
 import { ILineChartMetric, IStatRangeItem } from '@/utils/interface';
 import { VALUE_TYPE } from '@/utils/promQL';
-import _ from 'lodash';
 
 export const DETAIL_DEFAULT_RANGE = 60 * 60 * 24 * 1000;
 export const CARD_RANGE = 60 * 60 * 24 * 1000;
@@ -42,6 +42,7 @@ export const getProperStep = (start: number, end: number) => {
 export const renderUnit = (type) => {
   switch (type) {
     case VALUE_TYPE.byteSecond:
+    case VALUE_TYPE.byteSecondNet:
       return ['Bytes/s', 'KB/s', 'MB/s', 'GB/s', 'TB/s'];
     case VALUE_TYPE.byte:
       return ['Bytes', 'KB', 'MB', 'GB', 'TB'];
@@ -53,21 +54,32 @@ export const renderUnit = (type) => {
       return [];
   }
 };
+export const VERSION_REGEX = /\d+\.{1}\d+\.{1}\d+/;
+// 0.0.1 means unknow version
+export function getVersion(v: string) {
+  const match = v?.match(VERSION_REGEX);
+  return match ? match[0] : v;
+}
 
-export const getBaseLineByUnit = (baseLine, unit) => {
+export const getBaseLineByUnit = (config:{baseLine: number, unit: string, valueType : string}) => {
+  const { baseLine, unit, valueType } = config;
+  let conversion = 1024;
+  if(valueType === VALUE_TYPE.byteSecondNet){
+    conversion = 1000;
+  }
   switch (unit) {
     case 'KB':
     case 'KB/s':
-      return 1000 * baseLine;
+      return conversion * baseLine;
     case 'MB':
     case 'MB/s':
-      return 1000 * 1000 * baseLine;
+      return conversion * conversion * baseLine;
     case 'GB':
     case 'GB/s':
-      return 1000 * 1000 * 1000 * baseLine;
+      return conversion * conversion * conversion * baseLine;
     case 'TB':
     case 'TB/s':
-      return 1000 * 1000 * 1000 * 1000 * baseLine;
+      return conversion * conversion * conversion * conversion * baseLine;
     default:
       return baseLine;
   }
@@ -83,11 +95,11 @@ export const getWhichColor = value => {
   }
 };
 
-export const getProperByteDesc = bytes => {
-  const kb = 1000;
-  const mb = 1000 * 1000;
-  const gb = mb * 1000;
-  const tb = gb * 1000;
+export const getProperByteDesc = (bytes:any, conversion: number) => {
+  const kb = conversion;
+  const mb = conversion * conversion;
+  const gb = mb * conversion;
+  const tb = gb * conversion;
   const nt = bytes / tb;
   const ng = bytes / gb;
   const nm = bytes / mb;
@@ -210,6 +222,8 @@ export enum MACHINE_TYPE {
   network = 'network'
 }
 
+export const VERSIONS = ['v2.0.1', 'v2.5.1', 'v2.6.1', 'v3.0.0'];
+
 export const getDefaultTimeRange = (interval?: number) => {
   const end = Date.now();
   const start = interval ? end - interval : end - DETAIL_DEFAULT_RANGE;
@@ -234,13 +248,19 @@ export const getMaxNumAndLength = (payload:{
       maxNumLen = 5;
       break;
     case VALUE_TYPE.byte:
-    case VALUE_TYPE.byteSecond:
-      const { value, unit } = getProperByteDesc(maxNum);
+    case VALUE_TYPE.byteSecond:{
+      const { value, unit } = getProperByteDesc(maxNum, 1024);
       if (valueType === VALUE_TYPE.byteSecond) {
         maxNumLen = unit.length + value.toString().length + 2;
       }
       maxNumLen = unit.length + value.toString().length;
       break;
+    }
+    case VALUE_TYPE.byteSecondNet: {
+      const { value, unit } = getProperByteDesc(maxNum, 1000);
+      maxNumLen = unit.length + value.toString().length + 2;
+      break;
+    }
     case VALUE_TYPE.numberSecond:
       maxNumLen += 2;
       break;

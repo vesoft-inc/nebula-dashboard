@@ -24,7 +24,7 @@ if (!port) {
   throw new Error('no port found in config.yaml');
 }
 
-function getTargetUrl(target) {
+const getTargetUrl =(target)=> {
   return target.startsWith('http') ? target : `http://${target}`
 }
 

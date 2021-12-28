@@ -6,7 +6,6 @@
     "noImplicitAny": false,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "declaration": true,
     "jsx": "react",
     "charset": "utf8",
     "allowJs": false,
@@ -27,15 +26,7 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@assets/*": ["app/assets/*"]
     }
-  },
-  "include": [
-    "./src/**/*.ts",
-    "./src/**/*.tsx",
-  ],
-  "exclude": [
-    "node_modules",
-    "**/public/*"
-  ]
+  }
 }

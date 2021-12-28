@@ -1,13 +1,13 @@
 import { Spin, Table } from 'antd';
 import React from 'react';
 import intl from 'react-intl-universal';
-import PieChart from '@/components/Charts/PieChart';
-import { IVersionItem } from '@/utils/interface';
 import { groupBy, round } from 'lodash';
 import { Chart } from '@antv/g2';
+import { connect } from 'react-redux';
+import PieChart from '@/components/Charts/PieChart';
+import { IVersionItem } from '@/utils/interface';
 import { renderPieChartTpl } from '@/utils/chart/chart';
 import { IRootState } from '@/store';
-import { connect } from 'react-redux';
 import ServiceHeader from '@/components/Service/ServiceHeader';
 import './index.less';
 

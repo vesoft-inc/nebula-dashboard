@@ -1,8 +1,8 @@
 // export default connect(mapState, mapDispatch)(MemoryDetail);
 import { connect } from 'react-redux';
+import Detail from '.';
 import { IDispatch, IRootState } from '@/store';
 import { SUPPORT_METRICS } from '@/utils/promQL';
-import Detail from '.';
 
 const mapState = (state: IRootState) => {
   return {

@@ -1,8 +1,8 @@
 import React from 'react';
-import { IDispatch } from '@/store';
 import { connect } from 'react-redux';
-import { IVersionItem } from '@/utils/interface';
 import VersionItem from './VersionItem';
+import { IDispatch } from '@/store';
+import { IVersionItem } from '@/utils/interface';
 
 const mapDispatch = (dispatch: IDispatch) => {
   return {

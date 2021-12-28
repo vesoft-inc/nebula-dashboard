@@ -309,6 +309,8 @@ module.exports = {
             ignoreDeclarationSort: true,
             ignoreMemberSort: false,
             memberSyntaxSortOrder: ['none', 'all', 'multiple', 'single']
-        }]
+        }],
+        'import/order': 'off',
+        'react/jsx-no-undef':'off'
     }
 };

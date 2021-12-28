@@ -30,7 +30,7 @@ class BaseLineEdit extends React.Component<IProps> {
           <Form.Item
             label={intl.get('common.baseLine')}
             name="baseLine"
-            hasFeedback
+            hasFeedback={true}
             rules={[
               { required: true, message: intl.get('common.baseLineTip') },
             ]}

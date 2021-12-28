@@ -2,8 +2,8 @@ import { message as AntdMessage } from 'antd';
 import axios from 'axios';
 import intl from 'react-intl-universal';
 
-import { store } from '@/store';
 import { trackEvent } from './stat';
+import { store } from '@/store';
 
 const service = axios.create();
 

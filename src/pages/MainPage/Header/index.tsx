@@ -1,11 +1,11 @@
 import { PageHeader, Radio } from 'antd';
 import React from 'react';
-import Icon from '@/components/Icon';
 import {
   Link,
   RouteComponentProps,
   withRouter,
 } from 'react-router-dom';
+import Icon from '@/components/Icon';
 import { trackPageView } from '@/utils/stat';
 import './index.less';
 

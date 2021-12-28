@@ -1,13 +1,9 @@
 import DashboardCard from '@/components/DashboardCard';
 import Modal from '@/components/Modal';
-import BaseLineEdit from '@/components/BaseLineEdit';
-import { IDispatch, IRootState } from '@/store';
 import { Col, Row } from 'antd';
 import { connect } from 'react-redux';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { CARD_POLLING_INTERVAL, CARD_RANGE, MACHINE_TYPE, getBaseLineByUnit } from '@/utils/dashboard';
-import { SUPPORT_METRICS, VALUE_TYPE } from '@/utils/promQL';
 import CPUCard from './Cards/CPUCard';
 import './index.less';
 import MemoryCard from './Cards/MemoryCard';
@@ -15,6 +11,10 @@ import DiskCard from './Cards/DiskCard';
 import LoadCard from './Cards/LoadCard';
 import NetworkOut from './Cards/NetworkOut';
 import NetworkIn from './Cards/NetworkIn';
+import { SUPPORT_METRICS, VALUE_TYPE } from '@/utils/promQL';
+import { CARD_POLLING_INTERVAL, CARD_RANGE, MACHINE_TYPE, getBaseLineByUnit } from '@/utils/dashboard';
+import { IDispatch, IRootState } from '@/store';
+import BaseLineEdit from '@/components/BaseLineEdit';
 
 const mapDispatch: any = (dispatch: IDispatch) => {
   return {
@@ -80,7 +80,7 @@ class MachineDashboard extends React.Component<IProps, IState> {
   handleBaseLineChange= async (value) => {
     const { editPanelType } = this.state;
     const { baseLine, unit } = value;
-    await this.props.asyncUpdateBaseLine(`${editPanelType}BaseLine`, getBaseLineByUnit(baseLine, unit));
+    await this.props.asyncUpdateBaseLine(`${editPanelType}BaseLine`, getBaseLineByUnit({ baseLine, unit, valueType:this.getValueType(editPanelType) }));
     this.handleClose();
   }
   

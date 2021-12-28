@@ -12,7 +12,7 @@ const mapState = (state: IRootState) => {
   return {
     baseLine: networkInBaseLine,
     data: getDataByType({ data:networkInStat, type:'all', name: 'instance', aliasConfig }),
-    valueType: VALUE_TYPE.byteSecond,
+    valueType: VALUE_TYPE.byteSecondNet,
     loading: !!state.loading.effects.machine.asyncGetNetworkStatByRange,
   };
 };

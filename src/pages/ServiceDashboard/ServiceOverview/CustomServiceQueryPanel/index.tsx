@@ -1,14 +1,14 @@
 import React from 'react';
-import Icon from '@/components/Icon';
 import intl from 'react-intl-universal';
+import { connect } from 'react-redux';
+import { isEqual } from 'lodash';
+import { Popover } from 'antd';
+import Icon from '@/components/Icon';
 import { IServicePanelConfig, IStatRangeItem } from '@/utils/interface';
 import { getDataByType } from '@/utils/dashboard';
 import { SERVICE_DEFAULT_RANGE, SERVICE_POLLING_INTERVAL } from '@/utils/service';
 import Card from '@/components/Service/ServiceCard/Card';
 import { IDispatch, IRootState } from '@/store';
-import { connect } from 'react-redux';
-import { isEqual } from 'lodash';
-import { Popover } from 'antd';
 
 import './index.less';
 

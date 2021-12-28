@@ -2,9 +2,9 @@ import _ from 'lodash';
 import React from 'react';
 import { Table } from 'antd';
 import { connect } from 'react-redux';
+import intl from 'react-intl-universal';
 import { IDispatch, IRootState } from '@/store';
 import { TitleInstruction } from '@/components/Instruction';
-import intl from 'react-intl-universal';
 
 import './index.less';
 

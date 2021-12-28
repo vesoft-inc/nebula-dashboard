@@ -1,4 +1,12 @@
 import { Spin } from 'antd';
+import React from 'react';
+import intl from 'react-intl-universal';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { FormInstance } from 'antd/lib/form';
+import { Chart } from '@antv/g2';
+import dayjs from 'dayjs';
+import Panel from './Panel';
 import { 
   CARD_POLLING_INTERVAL,
   DETAIL_DEFAULT_RANGE, 
@@ -9,15 +17,9 @@ import {
   getMaxNum,
   getProperTickInterval
 } from '@/utils/dashboard';
-import React from 'react';
-import intl from 'react-intl-universal';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { IDispatch, IRootState } from '@/store';
-import { connect } from 'react-redux';
-import { FormInstance } from 'antd/lib/form';
-import { SERVICE_SUPPORT_METRICS, VALUE_TYPE } from '@/utils/promQL';
+import { VALUE_TYPE } from '@/utils/promQL';
 import { SERVICE_QUERY_PERIOD } from '@/utils/service';
-import { Chart } from '@antv/g2';
 import { IStatRangeItem } from '@/utils/interface';
 import ServiceHeader from '@/components/Service/ServiceHeader';
 
@@ -26,9 +28,7 @@ import { configDetailChart, updateDetailChart } from '@/utils/chart/chart';
 import Icon from '@/components/Icon';
 import Modal from '@/components/Modal';
 import BaseLineEdit from '@/components/BaseLineEdit';
-import dayjs from 'dayjs';
 
-import Panel from './Panel';
 
 import './index.less';
 
@@ -42,6 +42,7 @@ interface IState {
   baseLine: number|undefined,
   interval: number,
   instance: string,
+  metricSpace: string,
   metric: string,
   metricFunction: string,
   period: number,
@@ -63,6 +64,7 @@ const mapState = (state: IRootState) => {
   return {
     loading: state.loading.models.service,
     aliasConfig: state.app.aliasConfig,
+    serviceMetric: state.serviceMetric,
   };
 };
 
@@ -82,11 +84,11 @@ class ServiceDetail extends React.Component<IProps, IState> {
     const match = regx.exec(pathname);
     let serviceType = '';
     if(match){
-      serviceType = match[1];
+      serviceType = match[1] || 'graph';
     }
     this.state = {
-      serviceType: 'graph',
-      metricsValueType: SERVICE_SUPPORT_METRICS[serviceType][0].valueType,
+      serviceType,
+      metricsValueType: VALUE_TYPE.number,
       data: [],
       maxNum: 0,
       totalData: [],
@@ -94,11 +96,50 @@ class ServiceDetail extends React.Component<IProps, IState> {
       baseLine: undefined,
       interval: DETAIL_DEFAULT_RANGE,
       instance: 'all',
-      metric: SERVICE_SUPPORT_METRICS[serviceType][0].metric,
-      metricFunction: SERVICE_SUPPORT_METRICS[serviceType][0].metricType[0].value,
+      metricSpace: '',
+      metric: '',
+      metricFunction: '',
       period: SERVICE_QUERY_PERIOD,
       timeRange: getDefaultTimeRange(),
     };
+  }
+
+  componentDidMount() {
+    const { serviceMetric } = this.props;
+    const { serviceType } = this.state;
+    if (serviceMetric[`${serviceType}d`].length > 0) {
+      this.setState(
+        {
+          metric: serviceMetric[`${serviceType}d`][0]?.metric,
+          metricFunction:
+            serviceMetric[`${serviceType}d`][0]?.metricType?.[0].value,
+          metricsValueType: serviceMetric[`${serviceType}d`][0]?.valueType,
+        },
+        this.pollingData,
+      );
+    }
+  }
+
+  /* eslint-disable-next-line */
+    UNSAFE_componentWillReceiveProps(nextProps) {
+    const { serviceMetric } = this.props;
+    const { serviceType } = this.state;
+    if (
+      nextProps.serviceMetric[`${serviceType}d`] !==
+        serviceMetric[`${serviceType}d`]
+    ) {
+      this.setState(
+        {
+          metric: nextProps.serviceMetric[`${serviceType}d`][0]?.metric,
+          metricFunction:
+              nextProps.serviceMetric[`${serviceType}d`][0]?.metricType?.[0]
+                .value,
+          metricsValueType:
+              nextProps.serviceMetric[`${serviceType}d`][0]?.valueType,
+        },
+        this.pollingData,
+      );
+    }
   }
 
 
@@ -188,9 +229,10 @@ class ServiceDetail extends React.Component<IProps, IState> {
   }
 
   handleConfigUpdate = (changedValues) => {
+    const { serviceMetric } = this.props;
     const { serviceType } = this.state;
     if(changedValues.metric){
-      const selectedMetrics = SERVICE_SUPPORT_METRICS[serviceType].filter(item => item.metric === changedValues.metric)[0];
+      const selectedMetrics = serviceMetric[`${serviceType}d`].filter(item => item.metric === changedValues.metric)[0];
       this.setState({ 
         metric: changedValues.metric,
         metricsValueType: selectedMetrics.valueType,
@@ -216,13 +258,36 @@ class ServiceDetail extends React.Component<IProps, IState> {
 
   handleBaseLineChange= (value ) => {
     const { baseLine, unit } = value;
+    const { metricsValueType } = this.state;
     this.setState({
-      baseLine: getBaseLineByUnit(baseLine, unit),
+      baseLine: getBaseLineByUnit({ baseLine, unit, valueType: metricsValueType }),
     }, this.handleClose);
   }
   render() {
-    const { metricsValueType, maxNum, serviceType, baseLine, instanceList } = this.state;
+    const { 
+      metricsValueType, 
+      interval, 
+      instance, 
+      metric,
+      maxNum, 
+      metricSpace, 
+      metricFunction, 
+      period, 
+      timeRange, 
+      serviceType, 
+      baseLine, 
+      instanceList 
+    } = this.state;
     const { loading } = this.props;
+    const defaultFormParams = {
+      interval,
+      instance,
+      metric,
+      space: metricSpace,
+      metricFunction,
+      period,
+      timeRange,
+    };
     return (<div className="service-metrics">
       <ServiceHeader 
         title={`${serviceType} ${intl.get('common.metric')}`} 
@@ -232,6 +297,7 @@ class ServiceDetail extends React.Component<IProps, IState> {
         <Panel 
           instanceList={instanceList}
           serviceType={serviceType}
+          defaultFormParams={defaultFormParams}
           onTimeChange={this.handleIntervalChange}
           onServiceTypeChange={this.handleServiceTypeChange}
           onMetricsValueTypeChange={this.handleMetricsValueTypeChange}

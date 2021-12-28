@@ -1,10 +1,9 @@
 import React from 'react';
 import { Button, Form, InputNumber } from 'antd';
 import { FormInstance } from 'antd/lib/form';
-import { TIME_INTERVAL_OPTIONS } from '@/utils/dashboard';
-import { SERVICE_SUPPORT_METRICS } from '@/utils/promQL';
 import { cloneDeep } from 'lodash';
 import intl from 'react-intl-universal';
+import { TIME_INTERVAL_OPTIONS } from '@/utils/dashboard';
 import { DashboardSelect, Option } from '@/components/DashboardSelect';
 import { MetricPopover } from '@/components/MetricPopover';
 import { IServicePanelConfig } from '@/utils/interface';
@@ -14,6 +13,7 @@ import './index.less';
 interface IProps {
   editType: string;
   editIndex: number;
+  serviceMetric: any;
   panelConfig: {
     graph: IServicePanelConfig[];
     storage: IServicePanelConfig[];
@@ -27,19 +27,20 @@ class ServiceCardEdit extends React.Component<IProps> {
   formRef = React.createRef<FormInstance>();
 
   handleUpdateMetricType = (value: string) => {
-    const { editType } = this.props;
-    const metricTypeList = SERVICE_SUPPORT_METRICS[editType].filter(
+    const { serviceMetric = { spaces: [], graphd: [], storaged:[], metad:[] }, editType } = this.props;
+    const metric = serviceMetric[`${editType}d`].filter(
       item => item.metric === value,
-    )[0].metricType;
+    )[0];
     this.formRef.current!.setFieldsValue({
-      metricFunction: metricTypeList[0].value,
+      metricFunction: metric?.metricType[0].value,
+      space: ''
     });
   };
 
   handlePanelConfigUpdate = (values: any) => {
-    const { period, metric, metricFunction, baseLine } = values;
-    const { editType, panelConfig, editIndex } = this.props;
-    const metricTypeList = SERVICE_SUPPORT_METRICS[editType].filter(
+    const { period, space, metric, metricFunction, baseLine } = values;
+    const { editType, panelConfig, serviceMetric, editIndex } = this.props;
+    const metricTypeList = serviceMetric[`${editType}d`].filter(
       item => item.metric === metric,
     )[0].metricType;
     const metricType = metricTypeList.filter(
@@ -52,6 +53,7 @@ class ServiceCardEdit extends React.Component<IProps> {
       metricFunction,
       metricType,
       baseLine,
+      space,
     };
     this.props.onPanelConfigUpdate(_config);
     localStorage.setItem('panelConfig', JSON.stringify(_config));
@@ -59,7 +61,7 @@ class ServiceCardEdit extends React.Component<IProps> {
   };
 
   render() {
-    const { editIndex, editType, panelConfig, onClose } = this.props;
+    const { editIndex, editType, serviceMetric, panelConfig, onClose } = this.props;
     const editItem = panelConfig[editType][editIndex];
     return (
       <div className="service-card-edit">
@@ -77,35 +79,64 @@ class ServiceCardEdit extends React.Component<IProps> {
               ))}
             </DashboardSelect>
           </Form.Item>
-          <MetricPopover list={SERVICE_SUPPORT_METRICS[editType]} />
+          <MetricPopover list={serviceMetric[`${editType}d`]} />
           <Form.Item label={intl.get('service.metric')} name="metric">
             <DashboardSelect onChange={this.handleUpdateMetricType}>
-              {SERVICE_SUPPORT_METRICS[editType].map(metric => (
+              {serviceMetric[`${editType}d`].map(metric => (
                 <Option key={metric.metric} value={metric.metric}>
                   {metric.metric}
                 </Option>
               ))}
             </DashboardSelect>
           </Form.Item>
-
           <Form.Item
-            noStyle
+            noStyle={true}
             shouldUpdate={(prevValues, currentValues) =>
               prevValues.metric !== currentValues.metric
             }
           >
             {({ getFieldValue }) => {
               const metric = getFieldValue('metric');
-              const typeList = SERVICE_SUPPORT_METRICS[editType].filter(
+              const isSpaceMetric = serviceMetric[`${editType}d`].filter(
                 item => item.metric === metric,
-              )[0].metricType;
+              )[0]?.isSpaceMetric;
+              return getFieldValue('metric') && isSpaceMetric ? (
+                <Form.Item
+                  label={intl.get('service.spaces')}
+                  name="space"
+                >
+                  <DashboardSelect>
+                    <Option key="all" value="">
+                      {intl.get('common.all')} 
+                    </Option>
+                    {serviceMetric.spaces?.map(space => (
+                      <Option key={space} value={space}>
+                        {space}
+                      </Option>
+                    ))}
+                  </DashboardSelect>
+                </Form.Item>
+              ) : null;
+            }}
+          </Form.Item>
+          <Form.Item
+            noStyle={true}
+            shouldUpdate={(prevValues, currentValues) =>
+              prevValues.metric !== currentValues.metric
+            }
+          >
+            {({ getFieldValue }) => {
+              const metric = getFieldValue('metric');
+              const typeList = serviceMetric[`${editType}d`].filter(
+                item => item.metric === metric,
+              )[0]?.metricType;
               return getFieldValue('metric') ? (
                 <Form.Item
                   label={intl.get('service.metricParams')}
                   name="metricFunction"
                 >
                   <DashboardSelect>
-                    {typeList.map(params => (
+                    {typeList?.map(params => (
                       <Option key={params.key} value={params.value}>
                         {params.key}
                       </Option>

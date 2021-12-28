@@ -1,10 +1,5 @@
 import { Dropdown, Layout, Menu } from 'antd';
 import React from 'react';
-import nebulaLogo from '@/static/images/nebula_logo.png';
-import Icon from '@/components/Icon';
-import LanguageSelect from '@/components/LanguageSelect';
-import { trackPageView } from '@/utils/stat';
-import { IDispatch, IRootState } from '@/store';
 import { connect } from 'react-redux';
 import intl from 'react-intl-universal';
 import cookies from 'js-cookie';
@@ -17,8 +12,14 @@ import {
   withRouter,
 } from 'react-router-dom';
 import { MenuList, RoutesList } from './routes';
-import './index.less';
 import Header from './Header';
+import nebulaLogo from '@/static/images/nebula_logo.png';
+import Icon from '@/components/Icon';
+import LanguageSelect from '@/components/LanguageSelect';
+import { METRIC_PROCESS_TYPES } from '@/utils/metric';
+import { trackPageView } from '@/utils/stat';
+import { IDispatch, IRootState } from '@/store';
+import './index.less';
 import { LanguageContext } from '@/context';
 const { Sider, Content } = Layout;
 const { SubMenu } = Menu;
@@ -28,11 +29,14 @@ const mapDispatch: any = (dispatch: IDispatch) => {
     asyncLogout: dispatch.app.asyncLogout,
     asyncGetAppInfo: dispatch.app.asyncGetAppInfo,
     asyncGetCustomConfig: dispatch.app.asyncGetCustomConfig,
+    asyncGetServiceMetric: dispatch.serviceMetric.asyncGetServiceMetric,
+    asyncGetSpaces: dispatch.nebula.asyncGetSpaces
   };
 };
 
 const mapState = (state: IRootState) => ({
   appVersion: state.app.version,
+  nebluaVersion: state.nebula.version,
 });
 
 interface IProps extends ReturnType<typeof mapState>,
@@ -52,11 +56,21 @@ class MainPage extends React.Component<IProps, IState> {
   }
 
   componentDidMount() {
-    const { appVersion } = this.props;
+    const { appVersion, nebluaVersion } = this.props;
     this.props.asyncGetCustomConfig();
     if(appVersion === '') {
       this.props.asyncGetAppInfo();
     }
+    if(nebluaVersion){
+      this.props.asyncGetSpaces();
+      METRIC_PROCESS_TYPES.map(item =>
+        this.props.asyncGetServiceMetric({
+          componentType: item,
+          version: nebluaVersion,
+        }),
+      );
+    }
+    
   }
 
   renderMenu = (list) => {
@@ -124,15 +138,15 @@ class MainPage extends React.Component<IProps, IState> {
               {!collapsed && <span className="text-logout">{intl.get('common.logout')}</span>}
             </div>
             <LanguageContext.Consumer>
-                {({ currentLocale, toggleLanguage }) => (
-                  <LanguageSelect
-                    mode="dark" 
-                    showIcon={!collapsed}
-                    currentLocale={currentLocale}
-                    toggleLanguage={toggleLanguage}
-                  />
-                )}
-              </LanguageContext.Consumer>
+              {({ currentLocale, toggleLanguage }) => (
+                <LanguageSelect
+                  mode="dark" 
+                  showIcon={!collapsed}
+                  currentLocale={currentLocale}
+                  toggleLanguage={toggleLanguage}
+                />
+              )}
+            </LanguageContext.Consumer>
             <div className="row">
               {!collapsed && <span className="version">v {appVersion}</span>}
               {!collapsed && 

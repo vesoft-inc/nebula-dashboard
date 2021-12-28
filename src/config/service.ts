@@ -4,6 +4,10 @@ const execNGQL = post('/api-nebula/db/exec');
 
 const connectDB = post('/api-nebula/db/connect');
 
+const getSpaces = get('/api-metrics/label/space/values');
+
+const getMetrics = get('/api-metrics/label/__name__/values');
+
 const execPromQL = get('/api-metrics/query');
 
 const execPromQLByRange = get('/api-metrics/query_range');
@@ -15,6 +19,8 @@ const getAnnotationLineConfig = get('/api/config/annotation_line');
 export default {
   execNGQL,
   connectDB,
+  getSpaces,
+  getMetrics,
   getAppInfo,
   execPromQL,
   execPromQLByRange,

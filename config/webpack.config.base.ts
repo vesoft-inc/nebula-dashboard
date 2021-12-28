@@ -1,5 +1,8 @@
 import path from 'path';
 import { Configuration } from 'webpack';
+import CopyPlugin from 'copy-webpack-plugin';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+// import pkg from '../package.json';
 
 const baseConifg: Configuration = {
   module: {
@@ -68,7 +71,28 @@ const baseConifg: Configuration = {
       "@": path.join(__dirname, "../src"),
     }
   },
-  plugins: []
+  plugins: [
+    // new webpack.DefinePlugin({
+    //   'process.env': {
+    //     DASHBOARD_VERSION: JSON.stringify(pkg.version),
+    //   },
+    // }),
+    new CopyPlugin({
+      patterns: [
+        {
+          from: path.join(__dirname, '../static/iconfont/iconfont.js'),
+        },
+      ],
+    }),
+    new HtmlWebpackPlugin({
+      template: path.join(__dirname, '../src/index.html'),
+      title: 'Nebula Dashboard',
+      favicon: path.join(__dirname, '../favicon.ico'),
+      templateParameters: {
+        DASHBOARD_VERSION: process.env.DASHBOARD_VERSION,
+      },
+    }),
+  ]
 };
 
 export {

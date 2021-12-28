@@ -103,7 +103,7 @@ export const configDetailChart = (chartInstance: Chart, options: {
       chartInstance.axis('value', {
         label: {
           formatter: bytes => {
-            const { value, unit } = getProperByteDesc(bytes);
+            const { value, unit } = getProperByteDesc(bytes, 1024);
             let _unit = unit;
             if (options.valueType === VALUE_TYPE.byteSecond) {
               _unit = unit + '/s';
@@ -116,11 +116,37 @@ export const configDetailChart = (chartInstance: Chart, options: {
       chartInstance.tooltip({
         customItems: items => {
           return items.map(item => {
-            const { value, unit } = getProperByteDesc(item.value);
+            const { value, unit } = getProperByteDesc(item.value, 1024);
             let _unit = unit;
             if (options.valueType === VALUE_TYPE.byteSecond) {
               _unit = unit + '/s';
             }
+            return {
+              ...item,
+              value: value + ' ' + _unit,
+            };
+          });
+        },
+        showCrosshairs: true,
+        shared: true,
+        title: tooltipTitle
+      });
+      break;
+    case VALUE_TYPE.byteSecondNet:
+      chartInstance.axis('value', {
+        label: {
+          formatter: bytes => {
+            const { value, unit } = getProperByteDesc(bytes, 1000);
+            const _unit = unit + '/s';
+            return value + ' ' + _unit;
+          },
+        }
+      });
+      chartInstance.tooltip({
+        customItems: items => {
+          return items.map(item => {
+            const { value, unit } = getProperByteDesc(item.value, 1000);
+            const _unit = unit + '/s';
             return {
               ...item,
               value: value + ' ' + _unit,

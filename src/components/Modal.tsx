@@ -45,7 +45,7 @@ const Modal: React.FC<IProps> = (props: IProps) => {
     <>
       {visible && (
         <AntModal
-          visible
+          visible={true}
           onCancel={() => {
             hide();
           }}

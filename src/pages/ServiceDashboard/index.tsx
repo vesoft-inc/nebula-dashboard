@@ -1,11 +1,11 @@
 import React from 'react';
-import { IDispatch, IRootState } from '@/store';
 import { connect } from 'react-redux';
 import intl from 'react-intl-universal';
+import ServiceOverview from './ServiceOverview';
+import { IDispatch, IRootState } from '@/store';
 import Modal from '@/components/Modal';
 import ServiceCardEdit from '@/components/Service/ServiceCardEdit';
 import { METRIC_SERVICE_TYPES } from '@/utils/metric';
-import ServiceOverview from './ServiceOverview';
 import './index.less';
 
 const mapDispatch = (dispatch: IDispatch) => {
@@ -21,6 +21,7 @@ const mapState = (state: IRootState) => {
   return {
     panelConfig: state.service.panelConfig,
     aliasConfig: state.app.aliasConfig,
+    serviceMetric: state.serviceMetric
   };
 };
 
@@ -61,6 +62,7 @@ class ServiceDashboard extends React.Component<IProps, IState> {
     const { editPanelType, editPanelIndex } = this.state;
     const { 
       panelConfig,
+      serviceMetric,
       updatePanelConfig,
       asyncGetStatus,
     } = this.props;
@@ -83,6 +85,7 @@ class ServiceDashboard extends React.Component<IProps, IState> {
           footer={null}
         >
           <ServiceCardEdit 
+            serviceMetric={serviceMetric}
             editType={editPanelType}
             editIndex={editPanelIndex}
             panelConfig={panelConfig}

@@ -1,12 +1,12 @@
 import { Spin, Table } from 'antd';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { IDispatch, IRootState } from '@/store';
 import { Chart } from '@antv/g2';
-import { renderPieChartTpl } from '@/utils/chart/chart';
 import { connect } from 'react-redux';
-import PieChart from '@/components/Charts/PieChart';
 import { last, round } from 'lodash';
+import { IDispatch, IRootState } from '@/store';
+import { renderPieChartTpl } from '@/utils/chart/chart';
+import PieChart from '@/components/Charts/PieChart';
 import './index.less';
 
 const mapDispatch: any = (dispatch: IDispatch) => {

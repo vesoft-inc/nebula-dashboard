@@ -1,0 +1,34 @@
+.popover-metric {
+	width: 100%;
+	.metric-content {
+		width: 100%;
+		display: flex;
+		justify-content: flex-start;
+
+		> .metric {
+			text-align: right;
+		}
+	}
+
+	> .more {
+		display: block;
+		text-align: right;
+		font-size: 14px;
+	}
+	:global .ant-form-item{
+		margin-bottom: 0;
+		.ant-form-item-label{
+			label{
+				display: inline-block;
+				overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+				height: 21px;
+			}
+		}
+	}
+	:global .ant-form-item-control-input{
+		min-height: 21px;
+		text-align: left;
+	}
+}

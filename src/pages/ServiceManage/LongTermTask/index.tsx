@@ -2,19 +2,31 @@ import _ from 'lodash';
 import React from 'react';
 import { Table } from 'antd';
 import { connect } from 'react-redux';
-import { IDispatch, IRootState } from '@/store';
 import intl from 'react-intl-universal';
-import { TitleInstruction } from '@/components/Instruction';
+import { compare } from 'compare-versions';
 import dayjs from 'dayjs';
+import { IDispatch, IRootState } from '@/store';
+import { TitleInstruction } from '@/components/Instruction';
+import { DashboardSelect } from '@/components/DashboardSelect';
+import { getVersion } from '@/utils/dashboard';
 import './index.less';
 
 const mapState = (state: IRootState) => ({
   loading: state.loading.effects.nebula.asyncGetJobs,
   jobs: state.nebula.jobs,
+  version: state.nebula.version,
+  spaces: state.nebula.spaces,
+  currentSpace: state.nebula.currentSpace,
 });
 
 const mapDispatch = (dispatch: IDispatch) => ({
   asyncGetJobs: dispatch.nebula.asyncGetJobs,
+  asyncGetSpaces: dispatch.nebula.asyncGetSpaces,
+  asyncUseSpaces: dispatch.nebula.asyncUseSpaces,
+  updateSpace: space =>
+    dispatch.nebula.update({
+      currentSpace: space,
+    }),
 });
 interface IProps extends ReturnType<typeof mapState>,
   ReturnType<typeof mapDispatch>{
@@ -23,15 +35,36 @@ interface IProps extends ReturnType<typeof mapState>,
 class LongTermTask extends React.Component<IProps> {
 
   componentDidMount(){
-    this.props.asyncGetJobs();
+    this.init();
   }
+
+  init = async () => {
+    const { version, currentSpace } = this.props;
+    // HAKC: Compatible processing version 2.6.0
+    if (compare(getVersion(version), '2.6.0', '>=')) {
+      await this.props.asyncGetSpaces();
+      if (currentSpace) {
+        this.props.asyncGetJobs();
+      }
+    } else {
+      this.props.asyncGetJobs();
+    }
+  };
 
   renderTime= time => {  
     return <span>{dayjs(time).format('YYYY-MM-DD HH:mm:ss')}</span>;
   }
 
+  handleSpaceChange = async space => {
+    const { code } = await this.props.asyncUseSpaces(space);
+    if (code === 0) {
+      await this.props.updateSpace(space);
+      await this.props.asyncGetJobs();
+    }
+  };
+
   render() {
-    const { jobs, loading } = this.props;
+    const { jobs, version, currentSpace, spaces, loading } = this.props;
     const columns = [
       {
         title: <TitleInstruction title="Job ID" description={intl.get('description.jobId')} />,
@@ -58,7 +91,28 @@ class LongTermTask extends React.Component<IProps> {
       },
     ];
     return (
-      <div className="service-info" >
+      <div className="service-info long-task" >
+        {version && compare(getVersion(version), '2.6.0', '>=') && (
+          <div className="common-header">
+            <div className="select-space">
+              <span>{intl.get('service.spaces')}:</span>
+              <DashboardSelect
+                placeholder={intl.get('service.chooseSpace')}
+                value={currentSpace || undefined}
+                onChange={this.handleSpaceChange}
+                style={{
+                  width: 220,
+                }}
+              >
+                {spaces.map((space: any) => (
+                  <Option value={space.Name} key={space.Name}>
+                    {space.Name}
+                  </Option>
+                ))}s
+              </DashboardSelect>
+            </div>
+          </div>
+        )}
         <Table
           loading={!!loading}
           rowKey={(record: any) => record['Job Id']}
