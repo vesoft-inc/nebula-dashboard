@@ -2,7 +2,6 @@ import React from 'react';
 import { Button, Form, InputNumber } from 'antd';
 import { FormInstance } from 'antd/lib/form';
 import { TIME_INTERVAL_OPTIONS } from '@/utils/dashboard';
-import { SERVICE_SUPPORT_METRICS } from '@/utils/promQL';
 import { cloneDeep } from 'lodash';
 import intl from 'react-intl-universal';
 import { DashboardSelect, Option } from '@/components/DashboardSelect';
@@ -14,6 +13,7 @@ import './index.less';
 interface IProps {
   editType: string;
   editIndex: number;
+  serviceMetric: any[];
   panelConfig: {
     graph: IServicePanelConfig[];
     storage: IServicePanelConfig[];
@@ -27,8 +27,8 @@ class ServiceCardEdit extends React.Component<IProps> {
   formRef = React.createRef<FormInstance>();
 
   handleUpdateMetricType = (value: string) => {
-    const { editType } = this.props;
-    const metricTypeList = SERVICE_SUPPORT_METRICS[editType].filter(
+    const { serviceMetric, editType } = this.props;
+    const metricTypeList = serviceMetric[`${editType}d`].filter(
       item => item.metric === value,
     )[0].metricType;
     this.formRef.current!.setFieldsValue({
@@ -38,8 +38,8 @@ class ServiceCardEdit extends React.Component<IProps> {
 
   handlePanelConfigUpdate = (values: any) => {
     const { period, metric, metricFunction, baseLine } = values;
-    const { editType, panelConfig, editIndex } = this.props;
-    const metricTypeList = SERVICE_SUPPORT_METRICS[editType].filter(
+    const { editType, panelConfig, serviceMetric, editIndex } = this.props;
+    const metricTypeList = serviceMetric[`${editType}d`].filter(
       item => item.metric === metric,
     )[0].metricType;
     const metricType = metricTypeList.filter(
@@ -59,8 +59,9 @@ class ServiceCardEdit extends React.Component<IProps> {
   };
 
   render() {
-    const { editIndex, editType, panelConfig, onClose } = this.props;
+    const { editIndex, editType, serviceMetric, panelConfig, onClose } = this.props;
     const editItem = panelConfig[editType][editIndex];
+    console.log(serviceMetric[`${editType}d`],22222)
     return (
       <div className="service-card-edit">
         <Form
@@ -77,10 +78,10 @@ class ServiceCardEdit extends React.Component<IProps> {
               ))}
             </DashboardSelect>
           </Form.Item>
-          <MetricPopover list={SERVICE_SUPPORT_METRICS[editType]} />
+          <MetricPopover list={serviceMetric[`${editType}d`]} />
           <Form.Item label={intl.get('service.metric')} name="metric">
             <DashboardSelect onChange={this.handleUpdateMetricType}>
-              {SERVICE_SUPPORT_METRICS[editType].map(metric => (
+              {serviceMetric[`${editType}d`].map(metric => (
                 <Option key={metric.metric} value={metric.metric}>
                   {metric.metric}
                 </Option>
@@ -96,16 +97,16 @@ class ServiceCardEdit extends React.Component<IProps> {
           >
             {({ getFieldValue }) => {
               const metric = getFieldValue('metric');
-              const typeList = SERVICE_SUPPORT_METRICS[editType].filter(
+              const typeList = serviceMetric[`${editType}d`].filter(
                 item => item.metric === metric,
-              )[0].metricType;
+              )[0]?.metricType;
               return getFieldValue('metric') ? (
                 <Form.Item
                   label={intl.get('service.metricParams')}
                   name="metricFunction"
                 >
                   <DashboardSelect>
-                    {typeList.map(params => (
+                    {typeList?.map(params => (
                       <Option key={params.key} value={params.value}>
                         {params.key}
                       </Option>

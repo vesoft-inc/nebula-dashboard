@@ -26,6 +26,7 @@
     "@rematch/loading": "^1.2.1",
     "antd": "^4.16.13",
     "axios": "^0.21.4",
+    "compare-versions": "^4.1.2",
     "csv": "^5.5.3",
     "express": "^4.17.1",
     "express-http-proxy": "^1.6.2",
