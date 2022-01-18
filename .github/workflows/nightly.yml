@@ -12,12 +12,12 @@ jobs:
         os:
           - centos7
     container:
-      image: vesoft/nebula-dev:${{ matrix.os }}
+      image: reg.vesoft-inc.com/ci/cloud-dashboard-dev:alpine
     steps:
       - uses: actions/checkout@v2
         with:
           ref: 'master'
-          path: source/nebula-graph-dashboard
+          path: source/nebula-dashboard
       - uses: actions/checkout@v2
         with:
           repository: vesoft-inc/nebula-http-gateway
@@ -31,8 +31,8 @@ jobs:
       - name: ls
         run: ls -a
       - name: Package
-        run: bash ./source/nebula-graph-dashboard/scripts/package.sh ${{ secrets.GA_ID }}
+        run: bash ./source/nebula-dashboard/scripts/package.sh ${{ secrets.GA_ID }}
       - name: Upload to OSS
-        run: ls -a & ossutil64 -e ${{ secrets.OSS_ENDPOINT }} -i ${{ secrets.OSS_ID }} -k ${{ secrets.OSS_SECRET }} -f cp ./  ${{ secrets.OSS_TEST_URL }} --include "nebula-graph-dashboard-*.tar.gz" --only-current-dir -r
+        run: ls -a & ossutil64 -e ${{ secrets.OSS_ENDPOINT }} -i ${{ secrets.OSS_ID }} -k ${{ secrets.OSS_SECRET }} -f cp ./  ${{ secrets.OSS_TEST_URL }} --include "nebula-dashboard-*.tar.gz" --only-current-dir -r
 
     
