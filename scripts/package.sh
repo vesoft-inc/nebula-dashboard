@@ -16,18 +16,18 @@ cd $GATEWAY
 make
 TARGET_GATEWAY=$TARGET/$VENDOR_DIR/nebula-http-gateway
 mkdir -p $TARGET_GATEWAY/conf
-cp -r $DASHBOARD/vendors/gateway.conf $TARGET_GATEWAY/conf/app.conf
+mv $DASHBOARD/vendors/gateway.conf $TARGET_GATEWAY/conf/app.conf
 mv $GATEWAY/nebula-httpd $TARGET_GATEWAY/
 
 ### nebula-stat-exporter build ###
 chmod 755 $DASHBOARD/vendors/nebula-stats-exporter/nebula-stats-exporter
-cp -r  $DASHBOARD/vendors/nebula-stats-exporter/ $TARGET/$VENDOR_DIR
+mv  $DASHBOARD/vendors/nebula-stats-exporter/ $TARGET/$VENDOR_DIR
 
 ### node-exporter
-cp -r  $DASHBOARD/vendors/node-exporter/ $TARGET/$VENDOR_DIR
+mv  $DASHBOARD/vendors/node-exporter/ $TARGET/$VENDOR_DIR
 
 # prometheus
-cp -r $DASHBOARD/vendors/prometheus/ $TARGET/$VENDOR_DIR
+mv $DASHBOARD/vendors/prometheus/ $TARGET/$VENDOR_DIR
 
 ### Nebula Graph Dashboard relative ###
 cd $DASHBOARD
