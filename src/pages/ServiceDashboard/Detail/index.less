@@ -1,0 +1,104 @@
+.service-metrics {
+	background-color: #fff;
+	height: 100%;
+	overflow: auto;
+	.common-header {
+		span {
+			text-transform: capitalize;
+		}
+	}
+
+	.container {
+		padding: 20px 30px 0;
+		height: calc(100% - 75px);
+		display: flex;
+		position: relative;
+		flex-direction: column;
+
+		.metrics-params-form {
+			display: flex;
+			flex-direction: column;
+			>.ant-row:first-child {
+				justify-content: space-between;
+			}
+
+			.row-left {
+				display: flex;
+
+				.ant-radio-group {
+					> label {
+						height: 34px;
+						line-height: 34px;
+						font-size: 12px;
+						text-align: center;
+						padding: 0 10px;
+					}
+				}
+
+				.ant-picker-range {
+					height: 34px;
+					margin-left: 16px;
+				}
+			}
+
+			.service-status{
+				margin-left: 10px;
+			}
+
+			.status-panel {
+				padding-left: 10px;
+			}
+
+			.metric-filter {
+				width: calc(100% - 90px);
+				flex: 1;
+				display: flex;
+				.ant-form-item:not(:first-child) {
+					padding-left: 15px;
+				}
+				.metric-params{
+					.ant-form-item-control{
+						.ant-select{
+							width: 85px;
+							min-width: unset;
+						}
+					}
+				}
+
+				.metric-list{
+					.ant-form-item-control{
+						min-width: 180px;
+					}
+				}
+			}
+
+			.metric-info-icon {
+				margin: 6px 10px 0 10px;
+			}
+		}
+
+		.nebula-chart {
+			flex: 1;
+
+			.ant-spin-container {
+				height: 100%;
+
+				.nebula-chart-line {
+					height: 100%;
+				}
+			}
+		}
+
+		.btn-icon-with-desc {
+			position: absolute;
+			right: 30px;
+			top: 85px;
+		}
+	}
+}
+
+.service-modal {
+	.ant-modal-header {
+		visibility: hidden;
+	}
+}
