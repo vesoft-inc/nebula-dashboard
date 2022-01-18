@@ -12,7 +12,7 @@ jobs:
         os:
           - centos7
     container:
-      image: vesoft/nebula-dev:${{ matrix.os }}
+      image: reg.vesoft-inc.com/ci/cloud-dashboard-dev:alpine
     steps:
       - uses: actions/checkout@v2
         with:
