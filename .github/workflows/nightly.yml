@@ -22,7 +22,6 @@ jobs:
         with:
           repository: vesoft-inc/nebula-http-gateway
           path: source/nebula-http-gateway
-      ##ToDO: add nebula-stats-exporter、node-exporter and prometheus 
       - uses: actions/setup-go@v2
         with:
           go-version: '^1.13.1'
