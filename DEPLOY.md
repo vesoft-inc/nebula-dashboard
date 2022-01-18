@@ -75,10 +75,19 @@ Attention: the file under these packages is compiled under Linux environment, ca
       port: 9669, // change to running nebula graph port
     },
   ```
+
+- Modify proxy setting: `./vendors/config-release.yaml`
+  ```
+  port: 7003
+  proxy:
+    gateway:
+      target: "127.0.0.1:8090"  // change gateway service proxy
+    prometheus:
+      target: "127.0.0.1:9091"  // change prometheus service proxy
+  ```
 - Start:
   ```bash
-  $ cd nebula-graph-dashboard
-  $ npm run start
+  $ ./dashboard &
   ```
 - service address: http://127.0.0.1:7003
 
@@ -94,8 +103,7 @@ $ kill $(lsof -t -i :9200) # stop nebula-stats-exporter  service
 $ kill $(lsof -t -i :9100) # stop node-exporter service
 $ kill $(lsof -t -i :9090) # stop prometheus service
 $ kill $(lsof -t -i :8090) # stop nebula-http-gateway
-$ cd nebula-graph-dashboard
-$ npm run stop # stop nebula-graph-dashboard
+$ kill $(lsof -t -i :7003) # stop nebula-graph-dashboard
 ```
 
 
