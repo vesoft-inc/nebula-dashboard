@@ -2,6 +2,7 @@ const express = require('express');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const history = require('connect-history-api-fallback');
 const fs = require('fs');
+const path = require('path');
 const pkg = require('../package.json');
 const yaml = require('js-yaml');
 let config = {};
