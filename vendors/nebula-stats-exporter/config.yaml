@@ -1,0 +1,27 @@
+clusters:
+- name: "default"
+  instances:
+  - name: metad0 
+    endpointIP: 192.168.8.143
+    endpointPort: 19559
+    componentType: metad
+  - name: graphd0
+    endpointIP: 192.168.8.143
+    endpointPort: 19669
+    componentType: graphd
+  - name: storaged0
+    endpointIP: 192.168.8.143
+    endpointPort: 19779
+    componentType: storaged
+  - name: metad1
+    endpointIP: 192.168.8.167
+    endpointPort: 19559
+    componentType: metad
+  - name: graphd1
+    endpointIP: 192.168.8.167
+    endpointPort: 19669
+    componentType: graphd
+  - name: storaged2
+    endpointIP: 192.168.8.167
+    endpointPort: 19779
+    componentType: storaged
