@@ -29,7 +29,7 @@ Attention: the file under these packages is compiled under Linux environment, ca
 - Start：
   ```bash
   ## node-exporter should run in 
-  $ cd node-exporter
+  $ cd /nebula-dashboard/vendors/node-exporter
   $ nohup ./node-exporter --web.listen-address=":9100" &
   ```
   Service address: http://127.0.0.1:9100
@@ -40,7 +40,7 @@ Attention: the file under these packages is compiled under Linux environment, ca
 - dependency: modify ：`config.yml` according to nebula graph service address
   Start：
   ```bash
-  $ cd nebula-stats-exporter
+  $ cd /nebula-dashboard/vendors/nebula-stats-exporter
   $ nohup  ./nebula-stats-exporter --listen-address=":9200" --bare-metal --bare-metal-config=./config.yaml &
   ```
   Service address: http://127.0.0.1:9200
@@ -51,7 +51,7 @@ Attention: the file under these packages is compiled under Linux environment, ca
 - dependency：modify ：`./vendors/prometheus/prometheus.yaml` according to node-exporter and nebula-stats-exporter service address
 - Start：
   ```bash
-  $ cd prometheus
+  $ cd /nebula-dashboard/vendors/prometheus
   $ nohup ./prometheus --config.file=./prometheus.yaml &
   ```
   Service address: http://127.0.0.1:9090
@@ -61,7 +61,7 @@ Attention: the file under these packages is compiled under Linux environment, ca
 - location：in the same machine with nebula-graph-dashboard
 - Start：
   ```bash
-  $ cd nebula-http-gateway
+  $ cd /nebula-dashboard/vendors/nebula-http-gateway
   $ nohup ./nebula-httpd &
   ```
 - Service address: http://127.0.0.1:8090
