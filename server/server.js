@@ -6,7 +6,7 @@ const pkg = require('../package.json');
 const yaml = require('js-yaml');
 let config = {};
 try {
-  let fileContents = fs.readFileSync('config.yaml', 'utf8');
+  let fileContents = fs.readFileSync(path.join(__dirname, './config.yaml'), 'utf8');
   config = yaml.load(fileContents);
 } catch (e) {
   console.log(e);
@@ -56,7 +56,7 @@ app.get('/api/app', (_req, res) => {
 });
 
 app.get('/api/config/custom', async (_req, res) => {
-  if (data) {
+  if (nebulaServer) {
     res.send({
       code: 0,
       data: {

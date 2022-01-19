@@ -5,6 +5,6 @@ proxy:
   prometheus:
     target: "192.168.8.157:9090"
 nebulaServer: 
-  ip: "192.168.8.145",
+  ip: "192.168.8.145"
   port: 9669
   

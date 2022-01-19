@@ -4,13 +4,23 @@ import webpackDevMiddleware from 'webpack-dev-middleware';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import history from 'connect-history-api-fallback';
 import fs from 'fs';
-import path from 'path';
-
+import path from "path";
+const yaml = require('js-yaml');
 import config from '../config/webpack.config.dev';
 import pkg from '../package.json';
 
+let _config = {} as any;
+try {
+  let fileContents = fs.readFileSync(path.join(__dirname, './config.yaml'), 'utf8');
+  _config = yaml.load(fileContents);
+} catch (e) {
+  console.log(e);
+  throw new Error();
+}
+
 const app = express();
 const compiler = webpack(config);
+const { nebulaServer } = _config;
 
 app.use(history());
 
@@ -44,11 +54,15 @@ app.get('/api/app', (_req, res) => {
 });
 
 app.get('/api/config/custom', async (_req, res) => {
-  const data = await fs.readFileSync(path.join(__dirname, '../static/custom.json'), 'utf8');
-  if (data) {
+  if (nebulaServer) {
     res.send({
       code: 0,
-      data: JSON.parse(data)
+      data: {
+        connection: nebulaServer,
+        alias: {
+            "ip:port": "instance1"
+        },
+      }
     });
   } else {
     res.send({
