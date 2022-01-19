@@ -76,14 +76,14 @@ Attention: the file under these packages is compiled under Linux environment, ca
     },
   ```
 
-- Modify proxy setting: `./vendors/config-release.yaml`
+- Modify proxy setting: `./config.yaml`
   ```
   port: 7003
   proxy:
     gateway:
       target: "127.0.0.1:8090"  // change gateway service proxy
     prometheus:
-      target: "127.0.0.1:9091"  // change prometheus service proxy
+      target: "127.0.0.1:9090"  // change prometheus service proxy
   ```
 - Start:
   ```bash
