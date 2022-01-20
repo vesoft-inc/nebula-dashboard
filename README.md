@@ -86,14 +86,7 @@ If you plan to set up dashboard in production, refer to：[production guide](DEP
       ```
 
 5. Start `nebula-graph-dashboard`
-    - Modify nebula-graph connection setting: `./static/custom.json`
-      ```
-      connection: {
-        ip: '127.0.0.1', // change to nebula graph service ip
-        port: 9669, // change to nebula graph service port
-      },
-      ```
-    - Modify proxy setting: `./vendors/config-release.yaml`
+    - Modify proxy and connection setting: `./vendors/config-release.json`
       ```
       port: 7003
       proxy:
@@ -101,6 +94,9 @@ If you plan to set up dashboard in production, refer to：[production guide](DEP
           target: "127.0.0.1:8090"  // change gateway service proxy
         prometheus:
           target: "127.0.0.1:9091"  // change prometheus service proxy
+        nebulaServer:
+          "ip": "192.168.8.143"  // change to nebula graph service ip
+          "port": 9669 // change to nebula graph service port
       ```
 
     - Start
@@ -114,7 +110,7 @@ If you plan to set up dashboard in production, refer to：[production guide](DEP
       $ npm install
       $ npm run build
       $ npm run pkg
-      $ cp -r vendors/config-release.yaml ./config.yaml
+      $ cp -r vendors/config-release.json ./config.json
       $ ./dashboard &
       ```
 
