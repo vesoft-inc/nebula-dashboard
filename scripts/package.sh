@@ -40,7 +40,7 @@ cp -r public $TARGET/
 cp $DASHBOARD/DEPLOY.md $TARGET/
 npm run pkg
 mv dashboard $TARGET/
-cp -r vendors/config-release.yaml $TARGET/config.yaml
+cp -r vendors/config-release.json $TARGET/config.json
 
 ### tar
 cd $DIR
