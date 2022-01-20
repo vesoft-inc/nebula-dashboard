@@ -1,0 +1,15 @@
+{
+  "port": 7001,
+  "proxy":{
+    "gateway":{
+      "target": "http://192.168.8.240:8080"
+    },
+    "prometheus":{
+      "target": "192.168.8.157:9090"
+    }
+  },
+  "nebulaServer": {
+    "ip": "192.168.8.157",
+    "port": 9669
+  }
+}

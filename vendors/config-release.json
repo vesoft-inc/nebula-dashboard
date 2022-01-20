@@ -1,0 +1,16 @@
+{
+  "port": 7003,
+  "proxy":{
+    "gateway":{
+      "target": "http://localhost:8080"
+    },
+    "prometheus":{
+      "target": "192.168.8.157:9090"
+    }
+  },
+  "nebulaServer": {
+    "ip": "192.168.8.143",
+    "port": 9669
+  }
+}
+

@@ -1,20 +1,16 @@
 const express = require('express');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const history = require('connect-history-api-fallback');
-const fs = require('fs');
-const path = require('path');
 const pkg = require('../package.json');
-const yaml = require('js-yaml');
-let config = {};
-try {
-  let fileContents = fs.readFileSync(path.join(__dirname, './config.yaml'), 'utf8');
-  config = yaml.load(fileContents);
-} catch (e) {
-  console.log(e);
-  throw new Error(e);
-}
+const path = require('path');
 
-const { proxy,nebulaServer,  port = 7003 } = config;
+// change node config dir 
+process.env.NODE_CONFIG_DIR = path.resolve('') ;
+process.env.NODE_ENV= "config";
+const _config = require("config");
+const port = _config.get('port');
+const nebulaServer = _config.get('nebulaServer');
+const proxy = _config.get('proxy');
 
 if (!proxy) {
   throw new Error('no proxy found in config.yaml');

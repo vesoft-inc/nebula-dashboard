@@ -3,24 +3,25 @@ import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import history from 'connect-history-api-fallback';
-import fs from 'fs';
-import path from "path";
-const yaml = require('js-yaml');
 import config from '../config/webpack.config.dev';
 import pkg from '../package.json';
 
-let _config = {} as any;
-try {
-  let fileContents = fs.readFileSync(path.join(__dirname, './config.yaml'), 'utf8');
-  _config = yaml.load(fileContents);
-} catch (e) {
-  console.log(e);
-  throw new Error();
-}
+const path = require('path');
+// change node config dir 
+process.env.NODE_CONFIG_DIR = path.resolve('./server') ;
+process.env.NODE_ENV= "config";
+import _config from "config";
+_config
+const port = _config.get('port');
+const nebulaServer = _config.get('nebulaServer');
+const proxy = _config.get('proxy');
 
 const app = express();
 const compiler = webpack(config);
-const { nebulaServer } = _config;
+
+const getTargetUrl =(target)=> {
+  return target.startsWith('http') ? target : `http://${target}`
+}
 
 app.use(history());
 
@@ -32,7 +33,7 @@ app.use(
 );
 
 app.use('/api-metrics/*', createProxyMiddleware({
-  target: 'http://192.168.8.157:9090',
+  target: getTargetUrl(proxy.prometheus.target),
   pathRewrite: {
     '/api-metrics': '/api/v1',
   },
@@ -40,7 +41,7 @@ app.use('/api-metrics/*', createProxyMiddleware({
 }))
 
 app.use('/api-nebula/*', createProxyMiddleware({
-  target: 'http://192.168.8.240:8080',
+  target: getTargetUrl(proxy.gateway.target),
   pathRewrite: {
     '/api-nebula': '/api',
   },
@@ -72,6 +73,6 @@ app.get('/api/config/custom', async (_req, res) => {
   }
 });
 
-app.listen(7003, function () {
-  console.log('Example app listening on port 7003!\n');
+app.listen(port, function () {
+  console.log(`Example app listening on port ${port}!\n`);
 });

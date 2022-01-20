@@ -68,22 +68,18 @@ Attention: the file under these packages is compiled under Linux environment, ca
 
 5. nebula-graph-dashboard
 - packages: `nebula-graph-dashboard`
-- setting: `./static/custom.json`
-  ```javascript
-    connection: {
-      ip: '127.0.0.1', // change to running nebula graph address
-      port: 9669, // change to running nebula graph port
-    },
-  ```
 
-- Modify proxy setting: `./config.yaml`
+- Modify proxy and connection setting: `./config.json`
   ```
   port: 7003
   proxy:
     gateway:
       target: "127.0.0.1:8090"  // change gateway service proxy
     prometheus:
-      target: "127.0.0.1:9090"  // change prometheus service proxy
+      target: "127.0.0.1:9091"  // change prometheus service proxy
+    nebulaServer:
+      "ip": "192.168.8.143"  // change to nebula graph service ip
+      "port": 9669 // change to nebula graph service port
   ```
 - Start:
   ```bash
