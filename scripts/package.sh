@@ -7,9 +7,6 @@ DASHBOARD=$DIR/source/nebula-dashboard
 
 # build target dir
 TARGET=$DIR/nebula-dashboard
-[[ -d $DASHBOARD ]] && rm -rf $DASHBOARD
-[[ -d  $TARGET ]] && rm -rf $TARGET
-
 mkdir $TARGET
 
 ### nebula-http-gateway ###
