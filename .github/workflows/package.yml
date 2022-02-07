@@ -16,8 +16,8 @@ jobs:
     steps:
       - name: keep workspace empty
         run: |
-          [[ -d nebula-dashboard ]] && rm -rf nebula-dashboard
-          [[ -d source ]] && rm -rf source
+          if [[ -d source ]]; then rm -rf source; fi
+          if [[ -d nebula-dashboard ]]; then rm -rf nebula-dashboard; fi
       - uses: actions/checkout@v2
         with:
           path: source/nebula-dashboard
