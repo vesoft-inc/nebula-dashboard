@@ -14,6 +14,10 @@ jobs:
     container:
       image: vesoft/nebula-dev:${{ matrix.os }}
     steps:
+      - name: keep workspace empty
+        run: |
+          [[ -d nebula-dashboard ]] && rm -rf nebula-dashboard
+          [[ -d source ]] && rm -rf source
       - uses: actions/checkout@v2
         with:
           path: source/nebula-dashboard
