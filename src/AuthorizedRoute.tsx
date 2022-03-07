@@ -1,6 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Redirect, Route, RouteComponentProps, withRouter } from 'react-router-dom';
+import {
+  Redirect,
+  Route,
+  RouteComponentProps,
+  withRouter,
+} from 'react-router-dom';
 import cookies from 'js-cookie';
 
 import { IRootState } from '@/store';
@@ -25,10 +30,8 @@ const AuthorizedRoute = (props: IProps) => {
     ) : (
       <Route render={render} {...rest} />
     );
-  } else {
-    return <Redirect to="/login" {...rest} />;
   }
+  return <Redirect to="/login" {...rest} />;
 };
-
 
 export default connect(mapState, mapDispatch)(withRouter(AuthorizedRoute));

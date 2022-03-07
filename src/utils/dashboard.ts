@@ -5,7 +5,7 @@ import { VALUE_TYPE } from '@/utils/promQL';
 
 export const DETAIL_DEFAULT_RANGE = 60 * 60 * 24 * 1000;
 export const CARD_RANGE = 60 * 60 * 24 * 1000;
-export const CARD_POLLING_INTERVAL = 10000 * 1000; 
+export const CARD_POLLING_INTERVAL = 10000 * 1000;
 export const MAX_STEP_ALLOW = 11000;
 export const TIME_INTERVAL_OPTIONS = [5, 60, 600, 3600];
 
@@ -22,24 +22,35 @@ export const getProperStep = (start: number, end: number) => {
   const hours = Math.round((end - start) / (3600 * 1000));
   if (hours <= 1) {
     return 7;
-  } else if (hours <= 6) { // 6 hour
-    return 86;
-  } else if (hours <= 12) { // 12hour
-    return 172;
-  } else if (hours <= 24) { // 1 day
-    return 345;
-  } else if (hours <= 72) { // 3 days
-    return 691;
-  } else if (hours <= 168) { // 1 week
-    return 2419;
-  } else if (hours <= 336) { // 2 week
-    return 4838;
-  } else {
-    return Math.round((end - start) / MAX_STEP_ALLOW);
   }
+  if (hours <= 6) {
+    // 6 hour
+    return 86;
+  }
+  if (hours <= 12) {
+    // 12hour
+    return 172;
+  }
+  if (hours <= 24) {
+    // 1 day
+    return 345;
+  }
+  if (hours <= 72) {
+    // 3 days
+    return 691;
+  }
+  if (hours <= 168) {
+    // 1 week
+    return 2419;
+  }
+  if (hours <= 336) {
+    // 2 week
+    return 4838;
+  }
+  return Math.round((end - start) / MAX_STEP_ALLOW);
 };
 
-export const renderUnit = (type) => {
+export const renderUnit = type => {
   switch (type) {
     case VALUE_TYPE.byteSecond:
     case VALUE_TYPE.byteSecondNet:
@@ -61,10 +72,14 @@ export function getVersion(v: string) {
   return match ? match[0] : v;
 }
 
-export const getBaseLineByUnit = (config:{baseLine: number, unit: string, valueType : string}) => {
+export const getBaseLineByUnit = (config: {
+  baseLine: number;
+  unit: string;
+  valueType: string;
+}) => {
   const { baseLine, unit, valueType } = config;
   let conversion = 1024;
-  if(valueType === VALUE_TYPE.byteSecondNet){
+  if (valueType === VALUE_TYPE.byteSecondNet) {
     conversion = 1000;
   }
   switch (unit) {
@@ -88,14 +103,14 @@ export const getBaseLineByUnit = (config:{baseLine: number, unit: string, valueT
 export const getWhichColor = value => {
   if (value < THRESHOLDS.low) {
     return CARD_LOW_COLORS;
-  } else if (value < THRESHOLDS.medium) {
-    return CARD_MEDIUM_COLORS;
-  } else {
-    return CARD_HIGH_COLORS;
   }
+  if (value < THRESHOLDS.medium) {
+    return CARD_MEDIUM_COLORS;
+  }
+  return CARD_HIGH_COLORS;
 };
 
-export const getProperByteDesc = (bytes:any, conversion: number) => {
+export const getProperByteDesc = (bytes: any, conversion: number) => {
   const kb = conversion;
   const mb = conversion * conversion;
   const gb = mb * conversion;
@@ -131,13 +146,18 @@ export const getProperByteDesc = (bytes:any, conversion: number) => {
   };
 };
 
-export const getDataByType = (payload:{data: IStatRangeItem[], type?: string, name:string, aliasConfig?: any}) => {
+export const getDataByType = (payload: {
+  data: IStatRangeItem[];
+  type?: string;
+  name: string;
+  aliasConfig?: any;
+}) => {
   const { name, type, data, aliasConfig } = payload;
   const res = [] as ILineChartMetric[];
   data.forEach(instance => {
     instance.values.forEach(([timstamps, value]) => {
       const _name = instance.metric[name];
-      if((type === 'all' && _name !== 'total') || _name === type) {
+      if ((type === 'all' && _name !== 'total') || _name === type) {
         res.push({
           type: aliasConfig && aliasConfig[_name] ? aliasConfig[_name] : _name,
           value: Number(value),
@@ -149,8 +169,8 @@ export const getDataByType = (payload:{data: IStatRangeItem[], type?: string, na
   return res;
 };
 
-export const getProperTickInterval = (period) => {
-  switch(period) {
+export const getProperTickInterval = period => {
+  switch (period) {
     // past one hour
     case 24 * 60 * 60:
       return 2 * 60 * 60;
@@ -209,7 +229,7 @@ export const NEED_ADD_SUM_QUERYS = [
   'network_out_packet',
   // For Nebula Graph Service
   'num_queries',
-  'num_slow_queries'
+  'num_slow_queries',
 ];
 
 export enum MACHINE_TYPE {
@@ -219,7 +239,7 @@ export enum MACHINE_TYPE {
   disk = 'disk',
   networkOut = 'networkOut',
   networkIn = 'networkIn',
-  network = 'network'
+  network = 'network',
 }
 
 export const VERSIONS = ['v2.0.1', 'v2.5.1', 'v2.6.1', 'v3.0.0'];
@@ -230,25 +250,28 @@ export const getDefaultTimeRange = (interval?: number) => {
   return [dayjs(start), dayjs(end)];
 };
 
-export const getMaxNum = (data) => {
+export const getMaxNum = data => {
   const max = _.maxBy(data, item => item.value) as any;
   return max ? max.value : 0;
 };
 
-export const getMaxNumAndLength = (payload:{
+export const getMaxNumAndLength = (payload: {
   data: any[];
   valueType: string;
   baseLine?: number;
 }) => {
   const { data = [], valueType, baseLine } = payload;
   const maxNum = getMaxNum(data);
-  let maxNumLen = maxNum === 0 && baseLine ? baseLine.toString().length : maxNum.toString().length;
+  let maxNumLen =
+    maxNum === 0 && baseLine
+      ? baseLine.toString().length
+      : maxNum.toString().length;
   switch (valueType) {
     case VALUE_TYPE.percentage:
       maxNumLen = 5;
       break;
     case VALUE_TYPE.byte:
-    case VALUE_TYPE.byteSecond:{
+    case VALUE_TYPE.byteSecond: {
       const { value, unit } = getProperByteDesc(maxNum, 1024);
       if (valueType === VALUE_TYPE.byteSecond) {
         maxNumLen = unit.length + value.toString().length + 2;

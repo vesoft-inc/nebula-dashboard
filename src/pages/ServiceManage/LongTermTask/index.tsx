@@ -28,13 +28,12 @@ const mapDispatch = (dispatch: IDispatch) => ({
       currentSpace: space,
     }),
 });
-interface IProps extends ReturnType<typeof mapState>,
-  ReturnType<typeof mapDispatch>{
-}
+interface IProps
+  extends ReturnType<typeof mapState>,
+  ReturnType<typeof mapDispatch> {}
 
 class LongTermTask extends React.Component<IProps> {
-
-  componentDidMount(){
+  componentDidMount() {
     this.init();
   }
 
@@ -51,9 +50,7 @@ class LongTermTask extends React.Component<IProps> {
     }
   };
 
-  renderTime= time => {  
-    return <span>{dayjs(time).format('YYYY-MM-DD HH:mm:ss')}</span>;
-  }
+  renderTime = time => <span>{dayjs(time).format('YYYY-MM-DD HH:mm:ss')}</span>;
 
   handleSpaceChange = async space => {
     const { code } = await this.props.asyncUseSpaces(space);
@@ -67,31 +64,58 @@ class LongTermTask extends React.Component<IProps> {
     const { jobs, version, currentSpace, spaces, loading } = this.props;
     const columns = [
       {
-        title: <TitleInstruction title="Job ID" description={intl.get('description.jobId')} />,
+        title: (
+          <TitleInstruction
+            title="Job ID"
+            description={intl.get('description.jobId')}
+          />
+        ),
         dataIndex: 'Job Id',
       },
       {
-        title: <TitleInstruction title="Command" description={intl.get('description.command')} />,
+        title: (
+          <TitleInstruction
+            title="Command"
+            description={intl.get('description.command')}
+          />
+        ),
         dataIndex: 'Command',
       },
       {
-        title: <TitleInstruction title="Status" description={intl.get('description.longTermStatus')} />,
+        title: (
+          <TitleInstruction
+            title="Status"
+            description={intl.get('description.longTermStatus')}
+          />
+        ),
         dataIndex: 'Status',
-        render: status => <span className={`${status.toLowerCase()}`}>{status}</span>,
+        render: status => (
+          <span className={`${status.toLowerCase()}`}>{status}</span>
+        ),
       },
       {
-        title: <TitleInstruction title="Start Time" description={intl.get('description.longTermStartTime')} />,
+        title: (
+          <TitleInstruction
+            title="Start Time"
+            description={intl.get('description.longTermStartTime')}
+          />
+        ),
         dataIndex: 'Start Time',
         render: time => this.renderTime(time),
       },
       {
-        title: <TitleInstruction title="Stop Time" description={intl.get('description.longTermStopTime')} />,
+        title: (
+          <TitleInstruction
+            title="Stop Time"
+            description={intl.get('description.longTermStopTime')}
+          />
+        ),
         dataIndex: 'Stop Time',
         render: time => this.renderTime(time),
       },
     ];
     return (
-      <div className="service-info long-task" >
+      <div className="service-info long-task">
         {version && compare(getVersion(version), '2.6.0', '>=') && (
           <div className="common-header">
             <div className="select-space">
@@ -108,7 +132,8 @@ class LongTermTask extends React.Component<IProps> {
                   <Option value={space.Name} key={space.Name}>
                     {space.Name}
                   </Option>
-                ))}s
+                ))}
+                s
               </DashboardSelect>
             </div>
           </div>
@@ -116,8 +141,8 @@ class LongTermTask extends React.Component<IProps> {
         <Table
           loading={!!loading}
           rowKey={(record: any) => record['Job Id']}
-          dataSource={jobs} 
-          columns={columns} 
+          dataSource={jobs}
+          columns={columns}
         />
       </div>
     );

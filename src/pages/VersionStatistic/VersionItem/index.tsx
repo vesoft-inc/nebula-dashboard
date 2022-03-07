@@ -11,24 +11,21 @@ import { IRootState } from '@/store';
 import ServiceHeader from '@/components/Service/ServiceHeader';
 import './index.less';
 
-interface IProps extends ReturnType<typeof mapState>{
+interface IProps extends ReturnType<typeof mapState> {
   title: string;
   icon: string;
-  data: IVersionItem[]
+  data: IVersionItem[];
 }
 
-interface IState {
-}
+interface IState {}
 
-const mapState = (state: IRootState) => {
-  return {
-    loading: state.loading.models.service
-  };
-};
-
+const mapState = (state: IRootState) => ({
+  loading: state.loading.models.service,
+});
 
 class VersionItem extends React.PureComponent<IProps, IState> {
   chartInstance: Chart;
+
   componentDidUpdate() {
     this.updateChart();
   }
@@ -36,42 +33,46 @@ class VersionItem extends React.PureComponent<IProps, IState> {
   renderChart = (chartInstance: Chart) => {
     this.chartInstance = chartInstance;
     renderPieChartTpl(chartInstance);
-  }
+  };
 
   updateChart = () => {
     const { data } = this.props;
     const versionList = groupBy(data, 'version');
-    const chartData = Object.keys(versionList).map(key => {
-      return {
-        type: key,
-        value: round(versionList[key].length / data.length, 2)
-      };
-    });
+    const chartData = Object.keys(versionList).map(key => ({
+      type: key,
+      value: round(versionList[key].length / data.length, 2),
+    }));
     this.chartInstance.data(chartData).render();
-  }
+  };
 
   render() {
     const { title, icon, data, loading } = this.props;
-    const columns = [{
-      title: intl.get('common.service'),
-      dataIndex: 'name',
-    }, {
-      title: intl.get('common.version'),
-      dataIndex: 'version',
-    }];
+    const columns = [
+      {
+        title: intl.get('common.service'),
+        dataIndex: 'name',
+      },
+      {
+        title: intl.get('common.version'),
+        dataIndex: 'version',
+      },
+    ];
     return (
       <Spin delay={200} spinning={!!loading}>
         <div className="version-statistic-item">
           <ServiceHeader title={title} icon={icon} />
           <div className="version-content">
-            <PieChart options={{ height: 200 }} renderChart={this.renderChart} />
+            <PieChart
+              options={{ height: 200 }}
+              renderChart={this.renderChart}
+            />
             <Table
               className="service-table"
-              columns={columns} 
-              dataSource={data} 
+              columns={columns}
+              dataSource={data}
               bordered={true}
               pagination={false}
-              size={'small'}
+              size="small"
               rowKey="name"
             />
           </div>

@@ -1,20 +1,20 @@
 export interface IMetric {
-  instance: string,
-  instanceName: string,
-  device?: string
+  instance: string;
+  instanceName: string;
+  device?: string;
 }
 export interface IStatRangeItem {
-  metric: IMetric,
-  values: [number, any]
+  metric: IMetric;
+  values: [number, any];
 }
 export interface IStatSingleItem {
-  metric: IMetric,
-  value: [number, any]
+  metric: IMetric;
+  value: [number, any];
 }
 
 export interface IVersionItem {
-  name: string,
-  version: string
+  name: string;
+  version: string;
 }
 
 export interface ILineChartMetric {
@@ -24,10 +24,10 @@ export interface ILineChartMetric {
 }
 
 export interface IServicePanelConfig {
-  period: number,
-  metric: string,
-  metricFunction: string,
-  space?:string,
-  metricType: string,
-  baseLine: number| undefined,
+  period: number;
+  metric: string;
+  metricFunction: string;
+  space?: string;
+  metricType: string;
+  baseLine: number | undefined;
 }

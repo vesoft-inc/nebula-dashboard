@@ -8,35 +8,33 @@ import ServiceCardEdit from '@/components/Service/ServiceCardEdit';
 import { METRIC_SERVICE_TYPES } from '@/utils/metric';
 import './index.less';
 
-const mapDispatch = (dispatch: IDispatch) => {
-  return {
-    asyncGetStatus: dispatch.service.asyncGetStatus,
-    updatePanelConfig: (values) => dispatch.service.update({
-      panelConfig: values
+const mapDispatch = (dispatch: IDispatch) => ({
+  asyncGetStatus: dispatch.service.asyncGetStatus,
+  updatePanelConfig: values =>
+    dispatch.service.update({
+      panelConfig: values,
     }),
-  };
-};
+});
 
-const mapState = (state: IRootState) => {
-  return {
-    panelConfig: state.service.panelConfig,
-    aliasConfig: state.app.aliasConfig,
-    serviceMetric: state.serviceMetric
-  };
-};
+const mapState = (state: IRootState) => ({
+  panelConfig: state.service.panelConfig,
+  aliasConfig: state.app.aliasConfig,
+  serviceMetric: state.serviceMetric,
+});
 
-interface IProps extends ReturnType<typeof mapDispatch>,
-  ReturnType<typeof mapState> {
-
-}
+interface IProps
+  extends ReturnType<typeof mapDispatch>,
+  ReturnType<typeof mapState> {}
 
 interface IState {
-  editPanelType: string,
-  editPanelIndex: number,
+  editPanelType: string;
+  editPanelIndex: number;
 }
 class ServiceDashboard extends React.Component<IProps, IState> {
   pollingTimer: any;
+
   modalHandler;
+
   constructor(props: IProps) {
     super(props);
     this.state = {
@@ -45,38 +43,39 @@ class ServiceDashboard extends React.Component<IProps, IState> {
     };
   }
 
-  handleConfigPanel=(serviceType: string, index: number) => {
-    this.setState({
-      editPanelType: serviceType,
-      editPanelIndex: index
-    }, this.modalHandler.show);
-  }
+  handleConfigPanel = (serviceType: string, index: number) => {
+    this.setState(
+      {
+        editPanelType: serviceType,
+        editPanelIndex: index,
+      },
+      this.modalHandler.show,
+    );
+  };
 
   handleModalClose = () => {
-    if(this.modalHandler) {
+    if (this.modalHandler) {
       this.modalHandler.hide();
     }
-  }
-  
+  };
+
   render() {
     const { editPanelType, editPanelIndex } = this.state;
-    const { 
-      panelConfig,
-      serviceMetric,
-      updatePanelConfig,
-      asyncGetStatus,
-    } = this.props;
+    const { panelConfig, serviceMetric, updatePanelConfig, asyncGetStatus } =
+      this.props;
     // TODO: Use hooks to resolve situations where render is jamming
     return (
       <div className="service-table">
-        {METRIC_SERVICE_TYPES.map(type => <ServiceOverview 
-          key={type}
-          serviceType={type}
-          icon={`#iconnav-${type}`}
-          configs={panelConfig[type]}
-          getStatus={asyncGetStatus}
-          onConfigPanel={this.handleConfigPanel}
-        />)}
+        {METRIC_SERVICE_TYPES.map(type => (
+          <ServiceOverview
+            key={type}
+            serviceType={type}
+            icon={`#iconnav-${type}`}
+            configs={panelConfig[type]}
+            getStatus={asyncGetStatus}
+            onConfigPanel={this.handleConfigPanel}
+          />
+        ))}
         <Modal
           className="modal-show-selected"
           width="750px"
@@ -84,7 +83,7 @@ class ServiceDashboard extends React.Component<IProps, IState> {
           title={intl.get('service.queryCondition')}
           footer={null}
         >
-          <ServiceCardEdit 
+          <ServiceCardEdit
             serviceMetric={serviceMetric}
             editType={editPanelType}
             editIndex={editPanelIndex}
@@ -93,7 +92,8 @@ class ServiceDashboard extends React.Component<IProps, IState> {
             onPanelConfigUpdate={updatePanelConfig}
           />
         </Modal>
-      </div>);
+      </div>
+    );
   }
 }
 export default connect(mapState, mapDispatch)(ServiceDashboard);

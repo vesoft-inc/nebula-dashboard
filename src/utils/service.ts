@@ -28,37 +28,46 @@ export const LINE_COLORS = [
 ];
 
 export const DEFAULT_SERVICE_PANEL_CONFIG = {
-  graph: [{
-    period: 60,
-    metric: SERVICE_SUPPORT_METRICS.graph[0].metric,
-    metricFunction: SERVICE_SUPPORT_METRICS.graph[0].metricType[0].value,
-    metricType: SERVICE_SUPPORT_METRICS.graph[0].metricType[0].key
-  }, {
-    period: 60,
-    metric: SERVICE_SUPPORT_METRICS.graph[1].metric,
-    metricFunction: SERVICE_SUPPORT_METRICS.graph[1].metricType[0].value,
-    metricType: SERVICE_SUPPORT_METRICS.graph[1].metricType[0].key,
-  }],
-  storage: [{
-    period: 60,
-    metric: SERVICE_SUPPORT_METRICS.storage[0].metric,
-    metricFunction: SERVICE_SUPPORT_METRICS.storage[0].metricType[0].value,
-    metricType: SERVICE_SUPPORT_METRICS.storage[0].metricType[0].key,
-  }, {
-    period: 60,
-    metric: SERVICE_SUPPORT_METRICS.storage[1].metric,
-    metricFunction: SERVICE_SUPPORT_METRICS.storage[1].metricType[0].value,
-    metricType: SERVICE_SUPPORT_METRICS.storage[1].metricType[0].key,
-  }],
-  meta: [{
-    period: 60,
-    metric: SERVICE_SUPPORT_METRICS.meta[0].metric,
-    metricFunction: SERVICE_SUPPORT_METRICS.meta[0].metricType[0].value,
-    metricType: SERVICE_SUPPORT_METRICS.meta[0].metricType[0].key,
-  }, {
-    period: 60,
-    metric: SERVICE_SUPPORT_METRICS.meta[1].metric,
-    metricFunction: SERVICE_SUPPORT_METRICS.meta[1].metricType[0].value,
-    metricType: SERVICE_SUPPORT_METRICS.meta[1].metricType[0].key,
-  }],
+  graph: [
+    {
+      period: 60,
+      metric: SERVICE_SUPPORT_METRICS.graph[0].metric,
+      metricFunction: SERVICE_SUPPORT_METRICS.graph[0].metricType[0].value,
+      metricType: SERVICE_SUPPORT_METRICS.graph[0].metricType[0].key,
+    },
+    {
+      period: 60,
+      metric: SERVICE_SUPPORT_METRICS.graph[1].metric,
+      metricFunction: SERVICE_SUPPORT_METRICS.graph[1].metricType[0].value,
+      metricType: SERVICE_SUPPORT_METRICS.graph[1].metricType[0].key,
+    },
+  ],
+  storage: [
+    {
+      period: 60,
+      metric: SERVICE_SUPPORT_METRICS.storage[0].metric,
+      metricFunction: SERVICE_SUPPORT_METRICS.storage[0].metricType[0].value,
+      metricType: SERVICE_SUPPORT_METRICS.storage[0].metricType[0].key,
+    },
+    {
+      period: 60,
+      metric: SERVICE_SUPPORT_METRICS.storage[1].metric,
+      metricFunction: SERVICE_SUPPORT_METRICS.storage[1].metricType[0].value,
+      metricType: SERVICE_SUPPORT_METRICS.storage[1].metricType[0].key,
+    },
+  ],
+  meta: [
+    {
+      period: 60,
+      metric: SERVICE_SUPPORT_METRICS.meta[0].metric,
+      metricFunction: SERVICE_SUPPORT_METRICS.meta[0].metricType[0].value,
+      metricType: SERVICE_SUPPORT_METRICS.meta[0].metricType[0].key,
+    },
+    {
+      period: 60,
+      metric: SERVICE_SUPPORT_METRICS.meta[1].metric,
+      metricFunction: SERVICE_SUPPORT_METRICS.meta[1].metricType[0].value,
+      metricType: SERVICE_SUPPORT_METRICS.meta[1].metricType[0].key,
+    },
+  ],
 };

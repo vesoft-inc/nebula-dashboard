@@ -5,7 +5,11 @@ import intl from 'react-intl-universal';
 import { connect } from 'react-redux';
 import cookies from 'js-cookie';
 import { RouteComponentProps } from 'react-router-dom';
-import { passwordRulesFn, usernameRulesFn, versionRulesFn } from '@/config/rules';
+import {
+  passwordRulesFn,
+  usernameRulesFn,
+  versionRulesFn,
+} from '@/config/rules';
 import LanguageSelect from '@/components/LanguageSelect';
 import { VERSIONS } from '@/utils/dashboard';
 import './index.less';
@@ -17,7 +21,7 @@ const FormItem = Form.Item;
 
 const fomrItemLayout = {
   wrapperCol: {
-    span: 24
+    span: 24,
   },
 };
 
@@ -25,7 +29,6 @@ const mapState = (state: IRootState) => ({
   appVersion: state.app.version,
   connection: state.app.connection,
 });
-
 
 const mapDispatch: any = (dispatch: IDispatch) => ({
   asyncLogin: dispatch.app.asyncLogin,
@@ -37,12 +40,11 @@ const mapDispatch: any = (dispatch: IDispatch) => ({
     }),
 });
 
-interface IProps extends ReturnType<typeof mapState>,
+interface IProps
+  extends ReturnType<typeof mapState>,
   ReturnType<typeof mapDispatch>,
-  RouteComponentProps {
-}
+  RouteComponentProps {}
 class ConfigServerForm extends React.Component<IProps> {
-
   componentDidMount() {
     this.props.asyncGetAppInfo();
     this.props.asyncGetCustomConfig();
@@ -50,13 +52,18 @@ class ConfigServerForm extends React.Component<IProps> {
 
   onConfig = async (values: any) => {
     const { connection } = this.props;
-    const ok = await this.props.asyncLogin({ ip: connection.ip, port: connection.port, ...values });
+    const ok = await this.props.asyncLogin({
+      ip: connection.ip,
+      port: connection.port,
+      ...values,
+    });
     if (ok) {
       cookies.set('version', values.version);
       this.props.updateVersion(values.version);
       this.props.history.push('/machine/overview');
     }
   };
+
   render() {
     const { appVersion } = this.props;
     return (
@@ -65,16 +72,31 @@ class ConfigServerForm extends React.Component<IProps> {
           <img src={nebulaLogo} className="logo" />
           <p className="title">Nebula Dashboard</p>
           <p className="form-header">{intl.get('common.account')}</p>
-          <Form layout="horizontal" {...fomrItemLayout} onFinish={this.onConfig}>
+          <Form
+            layout="horizontal"
+            {...fomrItemLayout}
+            onFinish={this.onConfig}
+          >
             <FormItem name="username" rules={usernameRulesFn(intl)}>
-              <Input placeholder={intl.get('common.username')} bordered={false} />
+              <Input
+                placeholder={intl.get('common.username')}
+                bordered={false}
+              />
             </FormItem>
             <FormItem name="password" rules={passwordRulesFn(intl)}>
-              <Input type="password" placeholder={intl.get('common.password')} bordered={false} />
+              <Input
+                type="password"
+                placeholder={intl.get('common.password')}
+                bordered={false}
+              />
             </FormItem>
             <FormItem name="version" rules={versionRulesFn(intl)}>
               <Select>
-                {VERSIONS.map(version => <Select.Option value={version} key={version}>{version}</Select.Option>)}
+                {VERSIONS.map(version => (
+                  <Select.Option value={version} key={version}>
+                    {version}
+                  </Select.Option>
+                ))}
               </Select>
             </FormItem>
             <Button className="btn-submit" type="primary" htmlType="submit">
@@ -82,7 +104,9 @@ class ConfigServerForm extends React.Component<IProps> {
             </Button>
           </Form>
           <div className="footer">
-            <div className="version">{intl.get('common.version')}：{appVersion}</div>
+            <div className="version">
+              {intl.get('common.version')}：{appVersion}
+            </div>
             <LanguageContext.Consumer>
               {({ currentLocale, toggleLanguage }) => (
                 <LanguageSelect
@@ -97,7 +121,6 @@ class ConfigServerForm extends React.Component<IProps> {
       </div>
     );
   }
-
-};
+}
 
 export default connect(mapState, mapDispatch)(ConfigServerForm);

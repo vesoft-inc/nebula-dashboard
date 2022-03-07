@@ -10,8 +10,13 @@ const mapState = (state: IRootState) => {
   const { cpuBaseLine } = state.setting;
   const { aliasConfig } = state.app;
   return {
-    baseLine:cpuBaseLine,
-    data: getDataByType({ data:cpuStat, type:'all', name: 'instance', aliasConfig }),
+    baseLine: cpuBaseLine,
+    data: getDataByType({
+      data: cpuStat,
+      type: 'all',
+      name: 'instance',
+      aliasConfig,
+    }),
     valueType: VALUE_TYPE.percentage,
     loading: !!state.loading.effects.machine.asyncGetCPUStatByRange,
   };
