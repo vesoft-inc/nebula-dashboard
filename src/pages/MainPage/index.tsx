@@ -21,27 +21,27 @@ import { trackPageView } from '@/utils/stat';
 import { IDispatch, IRootState } from '@/store';
 import './index.less';
 import { LanguageContext } from '@/context';
+
 const { Sider, Content } = Layout;
 const { SubMenu } = Menu;
 
-const mapDispatch: any = (dispatch: IDispatch) => {
-  return {
+const mapDispatch: any = (dispatch: IDispatch) => ({
     asyncLogout: dispatch.app.asyncLogout,
     asyncGetAppInfo: dispatch.app.asyncGetAppInfo,
     asyncGetCustomConfig: dispatch.app.asyncGetCustomConfig,
     asyncGetServiceMetric: dispatch.serviceMetric.asyncGetServiceMetric,
     asyncGetSpaces: dispatch.nebula.asyncGetSpaces
-  };
-};
+  });
 
 const mapState = (state: IRootState) => ({
   appVersion: state.app.version,
   nebluaVersion: state.nebula.version,
 });
 
-interface IProps extends ReturnType<typeof mapState>,
-  ReturnType<typeof mapDispatch>, 
-  RouteComponentProps{}
+interface IProps
+  extends ReturnType<typeof mapState>,
+    ReturnType<typeof mapDispatch>,
+    RouteComponentProps {}
 
 interface IState {
   collapsed: boolean;
@@ -58,10 +58,10 @@ class MainPage extends React.Component<IProps, IState> {
   componentDidMount() {
     const { appVersion, nebluaVersion } = this.props;
     this.props.asyncGetCustomConfig();
-    if(appVersion === '') {
+    if (appVersion === '') {
       this.props.asyncGetAppInfo();
     }
-    if(nebluaVersion){
+    if (nebluaVersion) {
       this.props.asyncGetSpaces();
       METRIC_PROCESS_TYPES.map(item =>
         this.props.asyncGetServiceMetric({
@@ -70,52 +70,73 @@ class MainPage extends React.Component<IProps, IState> {
         }),
       );
     }
-    
   }
 
-  renderMenu = (list) => {
-    if(list && list.length > 0) {
+  renderMenu = list => {
+    if (list && list.length > 0) {
       return list.map(item => {
-        if(item.children && item.children.length > 0) {
-          return (<SubMenu key={item.key} icon={<Icon className="menu-icon anticon" icon={item.icon} />} title={item.title}>
-            {this.renderMenu(item.children)}
-          </SubMenu>);
+        if (item.children && item.children.length > 0) {
+          return (
+            <SubMenu
+              key={item.key}
+              icon={<Icon className="menu-icon anticon" icon={item.icon} />}
+              title={item.title}
+            >
+              {this.renderMenu(item.children)}
+            </SubMenu>
+          );
         }
-        return (<Menu.Item key={item.key} icon={<Icon className="menu-icon" icon={item.icon} />} title={item.title}>
-          <Link to={item.path || '/'}>{item.title}</Link>
-        </Menu.Item>);
+        return (
+          <Menu.Item
+            key={item.key}
+            icon={<Icon className="menu-icon" icon={item.icon} />}
+            title={item.title}
+          >
+            <Link to={item.path || '/'}>{item.title}</Link>
+          </Menu.Item>
+        );
       });
     }
-  }
+  };
 
   toggleMenu = () => {
     const { collapsed } = this.state;
     this.setState({
-      collapsed: !collapsed
+      collapsed: !collapsed,
     });
-  }
+  };
 
   render() {
     const { collapsed } = this.state;
     const { appVersion } = this.props;
-    const [, activeOpenSubMenu, activeMenu] = this.props.location.pathname.split('/');
-    let activeKey = activeMenu === 'overview' ? `${activeOpenSubMenu}-${activeMenu}` : activeMenu;
+    const [, activeOpenSubMenu, activeMenu] =
+      this.props.location.pathname.split('/');
+    let activeKey =
+      activeMenu === 'overview'
+        ? `${activeOpenSubMenu}-${activeMenu}`
+        : activeMenu;
     const locale = cookies.get('locale');
     const manualHref =
       locale === 'ZH_CN'
         ? 'https://docs.nebula-graph.com.cn/3.0.0/nebula-dashboard/1.what-is-dashboard/'
-        : 'https://docs.nebula-graph.io/3.0.0/nebula-dashboard/1.what-is-dashboard/'; 
-        
-    if(activeKey === undefined) {
+        : 'https://docs.nebula-graph.io/3.0.0/nebula-dashboard/1.what-is-dashboard/';
+
+    if (activeKey === undefined) {
       activeKey = 'machine-overview';
     }
-    if (activeKey === 'version-statistics' || activeKey === 'leader-distribution' || activeKey === 'partition-distribution'){
+    if (
+      activeKey === 'version-statistics' ||
+      activeKey === 'leader-distribution' ||
+      activeKey === 'partition-distribution'
+    ) {
       activeKey = 'service-overview';
     }
     return (
       <Layout className="nebula-stat">
-        <Sider className="nebula-sider" trigger={null} 
-          collapsible={true} 
+        <Sider
+          className="nebula-sider"
+          trigger={null}
+          collapsible={true}
           collapsed={collapsed}
           collapsedWidth={56}
         >
@@ -123,24 +144,28 @@ class MainPage extends React.Component<IProps, IState> {
             <img src={nebulaLogo} className="logo" />
             {!collapsed && <p className="title">Nebula Dashboard</p>}
           </div>
-          <Menu className="sidebar-menu" 
+          <Menu
+            className="sidebar-menu"
             theme="dark"
-            mode="inline" 
+            mode="inline"
             inlineIndent={20}
-            onClick={ item => () => trackPageView(item.key)}
+            onClick={item => () => trackPageView(item.key)}
             defaultOpenKeys={MenuList.map(item => item.key)}
-            selectedKeys={[activeKey]}>
+            selectedKeys={[activeKey]}
+          >
             {this.renderMenu(MenuList)}
           </Menu>
           <div className="sidebar-footer">
             <div className="btn-logout" onClick={this.props.asyncLogout}>
               <Icon className="menu-btn" icon="#iconnav-logout" />
-              {!collapsed && <span className="text-logout">{intl.get('common.logout')}</span>}
+              {!collapsed && (
+                <span className="text-logout">{intl.get('common.logout')}</span>
+              )}
             </div>
             <LanguageContext.Consumer>
               {({ currentLocale, toggleLanguage }) => (
                 <LanguageSelect
-                  mode="dark" 
+                  mode="dark"
                   showIcon={!collapsed}
                   currentLocale={currentLocale}
                   toggleLanguage={toggleLanguage}
@@ -149,44 +174,53 @@ class MainPage extends React.Component<IProps, IState> {
             </LanguageContext.Consumer>
             <div className="row">
               {!collapsed && <span className="version">v {appVersion}</span>}
-              {!collapsed && 
-              <Dropdown 
-                placement="topCenter"
-                overlay={
-                  <Menu>
-                    <Menu.Item>
-                      <a target="_blank" href={manualHref} rel="noreferrer">
-                        {intl.get('common.manual')}
-                      </a>
-                    </Menu.Item>
-                    <Menu.Item>
-                      <a target="_blank" href={intl.get('common.forumLink')} rel="noreferrer">
-                        {intl.get('common.forum')}
-                      </a>
-                    </Menu.Item>
-                  </Menu>
-                }>
-                <span className="help">
-                  {intl.get('common.help')}
-                </span>
-              </Dropdown>}
+              {!collapsed && (
+                <Dropdown
+                  placement="topCenter"
+                  overlay={
+                    <Menu>
+                      <Menu.Item>
+                        <a target="_blank" href={manualHref} rel="noreferrer">
+                          {intl.get('common.manual')}
+                        </a>
+                      </Menu.Item>
+                      <Menu.Item>
+                        <a
+                          target="_blank"
+                          href={intl.get('common.forumLink')}
+                          rel="noreferrer"
+                        >
+                          {intl.get('common.forum')}
+                        </a>
+                      </Menu.Item>
+                    </Menu>
+                  }
+                >
+                  <span className="help">{intl.get('common.help')}</span>
+                </Dropdown>
+              )}
               <div className="btn-collapse" onClick={this.toggleMenu}>
-                {!collapsed && <Icon className="menu-collapse-icon" icon="#iconnav-fold" />}
-                {collapsed && <Icon className="menu-collapse-icon" icon="#iconnav-unfold" />}
+                {!collapsed && (
+                  <Icon className="menu-collapse-icon" icon="#iconnav-fold" />
+                )}
+                {collapsed && (
+                  <Icon className="menu-collapse-icon" icon="#iconnav-unfold" />
+                )}
               </div>
             </div>
           </div>
         </Sider>
         <Layout className="page-content">
           <Switch>
-            {RoutesList.map(route => <Route path={route.path} render={() => {
-              return <>
+            {RoutesList.map(route => (
+              <Route
+                path={route.path}
+                render={() => <>
                 <Header config={route.headerConfig} />
                 <Content className="main-content">
                   <Route component={route.component} />
                 </Content>
-              </>;
-            }} key={route.path} exact={route.exact} />)}
+              </>} key={route.path} exact={route.exact} />)}
             <Redirect from="/*" to="/machine/overview" />
           </Switch>
         </Layout>

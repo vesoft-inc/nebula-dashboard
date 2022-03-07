@@ -4,22 +4,18 @@ import VersionItem from './VersionItem';
 import { IDispatch } from '@/store';
 import { IVersionItem } from '@/utils/interface';
 
-const mapDispatch = (dispatch: IDispatch) => {
-  return {
-    asyncGetServiceVersion: dispatch.nebula.asyncGetServiceVersion,
-  };
-};
+const mapDispatch = (dispatch: IDispatch) => ({
+  asyncGetServiceVersion: dispatch.nebula.asyncGetServiceVersion,
+});
 
-const mapState = () => {
-  return {};
-};
+const mapState = () => ({});
 
 interface IProps extends ReturnType<typeof mapDispatch> {}
 
 interface IState {
-  graph: IVersionItem[],
-  storage: IVersionItem[],
-  meta: IVersionItem[]
+  graph: IVersionItem[];
+  storage: IVersionItem[];
+  meta: IVersionItem[];
 }
 
 class VersionStatistic extends React.Component<IProps, IState> {
@@ -35,7 +31,7 @@ class VersionStatistic extends React.Component<IProps, IState> {
   componentDidMount() {
     this.getVersion();
   }
-  
+
   getVersion = async () => {
     const graph = await this.props.asyncGetServiceVersion('GRAPH');
     const storage = await this.props.asyncGetServiceVersion('STORAGE');
@@ -43,17 +39,34 @@ class VersionStatistic extends React.Component<IProps, IState> {
     this.setState({
       graph,
       storage,
-      meta
+      meta,
     });
-  }
+  };
 
   render() {
     const { graph, storage, meta } = this.state;
-    return (<div className="version-statistics">
-      <VersionItem title="Graph Service" icon="#iconservice-graph" mode="blue" data={graph} />
-      <VersionItem title="Storage Service" icon="#iconservice-storage" mode="pink" data={storage} />
-      <VersionItem title="Meta Service" icon="#iconservice-meta" mode="skyblue" data={meta} />
-    </div>);
+    return (
+      <div className="version-statistics">
+        <VersionItem
+          title="Graph Service"
+          icon="#iconservice-graph"
+          mode="blue"
+          data={graph}
+        />
+        <VersionItem
+          title="Storage Service"
+          icon="#iconservice-storage"
+          mode="pink"
+          data={storage}
+        />
+        <VersionItem
+          title="Meta Service"
+          icon="#iconservice-meta"
+          mode="skyblue"
+          data={meta}
+        />
+      </div>
+    );
   }
 }
 export default connect(mapState, mapDispatch)(VersionStatistic);

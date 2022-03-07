@@ -25,5 +25,5 @@ export default {
   execPromQL,
   execPromQLByRange,
   getCustomConfig,
-  getAnnotationLineConfig
+  getAnnotationLineConfig,
 };

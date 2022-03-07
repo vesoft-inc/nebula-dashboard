@@ -20,12 +20,18 @@ export const MetricPopover = (props: { list }) => {
       content={
         <div className={styles.popoverMetric}>
           <div className={styles.metricContent}>
-            <Form className={styles.metric} labelCol={{ span: 13 }} wrapperCol={{ span: 11 }}>
+            <Form
+              className={styles.metric}
+              labelCol={{ span: 13 }}
+              wrapperCol={{ span: 11 }}
+            >
               {props.list.map(option => {
-                if(intl.get(`metric_description.${option.metric}`)){
-                  return <Form.Item key={option.metric} label={option.metric}>
-                    {intl.get(`metric_description.${option.metric}`)}
-                  </Form.Item>;
+                if (intl.get(`metric_description.${option.metric}`)) {
+                  return (
+                    <Form.Item key={option.metric} label={option.metric}>
+                      {intl.get(`metric_description.${option.metric}`)}
+                    </Form.Item>
+                  );
                 }
               })}
             </Form>

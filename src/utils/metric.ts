@@ -73,13 +73,13 @@ export const FILTER_METRICS = [
   'kv_remove_latency_us',
   'num_agent_heartbeats',
   'agent_heartbeat_latency_us',
-  'num_auth_failed_sessions_out_of_max_allowed'
+  'num_auth_failed_sessions_out_of_max_allowed',
 ];
 
 export const METRIC_PROCESS_TYPES = ['graphd', 'storaged', 'metad'];
 
-export const filterServiceMetrics = (payload:{
-  metricList:string[];
+export const filterServiceMetrics = (payload: {
+  metricList: string[];
   spaceMetricList: string[];
   version?: string;
   componentType: string;
@@ -88,35 +88,43 @@ export const filterServiceMetrics = (payload:{
   const metrics = [] as any;
   // const metricValue = item.slice(0, item.lastIndexOf(`_${componentType}_`));
   metricList.map(item => {
-    const [ metricFieldType, metricFields] = item.split(`_${componentType}_`); // Example: nebula_graphd_num_queries_sum_60 =>  nebula, num_queries_sum_60
-    if(metricFieldType && metricFields){
+    const [metricFieldType, metricFields] = item.split(`_${componentType}_`); // Example: nebula_graphd_num_queries_sum_60 =>  nebula, num_queries_sum_60
+    if (metricFieldType && metricFields) {
       const metricFieldArr = metricFields.split(`_`);
-      const key = metricFieldArr?.splice(-2, 2)[0];  // sum / avg / p99 ~
+      const key = metricFieldArr?.splice(-2, 2)[0]; // sum / avg / p99 ~
       const metricValue = metricFieldArr.join('_'); // nebula_graphd_num_queries
       const metricItem = _.find(metrics, m => m.metric === metricValue);
 
-      if(_.includes(FILTER_METRICS, metricValue)){ // is filter metric
+      if (_.includes(FILTER_METRICS, metricValue)) {
+        // is filter metric
         return;
       }
-      const isSpaceMetric = _.findLast(spaceMetricList, metric => metric.includes(metricValue));
+      const isSpaceMetric = _.findLast(spaceMetricList, metric =>
+        metric.includes(metricValue),
+      );
       // push data in metrics
-      if(metricItem){
-        const metricTypeItem = _.find(metricItem.metricType, _item => _item.key === key);
-        if(!metricTypeItem){
+      if (metricItem) {
+        const metricTypeItem = _.find(
+          metricItem.metricType,
+          _item => _item.key === key,
+        );
+        if (!metricTypeItem) {
           metricItem.metricType.push({
             key,
             value: `${metricFieldType}_${componentType}_${metricValue}_${key}_`,
           });
         }
-      }else{
+      } else {
         metrics.push({
           metric: metricValue,
           valueType: VALUE_TYPE.number,
           isSpaceMetric: !!isSpaceMetric,
-          metricType:[{
-            key,
-            value: `${metricFieldType}_${componentType}_${metricValue}_${key}_`,
-          }]
+          metricType: [
+            {
+              key,
+              value: `${metricFieldType}_${componentType}_${metricValue}_${key}_`,
+            },
+          ],
         });
       }
     }

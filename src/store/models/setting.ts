@@ -2,12 +2,12 @@ import { createModel } from '@rematch/core';
 import _ from 'lodash';
 
 interface IState {
-  cpuBaseLine: number|undefined,
-  diskBaseLine: number|undefined,
-  memoryBaseLine: number|undefined,
-  networkOutBaseLine: number|undefined,
-  networkInBaseLine: number|undefined,
-  loadBaseLine: number|undefined,
+  cpuBaseLine: number | undefined;
+  diskBaseLine: number | undefined;
+  memoryBaseLine: number | undefined;
+  networkOutBaseLine: number | undefined;
+  networkInBaseLine: number | undefined;
+  loadBaseLine: number | undefined;
 }
 
 export const setting = createModel({
@@ -21,11 +21,9 @@ export const setting = createModel({
     networkBaseLine: undefined,
   },
   reducers: {
-    update: (state: IState, payload: any) => {
-      return {
-        ...state,
-        ...payload,
-      };
-    },
+    update: (state: IState, payload: any) => ({
+      ...state,
+      ...payload,
+    }),
   },
 });

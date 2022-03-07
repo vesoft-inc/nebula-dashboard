@@ -16,13 +16,12 @@ const mapState = (state: IRootState) => ({
 const mapDispatch = (dispatch: IDispatch) => ({
   asyncGetServices: dispatch.nebula.asyncGetServices,
 });
-interface IProps extends ReturnType<typeof mapState>,
-  ReturnType<typeof mapDispatch>{
-}
+interface IProps
+  extends ReturnType<typeof mapState>,
+  ReturnType<typeof mapDispatch> {}
 
 class ServiceInfo extends React.Component<IProps> {
-
-  componentDidMount(){
+  componentDidMount() {
     this.props.asyncGetServices();
   }
 
@@ -30,41 +29,78 @@ class ServiceInfo extends React.Component<IProps> {
     const { services } = this.props;
     const columns = [
       {
-        title: <TitleInstruction title="Host" description={intl.get('description.ip')} />,
+        title: (
+          <TitleInstruction
+            title="Host"
+            description={intl.get('description.ip')}
+          />
+        ),
         dataIndex: 'Host',
       },
       {
-        title: <TitleInstruction title="Port" description={intl.get('description.port')} />,
+        title: (
+          <TitleInstruction
+            title="Port"
+            description={intl.get('description.port')}
+          />
+        ),
         dataIndex: 'Port',
       },
       {
-        title: <TitleInstruction title="Status" description={intl.get('description.status')} />,
+        title: (
+          <TitleInstruction
+            title="Status"
+            description={intl.get('description.status')}
+          />
+        ),
         dataIndex: 'Status',
-        render:status => <span className={status.toLowerCase()}>{status}</span>,
+        render: status => (
+          <span className={status.toLowerCase()}>{status}</span>
+        ),
       },
       {
-        title: <TitleInstruction title="Git Info Sha" description={intl.get('description.gitInfo')} />,
+        title: (
+          <TitleInstruction
+            title="Git Info Sha"
+            description={intl.get('description.gitInfo')}
+          />
+        ),
         dataIndex: 'Git Info Sha',
       },
       {
-        title: <TitleInstruction title="Leader Count" description={intl.get('description.leaderCount')} />,
+        title: (
+          <TitleInstruction
+            title="Leader Count"
+            description={intl.get('description.leaderCount')}
+          />
+        ),
         dataIndex: 'Leader count',
       },
       {
-        title: <TitleInstruction title="Partition Distribution" description={intl.get('description.partitionDistribution')} />,
+        title: (
+          <TitleInstruction
+            title="Partition Distribution"
+            description={intl.get('description.partitionDistribution')}
+          />
+        ),
         dataIndex: 'Partition distribution',
       },
       {
-        title: <TitleInstruction title="Leader Distribution" description={intl.get('description.leaderDistribution')} />,
+        title: (
+          <TitleInstruction
+            title="Leader Distribution"
+            description={intl.get('description.leaderDistribution')}
+          />
+        ),
         dataIndex: 'Leader distribution',
       },
     ];
     return (
-      <div className="service-info" >
-        <Table 
+      <div className="service-info">
+        <Table
           rowKey={(record: any) => record.Host}
-          dataSource={services} 
-          columns={columns} 
+          dataSource={services}
+          columns={columns}
           pagination={false}
           tableLayout="fixed"
         />

@@ -11,7 +11,12 @@ const mapState = (state: IRootState) => {
   const { aliasConfig } = state.app;
   return {
     baseLine: networkInBaseLine,
-    data: getDataByType({ data:networkInStat, type:'all', name: 'instance', aliasConfig }),
+    data: getDataByType({
+      data: networkInStat,
+      type: 'all',
+      name: 'instance',
+      aliasConfig,
+    }),
     valueType: VALUE_TYPE.byteSecondNet,
     loading: !!state.loading.effects.machine.asyncGetNetworkStatByRange,
   };

@@ -11,7 +11,12 @@ const mapState = (state: IRootState) => {
   const { aliasConfig } = state.app;
   return {
     baseLine: loadBaseLine,
-    data: getDataByType({ data:loadStat, type:'all', name: 'instance', aliasConfig }),
+    data: getDataByType({
+      data: loadStat,
+      type: 'all',
+      name: 'instance',
+      aliasConfig,
+    }),
     valueType: VALUE_TYPE.number,
     loading: !!state.loading.effects.machine.asyncGetLoadByRange,
   };

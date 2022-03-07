@@ -4,39 +4,40 @@ import cookies from 'js-cookie';
 import service from '@/config/service';
 
 interface IState {
-  configs:any[];
+  configs: any[];
   jobs: any[];
   spaces: string[];
-  parts:any[];
+  parts: any[];
   services: any[];
   currentSpace: string;
   version: string;
 }
 
-type IServiceType = 'GRAPH' | 'STORAGE' | 'META'
+type IServiceType = 'GRAPH' | 'STORAGE' | 'META';
 
 export const nebula = createModel({
   state: {
-    configs:[],
-    jobs:[],
-    spaces:[] as any,
-    parts:[],
-    services:[],
+    configs: [],
+    jobs: [],
+    spaces: [] as any,
+    parts: [],
+    services: [],
     currentSpace: '',
     version: cookies.get('version') || '',
   },
   reducers: {
-    update: (state: IState, payload: any) => {
-      return {
-        ...state,
-        ...payload,
-      };
-    },
+    update: (state: IState, payload: any) => ({
+      ...state,
+      ...payload,
+    }),
   },
   effects: (dispatch: any) => ({
-    async asyncGetServiceConfigs(module?:string) {
+    async asyncGetServiceConfigs(module?: string) {
       const { code, data } = (await service.execNGQL({
-        gql: module && module !== 'all' ? `SHOW CONFIGS ${module} ` : 'SHOW CONFIGS'
+        gql:
+          module && module !== 'all'
+            ? `SHOW CONFIGS ${module} `
+            : 'SHOW CONFIGS',
       })) as any;
       if (code === 0) {
         this.update({
@@ -47,7 +48,7 @@ export const nebula = createModel({
 
     async asyncGetJobs() {
       const { code, data } = (await service.execNGQL({
-        gql: 'SHOW JOBS'
+        gql: 'SHOW JOBS',
       })) as any;
       if (code === 0 && data.tables) {
         this.update({
@@ -58,7 +59,7 @@ export const nebula = createModel({
 
     async asyncGetSpaces() {
       const { code, data } = (await service.execNGQL({
-        gql: 'SHOW SPACES'
+        gql: 'SHOW SPACES',
       })) as any;
       if (code === 0 && data.tables) {
         this.update({
@@ -69,14 +70,14 @@ export const nebula = createModel({
 
     async asyncUseSpaces(space) {
       const { code, data } = (await service.execNGQL({
-        gql: `USE ${space}`
+        gql: `USE ${space}`,
       })) as any;
       return { code, data };
     },
 
-    async asyncGetParts(partId?:string) {
+    async asyncGetParts(partId?: string) {
       const { code, data } = (await service.execNGQL({
-        gql: partId ? `SHOW PARTS ${partId}` : 'SHOW PARTS'
+        gql: partId ? `SHOW PARTS ${partId}` : 'SHOW PARTS',
       })) as any;
       if (code === 0 && data.tables) {
         this.update({
@@ -89,11 +90,13 @@ export const nebula = createModel({
     async asyncGetServices() {
       const hostData = await dispatch.nebula.asyncGetHostsInfo();
       let data = [];
-      if(hostData.length > 0) {
+      if (hostData.length > 0) {
         const storageData = await dispatch.nebula.asyncGetHostsInfo('STORAGE');
         data = hostData.map(host => {
-          const storage = storageData.find(storage => storage.Host === host.Host);
-          return{
+          const storage = storageData.find(
+            storage => storage.Host === host.Host,
+          );
+          return {
             ...host,
             ...storage,
           };
@@ -106,7 +109,7 @@ export const nebula = createModel({
 
     async asyncGetHostsInfo(type?: IServiceType) {
       const res = (await service.execNGQL({
-        gql: `SHOW HOSTS ${type || ''}`
+        gql: `SHOW HOSTS ${type || ''}`,
       })) as any;
       let data = [];
       if (res.code === 0 && res.data.tables) {
@@ -120,7 +123,7 @@ export const nebula = createModel({
       const res = await dispatch.nebula.asyncGetHostsInfo(type);
       return res.map(item => ({
         name: `${item.Host}:${item.Port}`,
-        version: item['Git Info Sha']
+        version: item['Git Info Sha'],
       }));
     },
   }),

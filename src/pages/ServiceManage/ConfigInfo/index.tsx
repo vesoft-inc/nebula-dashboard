@@ -16,45 +16,71 @@ const mapState = (state: IRootState) => ({
 const mapDispatch = (dispatch: IDispatch) => ({
   asyncGetServiceConfigs: dispatch.nebula.asyncGetServiceConfigs,
 });
-interface IProps extends ReturnType<typeof mapState>,
-  ReturnType<typeof mapDispatch>{
-}
+interface IProps
+  extends ReturnType<typeof mapState>,
+  ReturnType<typeof mapDispatch> {}
 class ConfigInfo extends React.Component<IProps> {
-
-  componentDidMount(){
+  componentDidMount() {
     this.props.asyncGetServiceConfigs();
   }
 
-  handleModuleChange= e => {
+  handleModuleChange = e => {
     trackEvent('service-info', 'click_module');
     this.props.asyncGetServiceConfigs(e.target.value);
-  }
+  };
 
   render() {
     const { configs, loading } = this.props;
     const columns = [
       {
-        title: <TitleInstruction title="Module" description={intl.get('description.module')} />,
+        title: (
+          <TitleInstruction
+            title="Module"
+            description={intl.get('description.module')}
+          />
+        ),
         dataIndex: 'module',
-        render: module => <span className={`module ${module.toLowerCase()}`}>{module}</span>,
+        render: module => (
+          <span className={`module ${module.toLowerCase()}`}>{module}</span>
+        ),
       },
       {
-        title: <TitleInstruction title="Name" description={intl.get('description.moduleName')} />,
+        title: (
+          <TitleInstruction
+            title="Name"
+            description={intl.get('description.moduleName')}
+          />
+        ),
         dataIndex: 'name',
       },
       {
-        title: <TitleInstruction title="Type" description={intl.get('description.moduleType')} />,
+        title: (
+          <TitleInstruction
+            title="Type"
+            description={intl.get('description.moduleType')}
+          />
+        ),
         dataIndex: 'type',
       },
       {
-        title: <TitleInstruction title="Value" description={intl.get('description.moduleValue')} />,
+        title: (
+          <TitleInstruction
+            title="Value"
+            description={intl.get('description.moduleValue')}
+          />
+        ),
         dataIndex: 'value',
-      }
+      },
     ];
     return (
-      <div className="service-info service-configs" >
+      <div className="service-info service-configs">
         <div className="common-header">
-          <Radio.Group buttonStyle="solid" defaultValue="all" className="service-radio" onChange={this.handleModuleChange}>
+          <Radio.Group
+            buttonStyle="solid"
+            defaultValue="all"
+            className="service-radio"
+            onChange={this.handleModuleChange}
+          >
             <Radio.Button value="all">{intl.get('service.all')}</Radio.Button>
             <Radio.Button value="storage">Storage</Radio.Button>
             <Radio.Button value="graph">Graph</Radio.Button>
@@ -66,8 +92,8 @@ class ConfigInfo extends React.Component<IProps> {
         <Table
           loading={!!loading}
           rowKey={(record: any) => record.module + record.name}
-          dataSource={configs} 
-          columns={columns} 
+          dataSource={configs}
+          columns={columns}
         />
       </div>
     );

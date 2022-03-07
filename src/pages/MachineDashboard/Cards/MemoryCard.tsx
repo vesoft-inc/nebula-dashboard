@@ -9,12 +9,18 @@ const mapState = (state: IRootState) => {
   const { memoryBaseLine } = state.setting;
   const { aliasConfig } = state.app;
   return {
-    data: getDataByType({ data:memoryStat, type:'all', name: 'instance', aliasConfig }),
+    data: getDataByType({
+      data: memoryStat,
+      type: 'all',
+      name: 'instance',
+      aliasConfig,
+    }),
     sizes: memorySizeStat,
     baseLine: memoryBaseLine,
     valueType: VALUE_TYPE.percentage,
-    loading: !!state.loading.effects.machine.asyncGetMemorySizeStat &&
-      !!state.loading.effects.machine.asyncGetMemoryStatByRange
+    loading:
+      !!state.loading.effects.machine.asyncGetMemorySizeStat &&
+      !!state.loading.effects.machine.asyncGetMemoryStatByRange,
   };
 };
 

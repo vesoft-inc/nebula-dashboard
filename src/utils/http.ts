@@ -13,12 +13,18 @@ service.interceptors.response.use(
     let _code;
     if ('code' in response.data) {
       _code = code;
-    } else { // response from prometheus api
+    } else {
+      // response from prometheus api
       _code = response.data.status === 'success' ? 0 : -1;
       response.data.code = _code;
     }
     // if connection refused, login again
-    if (code === -1 && message && (message.includes('connection refused') || message.includes('an existing connection was forcibly closed'))) {
+    if (
+      code === -1 &&
+      message &&
+      (message.includes('connection refused') ||
+        message.includes('an existing connection was forcibly closed'))
+    ) {
       AntdMessage.warning(intl.get('configServer.connectError'));
       store.dispatch({
         type: 'app/asyncLogout',
@@ -69,16 +75,24 @@ const trackService = (res, config) => {
   trackEvent(category, action, res.code === 0 ? 'ajax_success' : 'ajax_failed');
 };
 
-const get = (api: string) => (params?: object, config = {}) =>
-  sendRequest('get', api, params, config);
+const get =
+  (api: string) =>
+    (params?: object, config = {}) =>
+      sendRequest('get', api, params, config);
 
-const post = (api: string) => (params?: object, config = {} as any) =>
-  sendRequest('post', api, params, config);
+const post =
+  (api: string) =>
+    (params?: object, config = {} as any) =>
+      sendRequest('post', api, params, config);
 
-const put = (api: string) => (params?: object, config = {}) =>
-  sendRequest('put', api, params, config);
+const put =
+  (api: string) =>
+    (params?: object, config = {}) =>
+      sendRequest('put', api, params, config);
 
-const _delete = (api: string) => (params?: object, config = {}) =>
-  sendRequest('delete', api, params, config);
+const _delete =
+  (api: string) =>
+    (params?: object, config = {}) =>
+      sendRequest('delete', api, params, config);
 
 export { get, post, put, _delete };

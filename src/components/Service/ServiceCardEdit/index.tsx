@@ -27,13 +27,16 @@ class ServiceCardEdit extends React.Component<IProps> {
   formRef = React.createRef<FormInstance>();
 
   handleUpdateMetricType = (value: string) => {
-    const { serviceMetric = { spaces: [], graphd: [], storaged:[], metad:[] }, editType } = this.props;
+    const {
+      serviceMetric = { spaces: [], graphd: [], storaged: [], metad: [] },
+      editType,
+    } = this.props;
     const metric = serviceMetric[`${editType}d`].filter(
       item => item.metric === value,
     )[0];
     this.formRef.current!.setFieldsValue({
       metricFunction: metric?.metricType[0].value,
-      space: ''
+      space: '',
     });
   };
 
@@ -61,7 +64,8 @@ class ServiceCardEdit extends React.Component<IProps> {
   };
 
   render() {
-    const { editIndex, editType, serviceMetric, panelConfig, onClose } = this.props;
+    const { editIndex, editType, serviceMetric, panelConfig, onClose } =
+      this.props;
     const editItem = panelConfig[editType][editIndex];
     return (
       <div className="service-card-edit">
@@ -101,13 +105,10 @@ class ServiceCardEdit extends React.Component<IProps> {
                 item => item.metric === metric,
               )[0]?.isSpaceMetric;
               return getFieldValue('metric') && isSpaceMetric ? (
-                <Form.Item
-                  label={intl.get('service.spaces')}
-                  name="space"
-                >
+                <Form.Item label={intl.get('service.spaces')} name="space">
                   <DashboardSelect>
                     <Option key="all" value="">
-                      {intl.get('common.all')} 
+                      {intl.get('common.all')}
                     </Option>
                     {serviceMetric.spaces?.map(space => (
                       <Option key={space} value={space}>

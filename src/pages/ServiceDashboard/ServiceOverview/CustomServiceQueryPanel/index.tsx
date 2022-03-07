@@ -6,25 +6,25 @@ import { Popover } from 'antd';
 import Icon from '@/components/Icon';
 import { IServicePanelConfig, IStatRangeItem } from '@/utils/interface';
 import { getDataByType } from '@/utils/dashboard';
-import { SERVICE_DEFAULT_RANGE, SERVICE_POLLING_INTERVAL } from '@/utils/service';
+import {
+  SERVICE_DEFAULT_RANGE,
+  SERVICE_POLLING_INTERVAL,
+} from '@/utils/service';
 import Card from '@/components/Service/ServiceCard/Card';
 import { IDispatch, IRootState } from '@/store';
 
 import './index.less';
 
-const mapDispatch = (dispatch: IDispatch) => {
-  return {
-    asyncGetMetricsData: dispatch.service.asyncGetMetricsData,
-  };
-};
+const mapDispatch = (dispatch: IDispatch) => ({
+  asyncGetMetricsData: dispatch.service.asyncGetMetricsData,
+});
 
-const mapState = (state: IRootState) => {
-  return {
-    aliasConfig: state.app.aliasConfig,
-  };
-};
+const mapState = (state: IRootState) => ({
+  aliasConfig: state.app.aliasConfig,
+});
 
-interface IProps extends ReturnType<typeof mapDispatch>,
+interface IProps
+  extends ReturnType<typeof mapDispatch>,
   ReturnType<typeof mapState> {
   onConfigPanel: () => void;
   config: IServicePanelConfig;
@@ -32,10 +32,11 @@ interface IProps extends ReturnType<typeof mapDispatch>,
 }
 
 interface IState {
-  data: IStatRangeItem[],
+  data: IStatRangeItem[];
 }
 class CustomServiceQueryPanel extends React.Component<IProps, IState> {
   pollingTimer: any;
+
   constructor(props: IProps) {
     super(props);
     this.state = {
@@ -53,8 +54,8 @@ class CustomServiceQueryPanel extends React.Component<IProps, IState> {
     }
   }
 
-  componentDidUpdate( prevProps) {
-    if(!isEqual(prevProps.config, this.props.config)) {
+  componentDidUpdate(prevProps) {
+    if (!isEqual(prevProps.config, this.props.config)) {
       this.resetPollingData();
     }
   }
@@ -64,7 +65,7 @@ class CustomServiceQueryPanel extends React.Component<IProps, IState> {
       clearTimeout(this.pollingTimer);
     }
     this.pollingData();
-  }
+  };
 
   getMetricsData = async () => {
     const { config } = this.props;
@@ -73,37 +74,65 @@ class CustomServiceQueryPanel extends React.Component<IProps, IState> {
     const data = await this.props.asyncGetMetricsData({
       query: metricFunction + metricPeriod, // EXPLAIN: query like nebula_graphd_num_queries_rate_600
       start: end - SERVICE_DEFAULT_RANGE,
-      end
+      end,
     });
     this.setState({
-      data
+      data,
     });
-  }
+  };
 
   pollingData = () => {
     this.getMetricsData();
     this.pollingTimer = setTimeout(this.pollingData, SERVICE_POLLING_INTERVAL);
-  }
+  };
 
   render() {
     const { data } = this.state;
-    const { config: { metric, period, metricType, baseLine }, aliasConfig } = this.props;
-    return <div className="service-card">
-      <div className="header">
-        <Popover placement="bottomLeft" content={intl.get(`metric_description.${metric}`)}>{metric}</Popover>
-        <div>
-          <span>{intl.get('service.period')}: <span>{period}</span></span> 
-          <span>{intl.get('service.metricParams')}: <span>{metricType}</span></span>
-          <div className="btn-icon-with-desc blue" onClick={this.props.onConfigPanel} >
-            <Icon icon="#iconSetup" />
-            <span>{intl.get('common.set')}</span>
+    const {
+      config: { metric, period, metricType, baseLine },
+      aliasConfig,
+    } = this.props;
+    return (
+      <div className="service-card">
+        <div className="header">
+          <Popover
+            placement="bottomLeft"
+            content={intl.get(`metric_description.${metric}`)}
+          >
+            {metric}
+          </Popover>
+          <div>
+            <span>
+              {intl.get('service.period')}: <span>{period}</span>
+            </span>
+            <span>
+              {intl.get('service.metricParams')}: <span>{metricType}</span>
+            </span>
+            <div
+              className="btn-icon-with-desc blue"
+              onClick={this.props.onConfigPanel}
+            >
+              <Icon icon="#iconSetup" />
+              <span>{intl.get('common.set')}</span>
+            </div>
           </div>
         </div>
+        <div className="content">
+          {data.length > 0 && (
+            <Card
+              baseLine={baseLine}
+              data={getDataByType({
+                data,
+                type: 'all',
+                name: 'instanceName',
+                aliasConfig,
+              })}
+              loading={false}
+            />
+          )}
+        </div>
       </div>
-      <div className="content">
-        {data.length > 0 && <Card baseLine={baseLine} data={getDataByType({ data, type:'all', name:'instanceName', aliasConfig })} loading={false}/>}
-      </div>
-    </div>;
+    );
   }
 }
 

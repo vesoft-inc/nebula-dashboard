@@ -23,38 +23,41 @@ export const LINE_CHART_COLORS = [
   '#F8DE9B',
   '#F4BCBC',
   '#BFBFBF',
-  '#595959'
+  '#595959',
 ];
 
-export const configDetailChart = (chartInstance: Chart, options: {
-  tickInterval?: number,
-  sizes?: any
-  valueType?: VALUE_TYPE
-  isCard?: boolean,
-}): Chart => {
+export const configDetailChart = (
+  chartInstance: Chart,
+  options: {
+    tickInterval?: number;
+    sizes?: any;
+    valueType?: VALUE_TYPE;
+    isCard?: boolean;
+  },
+): Chart => {
   chartInstance
     .axis('time', {
       label: {
-        formatter: time => {
-          return dayjs(Number(time) * 1000).format('HH:mm');
-        }
+        formatter: time => dayjs(Number(time) * 1000).format('HH:mm'),
       },
-      grid: options.isCard ? null : {
-        line: {
-          type: 'line',
-          style: {
-            fill: '#d9d9d9',
-            opacity: 0.5,
-          }
-        }
-      }
+      grid: options.isCard
+        ? null
+        : {
+          line: {
+            type: 'line',
+            style: {
+              fill: '#d9d9d9',
+              opacity: 0.5,
+            },
+          },
+        },
     })
     .legend({
       position: 'bottom',
     })
     .scale({
       time: {
-        tickInterval: options.tickInterval
+        tickInterval: options.tickInterval,
       },
       temperature: {
         nice: true,
@@ -64,28 +67,25 @@ export const configDetailChart = (chartInstance: Chart, options: {
     .position('time*value')
     .color('type', LINE_CHART_COLORS);
 
-  const tooltipTitle = time => {
-    return dayjs(Number(time) * 1000).format('YYYY-MM-DD HH:mm:ss');
-  };
+  const tooltipTitle = time =>
+    dayjs(Number(time) * 1000).format('YYYY-MM-DD HH:mm:ss');
 
   switch (options.valueType) {
     case VALUE_TYPE.percentage:
       chartInstance.axis('value', {
         label: {
-          formatter: percent => `${percent}%`
+          formatter: percent => `${percent}%`,
         },
       });
       chartInstance.tooltip({
-        customItems: items => {
-
-          return items.map(item => {
-            const value = Number(item.value).toFixed(2) + '%';
+        customItems: items =>
+          items.map(item => {
+            const value = `${Number(item.value).toFixed(2)}%`;
             return {
               ...item,
               value,
             };
-          });
-        },
+          }),
         showCrosshairs: true,
         shared: true,
         title: tooltipTitle,
@@ -95,7 +95,7 @@ export const configDetailChart = (chartInstance: Chart, options: {
           min: 0,
           max: 100,
           tickInterval: 25,
-        }
+        },
       });
       break;
     case VALUE_TYPE.byte:
@@ -106,30 +106,29 @@ export const configDetailChart = (chartInstance: Chart, options: {
             const { value, unit } = getProperByteDesc(bytes, 1024);
             let _unit = unit;
             if (options.valueType === VALUE_TYPE.byteSecond) {
-              _unit = unit + '/s';
+              _unit = `${unit}/s`;
             }
 
-            return value + ' ' + _unit;
+            return `${value} ${_unit}`;
           },
-        }
+        },
       });
       chartInstance.tooltip({
-        customItems: items => {
-          return items.map(item => {
+        customItems: items =>
+          items.map(item => {
             const { value, unit } = getProperByteDesc(item.value, 1024);
             let _unit = unit;
             if (options.valueType === VALUE_TYPE.byteSecond) {
-              _unit = unit + '/s';
+              _unit = `${unit}/s`;
             }
             return {
               ...item,
-              value: value + ' ' + _unit,
+              value: `${value} ${_unit}`,
             };
-          });
-        },
+          }),
         showCrosshairs: true,
         shared: true,
-        title: tooltipTitle
+        title: tooltipTitle,
       });
       break;
     case VALUE_TYPE.byteSecondNet:
@@ -137,25 +136,24 @@ export const configDetailChart = (chartInstance: Chart, options: {
         label: {
           formatter: bytes => {
             const { value, unit } = getProperByteDesc(bytes, 1000);
-            const _unit = unit + '/s';
-            return value + ' ' + _unit;
+            const _unit = `${unit}/s`;
+            return `${value} ${_unit}`;
           },
-        }
+        },
       });
       chartInstance.tooltip({
-        customItems: items => {
-          return items.map(item => {
+        customItems: items =>
+          items.map(item => {
             const { value, unit } = getProperByteDesc(item.value, 1000);
-            const _unit = unit + '/s';
+            const _unit = `${unit}/s`;
             return {
               ...item,
-              value: value + ' ' + _unit,
+              value: `${value} ${_unit}`,
             };
-          });
-        },
+          }),
         showCrosshairs: true,
         shared: true,
-        title: tooltipTitle
+        title: tooltipTitle,
       });
       break;
     case VALUE_TYPE.number:
@@ -164,28 +162,27 @@ export const configDetailChart = (chartInstance: Chart, options: {
         label: {
           formatter: processNum => {
             if (options.valueType === VALUE_TYPE.numberSecond) {
-              return processNum + '/s';
+              return `${processNum}/s`;
             }
             return processNum;
-          }
-        }
+          },
+        },
       });
       chartInstance.tooltip({
-        customItems: items => {
-          return items.map(item => {
+        customItems: items =>
+          items.map(item => {
             let value = item.value;
             if (options.valueType === VALUE_TYPE.numberSecond) {
-              value = value + '/s';
+              value = `${value}/s`;
             }
             return {
               ...item,
               value,
             };
-          });
-        },
+          }),
         showCrosshairs: true,
         shared: true,
-        title: tooltipTitle
+        title: tooltipTitle,
       });
       break;
     default:
@@ -194,15 +191,18 @@ export const configDetailChart = (chartInstance: Chart, options: {
   return chartInstance;
 };
 
-export const updateDetailChart = (chartInstance: Chart, options: {
-  type: string,
-  tickInterval: number
-  statSizes?: any
-}): Chart => {
+export const updateDetailChart = (
+  chartInstance: Chart,
+  options: {
+    type: string;
+    tickInterval: number;
+    statSizes?: any;
+  },
+): Chart => {
   chartInstance.scale({
     time: {
       tickInterval: options.tickInterval,
-    }
+    },
   });
 
   return chartInstance;
@@ -213,28 +213,29 @@ export const renderPieChartTpl = (chartInstance: Chart, _options?): Chart => {
     radius: 0.75,
   });
   chartInstance.tooltip({
-    showMarkers: false
+    showMarkers: false,
   });
-  chartInstance.interval()
+  chartInstance
+    .interval()
     .adjust('stack')
     .position('value')
     .color('type', PIE_CHARTS_COLORS)
     .style({ opacity: 0.4 })
     .state({
       active: {
-        style: (element) => {
+        style: element => {
           const shape = element.shape;
           return {
             matrix: Util.zoom(shape, 1.1),
           };
-        }
-      }
+        },
+      },
     });
   chartInstance.legend({
     position: 'right-top',
     offsetX: -40,
-    offsetY: 25
-  }); 
+    offsetY: 25,
+  });
   return chartInstance;
 };
 

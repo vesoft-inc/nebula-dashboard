@@ -18,12 +18,10 @@ export const app = createModel({
     connection: {} as any,
   },
   reducers: {
-    update: (state: IState, payload: any) => {
-      return {
-        ...state,
-        ...payload,
-      };
-    },
+    update: (state: IState, payload: any) => ({
+      ...state,
+      ...payload,
+    }),
   },
   effects: (dispatch: any) => ({
     async asyncGetAppInfo() {
@@ -35,21 +33,24 @@ export const app = createModel({
     },
 
     async asyncGetCustomConfig() {
-      const { code, data:{ connection, alias } } = (await service.getCustomConfig()) as any;
+      const {
+        code,
+        data: { connection, alias },
+      } = (await service.getCustomConfig()) as any;
       if (code === 0) {
         this.update({
-          aliasConfig : alias,
-          connection
+          aliasConfig: alias,
+          connection,
         });
       }
     },
 
     async asyncLogin(payload: {
-      password:string,
-      username: string,
-      ip: string,
-      port: number,
-    }){
+      password: string;
+      username: string;
+      ip: string;
+      port: number;
+    }) {
       const { password, username, ip, port } = payload;
       const { code, message: errorMessage } = (await service.connectDB(
         {
@@ -63,21 +64,21 @@ export const app = createModel({
             category: 'user',
             action: 'sign_in',
           },
-        })) as any;
+        },
+      )) as any;
       if (code === 0) {
         cookies.set('nu', username);
         this.update({
           username,
         });
         return true;
-      }else{
-        message.error(`${intl.get('configServer.fail')}: ${errorMessage}`);
-        this.update({
-          username: '',
-        });
-        cookies.remove('nu', { path: '/' });
-        return false;
       }
+      message.error(`${intl.get('configServer.fail')}: ${errorMessage}`);
+      this.update({
+        username: '',
+      });
+      cookies.remove('nu', { path: '/' });
+      return false;
     },
 
     async asyncLogout() {
@@ -92,8 +93,9 @@ export const app = createModel({
             category: 'user',
             action: 'sign_out',
           },
-        });
+        },
+      );
       dispatch({ type: 'RESET_APP' });
     },
-  })
+  }),
 });

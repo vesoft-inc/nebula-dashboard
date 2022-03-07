@@ -25,13 +25,14 @@ type IProps = RouteComponentProps;
 
 class App extends React.Component<IProps> {
   currentLocale;
+
   constructor(props: IProps) {
     super(props);
     const regx = /lang=(\w+)/g;
     const match = regx.exec(props.history.location.search);
     const lang = document.documentElement.getAttribute('lang');
-    
-    if(!cookies.get('locale')){
+
+    if (!cookies.get('locale')) {
       if (match) {
         cookies.set('locale', match[1] === 'EN_US' ? 'EN_US' : 'ZH_CN');
       } else {

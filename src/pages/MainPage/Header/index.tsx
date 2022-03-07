@@ -1,10 +1,6 @@
 import { PageHeader, Radio } from 'antd';
 import React from 'react';
-import {
-  Link,
-  RouteComponentProps,
-  withRouter,
-} from 'react-router-dom';
+import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import Icon from '@/components/Icon';
 import { trackPageView } from '@/utils/stat';
 import './index.less';
@@ -12,14 +8,14 @@ import './index.less';
 interface IProps extends RouteComponentProps {
   config: {
     breadcrumb: {
-      path: string,
-      breadcrumbName: string
-    }[],
-    title: string,
-    showBackBtn?: boolean,
-    extra?: any
-  }
-};
+      path: string;
+      breadcrumbName: string;
+    }[];
+    title: string;
+    showBackBtn?: boolean;
+    extra?: any;
+  };
+}
 interface IState {
   collapsed: boolean;
 }
@@ -28,20 +24,20 @@ class Header extends React.PureComponent<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = {
-      collapsed: false
+      collapsed: false,
     };
   }
 
-  handlePageView = (e) => {
+  handlePageView = e => {
     trackPageView(e.target.value);
     this.props.history.push(e.target.value);
-  }
+  };
 
   handleBack = () => {
     const { breadcrumb } = this.props.config;
     const path = breadcrumb[breadcrumb.length - 2].path;
     this.props.history.push(path);
-  }
+  };
 
   render() {
     const { breadcrumb: routes, title, showBackBtn, extra } = this.props.config;
@@ -54,22 +50,36 @@ class Header extends React.PureComponent<IProps, IState> {
       );
     };
     const { pathname } = this.props.location;
-    const currentPage = extra ? extra.filter(item => item.value === pathname) : null;
+    const currentPage = extra
+      ? extra.filter(item => item.value === pathname)
+      : null;
     return (
       <PageHeader
         className="page-header"
-        title={<>
-          {showBackBtn && <Icon className="btn-return blue" icon="#iconreturn" onClick={this.handleBack} />}
-          <span>{title}</span>
-        </>}
+        title={
+          <>
+            {showBackBtn && (
+              <Icon
+                className="btn-return blue"
+                icon="#iconreturn"
+                onClick={this.handleBack}
+              />
+            )}
+            <span>{title}</span>
+          </>
+        }
         breadcrumb={{ itemRender, routes }}
-        extra={extra && currentPage.length !== 0 ? <Radio.Group
-          options={extra}
-          onChange={this.handlePageView}
-          value={currentPage[0].value}
-          optionType="button"
-          buttonStyle="solid"
-        /> : null}
+        extra={
+          extra && currentPage.length !== 0 ? (
+            <Radio.Group
+              options={extra}
+              onChange={this.handlePageView}
+              value={currentPage[0].value}
+              optionType="button"
+              buttonStyle="solid"
+            />
+          ) : null
+        }
       />
     );
   }

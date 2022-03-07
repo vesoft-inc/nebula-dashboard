@@ -68,12 +68,8 @@ export const handleTrackEvent = event => {
     }
   }
   if (target) {
-    const {
-      trackCategory,
-      trackAction,
-      trackLabel,
-      trackValue,
-    } = target.dataset;
+    const { trackCategory, trackAction, trackLabel, trackValue } =
+      target.dataset;
     trackEvent(trackCategory, trackAction, trackLabel, trackValue);
   }
 };
