@@ -1,5 +1,5 @@
-import { Dropdown, Layout, Menu } from 'antd';
 import React from 'react';
+import { Dropdown, Layout, Menu } from 'antd';
 import { connect } from 'react-redux';
 import intl from 'react-intl-universal';
 import cookies from 'js-cookie';
@@ -26,12 +26,12 @@ const { Sider, Content } = Layout;
 const { SubMenu } = Menu;
 
 const mapDispatch: any = (dispatch: IDispatch) => ({
-    asyncLogout: dispatch.app.asyncLogout,
-    asyncGetAppInfo: dispatch.app.asyncGetAppInfo,
-    asyncGetCustomConfig: dispatch.app.asyncGetCustomConfig,
-    asyncGetServiceMetric: dispatch.serviceMetric.asyncGetServiceMetric,
-    asyncGetSpaces: dispatch.nebula.asyncGetSpaces
-  });
+  asyncLogout: dispatch.app.asyncLogout,
+  asyncGetAppInfo: dispatch.app.asyncGetAppInfo,
+  asyncGetCustomConfig: dispatch.app.asyncGetCustomConfig,
+  asyncGetServiceMetric: dispatch.serviceMetric.asyncGetServiceMetric,
+  asyncGetSpaces: dispatch.nebula.asyncGetSpaces
+});
 
 const mapState = (state: IRootState) => ({
   appVersion: state.app.version,
@@ -40,8 +40,8 @@ const mapState = (state: IRootState) => ({
 
 interface IProps
   extends ReturnType<typeof mapState>,
-    ReturnType<typeof mapDispatch>,
-    RouteComponentProps {}
+  ReturnType<typeof mapDispatch>,
+  RouteComponentProps { }
 
 interface IState {
   collapsed: boolean;
@@ -212,15 +212,23 @@ class MainPage extends React.Component<IProps, IState> {
         </Sider>
         <Layout className="page-content">
           <Switch>
-            {RoutesList.map(route => (
-              <Route
-                path={route.path}
-                render={() => <>
-                <Header config={route.headerConfig} />
-                <Content className="main-content">
-                  <Route component={route.component} />
-                </Content>
-              </>} key={route.path} exact={route.exact} />)}
+            {
+              RoutesList.map(route => (
+                <Route
+                  path={route.path}
+                  render={
+                    () => (
+                      <>
+                        <Header config={route.headerConfig} />
+                        <Content className="main-content">
+                          <Route component={route.component} />
+                        </Content>
+                      </>
+                    )
+                  }
+                  key={route.path} exact={route.exact} />
+              ))
+            }
             <Redirect from="/*" to="/machine/overview" />
           </Switch>
         </Layout>

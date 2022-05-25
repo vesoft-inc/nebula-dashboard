@@ -1,6 +1,6 @@
 import path from 'path';
 import merge from 'webpack-merge';
-import htmlWebpackPlugin from 'html-webpack-plugin';
+// import htmlWebpackPlugin from 'html-webpack-plugin';
 import webpack from 'webpack';
 import CopyPlugin from 'copy-webpack-plugin';
 
@@ -17,22 +17,14 @@ const devConfig: any = {
     path: path.resolve(__dirname, '../public'),
     publicPath: '/',
   },
-  devServer: {
-    static: {
-      static: path.resolve(__dirname, '../public'),
-    }
-  },
   plugins: [
-    new htmlWebpackPlugin({
-      template: path.join(__dirname, '../src/index.html'),
-      title: 'Nebula Dashboard',
-    }),
     new webpack.HotModuleReplacementPlugin(),
     new CopyPlugin({
       patterns: [
         { from: path.join(__dirname, '../src/static/iconfont/iconfont.js') }
       ]
     }),
+    new webpack.ProgressPlugin(),
   ]
 };
 
