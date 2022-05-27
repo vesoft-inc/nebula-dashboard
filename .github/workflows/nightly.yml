@@ -1,8 +1,5 @@
-name: Dashboard tar Release
-on:
-  push:
-    branches:
-      - master
+name: Dashboard Mannually Package
+on: workflow_dispatch
 jobs:
   package:
     name: build package
@@ -12,32 +9,33 @@ jobs:
         os:
           - centos7
     container:
-      image: vesoft/nebula-dev:${{ matrix.os }}
+      image: reg.vesoft-inc.com/dashboard/dashboard-dev:${{ matrix.os }}
+      credentials:
+        username: ${{ secrets.HARBOR_USERNAME }}
+        password: ${{ secrets.HARBOR_PASSWORD }}
     steps:
       - name: keep workspace empty
         run: |
-          if [[ -d source ]]; then rm -rf source; fi
-          if [[ -d nebula-dashboard ]]; then rm -rf nebula-dashboard; fi
+          rm -rf *
       - uses: actions/checkout@v2
         with:
-          ref: 'master'
           path: source/nebula-dashboard
       - uses: actions/checkout@v2
         with:
           repository: vesoft-inc/nebula-http-gateway
           path: source/nebula-http-gateway
-       
+          ref: v2.2.1
       - uses: actions/setup-go@v2
         with:
           go-version: '^1.13.1'
       - uses: actions/setup-node@v2
         with:
-          node-version: '10'
+          node-version: '14'
       - name: ls
         run: ls -a
       - name: Package
         run: bash ./source/nebula-dashboard/scripts/package.sh ${{ secrets.GA_ID }}
       - name: Upload to OSS
-        run: ls -a & ossutil64 -e ${{ secrets.OSS_ENDPOINT }} -i ${{ secrets.OSS_ID }} -k ${{ secrets.OSS_SECRET }} -f cp ./  ${{ secrets.OSS_TEST_URL }} --include "nebula-dashboard-*.tar.gz" --only-current-dir -r
+        run: bash ./source/nebula-dashboard/scripts/upload.sh ${{ secrets.OSS_ENDPOINT }} ${{ secrets.OSS_ID }} ${{ secrets.OSS_SECRET }} ${{ secrets.OSS_URL }}
 
     
