@@ -12,8 +12,17 @@ jobs:
         os:
           - centos7
     container:
-      image: vesoft/nebula-dev:${{ matrix.os }}
+      image: reg.vesoft-inc.com/dashboard/dashboard-dev:${{ matrix.os }}
+      credentials:
+        username: ${{ secrets.HARBOR_USERNAME }}
+        password: ${{ secrets.HARBOR_PASSWORD }}
     steps:
+<<<<<<< HEAD
+=======
+      - name: keep workspace empty
+        run: |
+          rm -rf *
+>>>>>>> 977ecb6 (fix: gateway disconnect issue (#51))
       - uses: actions/checkout@v2
         with:
           ref: 'master'
@@ -22,7 +31,11 @@ jobs:
         with:
           repository: vesoft-inc/nebula-http-gateway
           path: source/nebula-http-gateway
+<<<<<<< HEAD
       ##ToDO: add nebula-stats-exporter、node-exporter and prometheus 
+=======
+          ref: v2.2.1
+>>>>>>> 977ecb6 (fix: gateway disconnect issue (#51))
       - uses: actions/setup-go@v2
         with:
           go-version: '^1.13.1'

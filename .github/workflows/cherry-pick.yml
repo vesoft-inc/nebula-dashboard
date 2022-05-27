@@ -1,0 +1,28 @@
+name: Auto Cherry Pick 
+on: workflow_dispatch
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  auto-cherry-pick:
+    runs-on: [self-hosted, nebula-fast]
+    container:
+      image: reg.vesoft-inc.com/dashboard/dashboard-dev:centos7
+      credentials:
+        username: ${{ secrets.HARBOR_USERNAME }}
+        password: ${{ secrets.HARBOR_PASSWORD }}
+    steps:
+      - name: keep workspace empty  
+        run: |
+          rm -rf *
+      - name: git config set
+        env:
+          CLOUD_GH_PAT: ${{ secrets.GITHUB_TOKEN }}
+      - name: auto cherry pick
+        uses: xigongdaEricyang/cherry-pick-robot@with-python
+        with:
+            repo_token: ${{ secrets.CLOUD_GH_PAT }}
+            pr_label: ^v[0-9]*\.[0-9]*-cherry-pick$
+ 
