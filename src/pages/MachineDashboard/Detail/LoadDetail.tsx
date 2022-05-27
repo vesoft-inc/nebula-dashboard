@@ -6,12 +6,13 @@ import { SUPPORT_METRICS } from '@/utils/promQL';
 
 const mapState = (state: IRootState) => ({
   type: 'load',
-  dataSource: state.machine.loadStat,
+  instances: state.machine.instanceList,
   metricOptions: SUPPORT_METRICS.load,
+  metricsFilterValues: state.machine.metricsFilterValues,
   loading: state.loading.effects.machine.asyncGetLoadByRange,
 });
 
-const mapDispatch = (dispatch: IDispatch) => ({
+const mapDispatch: any = (dispatch: IDispatch) => ({
   asyncGetDataSourceByRange: dispatch.machine.asyncGetLoadByRange,
 });
 

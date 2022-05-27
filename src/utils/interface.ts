@@ -1,3 +1,6 @@
+import { TIME_OPTION_TYPE } from "./dashboard";
+import { INTERVAL_FREQUENCY_TYPE } from "./service";
+
 export interface IMetric {
   instance: string;
   instanceName: string;
@@ -30,4 +33,28 @@ export interface IServicePanelConfig {
   space?: string;
   metricType: string;
   baseLine: number | undefined;
+}
+
+export interface IMetricType {
+  key: string;
+  value: string;
+}
+
+export interface IMetricOption {
+  metric: string;
+  isSpaceMetric: boolean;
+  metricType: IMetricType[];
+  valueType: string;
+}
+
+export interface MetricsPanelValue {
+  timeRange: TIME_OPTION_TYPE | [number, number];
+  instanceList: string[];
+  frequency: number;
+}
+
+export interface ServiceMetricsPanelValue extends MetricsPanelValue {
+  space: string;
+  metricType: string;
+  period: string;
 }

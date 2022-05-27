@@ -1,21 +1,25 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { connect } from 'react-redux';
-import { IDispatch } from '@/store';
+// import { IDispatch } from '@/store';
 import { NEBULA_COUNT } from '@/utils/promQL';
 import { DETAIL_DEFAULT_RANGE } from '@/utils/dashboard';
 import { SERVICE_POLLING_INTERVAL } from '@/utils/service';
+import { isEnterpriseVersion } from '@/utils';
 
 import './index.less';
 
-const mapState = () => ({});
-
-const mapDispatch = (dispatch: IDispatch) => ({
-  asyncGetStatus: dispatch.service.asyncGetStatus,
+const mapState = (state: any) => ({
+  cluster: state.cluster?.cluster,
 });
 
-interface IProps extends ReturnType<typeof mapDispatch> {
+const mapDispatch = (dispatch) => ({});
+
+const shouldCheckCluster = isEnterpriseVersion();
+
+interface IProps extends ReturnType<typeof mapState>  {
   type: string;
+  clusterID?: string;
   getStatus: (payload) => void;
 }
 
@@ -23,7 +27,7 @@ interface IState {
   normal: number;
   abnormal: number;
 }
-class StatusPanel extends React.PureComponent<IProps, IState> {
+class StatusPanel extends React.Component<IProps, IState> {
   pollingTimer: any;
 
   constructor(props: IProps) {
@@ -39,8 +43,16 @@ class StatusPanel extends React.PureComponent<IProps, IState> {
   }
 
   pollingData = () => {
-    this.asyncGetStatus();
-    this.pollingTimer = setTimeout(this.pollingData, SERVICE_POLLING_INTERVAL);
+    if (shouldCheckCluster) {
+      const { cluster } = this.props;
+      if (cluster.id) {
+        this.asyncGetStatus();
+        this.pollingTimer = setTimeout(this.pollingData, SERVICE_POLLING_INTERVAL);
+      }
+    } else {
+      this.asyncGetStatus();
+      this.pollingTimer = setTimeout(this.pollingData, SERVICE_POLLING_INTERVAL);
+    }
   };
 
   componentWillUnmount() {
@@ -50,11 +62,12 @@ class StatusPanel extends React.PureComponent<IProps, IState> {
   }
 
   asyncGetStatus = async () => {
-    const { type } = this.props;
+    const { type, cluster } = this.props;
     const { normal, abnormal } = (await this.props.getStatus({
       query: NEBULA_COUNT[type],
       end: Date.now(),
       interval: DETAIL_DEFAULT_RANGE,
+      clusterID: cluster?.id,
     })) as any;
     this.setState({ normal, abnormal });
   };

@@ -1,4 +1,4 @@
-import { lazy } from 'react';
+// import { lazy } from 'react';
 import intl from 'react-intl-universal';
 import LoadDetail from '../MachineDashboard/Detail/LoadDetail';
 import MachineDashboard from '@/pages/MachineDashboard';

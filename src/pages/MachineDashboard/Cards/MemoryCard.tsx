@@ -5,22 +5,20 @@ import { getDataByType } from '@/utils/dashboard';
 import { VALUE_TYPE } from '@/utils/promQL';
 
 const mapState = (state: IRootState) => {
-  const { memoryStat, memorySizeStat } = state.machine;
+  const { memoryStat, memorySizeStat, metricsFilterValues } = state.machine;
   const { memoryBaseLine } = state.setting;
   const { aliasConfig } = state.app;
   return {
     data: getDataByType({
       data: memoryStat,
-      type: 'all',
+      type: metricsFilterValues.instanceList,
       name: 'instance',
       aliasConfig,
     }),
     sizes: memorySizeStat,
     baseLine: memoryBaseLine,
     valueType: VALUE_TYPE.percentage,
-    loading:
-      !!state.loading.effects.machine.asyncGetMemorySizeStat &&
-      !!state.loading.effects.machine.asyncGetMemoryStatByRange,
+    loading:false,
   };
 };
 

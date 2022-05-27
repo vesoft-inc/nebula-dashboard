@@ -1,7 +1,7 @@
 import _ from 'loadsh';
 import { VALUE_TYPE } from '@/utils/promQL';
 
-export const METRICS_DESCRIPTION = {
+export const METRICS_DESCRIPTION: any = {
   num_queries: 'num_queries description',
   num_slow_queries: 'num_slow_queries description',
   query_latency_us: 'query_latency_us description',

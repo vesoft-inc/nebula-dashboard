@@ -31,7 +31,9 @@
     "manual": "User Manual",
     "forum": "Forum",
     "forumLink": "https://discuss.nebula-graph.io/",
-    "all":"All"
+    "all":"All",
+    "metricLabel": "instance",
+    "updateFrequency": "frequency"
   },
   "rules": {
     "usernameRequired": "Username Required",

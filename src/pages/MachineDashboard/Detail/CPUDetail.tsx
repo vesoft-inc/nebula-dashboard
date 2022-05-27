@@ -5,12 +5,11 @@ import { SUPPORT_METRICS } from '@/utils/promQL';
 
 const mapState = (state: IRootState) => ({
   type: 'cpu',
-  dataSource: state.machine.cpuStat,
   metricOptions: SUPPORT_METRICS.cpu,
   loading: !!state.loading.effects.machine.asyncGetCPUStatByRange,
 });
 
-const mapDispatch = (dispatch: IDispatch) => ({
+const mapDispatch: any = (dispatch: IDispatch) => ({
   asyncGetDataSourceByRange: dispatch.machine.asyncGetCPUStatByRange,
 });
 

@@ -6,7 +6,7 @@ import LineChart from '@/components/Charts/LineChart';
 import { ILineChartMetric, IStatSingleItem } from '@/utils/interface';
 import { configDetailChart } from '@/utils/chart/chart';
 import { VALUE_TYPE } from '@/utils/promQL';
-import { getMaxNumAndLength } from '@/utils/dashboard';
+import { getMaxNum, getMaxNumAndLength } from '@/utils/dashboard';
 
 interface IProps {
   data: ILineChartMetric[];

@@ -85,7 +85,6 @@ class ServicePanel extends React.Component<IProps> {
     } = this.props;
     if (serviceType) {
       const metricsList = serviceMetric[`${serviceType}d`];
-      console.log('metricsList', metricsList);
       const timeRange = getDefaultTimeRange();
       const defaultFormParams = {
         interval: DETAIL_DEFAULT_RANGE,
@@ -160,6 +159,7 @@ class ServicePanel extends React.Component<IProps> {
       instanceList,
       asyncGetStatus,
     } = this.props;
+
     return (
       <Form
         className="metrics-params-form"
@@ -229,7 +229,6 @@ class ServicePanel extends React.Component<IProps> {
               const isSpaceMetric = serviceMetric[`${serviceType}d`].filter(
                 item => item.metric === metric,
               )[0]?.isSpaceMetric;
-              console.log('spaces', spaces);
               return getFieldValue('metric') && isSpaceMetric ? (
                 <Form.Item label={intl.get('service.spaces')} name="space">
                   <DashboardSelect>

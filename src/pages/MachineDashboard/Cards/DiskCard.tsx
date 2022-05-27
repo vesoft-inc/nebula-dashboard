@@ -5,12 +5,20 @@ import { IRootState } from '@/store';
 import SpaceChart from '@/components/Charts/SpaceChart';
 
 const mapState = (state: IRootState) => {
-  const { diskSizeStat, diskStat } = state.machine;
+  const { diskSizeStat, diskStat, metricsFilterValues } = state.machine;
   const { aliasConfig } = state.app;
 
+  const { instanceList } = metricsFilterValues;
+  
   return {
     // According to type, only the detail increases total
     diskUsageDetail: diskStat
+      .filter(item => {
+        if (instanceList.includes('all')) {
+          return true;
+        }
+        return instanceList.includes(item.metric.instance)
+      })
       .filter(item => item.metric.instance !== 'total')
       .map((instance, idx) => {
         const latestValues = _.last(instance.values);

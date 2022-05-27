@@ -6,12 +6,13 @@ import { SUPPORT_METRICS } from '@/utils/promQL';
 
 const mapState = (state: IRootState) => ({
   type: 'disk',
-  dataSource: state.machine.diskStat,
+  instances: state.machine.instanceList,
   metricOptions: SUPPORT_METRICS.disk,
+  metricsFilterValues: state.machine.metricsFilterValues,
   loading: state.loading.effects.machine.asyncGetDiskStatByRange,
 });
 
-const mapDispatch = (dispatch: IDispatch) => ({
+const mapDispatch: any = (dispatch: IDispatch) => ({
   asyncGetDataSourceByRange: dispatch.machine.asyncGetDiskStatByRange,
 });
 

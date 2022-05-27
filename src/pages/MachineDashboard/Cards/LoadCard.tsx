@@ -6,19 +6,19 @@ import { getDataByType } from '@/utils/dashboard';
 import { VALUE_TYPE } from '@/utils/promQL';
 
 const mapState = (state: IRootState) => {
-  const { loadStat } = state.machine;
+  const { loadStat, metricsFilterValues } = state.machine;
   const { loadBaseLine } = state.setting;
   const { aliasConfig } = state.app;
   return {
     baseLine: loadBaseLine,
     data: getDataByType({
       data: loadStat,
-      type: 'all',
+      type: metricsFilterValues.instanceList,
       name: 'instance',
       aliasConfig,
     }),
     valueType: VALUE_TYPE.number,
-    loading: !!state.loading.effects.machine.asyncGetLoadByRange,
+    loading: false,
   };
 };
 

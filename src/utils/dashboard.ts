@@ -8,6 +8,7 @@ export const CARD_RANGE = 60 * 60 * 24 * 1000;
 export const CARD_POLLING_INTERVAL = 10000 * 1000;
 export const MAX_STEP_ALLOW = 11000;
 export const TIME_INTERVAL_OPTIONS = [5, 60, 600, 3600];
+export const AGGREGATION_OPTIONS = ['sum', 'rate', 'avg', 'p75', 'p95', 'p999', 'p99'];
 
 export const THRESHOLDS = {
   low: 60,
@@ -66,11 +67,6 @@ export const renderUnit = type => {
   }
 };
 export const VERSION_REGEX = /\d+\.{1}\d+\.{1}\d+/;
-// 0.0.1 means unknow version
-export function getVersion(v: string) {
-  const match = v?.match(VERSION_REGEX);
-  return match ? match[0] : v;
-}
 
 export const getBaseLineByUnit = (config: {
   baseLine: number;
@@ -148,7 +144,7 @@ export const getProperByteDesc = (bytes: any, conversion: number) => {
 
 export const getDataByType = (payload: {
   data: IStatRangeItem[];
-  type?: string;
+  type?: string | string[];
   name: string;
   aliasConfig?: any;
 }) => {
@@ -157,7 +153,13 @@ export const getDataByType = (payload: {
   data.forEach(instance => {
     instance.values.forEach(([timstamps, value]) => {
       const _name = instance.metric[name];
-      if ((type === 'all' && _name !== 'total') || _name === type) {
+      let shouldPush = false;
+      if (typeof type === 'string') {
+        shouldPush = (type === 'all' && _name !== 'total') || _name === type;
+      } else if (Array.isArray(type)) {
+        shouldPush = (type.includes('all') && _name !== 'total') || !!type.find(t => _name.includes(t))
+      }
+      if (shouldPush) {
         res.push({
           type: aliasConfig && aliasConfig[_name] ? aliasConfig[_name] : _name,
           value: Number(value),
@@ -181,33 +183,43 @@ export const getProperTickInterval = period => {
   }
 };
 
+export enum TIME_OPTION_TYPE {
+  HOUR1 = '1hour',
+  HOUR6 = '6hour',
+  HOUR12 = '12hour',
+  DAY1 = '1day',
+  DAY3 = '3day',
+  DAY7  = '7day',
+  DAY14 = '14day',
+}
+
 export const TIMEOPTIONS = [
   {
-    name: '1hour',
+    name: TIME_OPTION_TYPE.HOUR1,
     value: 60 * 60 * 1000,
   },
   {
-    name: '6hour',
+    name: TIME_OPTION_TYPE.HOUR6,
     value: 60 * 60 * 6 * 1000,
   },
   {
-    name: '12hour',
+    name: TIME_OPTION_TYPE.HOUR12,
     value: 60 * 60 * 12 * 1000,
   },
   {
-    name: '1day',
+    name: TIME_OPTION_TYPE.DAY1,
     value: 60 * 60 * 24 * 1000,
   },
   {
-    name: '3day',
+    name: TIME_OPTION_TYPE.DAY3,
     value: 60 * 60 * 24 * 3 * 1000,
   },
   {
-    name: '7day',
+    name: TIME_OPTION_TYPE.DAY7,
     value: 60 * 60 * 24 * 7 * 1000,
   },
   {
-    name: '14day',
+    name: TIME_OPTION_TYPE.DAY14,
     value: 60 * 60 * 24 * 14 * 1000,
   },
 ];
@@ -231,6 +243,17 @@ export const NEED_ADD_SUM_QUERYS = [
   'num_queries',
   'num_slow_queries',
 ];
+
+export const calcTimeRange = (timeRange: TIME_OPTION_TYPE | [number, number]): [number, number] => {
+  const end = Date.now();
+  if (typeof timeRange === 'string') {
+    const value = TIMEOPTIONS.find(t => t.name === timeRange)?.value!;
+    return [end - value, end];
+  } else if ( typeof timeRange === 'object' && timeRange.length === 2) {
+    return timeRange;
+  }
+  throw new Error('timeRange is not valid');
+}
 
 export enum MACHINE_TYPE {
   cpu = 'cpu',
@@ -292,3 +315,42 @@ export const getMaxNumAndLength = (payload: {
   }
   return { maxNum, maxNumLen };
 };
+
+export function compareVersion(v1, v2) {
+  // if not version format, return -1;
+  if (!v1.match(VERSION_REGEX) || !v2.match(VERSION_REGEX)) {
+    return -1;
+  }
+  v1 = v1.split('.');
+  v2 = v2.split('.');
+  const len = Math.max(v1.length, v2.length);
+
+  while (v1.length < len) {
+    v1.push('0');
+  }
+  while (v2.length < len) {
+    v2.push('0');
+  }
+
+  for (let i = 0; i < len; i++) {
+    const num1 = parseInt(v1[i], 10);
+    const num2 = parseInt(v2[i], 10);
+
+    if (num1 > num2) {
+      return 1;
+    }
+    if (num1 < num2) {
+      return -1;
+    }
+  }
+
+  return 0;
+}
+
+export const UNKONW_VERSION = 'unknow';
+
+// 0.0.1 means unknow version
+export function getVersion(v: string) {
+  const match = v?.match(VERSION_REGEX);
+  return match ? match[0] : v;
+}

@@ -2,7 +2,12 @@ import path from 'path';
 import { Configuration } from 'webpack';
 import CopyPlugin from 'copy-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 // import pkg from '../package.json';
+
+const isDevEnv = () => process.env.NODE_ENV === 'development';
+
+const useCssPlugin = () => !isDevEnv();
 
 const baseConifg: Configuration = {
   module: {
@@ -33,25 +38,56 @@ const baseConifg: Configuration = {
         include: path.join(__dirname, `../src`),
       },
       {
-        test: /\.less/,
+        test: /\.css$/,
         use: [
-          'style-loader',
-          {
-            loader: 'css-loader',
-            options: {
-              // url: true,
-            }
-          },
+          useCssPlugin() ? MiniCssExtractPlugin.loader : 'style-loader',
+          'css-loader',
+          'postcss-loader',
+        ],
+      },
+      {
+        test: /(?<!module)\.less$/,
+        use: [
+          useCssPlugin() ? MiniCssExtractPlugin.loader : 'style-loader',
+          'css-loader',
+          'postcss-loader',
           {
             loader: 'less-loader',
             options: {
               lessOptions: {
                 modifyVars: {
                   'primary-color': '#4372FF',
+                  'link-color': '#4372FF',
                 },
                 javascriptEnabled: true,
               },
             },
+          },
+        ],
+      },
+      {
+        test: /\.module\.less$/,
+        exclude: /node_modules/,
+        use: [
+          useCssPlugin() ? MiniCssExtractPlugin.loader : 'style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              modules: {
+                mode: 'local',
+                exportGlobals: true,
+                localIdentName: '[local]__[hash:base64:5]',
+                localIdentContext: path.resolve(__dirname, '..', 'src'),
+                exportLocalsConvention: 'camelCase',
+              },
+            },
+          },
+          {
+            loader: 'postcss-loader',
+          },
+          {
+            loader: 'less-loader',
+            options: { lessOptions: { javascriptEnabled: true } },
           },
         ],
       },
@@ -72,11 +108,6 @@ const baseConifg: Configuration = {
     }
   },
   plugins: [
-    // new webpack.DefinePlugin({
-    //   'process.env': {
-    //     DASHBOARD_VERSION: JSON.stringify(pkg.version),
-    //   },
-    // }),
     new CopyPlugin({
       patterns: [
         {
@@ -90,6 +121,7 @@ const baseConifg: Configuration = {
       favicon: path.join(__dirname, '../favicon.ico'),
       templateParameters: {
         DASHBOARD_VERSION: process.env.DASHBOARD_VERSION,
+        VERSION_TYPE: 'community',
       },
     }),
   ]

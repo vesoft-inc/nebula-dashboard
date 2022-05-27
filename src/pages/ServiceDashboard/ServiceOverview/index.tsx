@@ -1,6 +1,5 @@
 import { Col, Row } from 'antd';
 import React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
 import intl from 'react-intl-universal';
 import _ from 'lodash';
 import CustomServiceQueryPanel from './CustomServiceQueryPanel';
@@ -11,19 +10,20 @@ import Icon from '@/components/Icon';
 import { trackPageView } from '@/utils/stat';
 import './index.less';
 
-interface IProps extends RouteComponentProps {
+interface IProps {
   serviceType: string;
   icon: string;
   configs: IServicePanelConfig[];
   onConfigPanel: (serviceType: string, index: number) => void;
   getStatus: (payload) => void;
+  onView: (serviceType: string) => void;
 }
 
-class ServiceOverview extends React.PureComponent<IProps> {
+class ServiceOverview extends React.Component<IProps> {
   handleView = () => {
-    const { serviceType } = this.props;
+    const { serviceType, onView } = this.props;
     trackPageView(`${serviceType}_metrics`);
-    this.props.history.push(`/service/${serviceType}-metrics`);
+    onView(serviceType);
   };
 
   render() {
@@ -54,4 +54,4 @@ class ServiceOverview extends React.PureComponent<IProps> {
   }
 }
 
-export default withRouter(ServiceOverview);
+export default ServiceOverview;

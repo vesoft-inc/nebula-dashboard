@@ -33,6 +33,7 @@ export const configDetailChart = (
     sizes?: any;
     valueType?: VALUE_TYPE;
     isCard?: boolean;
+    maxNum?: number;
   },
 ): Chart => {
   chartInstance
@@ -93,8 +94,8 @@ export const configDetailChart = (
       chartInstance.scale({
         value: {
           min: 0,
-          max: 100,
-          tickInterval: 25,
+          max: options.maxNum || 100,
+          tickInterval: options.maxNum ? (options.maxNum % 10 + 10 ) / 5 : 25,
         },
       });
       break;

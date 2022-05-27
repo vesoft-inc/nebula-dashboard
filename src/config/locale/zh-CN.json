@@ -31,7 +31,8 @@
     "manual": "使用手册",
     "forum": "求助论坛",
     "forumLink": "https://discuss.nebula-graph.com.cn/",
-    "all":"全部"
+    "all":"全部",
+    "metricLabel": "实例"
   },
   "rules": {
     "usernameRequired": "请输入用户名",
@@ -86,7 +87,8 @@
     "queryCondition":"查询条件",
     "serviceMetricsDetails": "服务指标详情",
     "chooseSpace": "请选择图空间",
-    "enterPartitionId": "请输入 partitionId"
+    "enterPartitionId": "请输入 partitionId",
+    "updateFrequency": "更新频率"
   },
   "component": {
     "dashboardDetail": {
