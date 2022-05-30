@@ -1,9 +1,5 @@
 name: Auto Cherry Pick 
-# on: workflow_dispatch
-on:
-  push:
-    branches:
-      - upgrade-gateway
+on: workflow_dispatch
 
 defaults:
   run:
