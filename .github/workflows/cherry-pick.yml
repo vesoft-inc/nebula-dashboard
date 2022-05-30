@@ -26,6 +26,6 @@ jobs:
       - name: auto cherry pick
         uses: xigongdaEricyang/cherry-pick-robot@with-python
         with:
-            repo_token: ${{ secrets.CLOUD_GH_PAT }}
+            repo_token: ${{ secrets.GITHUB_TOKEN }}
             pr_label: ^v[0-9]*\.[0-9]*-cherry-pick$
  
