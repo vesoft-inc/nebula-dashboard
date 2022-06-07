@@ -60,8 +60,8 @@ services:
 
   nebula-dashboard:
     build:
-      context: .
-      dockerfile: Dockerfile.dev
+      context: ..
+      dockerfile: playground/Dockerfile.dev
     ports:
       - 7003:7003
     volumes:

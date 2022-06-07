@@ -2,7 +2,8 @@
 
 Start a nebula graph cluster.
 ```bash
-docker-compose up -d -f docker-compose-nebula-graph.yml
+cd playground
+docker-compose -f docker-compose-nebula-graph.yaml up -d
 ```
 
 Run Dashboard.
@@ -16,10 +17,12 @@ docker-compose up -d
 
 Start a nebula graph cluster.
 ```bash
-docker-compose up -d -f docker-compose-nebula-graph.yml
+cd playground
+docker-compose -f docker-compose-nebula-graph.yaml up -d
 ```
 
 ```bash
-docker-compose build -f docker-compose-dev.yml
-docker-compose up
+docker-compose -f docker-compose-dev.yaml build
+docker-compose -f docker-compose-dev.yaml up
 ```
+

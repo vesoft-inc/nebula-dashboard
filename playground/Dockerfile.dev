@@ -1,7 +1,7 @@
 FROM node:16
 WORKDIR /app
-COPY .. .
+COPY . .
 RUN npm install --unsafe-perm && npm run build && npm run pkg && \
-    cp -r public /app/ && cp vendors/config-release.json /app/config.json
+    cp vendors/config-release.json /app/config.json
 
 ENTRYPOINT ["/app/dashboard"]
