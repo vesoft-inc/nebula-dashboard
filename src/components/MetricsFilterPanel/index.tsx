@@ -1,5 +1,5 @@
-import React, { Children, forwardRef, useEffect, useImperativeHandle, useMemo } from 'react';
-import { Button, Form, FormInstance, Select, TreeSelect } from 'antd';
+import React, { forwardRef, useEffect, useImperativeHandle, useMemo } from 'react';
+import { Form, FormInstance, Select, TreeSelect } from 'antd';
 import intl from 'react-intl-universal';
 
 import { INTERVAL_FREQUENCY_LIST } from '@/utils/service';
@@ -78,12 +78,6 @@ const MetricsFilterPanel = (props: IProps, ref) => {
       className={styles.metricsFilterPanel}
       form={form}
       layout="inline"
-      // initialValues={{
-      //   frequency: INTERVAL_FREQUENCY_LIST[0].value,
-      //   instanceList: ['all'],
-      //   timeRange: TIME_OPTION_TYPE.DAY1,
-      //   ...initialValues,
-      // }}
       onChange={handleFormChange}
     >
       <Form.Item name="timeRange">
@@ -103,7 +97,6 @@ const MetricsFilterPanel = (props: IProps, ref) => {
         </Select>
       </Form.Item>
       <Form.Item wrapperCol={{
-        // span: 22,
       }} name="instanceList" label={intl.get('common.metricLabel')}>
         <TreeSelect 
           style={{ minWidth: '250px', maxWidth: '500px' }} 
@@ -115,7 +108,6 @@ const MetricsFilterPanel = (props: IProps, ref) => {
       {
         children ? children: null
       }
-      {/* <Button onClick={handleConfirm} type="primary" className={`${styles.primaryBtn} ${styles.confirmBtn}`}>{intl.get('common.confirm')}</Button> */}
     </Form>
   )
 }

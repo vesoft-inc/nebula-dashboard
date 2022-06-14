@@ -17,7 +17,7 @@ import {
   getBaseLineByUnit,
   calcTimeRange,
 } from '@/utils/dashboard';
-import BaseLineEdit from '@/components/BaseLineEdit';
+import BaseLineEdit from '@/components/BaseLineEditModal';
 import MetricsFilterPanel from '@/components/MetricsFilterPanel';
 
 const mapDispatch: any = (dispatch: any) => ({
@@ -268,12 +268,12 @@ function MachineDashboard(props: IProps) {
           handlerRef={ref => (modalHandlerRef.current = ref)}
           footer={null}
         >
-          <BaseLineEdit
+          {/* <BaseLineEdit
             valueType={getValueType(editPanelType)}
             baseLine={props[`${editPanelType}BaseLine`]}
             onClose={handleClose}
             onBaseLineChange={handleBaseLineChange}
-          />
+          /> */}
         </Modal>
       </div>
     </Spin>

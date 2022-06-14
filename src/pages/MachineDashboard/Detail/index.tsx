@@ -1,32 +1,24 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import intl from 'react-intl-universal';
 import { Chart } from '@antv/g2';
-// import { uniq } from 'lodash';
-import { Spin } from 'antd';
+import { Popover, Spin } from 'antd';
 import { connect } from 'react-redux';
-// import MachineDetail from '@/components/MachineDetail';
 import LineChart from '@/components/Charts/LineChart';
 import {
   calcTimeRange,
-  // CARD_POLLING_INTERVAL,
-  // DETAIL_DEFAULT_RANGE,
   getBaseLineByUnit,
   getDataByType,
-  getMaxNum,
   getProperTickInterval,
 } from '@/utils/dashboard';
 import { configDetailChart, updateDetailChart } from '@/utils/chart/chart';
-// import { IStatRangeItem } from '@/utils/interface';
 import { IDispatch, IRootState } from '@/store';
-import { SUPPORT_METRICS, VALUE_TYPE } from '@/utils/promQL';
-import { trackEvent } from '@/utils/stat';
-import Modal from '@/components/Modal';
-import BaseLineEdit from '@/components/BaseLineEdit';
+import { VALUE_TYPE } from '@/utils/promQL';
 
-import './index.less';
 import { shouldCheckCluster } from '@/utils';
 import MetricsFilterPanel from '@/components/MetricsFilterPanel';
 import Icon from '@/components/Icon';
+import BaseLineEditModal from '@/components/BaseLineEditModal';
+import './index.less';
 
 const mapDispatch: any = (dispatch: IDispatch) => ({
   asyncUpdateBaseLine: (key, value) =>
@@ -38,11 +30,6 @@ const mapDispatch: any = (dispatch: IDispatch) => ({
 
 const mapState = (state: IRootState) => ({
   aliasConfig: state.app.aliasConfig,
-  cpuBaseLine: state.setting.cpuBaseLine,
-  memoryBaseLine: state.setting.memoryBaseLine,
-  loadBaseLine: state.setting.loadBaseLine,
-  diskBaseLine: state.setting.diskBaseLine,
-  networkBaseLine: state.setting.networkBaseLine,
   cluster: (state as any).cluster?.cluster,
   instances: state.machine.instanceList,
   metricsFilterValues: state.machine.metricsFilterValues,
@@ -68,9 +55,7 @@ let pollingTimer: any;
 
 function Detail(props: IProps) {
 
-  const { metricOptions, loading, aliasConfig, type, asyncGetDataSourceByRange, asyncUpdateBaseLine, cluster, instances, metricsFilterValues, updateMetricsFiltervalues } = props;
-
-  const modalHandlerRef = useRef<any>(undefined);
+  const { metricOptions, loading, aliasConfig, asyncGetDataSourceByRange, asyncUpdateBaseLine, cluster, instances, metricsFilterValues, updateMetricsFiltervalues, type } = props;
 
   const [maxNum, setMaxNum] = useState<number>(0);
   const [dataSources, setDataSources] = useState<any[]>([]);
@@ -82,6 +67,7 @@ function Detail(props: IProps) {
       metric,
       chartInstance: undefined,
       index: i,
+      baseLine: undefined,
     })
   ), [metricOptions]);
 
@@ -144,18 +130,15 @@ function Detail(props: IProps) {
     updateMetricsFiltervalues(values);
   };
 
-  // const handleBaseLineChange = async value => {
-  //   const { baseLine, unit } = value;
-  //   await asyncUpdateBaseLine(
-  //     `${type}BaseLine`,
-  //     getBaseLineByUnit({
-  //       baseLine,
-  //       unit,
-  //       valueType: currentMetricOption.valueType,
-  //     }),
-  //   );
-  //   modalHandlerRef.current.hide();
-  // };
+  const handleBaseLineChange = async (metricChart, values) => {
+    const { baseLine, unit } = values;
+    metricChart.baseLine = getBaseLineByUnit({
+      baseLine,
+      unit,
+      valueType: metricChart.valueType,
+    });
+    metricChart.chartRef.updateChart(metricChart.baseLine);
+  };
 
   const renderChart = (i: number) => (chartInstance: Chart) => {
     const [startTimestamps, endTimestamps] = calcTimeRange(metricsFilterValues.timeRange);
@@ -186,19 +169,14 @@ function Detail(props: IProps) {
     })
   };
 
-  const handleBaseLineEdit = () => {
-    if (modalHandlerRef.current) {
-      modalHandlerRef.current.show();
-    }
+  const handleBaseLineEdit = (metricChart) => () => {
+    BaseLineEditModal.show({
+      baseLine: metricChart.baseLine,
+      valueType: metricChart.metric.valueType,
+      onOk: (values) => handleBaseLineChange(metricChart, values),
+    });
   };
 
-  const handleClose = () => {
-    if (modalHandlerRef.current) {
-      modalHandlerRef.current.hide();
-    }
-  };
-
-  const baseLine = useMemo(() => props[`${type}BaseLine`], [type]);
 
   const getTickInterval = () => {
     const [startTimestamps, endTimestamps] = calcTimeRange(metricsFilterValues.timeRange);
@@ -213,24 +191,35 @@ function Detail(props: IProps) {
         </div>
         <div className='detail-content'>
           {
-            metricOptions.map((metricOption, i) => (
+            metricCharts.map((metricChart, i) => (
               <div key={i} className='chart-item'>
-                <div className='chart-title'>{metricOption.metric}</div>
+                <div className='chart-title'>
+                  {metricChart.metric.metric}
+                  <Popover
+                    className={"chart-title-popover"}
+                    content={
+                      <div>{intl.get(`metric_description.${metricChart.metric.metric}`)}</div>
+                    }
+                  >
+                    <Icon className="metric-info-icon blue chart-title-desc" icon="#iconnav-serverInfo" />
+                  </Popover>
+                </div>
                 <div className='chart-content'>
                   <LineChart
                     isDefaultScale={
-                      metricOption.valueType === VALUE_TYPE.percentage
+                      metricChart.metric.valueType === VALUE_TYPE.percentage
                     }
                     yAxisMaximum={maxNum}
                     tickInterval={getTickInterval()}
-                    baseLine={baseLine}
+                    baseLine={metricChart.baseLine}
                     options={{ padding: [10, 70, 70, 70] }}
+                    ref={ref => metricChart.chartRef = ref}
                     renderChart={renderChart(i)}
                   />
                 </div>
                 <div
                   className="btn-icon-with-desc blue base-line"
-                  onClick={handleBaseLineEdit}
+                  onClick={handleBaseLineEdit(metricChart)}
                 >
                   <Icon icon="#iconSetup" />
                   <span>{intl.get('common.baseLine')}</span>
@@ -240,20 +229,6 @@ function Detail(props: IProps) {
           }
         </div>
       </div>
-      {/* <Modal
-        title="empty"
-        className="machine-modal"
-        width="550px"
-        handlerRef={handler => (modalHandlerRef.current = handler)}
-        footer={null}
-      >
-        <BaseLineEdit
-          valueType={currentMetricOption.valueType}
-          baseLine={baseLine || 0}
-          onClose={handleClose}
-          onBaseLineChange={handleBaseLineChange}
-        />
-      </Modal> */}
     </Spin>
   );
 }

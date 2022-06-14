@@ -1,56 +1,29 @@
-import { Spin } from 'antd';
+import { Popover, Spin } from 'antd';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import intl from 'react-intl-universal';
 import { RouteComponentProps, useLocation, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-// import { FormInstance } from 'antd/lib/form';
 import { Chart } from '@antv/g2';
-import dayjs from 'dayjs';
-// import Panel from './Panel';
 import {
-  CARD_POLLING_INTERVAL,
-  DETAIL_DEFAULT_RANGE,
-  NEED_ADD_SUM_QUERYS,
-  getBaseLineByUnit,
   getDataByType,
-  // getDefaultTimeRange,
-  getMaxNum,
   getProperTickInterval,
   calcTimeRange,
+  getBaseLineByUnit,
+  getMaxNum,
 } from '@/utils/dashboard';
 import { IDispatch, IRootState } from '@/store';
 import { VALUE_TYPE } from '@/utils/promQL';
-// import { SERVICE_QUERY_PERIOD } from '@/utils/service';
-import { IMetricOption, IStatRangeItem, ServiceMetricsPanelValue } from '@/utils/interface';
-// import ServiceHeader from '@/components/Service/ServiceHeader';
+import { IMetricOption, ServiceMetricsPanelValue } from '@/utils/interface';
 
 import LineChart from '@/components/Charts/LineChart';
 import { configDetailChart, updateDetailChart } from '@/utils/chart/chart';
 import Icon from '@/components/Icon';
-import Modal from '@/components/Modal';
-import BaseLineEdit from '@/components/BaseLineEdit';
+import BaseLineEditModal from '@/components/BaseLineEditModal';
 
 import ServiceMetricsFilterPanel from '@/components/ServiceMetricsFilterPanel';
 import { shouldCheckCluster } from '@/utils';
 
 import './index.less';
-
-// interface IState {
-//   serviceType: string;
-//   metricsValueType: VALUE_TYPE;
-//   instanceList: string[];
-//   data: IStatRangeItem[];
-//   maxNum: number;
-//   totalData: IStatRangeItem[];
-//   baseLine: number | undefined;
-//   interval: number;
-//   instance: string;
-//   metricSpace: string;
-//   metric: string;
-//   metricFunction: string;
-//   period: number;
-//   timeRange: dayjs.Dayjs[];
-// }
 
 const mapDispatch: any = (dispatch: IDispatch) => ({
   asyncGetStatus: dispatch.service.asyncGetStatus,
@@ -80,11 +53,6 @@ interface IProps
 let pollingTimer: any;
 
 function ServiceDetail(props: IProps) {
-  // class ServiceDetail extends React.Component<IProps, IState> {
-  // const chartInstanceRef = useRef<any>();
-
-  const modalHandlerRef = useRef<any>(undefined);
-
   const { asyncFetchMetricsData, asyncGetMetricsSumData, serviceMetric, loading, cluster, updateMetricsFiltervalues, metricsFilterValues, instanceList } = props;
 
 
@@ -93,7 +61,6 @@ function ServiceDetail(props: IProps) {
   const [serviceType, setServiceType] = useState<string>('');
   const [dataSources, setDataSources] = useState<any[]>([]);
   const [maxNum, setMaxNum] = useState(0);
-  const [baseLine, setBaseLine] = useState<number | undefined>(undefined);
   const [showLoading, setShowLoading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -160,6 +127,7 @@ function ServiceDetail(props: IProps) {
       metric,
       chartInstance: undefined,
       index: i,
+      baseLine: undefined,
     }));
     return charts;
   }, [metricTypeMap, metricsFilterValues.metricType])
@@ -206,7 +174,6 @@ function ServiceDetail(props: IProps) {
           space,
           clusterID: cluster?.id,
         }).then(res => {
-          console.log('111', res);
           resolve(res);
         }).catch(e => {
           reject(e)
@@ -237,7 +204,7 @@ function ServiceDetail(props: IProps) {
           name: 'instanceName',
           aliasConfig,
         });
-        setMaxNum(100);
+        setMaxNum(getMaxNum(data));
         updateDetailChart(chart.chartInstance, {
           type: serviceType,
           tickInterval: getProperTickInterval(endTimestamps - startTimestamps),
@@ -256,50 +223,24 @@ function ServiceDetail(props: IProps) {
     });
   };
 
-  // const handleServiceTypeChange = serviceType => {
-  //   setServiceType(serviceType);
-  // };
-
-  // const handleMetricsValueTypeChange = metricsValueType => {
-  //   setMetricsValueType(metricsValueType)
-  // };
-
-  // const handleIntervalChange = interval => {
-  //   setTimeRange(getDefaultTimeRange(interval))
-  // };
-
-  // const handleConfigUpdate = changedValues => {
-  //   if (changedValues.metric) {
-  //     const selectedMetrics = serviceMetric[`${serviceType}d`].filter(
-  //       item => item.metric === changedValues.metric,
-  //     )[0];
-  //     setMetric(changedValues.metric);
-  //     setMetricsValueType(selectedMetrics.valueType);
-  //     setMetricFunction(selectedMetrics.metricType[0].value);
-  //     setBaseLine(undefined);
-  //   }
-  // };
-
-  const handleBaseLineEdit = () => {
-    if (modalHandlerRef.current) {
-      modalHandlerRef.current.show();
-    }
+  const handleBaseLineEdit = (metricChart) => () => {
+    BaseLineEditModal.show({
+      baseLine: metricChart.baseLine,
+      valueType: metricChart.metric.valueType,
+      onOk: (values) => handleBaseLineChange(metricChart, values),
+    })
   };
 
-  // const handleClose = () => {
-  //   if (modalHandlerRef.current) {
-  //     modalHandlerRef.current.hide();
-  //   }
-  // };
-
-  // const handleBaseLineChange = value => {
-  //   const { baseLine, unit } = value;
-  //   setBaseLine(getBaseLineByUnit({
-  //     baseLine,
-  //     unit,
-  //     valueType: metricsValueType,
-  //   }))
-  // };
+  const handleBaseLineChange = async (metricChart, values) => {
+    const { baseLine, unit } = values;
+    metricChart.baseLine = getBaseLineByUnit({
+      baseLine,
+      unit,
+      valueType: metricChart.valueType,
+    });
+    console.log('metricChart.baseLine', metricChart.baseLine);
+    metricChart.chartRef.updateChart(metricChart.baseLine);
+  };
 
   const handleMetricChange = async values => {
     updateMetricsFiltervalues(values);
@@ -326,7 +267,18 @@ function ServiceDetail(props: IProps) {
           {
             metricCharts.map((metricChart, i) => (
               <div key={i} className='chart-item'>
-                <div className='chart-title'>{metricChart.metric.metric}</div>
+                <div className='chart-title'>
+                  {metricChart.metric.metric}
+                  <Popover
+                    className={"chart-title-popover"}
+                    // trigger="click"
+                    content={
+                      <div>{intl.get(`metric_description.${metricChart.metric.metric}`)}</div>
+                    }
+                  >
+                    <Icon className="metric-info-icon blue chart-title-desc" icon="#iconnav-serverInfo" />
+                  </Popover>
+                </div>
                 <div className='chart-content'>
                   <LineChart
                     isDefaultScale={
@@ -334,14 +286,15 @@ function ServiceDetail(props: IProps) {
                     }
                     yAxisMaximum={maxNum}
                     tickInterval={getTickInterval()}
-                    baseLine={baseLine}
+                    baseLine={metricChart.baseLine}
                     options={{ padding: [20, 20, 60, 50] }}
+                    ref={ref => metricChart.chartRef = ref}
                     renderChart={renderChart(i)}
                   />
                 </div>
                 <div
                   className="btn-icon-with-desc blue base-line"
-                  onClick={handleBaseLineEdit}
+                  onClick={handleBaseLineEdit(metricChart)}
                 >
                   <Icon icon="#iconSetup" />
                   <span>{intl.get('common.baseLine')}</span>

@@ -1,32 +1,70 @@
-import React from 'react';
-import { Button, Form, InputNumber, Select } from 'antd';
-import { FormInstance } from 'antd/lib/form';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Button, Form, InputNumber, Modal, Select } from 'antd';
 import intl from 'react-intl-universal';
 import { renderUnit } from '@/utils/dashboard';
 
 import './index.less';
+import ModalWrapper from '../ModalWrapper';
 
 interface IProps {
+  visible?: boolean;
   baseLine: number;
   valueType: string;
-  onClose: () => void;
-  onBaseLineChange: (values) => void;
+  onOk?: (values) => void;
+  hide?: () => void;
+  title?: string;
+  onCancel?: () => void;
 }
 
-class BaseLineEdit extends React.Component<IProps> {
-  formRef = React.createRef<FormInstance>();
+function BaseLineEditModal(props: IProps) {
+  const { valueType, baseLine, onCancel, visible, hide, onOk, title } = props;
+  const units = useMemo(() => renderUnit(valueType), [valueType]);
+  const [curVisible, setCurVisible] = useState(visible);
+  const [form] = Form.useForm();
 
-  render() {
-    const { valueType, baseLine, onClose, onBaseLineChange } = this.props;
-    const units = renderUnit(valueType);
+  const getInitialValues = () => {
     const initialValues = { baseLine } as any;
     if (units.length) {
       initialValues.unit = units[0];
     }
+    return initialValues;
+  }
 
-    return (
+  useEffect(() => {
+    setCurVisible(visible);
+  }, [visible]);
+
+  useEffect(() => {
+    if (!curVisible) {
+      hide && hide();
+    }
+  }, [curVisible]);
+
+  const handleCancelClick = () => {
+    onCancel?.();
+    setCurVisible(false);
+  };
+
+  const handleOkClick = () => {
+    setCurVisible(false);
+    form.validateFields().then(values => {
+      onOk?.(values)
+    })
+  }
+
+  return (
+    <Modal
+      title={title || "empty"}
+      className="baseline-modal"
+      width="550px"
+      footer={null}
+      onOk={handleOkClick}
+      maskClosable={false}
+      onCancel={handleCancelClick}
+      visible={curVisible}
+    >
       <div className="base-line-edit">
-        <Form initialValues={initialValues} onFinish={onBaseLineChange}>
+        <Form form={form} initialValues={getInitialValues()}>
           <Form.Item
             label={intl.get('common.baseLine')}
             name="baseLine"
@@ -53,12 +91,12 @@ class BaseLineEdit extends React.Component<IProps> {
             </Form.Item>
           )}
           <div className="footer-btns">
-            <Button htmlType="button" onClick={onClose}>
+            <Button htmlType="button" onClick={handleCancelClick}>
               {intl.get('common.cancel')}
             </Button>
             <Button
               type="primary"
-              htmlType="submit"
+              onClick={handleOkClick}
               data-track-category="base_line"
               data-track-action="confirm_edit"
               data-track-label={`from_${valueType}`}
@@ -68,8 +106,8 @@ class BaseLineEdit extends React.Component<IProps> {
           </div>
         </Form>
       </div>
-    );
-  }
+    </Modal>
+  )
 }
 
-export default BaseLineEdit;
+export default ModalWrapper(BaseLineEditModal);
