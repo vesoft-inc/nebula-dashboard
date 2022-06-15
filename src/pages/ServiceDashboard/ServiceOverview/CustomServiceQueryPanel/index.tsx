@@ -56,7 +56,7 @@ function CustomServiceQueryPanel(props: IProps) {
         clearTimeout(pollingTimer);
       }
     }
-  }, [metricsFilterValues.timeRange, , metricsFilterValues.frequency, cluster, config])
+  }, [metricsFilterValues, metricsFilterValues, cluster, config])
 
   const getMetricsData = async () => {
     const { period: metricPeriod, metricFunction, space } = config;

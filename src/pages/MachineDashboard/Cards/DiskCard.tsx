@@ -29,7 +29,7 @@ const mapState = (state: IRootState) => {
         const name = instance.metric.instance;
         return {
           size,
-          type: aliasConfig[name] || name,
+          type: aliasConfig?.[name] || name,
           value: latestValues ? Number(latestValues[1]) : 0,
         };
       }),

@@ -19,6 +19,7 @@ import {
 } from '@/utils/dashboard';
 import BaseLineEdit from '@/components/BaseLineEditModal';
 import MetricsFilterPanel from '@/components/MetricsFilterPanel';
+import { isCloudVersion } from '@/utils';
 
 const mapDispatch: any = (dispatch: any) => ({
   asyncGetCPUStatByRange: dispatch.machine.asyncGetCPUStatByRange,
@@ -183,9 +184,16 @@ function MachineDashboard(props: IProps) {
 
   const getViewPath = (path: string): string => {
     if (cluster?.id) {
+      if (isCloudVersion()) {
+        return `/clusters${path}`;
+      }
       return `/clusters/${cluster.id}${path}`;
     }
     return path;
+  }
+
+  const handleRefreshData = () => {
+    getMachineStatus();
   }
 
   return (
@@ -196,6 +204,7 @@ function MachineDashboard(props: IProps) {
             onChange={handleMetricsChange} 
             instanceList={instanceList}
             values={metricsFilterValues}
+            onRefresh={handleRefreshData}
           />
         </div>
         <Row>

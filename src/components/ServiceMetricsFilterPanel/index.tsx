@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { Form } from 'antd';
 import intl from 'react-intl-universal';
 
@@ -7,7 +7,6 @@ import { DashboardSelect, Option } from '../DashboardSelect';
 
 import styles from './index.module.less';
 import { AGGREGATION_OPTIONS, TIME_INTERVAL_OPTIONS } from '@/utils/dashboard';
-import { SERVICE_QUERY_PERIOD } from '@/utils/service';
 
 interface IProps {
   spaces: string[];
@@ -15,19 +14,15 @@ interface IProps {
   metricTypes: string[];
   onChange?: (values) => void;
   values?: any;
+  onRefresh?: () => void;
 }
 
 function ServiceMetricsFilterPanel(props: IProps) {
-  const { spaces, instanceList, metricTypes, onChange, values } = props;
+  const { spaces, instanceList, onChange, values, onRefresh } = props;
 
   const panelRef = useRef<any>()
 
   const form = useMemo(() => panelRef.current?.getForm(), [panelRef.current]);
-
-  // useEffect(() => {
-  //   if (!form) return;
-  //   onChange?.(form.getFieldsValue());
-  // }, [form])
 
   useEffect(() => {
     if (!form) return;
@@ -70,6 +65,7 @@ function ServiceMetricsFilterPanel(props: IProps) {
         instanceList={instanceList} 
         ref={panelRef}
         onChange={handleFilterPanelChange}
+        onRefresh={onRefresh}
       >
         <Form.Item label={intl.get('service.spaces')} name="space">
           <DashboardSelect onChange={handleSpaceChange}>

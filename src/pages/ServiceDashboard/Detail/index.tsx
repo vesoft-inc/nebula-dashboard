@@ -111,7 +111,6 @@ function ServiceDetail(props: IProps) {
 
   useEffect(() => {
     const match = /(\w+)-metrics/g.exec(location.pathname);
-    console.log('hh', match, location.pathname);
     let serviceType = '';
     if (match) {
       serviceType = match[1] || 'graph';
@@ -122,7 +121,6 @@ function ServiceDetail(props: IProps) {
   const metricCharts: any = useMemo(() => {
     if (Object.keys(metricTypeMap).length === 0) return [];
     const { metricType } = metricsFilterValues;
-    console.log('metricTypeMap[metricType]', metricTypeMap[metricType])
     const charts = metricTypeMap[metricType].map((metric, i) => ({
       metric,
       chartInstance: undefined,
@@ -238,7 +236,6 @@ function ServiceDetail(props: IProps) {
       unit,
       valueType: metricChart.valueType,
     });
-    console.log('metricChart.baseLine', metricChart.baseLine);
     metricChart.chartRef.updateChart(metricChart.baseLine);
   };
 
@@ -251,6 +248,11 @@ function ServiceDetail(props: IProps) {
     return getProperTickInterval(endTimestamps - startTimestamps);
   }
 
+  const handleRefresh = () => {
+    setShowLoading(!!loading);
+    asyncGetMetricsData();
+  }
+
   return (
     <Spin spinning={showLoading} wrapperClassName="service-detail">
       <div className='dashboard-detail'>
@@ -261,6 +263,7 @@ function ServiceDetail(props: IProps) {
             spaces={serviceMetric.spaces}
             metricTypes={Object.keys(metricTypeMap)}
             values={metricsFilterValues}
+            onRefresh={handleRefresh}
           />
         </div>
         <div className='detail-content'>

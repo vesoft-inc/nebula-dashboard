@@ -2,6 +2,8 @@
  * EXPLAIN: beacuse the metrics in each system are different, so dashboard need to load the detailed promql used by system
  */
 
+import { isCloudVersion } from ".";
+
 export const enum VALUE_TYPE {
   percentage = 'PERCENTAGE',
   byte = 'BYTE',
@@ -419,8 +421,8 @@ export const SERVICE_SUPPORT_METRICS = {
 };
 
 export const MAC_OS = (cluster?) => {
-  const clusterSuffix1 = cluster ? `,cluster='${cluster}'` : '';
-  const clusterSuffix2 = cluster ? `{cluster='${cluster}'}` : '';
+  const clusterSuffix1 = cluster ? `,${getClusterPrefix()}='${cluster}'` : '';
+  const clusterSuffix2 = cluster ? `{${getClusterPrefix()}='${cluster}'}` : '';
   return (
     {
       // cpu relative:
@@ -442,9 +444,18 @@ export const MAC_OS = (cluster?) => {
   )
 };
 
+// console.log('pr', process.env.VERSION_TYPE);
+
+export const getClusterPrefix = () => {
+  if (isCloudVersion()) {
+    return 'nebula_cluster';
+  }
+  return 'cluster';
+}
+
 export const LINUX = (cluster?) => {
-  const clusterSuffix1 = cluster ? `,cluster='${cluster}'` : '';
-  const clusterSuffix2 = cluster ? `{cluster='${cluster}'}` : '';
+  const clusterSuffix1 = cluster ? `,${getClusterPrefix()}='${cluster}'` : '';
+  const clusterSuffix2 = cluster ? `{${getClusterPrefix()}='${cluster}'}` : '';
   return {
     // cpu relative:
     cpu_utilization: `100 * (1 - sum by (instance)(increase(node_cpu_seconds_total{mode="idle"${clusterSuffix1}}[1m])) / sum by (instance)(increase(node_cpu_seconds_total${clusterSuffix2}[1m])))`,

@@ -5,6 +5,7 @@ import { IServicePanelConfig, ServiceMetricsPanelValue } from '@/utils/interface
 import { DEFAULT_SERVICE_PANEL_CONFIG, INTERVAL_FREQUENCY_LIST, SERVICE_QUERY_PERIOD } from '@/utils/service';
 import { AGGREGATION_OPTIONS, getProperStep, TIME_INTERVAL_OPTIONS, TIME_OPTION_TYPE } from '@/utils/dashboard';
 import { unique } from '@/utils';
+import { getClusterPrefix } from '@/utils/promQL';
 
 interface IState {
   panelConfig: {
@@ -16,7 +17,7 @@ interface IState {
   metricsFilterValues: ServiceMetricsPanelValue;
 }
 
-export function ModelWrapper(serviceApi) {
+export function SereviceModelWrapper(serviceApi) {
   return createModel({
     state: {
       panelConfig: localStorage.getItem('panelConfig')
@@ -64,9 +65,10 @@ export function ModelWrapper(serviceApi) {
         const step = getProperStep(start, end);
         const _start = start / 1000;
         const _end = end / 1000;
-        let query = `sum(${_query}{cluster="${clusterID}"})`;
-        query = `${_query}{cluster="${clusterID}", space="${space || ''}"}`;
+        let query = `sum(${_query}{${getClusterPrefix()}="${clusterID}"})`;
+        query = `${_query}{${getClusterPrefix()}="${clusterID}", space="${space || ''}"}`;
         const { code, data } = (await serviceApi.execPromQLByRange({
+          clusterID,
           query,
           start: _start,
           end: _end,
@@ -107,9 +109,10 @@ export function ModelWrapper(serviceApi) {
         const _end = end / 1000;
         let query = _query;
         if (clusterID && !noSuffix) {
-          query = `${_query}{cluster="${clusterID}", space="${space || ''}"}`;
+          query = `${_query}{${getClusterPrefix()}="${clusterID}", space="${space || ''}"}`;
         }
         const { code, data } = (await serviceApi.execPromQLByRange({
+          clusterID,
           query,
           start: _start,
           end: _end,
@@ -139,7 +142,8 @@ export function ModelWrapper(serviceApi) {
         const _start = start / 1000;
         const _end = end / 1000;
         const { code, data } = (await serviceApi.execPromQLByRange({
-          query: clusterID ? `${query}{cluster="${clusterID}"}` : query,
+          clusterID,
+          query: clusterID ? `${query}{${getClusterPrefix()}="${clusterID}"}` : query,
           start: _start,
           end: _end,
           step,
@@ -170,4 +174,4 @@ export function ModelWrapper(serviceApi) {
   });
 }
 
-export const service = ModelWrapper(serviceApi);
+export const service = SereviceModelWrapper(serviceApi);

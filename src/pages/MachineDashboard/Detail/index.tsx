@@ -183,11 +183,21 @@ function Detail(props: IProps) {
     return getProperTickInterval(endTimestamps - startTimestamps);
   }
 
+  const handleRefreshData = () => {
+    setShowLoading(loading);
+    getData();
+  }
+
   return (
     <Spin spinning={showLoading} wrapperClassName="machine-detail">
       <div className="dashboard-detail">
         <div className="filter">
-          <MetricsFilterPanel onChange={handleMetricChange} instanceList={instances} values={metricsFilterValues} />
+          <MetricsFilterPanel 
+            onChange={handleMetricChange} 
+            instanceList={instances} 
+            values={metricsFilterValues} 
+            onRefresh={handleRefreshData} 
+          />
         </div>
         <div className='detail-content'>
           {

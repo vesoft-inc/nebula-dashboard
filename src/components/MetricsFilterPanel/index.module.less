@@ -1,3 +1,5 @@
+@import '@/common.less';
+
 .metricsFilterPanel {
   display: flex;
   align-items: center;
@@ -17,6 +19,33 @@
       align-items: center;
     }
   }
+}
+
+.frequency {
+  display: flex;
+}
+
+.freshIcon {
+  border: 1px solid #d9d9d9;
+  justify-content: center;
+  width: 42px;
+  border-right: 0;
+  align-items: center;
+  display: flex;
+  &:hover {
+    cursor: pointer;
+    border-color: @blue;
+    border-right: 1px solid @blue;
+    .freshIconItem {
+      fill: @blue;
+    }
+  }
+}
+
+.freshIconItem {
+  fill: rgba(0,0,0,.85);
+  width: 18px;
+  height: 18px;
 }
 
 .frequencySelect {

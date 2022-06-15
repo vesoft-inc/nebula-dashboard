@@ -53,7 +53,6 @@ function LineChart(props: IProps, ref) {
 
   useImperativeHandle(ref, () => ({
     updateChart: (baseLine) => {
-      console.log('first', baseLine)
       updateChart(baseLine);
     },
   }))

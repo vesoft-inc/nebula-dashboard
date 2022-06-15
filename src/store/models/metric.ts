@@ -11,7 +11,7 @@ interface IState {
   spaces: string;
 }
 
-export function ModelWrapper(serviceApi) {
+export function MetricModelWrapper(serviceApi) {
   return createModel({
     state: {
       graphd: [],
@@ -27,15 +27,17 @@ export function ModelWrapper(serviceApi) {
     },
     effects: () => ({
       async asyncGetServiceMetric(payload: {
+        clusterID?: string;
         componentType: string;
         version: string;
       }) {
-        const { componentType, version } = payload;
+        const { componentType, version, clusterID } = payload;
         let metricList = [];
         let spaceMetricList = [];
         switch (true) {
           case compare(version, 'v3.0.0', '<'): {
             const { code, data } = (await serviceApi.getMetrics({
+              clusterID,
               'match[]': `{componentType="${componentType}",__name__!~"ALERTS.*",__name__!~".*count"}`,
             })) as any;
             if (code === 0) {
@@ -46,12 +48,14 @@ export function ModelWrapper(serviceApi) {
           case compare(version, 'v3.0.0', '>='):
             {
               const { code, data } = (await serviceApi.getMetrics({
+                clusterID,
                 'match[]': `{componentType="${componentType}",space!="",__name__!~"ALERTS.*",__name__!~".*count"}`,
               })) as any;
               if (code === 0) {
                 spaceMetricList = data;
                 const { code: _code, data: metricData } =
                   (await serviceApi.getMetrics({
+                    clusterID,
                     'match[]': `{componentType="${componentType}",space="",__name__!~"ALERTS.*",__name__!~".*count"}`,
                   })) as any;
                 if (_code === 0) {
@@ -85,4 +89,4 @@ export function ModelWrapper(serviceApi) {
   });
 }
 
-export const serviceMetric = ModelWrapper(service);
+export const serviceMetric = MetricModelWrapper(service);

@@ -67,6 +67,10 @@ function ServiceDashboard(props: IProps){
     updateMetricsFiltervalues(values);
   }
 
+  const handleRefreshData = (values) => {
+    updateMetricsFiltervalues(values);
+  }
+
   return (
     <>
       <div className="service-table">
@@ -75,6 +79,7 @@ function ServiceDashboard(props: IProps){
             onChange={handleMetricsChange} 
             instanceList={instanceList} 
             values={metricsFilterValues}
+            onRefresh={handleRefreshData}
           />
         </div>
         {METRIC_SERVICE_TYPES.map(type => (

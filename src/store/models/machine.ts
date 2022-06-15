@@ -73,6 +73,7 @@ export function MachineModelWrapper(service) {
         const _end = end / 1000;
         const step = getProperStep(start, end);
         const { code, data } = (await service.execPromQLByRange({
+          clusterID,
           query: PROMQL(clusterID)[metric],
           start: _start,
           end: _end,
@@ -82,6 +83,7 @@ export function MachineModelWrapper(service) {
         if (code === 0) {
           if (NEED_ADD_SUM_QUERYS.includes(metric)) {
             result = (await this.asyncGetSumDataByRange({
+              clusterID,
               query: PROMQL(clusterID)[metric],
               start: _start,
               end: _end,
@@ -124,6 +126,7 @@ export function MachineModelWrapper(service) {
   
       async asyncGetMemorySizeStat(clusterID?: string) {
         const { code, data } = (await service.execPromQL({
+          clusterID,
           query: PROMQL(clusterID).memory_size,
         })) as any;
         let memorySizeStat = [];
@@ -151,6 +154,7 @@ export function MachineModelWrapper(service) {
   
       async asyncGetDiskSizeStat(clusterID?: string) {
         const { code, data } = (await service.execPromQL({
+          clusterID,
           query: PROMQL(clusterID).disk_size,
         })) as any;
         let diskSizeStat = [];
@@ -205,14 +209,16 @@ export function MachineModelWrapper(service) {
       },
   
       async asyncGetSumDataByRange(payload: {
+        clusterID?: string;
         query: string;
         start: number;
         end: number;
         step: number;
         data: any[];
       }) {
-        const { query, start, end, step, data } = payload;
+        const { query, start, end, step, data, clusterID } = payload;
         const { code, data: dataStat } = (await service.execPromQLByRange({
+          clusterID,
           query: `sum(${query})`,
           start,
           end,
