@@ -447,10 +447,10 @@ export const MAC_OS = (cluster?) => {
 // console.log('pr', process.env.VERSION_TYPE);
 
 export const getClusterPrefix = () => {
-  if (isCloudVersion()) {
-    return 'nebula_cluster';
-  }
-  return 'cluster';
+  // if (isCloudVersion()) {
+  //   return 'nebula_cluster';
+  // }
+  return 'nebula_cluster';
 }
 
 export const LINUX = (cluster?) => {
