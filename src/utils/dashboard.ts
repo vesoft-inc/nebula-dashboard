@@ -8,7 +8,7 @@ export const CARD_RANGE = 60 * 60 * 24 * 1000;
 export const CARD_POLLING_INTERVAL = 10000 * 1000;
 export const MAX_STEP_ALLOW = 11000;
 export const TIME_INTERVAL_OPTIONS = [5, 60, 600, 3600];
-export const AGGREGATION_OPTIONS = ['sum', 'rate', 'avg', 'p75', 'p95', 'p999', 'p99'];
+export const AGGREGATION_OPTIONS = ['sum', 'rate', 'avg', 'p75', 'p95', 'p99', 'p999'];
 
 export const THRESHOLDS = {
   low: 60,

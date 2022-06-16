@@ -17,7 +17,7 @@ import {
   getBaseLineByUnit,
   calcTimeRange,
 } from '@/utils/dashboard';
-import BaseLineEdit from '@/components/BaseLineEditModal';
+import BaseLineEditModal from '@/components/BaseLineEditModal';
 import MetricsFilterPanel from '@/components/MetricsFilterPanel';
 import { isCloudVersion } from '@/utils';
 
@@ -63,11 +63,11 @@ function MachineDashboard(props: IProps) {
     loading,
   } = props;
 
-  const [editPanelType, setEditPanelType] = useState<string>('');
+  // const [editPanelType, setEditPanelType] = useState<string>('');
   const [showLoading, setShowLoading] = useState<boolean>(false);
 
   const modalHandlerRef = useRef<any>();
-
+// 
   useEffect(() => {
     asyncGetMemorySizeStat(cluster?.id);
     asyncGetDiskSizeStat(cluster?.id);
@@ -91,11 +91,14 @@ function MachineDashboard(props: IProps) {
   }, [metricsFilterValues.timeRange, metricsFilterValues.frequency])
 
   const handleConfigPanel = (editPanelType: string) => {
-    setEditPanelType(editPanelType);
-    modalHandlerRef.current.show();
+    BaseLineEditModal.show({
+      baseLine: props[`${editPanelType}BaseLine`],
+      valueType: getValueType(editPanelType),
+      onOk: (values) => handleBaseLineChange(values, editPanelType),
+    });
   };
 
-  const handleBaseLineChange = async value => {
+  const handleBaseLineChange = async (value, editPanelType) => {
     const { baseLine, unit } = value;
     await asyncUpdateBaseLine(
       `${editPanelType}BaseLine`,
@@ -105,11 +108,6 @@ function MachineDashboard(props: IProps) {
         valueType: getValueType(editPanelType),
       }),
     );
-    handleClose();
-  };
-
-  const handleClose = () => {
-    modalHandlerRef.current?.hide();
   };
 
   const getMachineStatus = () => {
@@ -270,20 +268,6 @@ function MachineDashboard(props: IProps) {
             </DashboardCard>
           </Col>
         </Row>
-        <Modal
-          title="empty"
-          className="modal-baseLine"
-          width="550px"
-          handlerRef={ref => (modalHandlerRef.current = ref)}
-          footer={null}
-        >
-          {/* <BaseLineEdit
-            valueType={getValueType(editPanelType)}
-            baseLine={props[`${editPanelType}BaseLine`]}
-            onClose={handleClose}
-            onBaseLineChange={handleBaseLineChange}
-          /> */}
-        </Modal>
       </div>
     </Spin>
   )
