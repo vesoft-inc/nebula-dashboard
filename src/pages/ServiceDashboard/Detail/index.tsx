@@ -39,7 +39,7 @@ const mapDispatch: any = (dispatch: IDispatch) => ({
 const mapState = (state: IRootState) => ({
   aliasConfig: state.app.aliasConfig,
   serviceMetric: state.serviceMetric,
-  cluster: (state as any)?.cluster.cluster,
+  cluster: (state as any)?.cluster?.cluster,
   metricsFilterValues: (state as any).service.metricsFilterValues as ServiceMetricsPanelValue,
   instanceList: (state as any).service.instanceList,
   loading: state.loading.models.service,

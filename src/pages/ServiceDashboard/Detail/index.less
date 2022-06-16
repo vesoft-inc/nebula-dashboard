@@ -34,7 +34,6 @@
 
     >.chart-item {
       width: calc(50% - 15px);
-      max-width: 700px;
       height: 350px;
       border: 2px solid rgba(0, 0, 0, .06);
       margin-bottom: 24px;
@@ -78,6 +77,24 @@
         position: absolute;
         top: 15px;
         right: 24px;
+      }
+    }
+
+    @media screen and (max-width: 1960px) and (min-width: 1200px) {
+      >.chart-item {
+        width: calc(50% - 15px);
+      }
+    }
+
+    @media screen and (min-width: 1960px) and (max-width: 2480px) {
+      >.chart-item {
+        width: calc(33.3% - 15px);
+      }
+    }
+
+    @media screen and (min-width: 2480px) {
+      >.chart-item {
+        width: calc(25% - 15px);
       }
     }
   }

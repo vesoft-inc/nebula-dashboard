@@ -54,7 +54,7 @@ function BaseLineEditModal(props: IProps) {
 
   return (
     <Modal
-      title={title || "empty"}
+      title={title || intl.get('base.baseLineModalTitle')}
       className="baseline-modal"
       width="550px"
       footer={null}

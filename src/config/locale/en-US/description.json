@@ -1,0 +1,23 @@
+{
+  "module":  "The name of the service",
+  "moduleName":  "The name of the parameter",
+  "moduleType":  "The data type of Value",
+  "moduleMode":  "The mode of the parameter",
+  "moduleValue":  "The value of the parameter",
+  "ip":  "The IP address of the host",
+  "port":  "The port of the host",
+  "status":  "Host Status",
+  "gitInfo":  "The Commit ID of the current version",
+  "leaderCount":  "The number of leaders",
+  "partitionDistribution":  "The distribution of partitions",
+  "leaderDistribution":  "The distribution of leaders",
+  "partitionId":  "The ID of the partition",
+  "leader":  "The IP address and port of the leader",
+  "peers":  "The IP addresses and ports of all the replicas",
+  "losts":  "The IP addresses and ports of replicas at fault",
+  "jobId":  "The first row shows the job ID, and the other rows show the task IDs.",
+  "command":  "The first row shows the command executed, and the other rows show on which storaged processes the task is running.",
+  "longTermStatus":  "Shows the status of the job or task. ",
+  "longTermStartTime":  "Shows a timestamp indicating the time when the job or task enters the RUNNING phase.",
+  "longTermStopTime":  "Shows a timestamp indicating the time when the job or task gets FINISHED, FAILED, or STOPPED."
+}

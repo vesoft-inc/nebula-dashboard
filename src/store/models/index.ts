@@ -1,6 +1,6 @@
 export * from './app';
-export * from './machine';
+export { machine } from './machine';
 export * from './nebula';
-export * from './service';
+export { service } from './service';
 export * from './setting';
-export * from './metric';
+export { serviceMetric } from './metric';

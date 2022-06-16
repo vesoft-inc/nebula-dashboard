@@ -1,5 +1,5 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
-import { Chart } from '@antv/g2';
+import { Chart, registerAction, registerInteraction } from '@antv/g2';
 import { ChartCfg } from '@antv/g2/lib/interface';
 
 export interface IProps {
@@ -13,7 +13,7 @@ export interface IProps {
 
 function LineChart(props: IProps, ref) {
   const { isDefaultScale, yAxisMaximum, baseLine, tickInterval, options, renderChart } = props;
-  
+
   const chartRef = useRef<any>();
 
   const chartInstanceRef = useRef<Chart>();
@@ -26,6 +26,32 @@ function LineChart(props: IProps, ref) {
       padding: [20, 0, 0, 0],
       ...options,
     });
+    registerInteraction('brush', {
+      showEnable: [
+        { trigger: 'plot:mouseenter', action: 'cursor:crosshair' },
+        { trigger: 'plot:mouseleave', action: 'cursor:default' },
+      ],
+      start: [
+        {
+          trigger: 'plot:mousedown',
+          action: ['brush-x:start', 'rect-mask:start', 'rect-mask:show'],
+        },
+      ],
+      processing: [
+        {
+          trigger: 'plot:mousemove',
+          action: ['rect-mask:resize'],
+        },
+      ],
+      end: [
+        {
+          trigger: 'plot:mouseup',
+          action: ['brush-x:filter', 'brush:end', 'rect-mask:end', 'rect-mask:hide', 'reset-button:show'],
+        },
+      ],
+      rollback: [{ trigger: 'reset-button:click', action: ['brush:reset', 'reset-button:hide'] }],
+    });
+    chartInstanceRef.current.interaction('brush');
     if (baseLine) {
       chartInstanceRef.current.annotation().line({
         start: ['min', baseLine],

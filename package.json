@@ -1,6 +1,6 @@
 {
   "name": "nebula-dashboard",
-  "version": "1.1.1",
+  "version": "3.0.0",
   "description": "nebula-dashboard community version",
   "author": "vesoft cloud team",
   "homepage": "",
@@ -9,10 +9,10 @@
     "lib"
   ],
   "scripts": {
-    "dev": "ts-node server/dev-server.ts",
-    "build": "webpack --config config/webpack.config.prod.ts",
+    "dev": "NODE_ENV=development ts-node server/dev-server.ts",
+    "build": "NODE_ENV=production webpack --config config/webpack.config.prod.ts",
     "test": "echo \"Error: run tests from root\" && exit 1",
-    "pkg": "pkg -t node14-linux-x64 server/server.js -o dashboard",
+    "pkg": "NODE_ENV=production pkg -t node14-linux-x64 server/server.js -o dashboard",
     "lint-fix": "eslint 'src/**/*.{ts,tsx}' --fix"
   },
   "bin": "server/server.js",
