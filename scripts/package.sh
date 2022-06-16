@@ -28,6 +28,7 @@ mv  $DASHBOARD/vendors/node-exporter/ $TARGET/$VENDOR_DIR
 
 # prometheus
 mv $DASHBOARD/vendors/prometheus/ $TARGET/$VENDOR_DIR
+mv $DASHBOARD/docker-compose/ $TARGET/docker-compose
 
 ### Nebula Graph Dashboard relative ###
 cd $DASHBOARD
