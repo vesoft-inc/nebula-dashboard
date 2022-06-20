@@ -124,7 +124,7 @@ export function SereviceModelWrapper(serviceApi) {
         }
         const list = stat.map(item => {
           const instanceName = item.metric.instanceName;
-          return instanceName.slice(instanceName.lastIndexOf('-') + 1)
+          return instanceName.slice(0, instanceName.indexOf('-'))
         });
         this.updateInstanceList(list)
         return stat;

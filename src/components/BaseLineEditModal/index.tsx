@@ -73,7 +73,7 @@ function BaseLineEditModal(props: IProps) {
               { required: true, message: intl.get('common.baseLineTip') },
             ]}
           >
-            <InputNumber min={0} />
+            <InputNumber type="number" min={0} />
           </Form.Item>
           {units.length !== 0 && (
             <Form.Item

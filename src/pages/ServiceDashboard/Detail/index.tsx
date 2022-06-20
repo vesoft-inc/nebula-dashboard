@@ -28,7 +28,6 @@ import './index.less';
 const mapDispatch: any = (dispatch: IDispatch) => ({
   asyncGetStatus: dispatch.service.asyncGetStatus,
   asyncFetchMetricsData: dispatch.service.asyncGetMetricsData,
-  asyncGetMetricsSumData: dispatch.service.asyncGetMetricsSumData,
   asyncUpdateBaseLine: (key, value) =>
     dispatch.machine.update({
       [key]: value,
@@ -53,7 +52,7 @@ interface IProps
 let pollingTimer: any;
 
 function ServiceDetail(props: IProps) {
-  const { asyncFetchMetricsData, asyncGetMetricsSumData, serviceMetric, loading, cluster, updateMetricsFiltervalues, metricsFilterValues, instanceList } = props;
+  const { asyncFetchMetricsData, serviceMetric, loading, cluster, updateMetricsFiltervalues, metricsFilterValues, instanceList } = props;
 
 
   const location = useLocation();
@@ -85,7 +84,7 @@ function ServiceDetail(props: IProps) {
       })
     }
     return options;
-  }, [serviceType, serviceMetric.graphd, serviceMetric.metad, serviceMetric.storaged]);
+  }, [serviceType, serviceMetric.graphd, serviceMetric.metad, serviceMetric.storaged, serviceMetric.spaces]);
 
   const metricTypeMap = useMemo(() => {
     const map = {};
@@ -252,6 +251,8 @@ function ServiceDetail(props: IProps) {
     setShowLoading(!!loading);
     asyncGetMetricsData();
   }
+
+  console.log('serviceMetric.spaces', serviceMetric.spaces);
 
   return (
     <Spin spinning={showLoading} wrapperClassName="service-detail">

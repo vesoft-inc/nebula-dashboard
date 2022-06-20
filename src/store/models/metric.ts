@@ -3,6 +3,7 @@ import _ from 'lodash';
 import { compare } from 'compare-versions';
 import service from '@/config/service';
 import { filterServiceMetrics } from '@/utils/metric';
+import dayjs from 'dayjs';
 
 interface IState {
   graphd: any[];
@@ -78,10 +79,10 @@ export function MetricModelWrapper(serviceApi) {
         });
       },
       async asyncGetSpaces(clusterID: string) {
-        const { code, data } = (await service.getSpaces({ clusterID })) as any;
-        if (code === 0) {
+        const { data: res } = (await service.getSpaces({ clusterID })) as any;
+        if (res.status === 'success') {
           this.update({
-            spaces: data,
+            spaces: res.data,
           });
         }
       },
