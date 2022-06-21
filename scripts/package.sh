@@ -3,7 +3,8 @@
 set -ex
 
 DIR=`pwd`
-DASHBOARD=$DIR/source/nebula-dashboard
+DASHBOARD=${1-$DIR/source/nebula-dashboard}
+GATEWAY=${2-$DIR/source/nebula-http-gateway}
 
 # build target dir
 TARGET=$DIR/nebula-dashboard
@@ -11,7 +12,6 @@ mkdir $TARGET
 
 ### nebula-http-gateway ###
 VENDOR_DIR=vendors
-GATEWAY=$DIR/source/nebula-http-gateway
 cd $GATEWAY
 make
 TARGET_GATEWAY=$TARGET/$VENDOR_DIR/nebula-http-gateway
@@ -33,7 +33,7 @@ mv $DASHBOARD/docker-compose/ $TARGET/docker-compose
 ### Nebula Graph Dashboard relative ###
 cd $DASHBOARD
 VERSION=`cat package.json | grep '"version":' | awk 'NR==1{print $2}' | awk -F'"' '{print $2}'`
-bash ./scripts/setEventTracking.sh $1
+bash $DASHBOARD/scripts/setEventTracking.sh $3
 
 npm install --unsafe-perm
 npm run build
@@ -41,7 +41,7 @@ cp -r public $TARGET/
 cp $DASHBOARD/DEPLOY.md $TARGET/
 npm run pkg
 mv dashboard $TARGET/
-cp -r vendors/config-release.json $TARGET/config.json
+cp -r $DASHBOARD/vendors/config-release.json $TARGET/config.json
 
 ### tar
 cd $DIR
