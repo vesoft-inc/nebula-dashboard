@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { compare } from 'compare-versions';
 import service from '@/config/service';
 import { filterServiceMetrics } from '@/utils/metric';
-import dayjs from 'dayjs';
+import { getClusterPrefix } from '@/utils/promQL';
 
 interface IState {
   graphd: any[];
@@ -78,8 +78,14 @@ export function MetricModelWrapper(serviceApi) {
           [componentType]: metrics,
         });
       },
-      async asyncGetSpaces(clusterID: string) {
-        const { data: res } = (await service.getSpaces({ clusterID })) as any;
+      async asyncGetSpaces({ clusterID, start, end }) {
+        start = start / 1000;
+        end = end / 1000;
+        const { data: res } = (await service.getSpaces({ 
+          'match[]': clusterID ? `{${getClusterPrefix()}='${clusterID}'}` : undefined,
+          start, 
+          end
+        })) as any;
         if (res.status === 'success') {
           this.update({
             spaces: res.data,

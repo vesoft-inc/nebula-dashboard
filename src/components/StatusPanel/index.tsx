@@ -1,12 +1,10 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import intl from 'react-intl-universal';
 import { connect } from 'react-redux';
-// import { IDispatch } from '@/store';
 import { NEBULA_COUNT } from '@/utils/promQL';
 import { DETAIL_DEFAULT_RANGE } from '@/utils/dashboard';
 import { SERVICE_POLLING_INTERVAL } from '@/utils/service';
-import { isEnterpriseVersion } from '@/utils';
-
+import { shouldCheckCluster } from '@/utils';
 import './index.less';
 
 const mapState = (state: any) => ({
@@ -15,76 +13,64 @@ const mapState = (state: any) => ({
 
 const mapDispatch = (dispatch) => ({});
 
-const shouldCheckCluster = isEnterpriseVersion();
-
 interface IProps extends ReturnType<typeof mapState>  {
   type: string;
   clusterID?: string;
   getStatus: (payload) => void;
 }
 
-interface IState {
-  normal: number;
-  abnormal: number;
-}
-class StatusPanel extends React.Component<IProps, IState> {
-  pollingTimer: any;
+function StatusPanel(props: IProps) {
 
-  constructor(props: IProps) {
-    super(props);
-    this.state = {
-      normal: 0,
-      abnormal: 0,
-    };
-  }
+  const { cluster, type, getStatus } = props;
 
-  componentDidMount() {
-    this.pollingData();
-  }
+  const pollingTimer: any = useRef<any>();
 
-  pollingData = () => {
-    if (shouldCheckCluster) {
-      const { cluster } = this.props;
-      if (cluster.id) {
-        this.asyncGetStatus();
-        this.pollingTimer = setTimeout(this.pollingData, SERVICE_POLLING_INTERVAL);
+  const [ statusNumInfo, setStatusNumInfo ] = useState<any>({
+    abnormal: 0,
+    normal: 0
+  });
+
+  useEffect(() => {
+    pollingData();
+    return () => {
+      if (pollingTimer.current) {
+        clearTimeout(pollingTimer.current);
       }
-    } else {
-      this.asyncGetStatus();
-      this.pollingTimer = setTimeout(this.pollingData, SERVICE_POLLING_INTERVAL);
     }
-  };
+  }, [cluster])
 
-  componentWillUnmount() {
-    if (this.pollingTimer) {
-      clearTimeout(this.pollingTimer);
-    }
-  }
-
-  asyncGetStatus = async () => {
-    const { type, cluster } = this.props;
-    const { normal, abnormal } = (await this.props.getStatus({
+  const asyncGetStatus = async () => {
+    const { normal, abnormal } = (await getStatus({
       query: NEBULA_COUNT[type],
       end: Date.now(),
       interval: DETAIL_DEFAULT_RANGE,
       clusterID: cluster?.id,
     })) as any;
-    this.setState({ normal, abnormal });
+    setStatusNumInfo({ normal, abnormal })
   };
 
-  render() {
-    const { normal, abnormal } = this.state;
-    return (
-      <ul className="status-panel">
-        <li className="normal">
-          {intl.get('service.normal')}: <span>{normal}</span>
-        </li>
-        <li className="abnormal">
-          {intl.get('service.abnormal')}: <span>{abnormal}</span>
-        </li>
-      </ul>
-    );
-  }
+  const pollingData = () => {
+    if (shouldCheckCluster()) {
+      if (cluster.id) {
+        asyncGetStatus();
+        pollingTimer.current = setTimeout(pollingData, SERVICE_POLLING_INTERVAL);
+      }
+    } else {
+      asyncGetStatus();
+      pollingTimer.current = setTimeout(pollingData, SERVICE_POLLING_INTERVAL);
+    }
+  };
+
+  return (
+    <ul className="status-panel">
+      <li className="normal">
+        {intl.get('service.normal')}: <span>{statusNumInfo.normal}</span>
+      </li>
+      <li className="abnormal">
+        {intl.get('service.abnormal')}: <span>{statusNumInfo.abnormal}</span>
+      </li>
+    </ul>
+  );
 }
 
 export default connect(mapState, mapDispatch)(StatusPanel);

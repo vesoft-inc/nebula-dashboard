@@ -11,10 +11,9 @@ import { AGGREGATION_OPTIONS, TIME_INTERVAL_OPTIONS } from '@/utils/dashboard';
 interface IProps {
   spaces: string[];
   instanceList: string[];
-  metricTypes: string[];
   onChange?: (values) => void;
   values?: any;
-  onRefresh?: () => void;
+  onRefresh?: (values: any) => void;
 }
 
 function ServiceMetricsFilterPanel(props: IProps) {

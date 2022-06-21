@@ -5,12 +5,9 @@ import { Popover } from 'antd';
 import Icon from '@/components/Icon';
 import { IServicePanelConfig } from '@/utils/interface';
 import { calcTimeRange, getDataByType } from '@/utils/dashboard';
-// import {
-//   SERVICE_DEFAULT_RANGE,
-// } from '@/utils/service';
 import Card from '@/components/Service/ServiceCard/Card';
 import { IDispatch, IRootState } from '@/store';
-import { isEnterpriseVersion, shouldCheckCluster } from '@/utils';
+import { shouldCheckCluster } from '@/utils';
 
 import './index.less';
 
@@ -30,13 +27,14 @@ interface IProps
   onConfigPanel: () => void;
   config: IServicePanelConfig;
   aliasConfig: any;
+  isHidePeriod?: boolean;
 }
 
 function CustomServiceQueryPanel(props: IProps) {
 
-  const { config, cluster, asyncGetMetricsData, onConfigPanel, aliasConfig, metricsFilterValues } = props;
+  const { config, cluster, asyncGetMetricsData, onConfigPanel, aliasConfig, metricsFilterValues, isHidePeriod } = props;
 
-  const [ data, setData ] = useState<any[]>([])
+  const [data, setData] = useState<any[]>([])
 
   let pollingTimer: any = useMemo(() => undefined, []);
 
@@ -60,7 +58,7 @@ function CustomServiceQueryPanel(props: IProps) {
 
   const getMetricsData = async () => {
     const { period: metricPeriod, metricFunction, space } = config;
-    const [ start, end ] = calcTimeRange(metricsFilterValues.timeRange);
+    const [start, end] = calcTimeRange(metricsFilterValues.timeRange);
     const data = await asyncGetMetricsData({
       query: metricFunction + metricPeriod, // EXPLAIN: query like nebula_graphd_num_queries_rate_600
       start,
@@ -90,12 +88,18 @@ function CustomServiceQueryPanel(props: IProps) {
           {config.metric}
         </Popover>
         <div>
-          <span>
-            {intl.get('service.period')}: <span>{config.period}</span>
-          </span>
-          <span>
-            {intl.get('service.metricParams')}: <span>{config.metricType}</span>
-          </span>
+          {
+            !isHidePeriod && (
+              <>
+                <span>
+                  {intl.get('service.period')}: <span>{config.period}</span>
+                </span>
+                <span>
+                  {intl.get('service.metricParams')}: <span>{config.metricType}</span>
+                </span>
+              </>
+            )
+          }
           <div
             className="btn-icon-with-desc blue"
             onClick={onConfigPanel}

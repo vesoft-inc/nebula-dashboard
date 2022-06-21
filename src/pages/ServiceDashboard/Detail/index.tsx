@@ -27,6 +27,7 @@ import './index.less';
 
 const mapDispatch: any = (dispatch: IDispatch) => ({
   asyncGetStatus: dispatch.service.asyncGetStatus,
+  asyncGetSpaces: dispatch.serviceMetric.asyncGetSpaces,
   asyncFetchMetricsData: dispatch.service.asyncGetMetricsData,
   asyncUpdateBaseLine: (key, value) =>
     dispatch.machine.update({
@@ -52,8 +53,7 @@ interface IProps
 let pollingTimer: any;
 
 function ServiceDetail(props: IProps) {
-  const { asyncFetchMetricsData, serviceMetric, loading, cluster, updateMetricsFiltervalues, metricsFilterValues, instanceList } = props;
-
+  const { asyncFetchMetricsData, serviceMetric, loading, cluster, updateMetricsFiltervalues, metricsFilterValues, instanceList, asyncGetSpaces } = props;
 
   const location = useLocation();
 
@@ -64,7 +64,25 @@ function ServiceDetail(props: IProps) {
 
   useEffect(() => {
     setShowLoading(loading && metricsFilterValues.frequency === 0)
-  }, [loading, metricsFilterValues.frequency])
+  }, [loading, metricsFilterValues.frequency]);
+
+  useEffect(() => {
+    const [ start, end ] = calcTimeRange(metricsFilterValues.timeRange);
+    if (shouldCheckCluster()) {
+      if (cluster?.id) {
+        asyncGetSpaces({
+          clusterID: cluster.id,
+          start,
+          end
+        })
+      }
+    } else {
+      asyncGetSpaces({
+        start,
+        end
+      })
+    }
+  }, [metricsFilterValues.timeRange, cluster])
 
   const metricOptions = useMemo<IMetricOption[]>(() => {
     if (serviceMetric.graphd.length === 0
@@ -84,7 +102,7 @@ function ServiceDetail(props: IProps) {
       })
     }
     return options;
-  }, [serviceType, serviceMetric.graphd, serviceMetric.metad, serviceMetric.storaged, serviceMetric.spaces]);
+  }, [serviceType, serviceMetric.graphd, serviceMetric.metad, serviceMetric.storaged]);
 
   const metricTypeMap = useMemo(() => {
     const map = {};
@@ -252,8 +270,6 @@ function ServiceDetail(props: IProps) {
     asyncGetMetricsData();
   }
 
-  console.log('serviceMetric.spaces', serviceMetric.spaces);
-
   return (
     <Spin spinning={showLoading} wrapperClassName="service-detail">
       <div className='dashboard-detail'>
@@ -262,7 +278,6 @@ function ServiceDetail(props: IProps) {
             onChange={handleMetricChange}
             instanceList={instanceList}
             spaces={serviceMetric.spaces}
-            metricTypes={Object.keys(metricTypeMap)}
             values={metricsFilterValues}
             onRefresh={handleRefresh}
           />
