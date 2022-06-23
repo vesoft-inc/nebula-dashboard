@@ -171,6 +171,35 @@ export const getDataByType = (payload: {
   return res;
 };
 
+export const getDiskData = (payload: {
+  data: IStatRangeItem[];
+  type?: string | string[];
+  aliasConfig?: any;
+}) => {
+  const { type, data } = payload;
+  const res = [] as ILineChartMetric[];
+  data.forEach(instance => {
+    instance.values.forEach(([timstamps, value]) => {
+      const device = instance.metric['device'];
+      const _name = instance.metric['instance'];
+      let shouldPush = false;
+      if (typeof type === 'string') {
+        shouldPush = (type === 'all' && _name !== 'total') || _name === type;
+      } else if (Array.isArray(type)) {
+        shouldPush = (type.includes('all') && _name !== 'total') || !!type.find(t => _name.includes(t))
+      }
+      if (shouldPush) {
+        res.push({
+          type: `${_name}-${device}`,
+          value: Number(value),
+          time: timstamps,
+        });
+      }
+    });
+  });
+  return res;
+}
+
 export const getProperTickInterval = period => {
   switch (period) {
     // past one hour

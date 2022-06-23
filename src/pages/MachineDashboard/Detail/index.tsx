@@ -8,6 +8,7 @@ import {
   calcTimeRange,
   getBaseLineByUnit,
   getDataByType,
+  getDiskData,
   getProperTickInterval,
 } from '@/utils/dashboard';
 import { configDetailChart, updateDetailChart } from '@/utils/chart/chart';
@@ -153,7 +154,13 @@ function Detail(props: IProps) {
     const [startTimestamps, endTimestamps] = calcTimeRange(metricsFilterValues.timeRange);
     metricCharts.forEach((chart, i) => {
       if (chart.chartInstance) {
-        const data = getDataByType({
+        const data = type === 'disk' ? 
+        getDiskData({
+          data: dataSources[i] || [],
+          type: metricsFilterValues.instanceList,
+          aliasConfig,
+        }) :
+        getDataByType({
           data: dataSources[i] || [],
           type: metricsFilterValues.instanceList,
           name: 'instance',

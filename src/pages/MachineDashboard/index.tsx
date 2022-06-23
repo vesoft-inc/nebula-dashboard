@@ -63,11 +63,8 @@ function MachineDashboard(props: IProps) {
     loading,
   } = props;
 
-  // const [editPanelType, setEditPanelType] = useState<string>('');
   const [showLoading, setShowLoading] = useState<boolean>(false);
 
-  const modalHandlerRef = useRef<any>();
-// 
   useEffect(() => {
     asyncGetMemorySizeStat(cluster?.id);
     asyncGetDiskSizeStat(cluster?.id);
@@ -127,7 +124,7 @@ function MachineDashboard(props: IProps) {
     asyncGetDiskStatByRange({
       start: end - 1000,
       end,
-      metric: SUPPORT_METRICS.disk[0].metric,
+      metric: SUPPORT_METRICS.disk[1].metric,
       clusterID: cluster?.id
     });
     asyncGetLoadByRange({

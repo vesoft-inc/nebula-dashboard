@@ -123,7 +123,7 @@ export const nebula = createModel({
       const res = await dispatch.nebula.asyncGetHostsInfo(type);
       return res.map(item => ({
         name: `${item.Host}:${item.Port}`,
-        version: item['Git Info Sha'],
+        version: item['Version'],
       }));
     },
   }),

@@ -118,5 +118,6 @@
   "num_get_prop_errors":	"GetPropProcessor 执行时出错的次数。",
   "num_delete_vertices":	"删除点的次数。",
   "num_lookup":	"LookupProcessor 执行的次数。",
+  "disk_used_percentage":	"磁盘使用率",
   "more": "更多参数说明"
 }
