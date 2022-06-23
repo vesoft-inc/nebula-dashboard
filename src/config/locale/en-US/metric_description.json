@@ -117,5 +117,6 @@
   "num_get_prop_errors":	"The number of execution errors for the GetPropProcessor.",
   "num_delete_vertices":	"The number of times that vertices are deleted.",
   "num_lookup":	"The number of executions for the LookupProcessor.",
+  "disk_used_percentage":  "The percentage of disk used.",
   "more": "More"
 }

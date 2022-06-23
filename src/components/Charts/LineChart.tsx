@@ -1,5 +1,5 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
-import { Chart, registerAction, registerInteraction } from '@antv/g2';
+import { Chart, registerInteraction } from '@antv/g2';
 import { ChartCfg } from '@antv/g2/lib/interface';
 
 export interface IProps {

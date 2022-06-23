@@ -1,10 +1,10 @@
 import { TIME_OPTION_TYPE } from "./dashboard";
-import { INTERVAL_FREQUENCY_TYPE } from "./service";
 
 export interface IMetric {
   instance: string;
   instanceName: string;
   device?: string;
+  mountpoint?: string;
 }
 export interface IStatRangeItem {
   metric: IMetric;
@@ -57,4 +57,12 @@ export interface ServiceMetricsPanelValue extends MetricsPanelValue {
   space: string;
   metricType: string;
   period: string;
+}
+
+export interface DiskMetricInfo {
+  size: number;
+  device: string;
+  used: number;
+  mountpoint: string;
+  name: string;
 }
