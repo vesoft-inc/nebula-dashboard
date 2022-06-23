@@ -10,6 +10,9 @@ import {
   Switch,
   withRouter,
 } from 'react-router-dom';
+import dayjs from 'dayjs';
+import weekday from "dayjs/plugin/weekday"
+import localeData from "dayjs/plugin/localeData"
 import { handleTrackEvent, trackEvent } from './utils/stat';
 import { INTL_LOCALES } from '@/config';
 import './App.less';
@@ -17,6 +20,9 @@ import { LanguageContext } from '@/context';
 import { updateQueryStringParameter } from '@/utils';
 import AuthorizedRoute from '@/AuthorizedRoute';
 import Login from '@/pages/Login';
+
+dayjs.extend(weekday)
+dayjs.extend(localeData)
 
 // @ts-ignore
 const MainPage = lazy(() => import('@/pages/MainPage/index'));
