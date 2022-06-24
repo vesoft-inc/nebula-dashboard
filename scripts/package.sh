@@ -30,7 +30,7 @@ mv  $DASHBOARD/vendors/node-exporter/ $TARGET/$VENDOR_DIR
 
 # prometheus
 mv $DASHBOARD/vendors/prometheus/ $TARGET/$VENDOR_DIR
-mv $DASHBOARD/docker-compose/ $TARGET/docker-compose
+mv $DASHBOARD/docker-compose/docker-compose.yaml $TARGET/
 
 ### Nebula Graph Dashboard relative ###
 cd $DASHBOARD

@@ -1,30 +1,31 @@
 version: '3.7'
 services:
   nebula-stats-exporter:
-    image: vesoft/nebula-stats-exporter:${NEBULA_STATS_EXPORTER_VERSION:-v3.1.0}
+    image: centos:7
     command:
+      - ./nebula-stats-exporter
       - --bare-metal
       - --bare-metal-config=/config.yaml
       - --listen-address=:9200
     ports:
       - 9200:9200
     volumes:
-      - ../vendors/nebula-stats-exporter/config.yaml:/config.yaml
+      - ./vendors/nebula-stats-exporter/nebula-stats-exporter:/nebula-stats-exporter
+      - ./vendors/nebula-stats-exporter/config.yaml:/config.yaml
     networks:
       - nebula-net
 
   prometheus:
-    image: prom/prometheus:v2.1.0
-    user: root
+    image: centos:7
     volumes:
-      - ../vendors/prometheus/prometheus.yaml:/etc/prometheus/prometheus.yml
-      - ./data/prometheus:/prometheus:rw
+      - ./vendors/prometheus/prometheus:/prometheus
+      - ./vendors/prometheus/prometheus.yaml:/etc/prometheus/prometheus.yml
+      - ./data/prometheus:/data/prometheus:rw
+    environment:
+      USER: root
     command:
+      - ./prometheus
       - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
-      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
-      - '--web.console.templates=/usr/share/prometheus/consoles'
-      - '--storage.tsdb.retention=15d'
     ports:
       - 9090:9090
     networks:
@@ -33,26 +34,28 @@ services:
       - "host.docker.internal:host-gateway"
 
   nebula-http-gateway:
-    image: vesoft/nebula-http-gateway:${NEBULA_HTTP_GW_VERSION:-v2.2.0}
-    volumes:
-      - ../vendors/nebula-http-gateway/conf/app.conf:/root/conf/app.conf
+    image: centos:7
     environment:
       USER: root
-    ports:
-      - 8080:8080
     volumes:
-      - ${UPLOAD_DIR}:${MAPPING_DOCKER_DIR}:rw
+      - ./vendors/nebula-http-gateway/nebula-httpd:/nebula-httpd
+      - ./vendors/nebula-http-gateway/conf:/conf
+      - ./vendors/nebula-http-gateway/logs:/logs
+      - ./uploads:/upload-dir:rw
+    ports:
+      - 8090:8090
+    command:
+      - ./nebula-httpd
     networks:
       - nebula-net
-
   nebula-dashboard:
     image: centos:7
     ports:
       - 7003:7003
     volumes:
-      - ../config.json:/config.json
-      - ../dashboard:/dashboard
-      - ../public:/public
+      - ./config.json:/config.json
+      - ./dashboard:/dashboard
+      - ./public:/public
     command:
       - ./dashboard
     environment:
