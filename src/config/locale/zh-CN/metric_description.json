@@ -119,5 +119,7 @@
   "num_delete_vertices":	"删除点的次数。",
   "num_lookup":	"LookupProcessor 执行的次数。",
   "disk_used_percentage":	"磁盘使用率",
+  "num_sync_data": "The number of times the storage synchronizes data from drainer.",
+  "num_sync_data_errors": "The number of errors the storage synchronizes data from drainer.",
   "more": "更多参数说明"
 }

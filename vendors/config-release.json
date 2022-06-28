@@ -2,7 +2,7 @@
   "port": 7003,
   "proxy":{
     "gateway":{
-      "target": "nebula-http-gateway:8080"
+      "target": "nebula-http-gateway:8090"
     },
     "prometheus":{
       "target": "prometheus:9090"

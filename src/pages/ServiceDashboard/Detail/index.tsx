@@ -219,7 +219,7 @@ function ServiceDetail(props: IProps) {
           name: 'instanceName',
           aliasConfig,
         });
-        setMaxNum(getMaxNum(data));
+        chart.maxNum = getMaxNum(data);
         updateDetailChart(chart.chartInstance, {
           type: serviceType,
           tickInterval: getProperTickInterval(endTimestamps - startTimestamps),
@@ -303,7 +303,7 @@ function ServiceDetail(props: IProps) {
                     isDefaultScale={
                       metricChart.valueType === VALUE_TYPE.percentage
                     }
-                    yAxisMaximum={maxNum}
+                    yAxisMaximum={metricChart.maxNum}
                     tickInterval={getTickInterval()}
                     baseLine={metricChart.baseLine}
                     options={{ padding: [20, 20, 60, 50] }}

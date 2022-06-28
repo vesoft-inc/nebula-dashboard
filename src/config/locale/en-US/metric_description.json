@@ -118,5 +118,7 @@
   "num_delete_vertices":	"The number of times that vertices are deleted.",
   "num_lookup":	"The number of executions for the LookupProcessor.",
   "disk_used_percentage":  "The percentage of disk used.",
+  "num_sync_data": "Storage 同步 Drainer 数据的次数。",
+  "num_sync_data_errors": "Storage 同步 Drainer 数据出错的次数。",
   "more": "More"
 }

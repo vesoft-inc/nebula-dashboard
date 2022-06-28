@@ -1,37 +1,32 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-// import intl from 'react-intl-universal';
+import intl from 'react-intl-universal';
+
 import { getProperByteDesc, getWhichColor } from '@/utils/dashboard';
 import { DiskMetricInfo } from '@/utils/interface';
 import './SpaceChart.less';
 import _ from 'lodash';
-import { LINE_CHART_COLORS } from '@/utils/chart/chart';
-import { Table } from 'antd';
+import { Select, Table } from 'antd';
+import Icon from '../Icon';
 
 interface IProps {
   diskInfos: DiskMetricInfo[];
 }
 
-interface IInstanceShow {
-  name: string;
-  show: boolean;
-  color: string;
-}
 
 function SpaceChart(props: IProps) {
   const { diskInfos } = props;
 
-  const [curInstances, setCurInstances] = useState<IInstanceShow[]>([]);
-
   const diskInfoMap = useMemo(() => _.groupBy(diskInfos, 'name'), [diskInfos])
+  
+  const instances: string[] = useMemo(() => Object.keys(diskInfoMap), [diskInfoMap])
+  
+  const [curInstances, setCurInstances] = useState<string[]>([]);
 
-  const instances: IInstanceShow[] = useMemo(() => Object.keys(diskInfoMap).map((name, i) => ({
-    name,
-    show: true,
-    color: LINE_CHART_COLORS[i % LINE_CHART_COLORS.length],
-  })), [diskInfoMap])
+  const [ seletedInstance, setSeletedInstance ] = useState<string>('all');
 
   useEffect(() => {
     setCurInstances(instances);
+    setSeletedInstance('all');
   }, [instances])
 
   const getDisplayInfos = (infos: DiskMetricInfo[]) => {
@@ -52,19 +47,21 @@ function SpaceChart(props: IProps) {
     })
   }
 
-  const handleInstanceShow = (instance: IInstanceShow) => () => {
-    instance.show = !instance.show;
-    setCurInstances([...curInstances]);
+  const handleInstanceShow = (instance: string | 'all') => {
+    if (instance === 'all') {
+      setCurInstances(instances);
+    } else {
+      setCurInstances([instance]);
+      setSeletedInstance(instance);
+    }
   }
 
   const renderDiskInfo = () => {
-    return curInstances.filter(item => item.show).map(item => {
-      const { name, color } = item;
-      const displayInfos = getDisplayInfos(diskInfoMap[name] || []);
-      console.log('displayInfos', displayInfos)
+    return curInstances.map(instance => {
+      const displayInfos = getDisplayInfos(diskInfoMap[instance] || []);
       return (
-        <div key={name} className="disk-tr">
-          <div className='disk-tr-item disk-name'>{name}</div>
+        <div key={instance} className="disk-tr">
+          <div className='disk-tr-item disk-name'>{instance}</div>
           <div className='disk-tr-item'>
             {
               displayInfos.map(i => i.device).map((device, i) => (
@@ -114,16 +111,21 @@ function SpaceChart(props: IProps) {
         </div>
         {renderDiskInfo()}
       </div>
-      {/* <div className="instance-type">
+      <Select 
+        className="instance-select" 
+        bordered={false}
+        value={seletedInstance}
+        onSelect={(value: any) => handleInstanceShow(value)}
+        dropdownMatchSelectWidth={200}
+        suffixIcon={<Icon className="select-icon" icon="#iconnav-foldTriangle" />}
+      >
+        <Select.Option key='all' value='all'>{intl.get('base.spaceChartAllInstance')}</Select.Option>
         {
-          curInstances.map((instance) => (
-            <div key={instance.name} className='instance-item' onClick={handleInstanceShow(instance)}>
-              <div className={`instance-label ${instance.show ? '' : 'instance-label-hidden'}`} style={{ background: instance.color }} />
-              <div className={`instance-name ${instance.show ? '' : 'instance-name-hidden'}`}>{instance.name}</div>
-            </div>
+          instances.map((instance) => (
+            <Select.Option key={instance} value={instance}>{instance}</Select.Option>
           ))
         }
-      </div> */}
+      </Select>
     </div>
   );
 }
