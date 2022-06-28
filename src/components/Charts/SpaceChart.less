@@ -14,66 +14,29 @@
   }
 
   >.space-instance {
-    padding: 24px;
+    // padding: 24px;
     position: relative;
-    >.space-instance-description {
-      position: absolute;
-      top: 0;
-      left: 24px;
-      font-weight: bold;
-    }
-    >.space-bar {
-      >.description {
-        font-size: 12px;
-        text-align: left;
+    // >.space-instance-description {
+    //   position: absolute;
+    //   top: 0;
+    //   left: 24px;
+    //   font-weight: bold;
+    // }
+    // >.space-bar {
+    //   >.description {
+    //     font-size: 12px;
+    //     text-align: left;
 
-        >span+span {
-          margin-left: 20px;
-        }
-      }
-
-      >.wrap {
-        display: flex;
-        width: 100%;
-        height: 30px;
-        margin-top: 8px;
+    //     >span+span {
+    //       margin-left: 20px;
+    //     }
+    //   }
 
 
-        >.bar-item {
-          display: flex;
 
-          >.left {
-            flex: 1;
-            opacity: 0.3;
-            height: 100%;
-          }
-
-          >.right {
-            width: 5px;
-            height: 100%;
-          }
-        }
-
-        >.empty {
-          flex: 1;
-          background: #ecf0ff;
-          opacity: 0.3;
-        }
-
-        >p {
-          padding-left: 12px;
-          width: 66px;
-          line-height: 30px;
-          font-size: 18px;
-          font-weight: 400;
-          text-align: left;
-        }
-      }
-    }
-
-    >.space-bar+.space-bar {
-      margin-top: 12px;
-    }
+    // >.space-bar+.space-bar {
+    //   margin-top: 12px;
+    // }
   }
 }
 
@@ -116,4 +79,112 @@
 
 .instance-name-hidden {
   color: #eee !important;
+}
+
+.disk-info-content {
+  display: flex;
+}
+
+.disk-th {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 2fr;
+  text-align: left;
+  width: 100%;
+  height: 30px;
+  line-height: 30px;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  color: #BDBDBD;
+}
+
+.disk-tr {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 2fr;
+  width: 100%;
+  text-align: left;
+  border-bottom: 1px solid #E8E8E8;
+  padding: 20px 0;
+}
+
+.disk-tr-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.disk-tr-item > div:not(:last-child) {
+  margin-bottom: 20px;
+}
+
+.disk-tr-item-info {
+  height: 30px;
+  display: flex;
+  align-items: center;
+  width: 100px;
+  font-size: 12px;
+  // min-width: 135px;
+}
+
+.disk-usage-detail {
+  height: 12px;
+}
+
+.disk-usage-percent {
+  font-size: 12px !important;
+}
+
+.disk-name {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 30px;
+  color: #000000;
+}
+
+.disk-usage {
+  width: 100%;
+  // height: 30px;
+  // display: flex;
+}
+
+.wrap {
+  display: flex;
+  width: 100%;
+  flex: 1;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  height: 30px;
+
+  >.bar-item {
+    display: flex;
+    height: 100%;
+
+    >.left {
+      flex: 1;
+      opacity: 0.3;
+      height: 100%;
+    }
+
+    >.right {
+      width: 5px;
+      height: 100%;
+    }
+  }
+
+  >.empty {
+    flex: 1;
+    background: #ecf0ff;
+    opacity: 0.3;
+  }
+
+  >p {
+    padding-left: 12px;
+    width: 66px;
+    line-height: 30px;
+    font-size: 18px;
+    font-weight: 400;
+    text-align: left;
+  }
 }

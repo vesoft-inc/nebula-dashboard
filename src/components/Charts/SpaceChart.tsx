@@ -5,6 +5,7 @@ import { DiskMetricInfo } from '@/utils/interface';
 import './SpaceChart.less';
 import _ from 'lodash';
 import { LINE_CHART_COLORS } from '@/utils/chart/chart';
+import { Table } from 'antd';
 
 interface IProps {
   diskInfos: DiskMetricInfo[];
@@ -60,33 +61,41 @@ function SpaceChart(props: IProps) {
     return curInstances.filter(item => item.show).map(item => {
       const { name, color } = item;
       const displayInfos = getDisplayInfos(diskInfoMap[name] || []);
+      console.log('displayInfos', displayInfos)
       return (
-        <div key={name} className='space-instance' style={{ borderLeft: `2px solid ${color}` }}>
-          <div className="space-instance-description">
-            <span>{name}</span>
+        <div key={name} className="disk-tr">
+          <div className='disk-tr-item disk-name'>{name}</div>
+          <div className='disk-tr-item'>
+            {
+              displayInfos.map(i => i.device).map((device, i) => (
+                <div key={i} className='disk-tr-item-info'>{device}</div>
+              ))
+            }
           </div>
-          {
-            displayInfos.map((displayInfo, i) => (
-              <div key={i} className="space-bar">
-                <p className="description">
-                  <span>{displayInfo.device}({displayInfo.mountpoint})</span>
-                  <span>
-                    {displayInfo.usedDesc}/{displayInfo.sizeDesc}
-                  </span>
-                </p>
-                <div className="wrap">
-                  <div className="bar-item" style={{ width: `${displayInfo.percent}%` }}>
-                    <div className="left" style={{ backgroundColor: displayInfo.color }}>
-
+          <div className='disk-tr-item'>
+            {
+              displayInfos.map(i => i.mountpoint).map((mountpoint, i) => (
+                <div key={i} className='disk-tr-item-info'>{mountpoint}</div>
+              ))
+            }
+          </div>
+          <div className='disk-tr-item'>
+            {
+              displayInfos.map((displayInfo, i) => (
+                <div className='disk-usage'>
+                  <div key={i} className='disk-tr-item-info disk-usage-detail' >{displayInfo.usedDesc}/{displayInfo.sizeDesc}</div>
+                  <div className="wrap">
+                    <div className="bar-item" style={{ width: `${displayInfo.percent}%` }}>
+                      <div className="left" style={{ backgroundColor: displayInfo.color }} />
+                      <div className="right" style={{ backgroundColor: displayInfo.color }} />
                     </div>
-                    <div className="right" style={{ backgroundColor: displayInfo.color }} />
+                    <div className="empty" />
+                    <p className='disk-usage-percent'>{displayInfo.percent}%</p>
                   </div>
-                  <div className="empty" />
-                  <p>{displayInfo.percent}%</p>
                 </div>
-              </div>
-            ))
-          }
+              ))
+            }
+          </div>
         </div>
       )
     })
@@ -94,10 +103,18 @@ function SpaceChart(props: IProps) {
 
   return (
     <div className="nebula-chart nebula-chart-space">
-      {
-        renderDiskInfo()
-      }
-      <div className="instance-type">
+      <div className='space-instance'>
+        <div className="disk-info-content">
+          <div className="disk-th">
+            <div>instance</div>
+            <div>Disk Name</div>
+            <div>Mount Point</div>
+            <div>Disk Used</div>
+          </div>
+        </div>
+        {renderDiskInfo()}
+      </div>
+      {/* <div className="instance-type">
         {
           curInstances.map((instance) => (
             <div key={instance.name} className='instance-item' onClick={handleInstanceShow(instance)}>
@@ -106,7 +123,7 @@ function SpaceChart(props: IProps) {
             </div>
           ))
         }
-      </div>
+      </div> */}
     </div>
   );
 }
