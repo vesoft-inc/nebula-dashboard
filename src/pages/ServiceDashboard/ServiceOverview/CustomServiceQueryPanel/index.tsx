@@ -8,6 +8,7 @@ import { calcTimeRange, getDataByType } from '@/utils/dashboard';
 import Card from '@/components/Service/ServiceCard/Card';
 import { IDispatch, IRootState } from '@/store';
 import { shouldCheckCluster } from '@/utils';
+import classnames from "classnames";
 
 import './index.less';
 
@@ -100,7 +101,9 @@ function CustomServiceQueryPanel(props: IProps) {
             )
           }
           <div
-            className="btn-icon-with-desc blue"
+            className={classnames('blue btn-icon-with-desc', {
+              'hide-period': isHidePeriod,
+            })}
             onClick={onConfigPanel}
           >
             <Icon icon="#iconSetup" />
