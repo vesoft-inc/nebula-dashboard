@@ -5,7 +5,7 @@ import { getProperByteDesc, getWhichColor } from '@/utils/dashboard';
 import { DiskMetricInfo } from '@/utils/interface';
 import './SpaceChart.less';
 import _ from 'lodash';
-import { Select, Table } from 'antd';
+import { Popover, Select, Table } from 'antd';
 import Icon from '../Icon';
 
 interface IProps {
@@ -65,14 +65,26 @@ function SpaceChart(props: IProps) {
           <div className='disk-tr-item'>
             {
               displayInfos.map(i => i.device).map((device, i) => (
-                <div key={i} className='disk-tr-item-info'>{device}</div>
+                <Popover
+                  key={i} 
+                  content={device}
+                  placement='topLeft'
+                >
+                  <div className='disk-tr-item-info text-overflow'>{device}</div>
+                </Popover>
               ))
             }
           </div>
           <div className='disk-tr-item'>
             {
               displayInfos.map(i => i.mountpoint).map((mountpoint, i) => (
-                <div key={i} className='disk-tr-item-info'>{mountpoint}</div>
+                <Popover
+                  key={i} 
+                  content={mountpoint}
+                  placement='top'
+                >
+                  <div className='disk-tr-item-info text-overflow'>{mountpoint}</div>
+                </Popover>
               ))
             }
           </div>

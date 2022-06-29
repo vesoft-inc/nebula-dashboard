@@ -87,7 +87,7 @@
 
 .disk-th {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 2fr;
+  grid-template-columns: 20% 20% 20% 40%;
   text-align: left;
   width: 100%;
   height: 30px;
@@ -100,7 +100,7 @@
 
 .disk-tr {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 2fr;
+  grid-template-columns: 20% 20% 20% 40%;
   width: 100%;
   text-align: left;
   border-bottom: 1px solid #E8E8E8;
@@ -118,12 +118,20 @@
 }
 
 .disk-tr-item-info {
-  height: 30px;
-  display: flex;
   align-items: center;
-  width: 100px;
+  display: flex;
   font-size: 12px;
-  // min-width: 135px;
+  height: 30px;
+  overflow: hidden;
+  line-height: 30px;
+}
+
+.text-overflow {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
+  width: 90%;
 }
 
 .disk-usage-detail {
@@ -177,6 +185,7 @@
     flex: 1;
     background: #ecf0ff;
     opacity: 0.3;
+    height: 100%;
   }
 
   >p {

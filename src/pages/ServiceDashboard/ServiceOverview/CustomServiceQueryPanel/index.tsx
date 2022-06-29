@@ -112,8 +112,7 @@ function CustomServiceQueryPanel(props: IProps) {
         </div>
       </div>
       <div className="content">
-        {data.length > 0 && (
-          <Card
+        <Card
             baseLine={config.baseLine}
             data={getDataByType({
               data,
@@ -123,7 +122,6 @@ function CustomServiceQueryPanel(props: IProps) {
             })}
             loading={false}
           />
-        )}
       </div>
     </div>
   );

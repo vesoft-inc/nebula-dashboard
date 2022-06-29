@@ -3,12 +3,12 @@ import intl from 'react-intl-universal';
 import { connect } from 'react-redux';
 import { NEBULA_COUNT } from '@/utils/promQL';
 import { DETAIL_DEFAULT_RANGE } from '@/utils/dashboard';
-import { SERVICE_POLLING_INTERVAL } from '@/utils/service';
 import { shouldCheckCluster } from '@/utils';
 import './index.less';
 
 const mapState = (state: any) => ({
   cluster: state.cluster?.cluster,
+  metricsFilterValues: state.machine.metricsFilterValues,
 });
 
 const mapDispatch = (dispatch) => ({});
@@ -21,7 +21,7 @@ interface IProps extends ReturnType<typeof mapState>  {
 
 function StatusPanel(props: IProps) {
 
-  const { cluster, type, getStatus } = props;
+  const { cluster, type, getStatus, metricsFilterValues } = props;
 
   const pollingTimer: any = useRef<any>();
 
@@ -31,13 +31,22 @@ function StatusPanel(props: IProps) {
   });
 
   useEffect(() => {
-    pollingData();
+    if (pollingTimer.current) {
+      clearTimeout(pollingTimer.current);
+    }
+    if (shouldCheckCluster()) {
+      if (cluster.id) {
+        pollingData();
+      }
+    } else {
+      pollingData();
+    }
     return () => {
       if (pollingTimer.current) {
         clearTimeout(pollingTimer.current);
       }
     }
-  }, [cluster])
+  }, [cluster, metricsFilterValues.frequency, metricsFilterValues.timeRange])
 
   const asyncGetStatus = async () => {
     const { normal, abnormal } = (await getStatus({
@@ -50,14 +59,9 @@ function StatusPanel(props: IProps) {
   };
 
   const pollingData = () => {
-    if (shouldCheckCluster()) {
-      if (cluster.id) {
-        asyncGetStatus();
-        pollingTimer.current = setTimeout(pollingData, SERVICE_POLLING_INTERVAL);
-      }
-    } else {
-      asyncGetStatus();
-      pollingTimer.current = setTimeout(pollingData, SERVICE_POLLING_INTERVAL);
+    asyncGetStatus();
+    if (metricsFilterValues.frequency > 0) {
+      pollingTimer.current = setTimeout(pollingData, metricsFilterValues.frequency);
     }
   };
 
