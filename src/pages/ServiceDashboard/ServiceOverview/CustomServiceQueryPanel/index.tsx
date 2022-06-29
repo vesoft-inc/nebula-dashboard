@@ -26,7 +26,6 @@ interface IProps
   ReturnType<typeof mapState> {
   onConfigPanel: () => void;
   config: IServicePanelConfig;
-  aliasConfig: any;
   isHidePeriod?: boolean;
 }
 

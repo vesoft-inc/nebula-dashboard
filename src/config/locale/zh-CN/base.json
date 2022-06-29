@@ -1,4 +1,8 @@
 {
   "baseLineModalTitle": "基线设置",
-  "spaceChartAllInstance": "全部实例"
+  "spaceChartAllInstance": "全部实例",
+  "spaceChartInstance": "实例",
+  "spaceChartDiskname": "磁盘名称",
+  "spaceChartMountpoint": "挂载点",
+  "spaceChartDiskused": "已使用"
 }
