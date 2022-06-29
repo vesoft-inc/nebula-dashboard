@@ -103,10 +103,10 @@ function SpaceChart(props: IProps) {
       <div className='space-instance'>
         <div className="disk-info-content">
           <div className="disk-th">
-            <div>instance</div>
-            <div>Disk Name</div>
-            <div>Mount Point</div>
-            <div>Disk Used</div>
+            <div>{intl.get('base.spaceChartInstance')}</div>
+            <div>{intl.get('base.spaceChartDiskname')}</div>
+            <div>{intl.get('base.spaceChartMountpoint')}</div>
+            <div>{intl.get('base.spaceChartDiskused')}</div>
           </div>
         </div>
         {renderDiskInfo()}
