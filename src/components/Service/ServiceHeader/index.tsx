@@ -1,8 +1,8 @@
 import React from 'react';
 import Icon from '@/components/Icon';
-import metadIcon from '@/static/images/Meta-image.png';
-import graphdIcon from '@/static/images/Graphd-image.png';
-import storagedIcon from '@/static/images/Storage-image.png';
+import metadIcon from '@/static/images/Metad-icon60.png';
+import graphdIcon from '@/static/images/Graphd-icon60.png';
+import storagedIcon from '@/static/images/Storaged-icon60.png';
 import './index.less';
 
 interface IProps {
