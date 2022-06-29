@@ -130,6 +130,9 @@ function LineChart(props: IProps, ref) {
       e.initEvent('resize', true, true);
       window.dispatchEvent(e);
     }
+    if (chartRef.current) {
+      chartInstanceRef.current.changeSize(chartRef.current.clientWidth, chartRef.current.clientHeight);
+    }
     chartInstanceRef.current!.render(true);
   };
 

@@ -22,7 +22,13 @@ export interface IState {
   metricsFilterValues: MetricsPanelValue;
 }
 
-export function MachineModelWrapper(service) {
+export function MachineModelWrapper(service, customizePromQL = (_clusterID) => ({})) {
+  const getPromQL = (clusterID) => {
+    return {
+      ...PROMQL(clusterID),
+      ...customizePromQL(clusterID)
+    }
+  }
   return createModel({
     state: {
       cpuStat: [] as IStatRangeItem[],
@@ -74,7 +80,7 @@ export function MachineModelWrapper(service) {
         const step = getProperStep(start, end);
         const { code, data } = (await service.execPromQLByRange({
           clusterID,
-          query: PROMQL(clusterID)[metric],
+          query: getPromQL(clusterID)[metric],
           start: _start,
           end: _end,
           step,
@@ -84,7 +90,7 @@ export function MachineModelWrapper(service) {
           if (NEED_ADD_SUM_QUERYS.includes(metric)) {
             result = (await this.asyncGetSumDataByRange({
               clusterID,
-              query: PROMQL(clusterID)[metric],
+              query: getPromQL(clusterID)[metric],
               start: _start,
               end: _end,
               step,
@@ -127,7 +133,7 @@ export function MachineModelWrapper(service) {
       async asyncGetMemorySizeStat(clusterID?: string) {
         const { code, data } = (await service.execPromQL({
           clusterID,
-          query: PROMQL(clusterID).memory_size,
+          query: getPromQL(clusterID).memory_size,
         })) as any;
         let memorySizeStat = [];
         if (code === 0) {
@@ -155,7 +161,7 @@ export function MachineModelWrapper(service) {
       async asyncGetDiskSizeStat(clusterID?: string) {
         const { code, data } = (await service.execPromQL({
           clusterID,
-          query: PROMQL(clusterID).disk_size,
+          query: getPromQL(clusterID).disk_size,
         })) as any;
         let diskSizeStat = [];
         if (code === 0) {

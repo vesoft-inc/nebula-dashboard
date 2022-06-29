@@ -422,36 +422,7 @@ export const SERVICE_SUPPORT_METRICS = {
   ],
 };
 
-export const MAC_OS = (cluster?) => {
-  const clusterSuffix1 = cluster ? `,${getClusterPrefix()}='${cluster}'` : '';
-  const clusterSuffix2 = cluster ? `{${getClusterPrefix()}='${cluster}'}` : '';
-  return (
-    {
-      // cpu relative:
-      cpu_utilization: `100 * (1 - sum by (instance)(increase(node_cpu_seconds_total{mode="idle"${clusterSuffix1}}[5m])) / sum by (instance)(increase(node_cpu_seconds_total${clusterSuffix2}[5m])))`,
-      cpu_idle: `100 * (sum by (instance)(increase(node_cpu_seconds_total{mode="idle"${clusterSuffix1}}[5m])) / sum by (instance)(increase(node_cpu_seconds_total${clusterSuffix2}[5m])))`,
-      cpu_wait: `100 * (sum by (instance)(increase(node_cpu_seconds_total{mode="iowait"${clusterSuffix1}}[5m])) / sum by (instance)(increase(node_cpu_seconds_total${clusterSuffix2}[5m])))`,
-      cpu_user: `100 * (sum by (instance)(increase(node_cpu_seconds_total{mode="user"${clusterSuffix1}}[5m])) / sum by (instance)(increase(node_cpu_seconds_total${clusterSuffix2}[5m])))`,
-      cpu_system: `100 * (sum by (instance)(increase(node_cpu_seconds_total{mode="system"${clusterSuffix1}}[5m])) / sum by (instance)(increase(node_cpu_seconds_total${clusterSuffix2}[5m])))`,
-
-      // memory relative
-      memory_util: `(1 - avg_over_time(node_memory_free_bytes${clusterSuffix2}[1m]) / avg_over_time(node_memory_total_bytes${clusterSuffix2}[1m]))* 100`,
-      memory_size: `node_memory_total_bytes${clusterSuffix2}`,
-      disk_usage_rate: `(1 - (node_filesystem_avail_bytes{mountpoint="/",fstype!="rootfs"${clusterSuffix1}}) /  node_filesystem_size_bytes{mountpoint="/",fstype!="rootfs"${clusterSuffix1})* 100`,
-      disk_size: `node_filesystem_size_bytes{mountpoint="/",fstype!="rootfs"${clusterSuffix1}}`,
-      network_flow_down: `sum by(instance)(rate(node_network_receive_bytes_total{device=~"en[0-9]*"${clusterSuffix1}}[1m]))`,
-      network_flow_up: `sum by(instance)(rate(node_network_transmit_bytes_total{device=~"en[0-9]*"${clusterSuffix1}}[1m]))`,
-      node_load5: `node_load5${clusterSuffix2}`,
-    }
-  )
-};
-
-// console.log('pr', process.env.VERSION_TYPE);
-
 export const getClusterPrefix = () => {
-  // if (isCloudVersion()) {
-  //   return 'nebula_cluster';
-  // }
   return 'nebula_cluster';
 }
 
@@ -481,15 +452,15 @@ export const LINUX = (cluster?) => {
   
     // disk relative:
     disk_used: `node_filesystem_size_bytes{${diskPararms}${clusterSuffix1}} - node_filesystem_free_bytes{${diskPararms}${clusterSuffix1}}`,
-    disk_free: `node_filesystem_avail_bytes{fstype=~"ext.*|xfs",mountpoint !~".*pod.*"${clusterSuffix1}}`,
+    disk_free: `node_filesystem_avail_bytes{${diskPararms}${clusterSuffix1}}`,
     disk_readbytes: `irate(node_disk_read_bytes_total{device=~"(sd|nvme|hd)[a-z0-9]*"${clusterSuffix1}}[1m])`,
     disk_writebytes: `irate(node_disk_written_bytes_total{device=~"(sd|nvme|hd)[a-z0-9]*"${clusterSuffix1}}[1m])`,
     disk_readiops: `irate(node_disk_reads_completed_total{device=~"(sd|nvme|hd)[a-z0-9]*"${clusterSuffix1}}[1m])`,
     disk_writeiops: `irate(node_disk_writes_completed_total{device=~"(sd|nvme|hd)[a-z0-9]*"${clusterSuffix1}}[1m])`,
-    inode_utilization: `(1- (node_filesystem_files_free{fstype=~"ext.*|xfs",mountpoint !~".*pod.*"${clusterSuffix1}}) / (node_filesystem_files{mountpoint="/",fstype!="rootfs"${clusterSuffix1}})) * 100`,
+    inode_utilization: `(1- (node_filesystem_files_free{${diskPararms}${clusterSuffix1}}) / (node_filesystem_files{mountpoint="/",fstype!="rootfs"${clusterSuffix1}})) * 100`,
     disk_used_percentage: `(node_filesystem_size_bytes{${diskPararms}${clusterSuffix1}}-node_filesystem_free_bytes{${diskPararms}${clusterSuffix1}}) *100/(node_filesystem_avail_bytes {${diskPararms}${clusterSuffix1}}+(node_filesystem_size_bytes{${diskPararms}${clusterSuffix1}}-node_filesystem_free_bytes{${diskPararms}${clusterSuffix1}}))`,
   
-    disk_size: `node_filesystem_size_bytes{fstype=~"ext.*|xfs",mountpoint !~".*pod.*"${clusterSuffix1}}`,
+    disk_size: `node_filesystem_size_bytes{${diskPararms}${clusterSuffix1}}`,
     network_in_rate: `ceil(sum by(instance)(irate(node_network_receive_bytes_total{device=~"(eth|en)[a-z0-9]*"${clusterSuffix1}}[1m])))`,
     network_out_rate: `ceil(sum by(instance)(irate(node_network_transmit_bytes_total{device=~"(eth|en)[a-z0-9]*"${clusterSuffix1}}[1m])))`,
     network_in_errs: `ceil(sum by(instance)(irate(node_network_receive_errs_total{device=~"(eth|en)[a-z0-9]*"${clusterSuffix1}}[1m])))`,
