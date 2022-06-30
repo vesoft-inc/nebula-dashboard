@@ -3,8 +3,8 @@ import intl from 'react-intl-universal';
 import { connect } from 'react-redux';
 import { Popover } from 'antd';
 import Icon from '@/components/Icon';
-import { IServicePanelConfig } from '@/utils/interface';
-import { calcTimeRange, getDataByType } from '@/utils/dashboard';
+import { IServicePanelConfig, MetricScene } from '@/utils/interface';
+import { calcTimeRange, getDataByType, getMetricsUniqName } from '@/utils/dashboard';
 import Card from '@/components/Service/ServiceCard/Card';
 import { IDispatch, IRootState } from '@/store';
 import { shouldCheckCluster } from '@/utils';
@@ -117,7 +117,7 @@ function CustomServiceQueryPanel(props: IProps) {
             data={getDataByType({
               data,
               type: metricsFilterValues.instanceList,
-              name: 'instanceName',
+              nameObj: getMetricsUniqName(MetricScene.SERVICE),
               aliasConfig,
             })}
             loading={false}

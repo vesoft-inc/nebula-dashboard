@@ -50,13 +50,14 @@ interface IProps
     valueType: VALUE_TYPE;
   }[];
   loading: true;
+  dataTypeObj: any;
 }
 
 let pollingTimer: any;
 
 function Detail(props: IProps) {
 
-  const { metricOptions, loading, aliasConfig, asyncGetDataSourceByRange, asyncUpdateBaseLine, cluster, instances, metricsFilterValues, updateMetricsFiltervalues, type } = props;
+  const { metricOptions, loading, aliasConfig, asyncGetDataSourceByRange, asyncUpdateBaseLine, cluster, instances, metricsFilterValues, updateMetricsFiltervalues, type, dataTypeObj } = props;
 
   const [maxNum, setMaxNum] = useState<number>(0);
   const [dataSources, setDataSources] = useState<any[]>([]);
@@ -158,12 +159,13 @@ function Detail(props: IProps) {
         getDiskData({
           data: dataSources[i] || [],
           type: metricsFilterValues.instanceList,
+          nameObj: dataTypeObj,
           aliasConfig,
         }) :
         getDataByType({
           data: dataSources[i] || [],
           type: metricsFilterValues.instanceList,
-          name: 'instance',
+          nameObj: dataTypeObj,
           aliasConfig,
         });
         setMaxNum(100);
