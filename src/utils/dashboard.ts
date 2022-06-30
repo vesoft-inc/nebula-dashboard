@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import _ from 'lodash';
-import { ILineChartMetric, IStatRangeItem } from '@/utils/interface';
+import { DashboardType, ILineChartMetric, IStatRangeItem, MetricScene } from '@/utils/interface';
 import { VALUE_TYPE } from '@/utils/promQL';
 
 export const DETAIL_DEFAULT_RANGE = 60 * 60 * 24 * 1000;
@@ -145,10 +145,14 @@ export const getProperByteDesc = (bytes: any, conversion: number) => {
 export const getDataByType = (payload: {
   data: IStatRangeItem[];
   type?: string | string[];
-  name: string;
+  nameObj: {
+    name: string;
+    showName: (name: string) => string;
+  };
   aliasConfig?: any;
 }) => {
-  const { name, type, data, aliasConfig } = payload;
+  const { nameObj, type, data, aliasConfig } = payload;
+  const { name, showName } = nameObj;
   const res = [] as ILineChartMetric[];
   data.forEach(instance => {
     instance.values.forEach(([timstamps, value]) => {
@@ -161,7 +165,7 @@ export const getDataByType = (payload: {
       }
       if (shouldPush) {
         res.push({
-          type: aliasConfig && aliasConfig[_name] ? aliasConfig[_name] : _name,
+          type: showName(aliasConfig && aliasConfig[_name] ? aliasConfig[_name] : _name),
           value: Number(value),
           time: timstamps,
         });
@@ -175,13 +179,18 @@ export const getDiskData = (payload: {
   data: IStatRangeItem[];
   type?: string | string[];
   aliasConfig?: any;
+  nameObj: {
+    name: string;
+    showName: (name: string) => string;
+  };
 }) => {
-  const { type, data } = payload;
+  const { type, data, nameObj } = payload;
+  const { name, showName } = nameObj;
   const res = [] as ILineChartMetric[];
   data.forEach(instance => {
     instance.values.forEach(([timstamps, value]) => {
       const device = instance.metric['device'];
-      const _name = instance.metric['instance'];
+      const _name = instance.metric[name];
       let shouldPush = false;
       if (typeof type === 'string') {
         shouldPush = (type === 'all' && _name !== 'total') || _name === type;
@@ -190,7 +199,7 @@ export const getDiskData = (payload: {
       }
       if (shouldPush) {
         res.push({
-          type: `${_name}-${device}`,
+          type: `${showName(_name)}-${device}`,
           value: Number(value),
           time: timstamps,
         });
@@ -218,7 +227,7 @@ export enum TIME_OPTION_TYPE {
   HOUR12 = '12hour',
   DAY1 = '1day',
   DAY3 = '3day',
-  DAY7  = '7day',
+  DAY7 = '7day',
   DAY14 = '14day',
 }
 
@@ -278,7 +287,7 @@ export const calcTimeRange = (timeRange: TIME_OPTION_TYPE | [number, number]): [
   if (typeof timeRange === 'string') {
     const value = TIMEOPTIONS.find(t => t.name === timeRange)?.value!;
     return [end - value, end];
-  } else if ( typeof timeRange === 'object' && timeRange.length === 2) {
+  } else if (typeof timeRange === 'object' && timeRange.length === 2) {
     return timeRange;
   }
   throw new Error('timeRange is not valid');
@@ -382,4 +391,51 @@ export const UNKONW_VERSION = 'unknow';
 export function getVersion(v: string) {
   const match = v?.match(VERSION_REGEX);
   return match ? match[0] : v;
+}
+
+export const getMetricsUniqName = (scene: MetricScene) => {
+  const dashboardType = VERSION_TYPE?.type;
+  switch (dashboardType) {
+    case DashboardType.CLOUD:
+      if (scene === MetricScene.MACHINE) {
+        return {
+          name: 'pod',
+          showName: (name) => name ? name.slice(name.lastIndexOf('-') + 1) : name
+        }
+      }
+      if (scene === MetricScene.CPU || scene === MetricScene.NETWORK) {
+        return {
+          name: 'instance',
+          showName: (name) => name ? name.slice(name.lastIndexOf('-') + 1) : name
+        }
+      }
+      if (scene === MetricScene.SERVICE) {
+        return {
+          name: 'kubernetes_pod_name',
+          showName: (name) => name ? name.slice(name.split('-').slice(2).join('-')) : name
+        }
+      }
+      if (scene === MetricScene.DISK) {
+        return {
+          name: 'pod',
+          showName: (name) => name ? name.slice(name.split('-').slice(2).join('-')) : name
+        }
+      }
+      break;
+    default:
+      if (scene === MetricScene.SERVICE) {
+        return {
+          name: 'instanceName',
+          showName: (name) => name
+        }
+      }
+      return {
+        name: 'instance',
+        showName: (name) => name
+      }
+  }
+  return {
+    name: 'instance',
+    showName: (name) => name
+  }
 }

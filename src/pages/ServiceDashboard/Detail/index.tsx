@@ -10,10 +10,11 @@ import {
   calcTimeRange,
   getBaseLineByUnit,
   getMaxNum,
+  getMetricsUniqName,
 } from '@/utils/dashboard';
 import { IDispatch, IRootState } from '@/store';
 import { VALUE_TYPE } from '@/utils/promQL';
-import { IMetricOption, ServiceMetricsPanelValue } from '@/utils/interface';
+import { IMetricOption, MetricScene, ServiceMetricsPanelValue } from '@/utils/interface';
 
 import LineChart from '@/components/Charts/LineChart';
 import { configDetailChart, updateDetailChart } from '@/utils/chart/chart';
@@ -216,7 +217,7 @@ function ServiceDetail(props: IProps) {
         const data = getDataByType({
           data: dataSources[i] || [],
           type: instanceList,
-          name: 'instanceName',
+          nameObj: getMetricsUniqName(MetricScene.SERVICE),
           aliasConfig,
         });
         chart.maxNum = getMaxNum(data);

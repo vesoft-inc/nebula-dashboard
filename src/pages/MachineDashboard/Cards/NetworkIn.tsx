@@ -2,8 +2,9 @@ import { connect } from 'react-redux';
 import { IRootState } from '@/store';
 
 import LineCard from '@/components/DashboardCard/LineCard';
-import { getDataByType } from '@/utils/dashboard';
+import { getDataByType, getMetricsUniqName } from '@/utils/dashboard';
 import { VALUE_TYPE } from '@/utils/promQL';
+import { MetricScene } from '@/utils/interface';
 
 const mapState = (state: IRootState) => {
   const { networkInStat, metricsFilterValues } = state.machine;
@@ -14,7 +15,7 @@ const mapState = (state: IRootState) => {
     data: getDataByType({
       data: networkInStat,
       type: metricsFilterValues.instanceList,
-      name: 'instance',
+      nameObj: getMetricsUniqName(MetricScene.NETWORK),
       aliasConfig,
     }),
     valueType: VALUE_TYPE.byteSecondNet,

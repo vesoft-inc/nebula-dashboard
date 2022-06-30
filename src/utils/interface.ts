@@ -66,3 +66,18 @@ export interface DiskMetricInfo {
   mountpoint: string;
   name: string;
 }
+
+export enum DashboardType {
+  COMMUNTY = 'community',
+  ENTERPRISE = 'enterprise',
+  CLOUD = 'cloud',
+  PLAYGROUND = 'playground'
+}
+
+export enum MetricScene {
+  MACHINE,
+  SERVICE,
+  CPU,
+  NETWORK,
+  DISK,
+}

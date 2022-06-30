@@ -1,8 +1,9 @@
 import { connect } from 'react-redux';
 import LineCard from '@/components/DashboardCard/LineCard';
 import { IRootState } from '@/store';
-import { getDataByType } from '@/utils/dashboard';
+import { getDataByType, getMetricsUniqName } from '@/utils/dashboard';
 import { VALUE_TYPE } from '@/utils/promQL';
+import { MetricScene } from '@/utils/interface';
 
 const mapState = (state: IRootState) => {
   const { memoryStat, memorySizeStat, metricsFilterValues } = state.machine;
@@ -12,7 +13,7 @@ const mapState = (state: IRootState) => {
     data: getDataByType({
       data: memoryStat,
       type: metricsFilterValues.instanceList,
-      name: 'instance',
+      nameObj: getMetricsUniqName(MetricScene.MACHINE),
       aliasConfig,
     }),
     sizes: memorySizeStat,
