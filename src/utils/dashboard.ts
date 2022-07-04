@@ -265,7 +265,7 @@ export const TIMEOPTIONS = [
 export const NEED_ADD_SUM_QUERYS = [
   // For Instanc
   'memory_used',
-  'memory_actual_used',
+  // 'memory_actual_used',
   'memory_free',
   'disk_used',
   'disk_free',

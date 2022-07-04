@@ -9,7 +9,7 @@ import styles from './index.module.less';
 import { AGGREGATION_OPTIONS, TIME_INTERVAL_OPTIONS } from '@/utils/dashboard';
 
 interface IProps {
-  spaces: string[];
+  spaces?: string[];
   instanceList: string[];
   onChange?: (values) => void;
   values?: any;
@@ -29,7 +29,7 @@ function ServiceMetricsFilterPanel(props: IProps) {
       form.setFieldsValue(values);
     }
   }, [values, form]);
-  
+
   const handleSpaceChange = (value) => {
     if (!form) return;
     form.setFieldsValue({
@@ -60,24 +60,28 @@ function ServiceMetricsFilterPanel(props: IProps) {
 
   return (
     <div className={styles.filterPanelContent}>
-      <MetricsFilterPanel 
-        instanceList={instanceList} 
+      <MetricsFilterPanel
+        instanceList={instanceList}
         ref={panelRef}
         onChange={handleFilterPanelChange}
         onRefresh={onRefresh}
       >
-        <Form.Item label={intl.get('service.spaces')} name="space">
-          <DashboardSelect onChange={handleSpaceChange}>
-            <Option key="all" value="">
-              {intl.get('common.all')}
-            </Option>
-            {spaces.map(space => (
-              <Option key={space} value={space}>
-                {space}
-              </Option>
-            ))}
-          </DashboardSelect>
-        </Form.Item>
+        {
+          spaces && (
+            <Form.Item label={intl.get('service.spaces')} name="space">
+              <DashboardSelect onChange={handleSpaceChange}>
+                <Option key="all" value="">
+                  {intl.get('common.all')}
+                </Option>
+                {spaces.map(space => (
+                  <Option key={space} value={space}>
+                    {space}
+                  </Option>
+                ))}
+              </DashboardSelect>
+            </Form.Item>
+          )
+        }
         <Form.Item
           className="metric-period"
           label={intl.get('service.period')}

@@ -43,10 +43,10 @@ export const SUPPORT_METRICS = {
       metric: 'memory_used',
       valueType: VALUE_TYPE.byte,
     },
-    {
-      metric: 'memory_actual_used',
-      valueType: VALUE_TYPE.byte,
-    },
+    // {
+    //   metric: 'memory_actual_used',
+    //   valueType: VALUE_TYPE.byte,
+    // },
     {
       metric: 'memory_free',
       valueType: VALUE_TYPE.byte,
@@ -441,7 +441,7 @@ export const LINUX = (cluster?) => {
     // memory relative:
     memory_utilization: `(1 - (node_memory_MemFree_bytes${clusterSuffix2}+ node_memory_Buffers_bytes${clusterSuffix2}+ node_memory_Cached_bytes${clusterSuffix2}) / node_memory_MemTotal_bytes${clusterSuffix2} )* 100`,
     memory_used: `node_memory_MemTotal_bytes${clusterSuffix2} - node_memory_MemFree_bytes${clusterSuffix2}- node_memory_Buffers_bytes${clusterSuffix2}  - node_memory_Cached_bytes${clusterSuffix2}`,
-    memory_actual_used: `node_memory_MemTotal_bytes${clusterSuffix2} - node_memory_MemFree_bytes${clusterSuffix2} - node_memory_Buffers_bytes${clusterSuffix2} - node_memory_Cached_bytes${clusterSuffix2}`,
+    // memory_actual_used: `node_memory_MemTotal_bytes${clusterSuffix2} - node_memory_MemFree_bytes${clusterSuffix2} - node_memory_Buffers_bytes${clusterSuffix2} - node_memory_Cached_bytes${clusterSuffix2}`,
     memory_free: `node_memory_MemFree_bytes${clusterSuffix2}`,
     memory_size: `node_memory_MemTotal_bytes${clusterSuffix2}`,
   

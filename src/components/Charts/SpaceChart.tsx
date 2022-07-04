@@ -17,12 +17,12 @@ function SpaceChart(props: IProps) {
   const { diskInfos } = props;
 
   const diskInfoMap = useMemo(() => _.groupBy(diskInfos, 'name'), [diskInfos])
-  
+
   const instances: string[] = useMemo(() => Object.keys(diskInfoMap), [diskInfoMap])
-  
+
   const [curInstances, setCurInstances] = useState<string[]>([]);
 
-  const [ seletedInstance, setSeletedInstance ] = useState<string>('all');
+  const [seletedInstance, setSeletedInstance] = useState<string>('all');
 
   useEffect(() => {
     setCurInstances(instances);
@@ -61,12 +61,19 @@ function SpaceChart(props: IProps) {
       const displayInfos = getDisplayInfos(diskInfoMap[instance] || []);
       return (
         <div key={instance} className="disk-tr">
-          <div className='disk-tr-item disk-name'>{instance}</div>
+          <div className='disk-tr-item disk-name'>
+            <Popover
+              content={instance}
+              placement='topLeft'
+            >
+              <div className='disk-tr-item-info text-overflow'>{instance}</div>
+            </Popover>
+          </div>
           <div className='disk-tr-item'>
             {
               displayInfos.map(i => i.device).map((device, i) => (
                 <Popover
-                  key={i} 
+                  key={i}
                   content={device}
                   placement='topLeft'
                 >
@@ -79,7 +86,7 @@ function SpaceChart(props: IProps) {
             {
               displayInfos.map(i => i.mountpoint).map((mountpoint, i) => (
                 <Popover
-                  key={i} 
+                  key={i}
                   content={mountpoint}
                   placement='top'
                 >
@@ -123,8 +130,8 @@ function SpaceChart(props: IProps) {
         </div>
         {renderDiskInfo()}
       </div>
-      <Select 
-        className="instance-select" 
+      <Select
+        className="instance-select"
         bordered={false}
         value={seletedInstance}
         onSelect={(value: any) => handleInstanceShow(value)}
