@@ -5,14 +5,13 @@ import { ChartCfg } from '@antv/g2/lib/interface';
 export interface IProps {
   renderChart: (chartInstance: Chart) => void;
   options?: Partial<ChartCfg>;
-  tickInterval?: number;
   baseLine?: number;
   yAxisMaximum?: number;
   isDefaultScale?: boolean;
 }
 
 function LineChart(props: IProps, ref) {
-  const { isDefaultScale, yAxisMaximum, baseLine, tickInterval, options, renderChart } = props;
+  const { isDefaultScale, yAxisMaximum, baseLine, options, renderChart } = props;
 
   const chartRef = useRef<any>();
 
@@ -78,7 +77,7 @@ function LineChart(props: IProps, ref) {
   }, [options, baseLine])
 
   useImperativeHandle(ref, () => ({
-    updateChart: (baseLine) => {
+    updateBaseline: (baseLine) => {
       updateChart(baseLine);
     },
   }))
@@ -93,7 +92,7 @@ function LineChart(props: IProps, ref) {
           tickInterval: 25,
         },
       });
-    } else if (yAxisMaximum === 0 && baseLine) {
+    } else if ((yAxisMaximum === undefined ||  yAxisMaximum === 0) && baseLine) {
       chartInstanceRef.current?.scale('value', {
         ticks: [0, baseLine, Math.round(baseLine * 1.5)],
       });

@@ -1,5 +1,5 @@
 import { Popover, Spin } from 'antd';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import intl from 'react-intl-universal';
 import { RouteComponentProps, useLocation, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -60,7 +60,6 @@ function ServiceDetail(props: IProps) {
 
   const [serviceType, setServiceType] = useState<string>('');
   const [dataSources, setDataSources] = useState<any[]>([]);
-  const [maxNum, setMaxNum] = useState(0);
   const [showLoading, setShowLoading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -187,7 +186,7 @@ function ServiceDetail(props: IProps) {
           query: item.metricFunction + period,
           start: startTime,
           end: endTime,
-          space,
+          space: serviceType === 'graph' ? space : undefined,
           clusterID: cluster?.id,
         }).then(res => {
           resolve(res);
@@ -254,17 +253,12 @@ function ServiceDetail(props: IProps) {
       unit,
       valueType: metricChart.valueType,
     });
-    metricChart.chartRef.updateChart(metricChart.baseLine);
+    metricChart.chartRef.updateBaseline(metricChart.baseLine);
   };
 
   const handleMetricChange = async values => {
     updateMetricsFiltervalues(values);
   };
-
-  const getTickInterval = () => {
-    const [startTimestamps, endTimestamps] = calcTimeRange(metricsFilterValues.timeRange);
-    return getProperTickInterval(endTimestamps - startTimestamps);
-  }
 
   const handleRefresh = () => {
     setShowLoading(!!loading);
@@ -278,7 +272,7 @@ function ServiceDetail(props: IProps) {
           <ServiceMetricsFilterPanel
             onChange={handleMetricChange}
             instanceList={instanceList}
-            spaces={serviceMetric.spaces}
+            spaces={serviceType === 'graph' ? serviceMetric.spaces : undefined}
             values={metricsFilterValues}
             onRefresh={handleRefresh}
           />
@@ -305,7 +299,6 @@ function ServiceDetail(props: IProps) {
                       metricChart.valueType === VALUE_TYPE.percentage
                     }
                     yAxisMaximum={metricChart.maxNum}
-                    tickInterval={getTickInterval()}
                     baseLine={metricChart.baseLine}
                     options={{ padding: [20, 20, 60, 50] }}
                     ref={ref => metricChart.chartRef = ref}

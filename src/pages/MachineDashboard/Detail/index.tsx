@@ -139,7 +139,7 @@ function Detail(props: IProps) {
       unit,
       valueType: metricChart.valueType,
     });
-    metricChart.chartRef.updateChart(metricChart.baseLine);
+    metricChart.chartRef.updateBaseline(metricChart.baseLine);
   };
 
   const renderChart = (i: number) => (chartInstance: Chart) => {
@@ -186,12 +186,6 @@ function Detail(props: IProps) {
     });
   };
 
-
-  const getTickInterval = () => {
-    const [startTimestamps, endTimestamps] = calcTimeRange(metricsFilterValues.timeRange);
-    return getProperTickInterval(endTimestamps - startTimestamps);
-  }
-
   const handleRefreshData = () => {
     setShowLoading(loading);
     getData();
@@ -229,7 +223,6 @@ function Detail(props: IProps) {
                       metricChart.metric.valueType === VALUE_TYPE.percentage
                     }
                     yAxisMaximum={maxNum}
-                    tickInterval={getTickInterval()}
                     baseLine={metricChart.baseLine}
                     options={{ padding: [10, 70, 70, 70] }}
                     ref={ref => metricChart.chartRef = ref}

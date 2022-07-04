@@ -34,7 +34,7 @@ export const configDetailChart = (
     valueType?: VALUE_TYPE;
     isCard?: boolean;
     maxNum?: number;
-  },
+  }
 ): Chart => {
   chartInstance
     .axis('time', {
