@@ -15,7 +15,7 @@ const mapState = (state: IRootState) => ({
 
 const mapDispatch = (dispatch: IDispatch) => ({
   asyncGetServices: dispatch.nebula.asyncGetServices,
-});
+}) as any;
 interface IProps
   extends ReturnType<typeof mapState>,
   ReturnType<typeof mapDispatch> {}
@@ -84,6 +84,7 @@ class ServiceInfo extends React.Component<IProps> {
           />
         ),
         dataIndex: 'Partition distribution',
+        render: distribution => <div className='partition-table'>{distribution}</div>
       },
       {
         title: (
@@ -93,6 +94,7 @@ class ServiceInfo extends React.Component<IProps> {
           />
         ),
         dataIndex: 'Leader distribution',
+        render: distribution => <div className='leader-table'>{distribution}</div>
       },
     ];
     return (

@@ -118,8 +118,8 @@ class MainPage extends React.Component<IProps, IState> {
     const locale = cookies.get('locale');
     const manualHref =
       locale === 'ZH_CN'
-        ? 'https://docs.nebula-graph.com.cn/3.1.0/nebula-dashboard/1.what-is-dashboard/'
-        : 'https://docs.nebula-graph.io/3.1.0/nebula-dashboard/1.what-is-dashboard/';
+        ? 'https://docs.nebula-graph.com.cn/3.2.0/nebula-dashboard/1.what-is-dashboard/'
+        : 'https://docs.nebula-graph.io/3.2.0/nebula-dashboard/1.what-is-dashboard/';
 
     if (activeKey === undefined) {
       activeKey = 'machine-overview';

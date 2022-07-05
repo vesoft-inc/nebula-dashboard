@@ -96,7 +96,7 @@ class LeaderDistribution extends React.Component<IProps, IState> {
       <Spin delay={200} spinning={!!loading}>
         <div className="leader-distribution">
           <div className="common-header">
-            <span>Storage Leader 分布</span>
+            <span>Storage Leader {intl.get('service.distribution')}</span>
           </div>
           <div className="leader-content">
             <PieChart

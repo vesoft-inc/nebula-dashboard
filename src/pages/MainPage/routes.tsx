@@ -63,7 +63,7 @@ export const MenuList = [
   {
     key: 'service',
     title: intl.get('common.service'),
-    icon: '#iconnav-service',
+    icon: '#iconnav-servise',
     children: [
       {
         key: 'service-overview',

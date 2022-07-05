@@ -16,6 +16,9 @@ const getAppInfo = get('/api/app');
 const getCustomConfig = get('/api/config/custom');
 const getAnnotationLineConfig = get('/api/config/annotation_line');
 
+const getGraphConfig = get(`/api-graph/flags`);
+const getStorageConfig = get(`/api-storage/flags`);
+
 export default {
   execNGQL,
   connectDB,
@@ -25,5 +28,7 @@ export default {
   execPromQL,
   execPromQLByRange,
   getCustomConfig,
+  getGraphConfig,
+  getStorageConfig,
   getAnnotationLineConfig,
 };

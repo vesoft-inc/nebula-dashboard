@@ -15,13 +15,13 @@ const mapState = (state: IRootState) => ({
 
 const mapDispatch = (dispatch: IDispatch) => ({
   asyncGetServiceConfigs: dispatch.nebula.asyncGetServiceConfigs,
-});
+}) as any;
 interface IProps
   extends ReturnType<typeof mapState>,
   ReturnType<typeof mapDispatch> {}
 class ConfigInfo extends React.Component<IProps> {
   componentDidMount() {
-    this.props.asyncGetServiceConfigs();
+    this.props.asyncGetServiceConfigs('graph');
   }
 
   handleModuleChange = e => {
@@ -35,32 +35,11 @@ class ConfigInfo extends React.Component<IProps> {
       {
         title: (
           <TitleInstruction
-            title="Module"
-            description={intl.get('description.module')}
-          />
-        ),
-        dataIndex: 'module',
-        render: module => (
-          <span className={`module ${module.toLowerCase()}`}>{module}</span>
-        ),
-      },
-      {
-        title: (
-          <TitleInstruction
             title="Name"
             description={intl.get('description.moduleName')}
           />
         ),
         dataIndex: 'name',
-      },
-      {
-        title: (
-          <TitleInstruction
-            title="Type"
-            description={intl.get('description.moduleType')}
-          />
-        ),
-        dataIndex: 'type',
       },
       {
         title: (
@@ -77,11 +56,10 @@ class ConfigInfo extends React.Component<IProps> {
         <div className="common-header">
           <Radio.Group
             buttonStyle="solid"
-            defaultValue="all"
+            defaultValue="graph"
             className="service-radio"
             onChange={this.handleModuleChange}
           >
-            <Radio.Button value="all">{intl.get('service.all')}</Radio.Button>
             <Radio.Button value="storage">Storage</Radio.Button>
             <Radio.Button value="graph">Graph</Radio.Button>
             {/* TODO: Nebula 2.0.1 does not support meta modifications, support can be released in later versions
@@ -91,7 +69,7 @@ class ConfigInfo extends React.Component<IProps> {
         </div>
         <Table
           loading={!!loading}
-          rowKey={(record: any) => record.module + record.name}
+          rowKey={(record: any) => record.value + record.name}
           dataSource={configs}
           columns={columns}
         />

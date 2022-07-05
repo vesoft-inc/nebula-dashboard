@@ -439,3 +439,14 @@ export const getMetricsUniqName = (scene: MetricScene) => {
     showName: (name) => name
   }
 }
+
+export const getConfigData=(data)=>{
+  let list = [] as any;
+  data.split('\n')?.forEach(item =>{
+    const [name, value] =item.split('=')
+    if(name){
+      list.push({name, value})
+    }
+  })
+  return list;
+}
