@@ -2,6 +2,7 @@ import { createModel } from '@rematch/core';
 import _ from 'lodash';
 import cookies from 'js-cookie';
 import service from '@/config/service';
+import { getConfigData } from "@/utils/dashboard";
 
 interface IState {
   configs: any[];
@@ -32,16 +33,12 @@ export const nebula = createModel({
     }),
   },
   effects: (dispatch: any) => ({
-    async asyncGetServiceConfigs(module?: string) {
-      const { code, data } = (await service.execNGQL({
-        gql:
-          module && module !== 'all'
-            ? `SHOW CONFIGS ${module} `
-            : 'SHOW CONFIGS',
-      })) as any;
-      if (code === 0) {
+    async asyncGetServiceConfigs(module) {
+      const data = module === 'graph'?await service.getGraphConfig(): await service.getStorageConfig() as any;
+
+      if (data) {
         this.update({
-          configs: data.tables ? data.tables : [],
+          configs: getConfigData(data),
         });
       }
     },
