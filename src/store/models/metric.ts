@@ -35,11 +35,12 @@ export function MetricModelWrapper(serviceApi) {
         const { componentType, version, clusterID } = payload;
         let metricList = [];
         let spaceMetricList = [];
+        const clusterSuffix1 = clusterID ? `,${getClusterPrefix()}='${clusterID}'` : '';
         switch (true) {
           case compare(version, 'v3.0.0', '<'): {
             const { code, data } = (await serviceApi.getMetrics({
               clusterID,
-              'match[]': `{componentType="${componentType}",__name__!~"ALERTS.*",__name__!~".*count"}`,
+              'match[]': `{componentType="${componentType}",__name__!~"ALERTS.*",__name__!~".*count"${clusterSuffix1}}`,
             })) as any;
             if (code === 0) {
               metricList = data;
@@ -50,14 +51,14 @@ export function MetricModelWrapper(serviceApi) {
             {
               const { code, data } = (await serviceApi.getMetrics({
                 clusterID,
-                'match[]': `{componentType="${componentType}",space!="",__name__!~"ALERTS.*",__name__!~".*count"}`,
+                'match[]': `{componentType="${componentType}",space!="",__name__!~"ALERTS.*",__name__!~".*count"${clusterSuffix1}}`,
               })) as any;
               if (code === 0) {
                 spaceMetricList = data;
                 const { code: _code, data: metricData } =
                   (await serviceApi.getMetrics({
                     clusterID,
-                    'match[]': `{componentType="${componentType}",space="",__name__!~"ALERTS.*",__name__!~".*count"}`,
+                    'match[]': `{componentType="${componentType}",space="",__name__!~"ALERTS.*",__name__!~".*count"${clusterSuffix1}}`,
                   })) as any;
                 if (_code === 0) {
                   metricList = metricData;
