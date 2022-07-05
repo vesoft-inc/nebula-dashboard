@@ -6,6 +6,12 @@
     },
     "prometheus":{
       "target": "prometheus:9090"
+    },
+    "graph":{
+      "target": "graphd:19669"
+    },
+    "storage":{
+      "target": "graphd:19779"
     }
   },
   "nebulaServer": {
