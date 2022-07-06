@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 import _ from 'lodash';
 import { DashboardType, ILineChartMetric, IStatRangeItem, MetricScene } from '@/utils/interface';
 import { VALUE_TYPE } from '@/utils/promQL';
+import { isCloudVersion } from '.';
 
 export const DETAIL_DEFAULT_RANGE = 60 * 60 * 24 * 1000;
 export const CARD_RANGE = 60 * 60 * 24 * 1000;
@@ -187,6 +188,28 @@ export const getDiskData = (payload: {
   const { type, data, nameObj } = payload;
   const { name, showName } = nameObj;
   const res = [] as ILineChartMetric[];
+  if (isCloudVersion()) {
+    data.forEach(instance => {
+      instance.values.forEach(([timstamps, value]) => {
+        const _name = instance.metric[name] || instance.metric['container'];
+        // console.log('zzz', _name);
+        let shouldPush = false;
+        if (typeof type === 'string') {
+          shouldPush = (type === 'all' && _name !== 'total') || _name === type;
+        } else if (Array.isArray(type)) {
+          shouldPush = (type.includes('all') && _name !== 'total') || !!type.find(t => _name.includes(t))
+        }
+        if (shouldPush) {
+          res.push({
+            type: showName(_name),
+            value: Number(value),
+            time: timstamps,
+          });
+        }
+      });
+    });
+    return res;
+  }
   data.forEach(instance => {
     instance.values.forEach(([timstamps, value]) => {
       const device = instance.metric['device'];
@@ -403,9 +426,15 @@ export const getMetricsUniqName = (scene: MetricScene) => {
           showName: (name) => name ? name.slice(name.lastIndexOf('-') + 1) : name
         }
       }
-      if (scene === MetricScene.CPU || scene === MetricScene.NETWORK) {
+      if (scene === MetricScene.NETWORK) {
         return {
-          name: 'instance',
+          name: 'pod',
+          showName: (name) => name ? name.slice(name.lastIndexOf('-') + 1) : name
+        }
+      }
+      if (scene === MetricScene.CPU || scene === MetricScene.MEMORY || scene === MetricScene.LOAD) {
+        return {
+          name: 'container',
           showName: (name) => name ? name.slice(name.lastIndexOf('-') + 1) : name
         }
       }
@@ -417,7 +446,7 @@ export const getMetricsUniqName = (scene: MetricScene) => {
       }
       if (scene === MetricScene.DISK) {
         return {
-          name: 'pod',
+          name: 'persistentvolumeclaim',
           showName: (name) => name ? name.slice(name.split('-').slice(2).join('-')) : name
         }
       }

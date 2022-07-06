@@ -2,6 +2,8 @@
  * EXPLAIN: beacuse the metrics in each system are different, so dashboard need to load the detailed promql used by system
  */
 
+import { isCloudVersion } from "."
+
 export const enum VALUE_TYPE {
   percentage = 'PERCENTAGE',
   byte = 'BYTE',
@@ -11,122 +13,219 @@ export const enum VALUE_TYPE {
   numberSecond = 'numberSecond',
 }
 
-export const SUPPORT_METRICS = {
-  cpu: [
-    {
-      metric: 'cpu_utilization',
-      valueType: VALUE_TYPE.percentage,
-    },
-    {
-      metric: 'cpu_idle',
-      valueType: VALUE_TYPE.percentage,
-    },
-    {
-      metric: 'cpu_wait',
-      valueType: VALUE_TYPE.percentage,
-    },
-    {
-      metric: 'cpu_user',
-      valueType: VALUE_TYPE.percentage,
-    },
-    {
-      metric: 'cpu_system',
-      valueType: VALUE_TYPE.percentage,
-    },
-  ],
-  memory: [
-    {
-      metric: 'memory_utilization',
-      valueType: VALUE_TYPE.percentage,
-    },
-    {
-      metric: 'memory_used',
-      valueType: VALUE_TYPE.byte,
-    },
-    // {
-    //   metric: 'memory_actual_used',
-    //   valueType: VALUE_TYPE.byte,
-    // },
-    {
-      metric: 'memory_free',
-      valueType: VALUE_TYPE.byte,
-    },
-  ],
-  load: [
-    {
-      metric: 'load_1m',
-      valueType: VALUE_TYPE.number,
-    },
-    {
-      metric: 'load_5m',
-      valueType: VALUE_TYPE.number,
-    },
-    {
-      metric: 'load_15m',
-      valueType: VALUE_TYPE.number,
-    },
-  ],
-  disk: [
-    {
-      metric: 'disk_used_percentage',
-      valueType: VALUE_TYPE.percentage,
-    },
-    {
-      metric: 'disk_used',
-      valueType: VALUE_TYPE.byte,
-    },
-    {
-      metric: 'disk_free',
-      valueType: VALUE_TYPE.byte,
-    },
-    {
-      metric: 'disk_readbytes',
-      valueType: VALUE_TYPE.byteSecond,
-    },
-    {
-      metric: 'disk_writebytes',
-      valueType: VALUE_TYPE.byteSecond,
-    },
-    {
-      metric: 'disk_readiops',
-      valueType: VALUE_TYPE.numberSecond,
-    },
-    {
-      metric: 'disk_writeiops',
-      valueType: VALUE_TYPE.numberSecond,
-    },
-    {
-      metric: 'inode_utilization',
-      valueType: VALUE_TYPE.percentage,
-    },
-  ],
-  network: [
-    {
-      metric: 'network_in_rate',
-      valueType: VALUE_TYPE.byteSecond,
-    },
-    {
-      metric: 'network_out_rate',
-      valueType: VALUE_TYPE.byteSecond,
-    },
-    {
-      metric: 'network_in_errs',
-      valueType: VALUE_TYPE.numberSecond,
-    },
-    {
-      metric: 'network_out_errs',
-      valueType: VALUE_TYPE.numberSecond,
-    },
-    {
-      metric: 'network_in_packets',
-      valueType: VALUE_TYPE.numberSecond,
-    },
-    {
-      metric: 'network_out_packets',
-      valueType: VALUE_TYPE.numberSecond,
-    },
-  ],
-};
+export const SUPPORT_METRICS = isCloudVersion() ?
+  {
+    cpu: [
+      {
+        metric: 'cpu_utilization',
+        valueType: VALUE_TYPE.percentage,
+      },
+      {
+        metric: 'cpu_user',
+        valueType: VALUE_TYPE.percentage,
+      },
+      {
+        metric: 'cpu_system',
+        valueType: VALUE_TYPE.percentage,
+      },
+    ],
+    memory: [
+      {
+        metric: 'memory_utilization',
+        valueType: VALUE_TYPE.percentage,
+      },
+      {
+        metric: 'memory_used',
+        valueType: VALUE_TYPE.byte,
+      },
+      {
+        metric: 'memory_free',
+        valueType: VALUE_TYPE.byte,
+      },
+      {
+        metric: 'memory_size',
+        valueType: VALUE_TYPE.byte,
+      }
+    ],
+    load: [
+      {
+        metric: 'load',
+        valueType: VALUE_TYPE.number,
+      }
+    ],
+    disk: [
+      {
+        metric: 'disk_used_percentage',
+        valueType: VALUE_TYPE.percentage,
+      },
+      {
+        metric: 'disk_used',
+        valueType: VALUE_TYPE.byte,
+      },
+      {
+        metric: 'disk_free',
+        valueType: VALUE_TYPE.byte,
+      },
+      {
+        metric: 'disk_readbytes',
+        valueType: VALUE_TYPE.byteSecond,
+      },
+      {
+        metric: 'disk_writebytes',
+        valueType: VALUE_TYPE.byteSecond,
+      },
+      {
+        metric: 'disk_readiops',
+        valueType: VALUE_TYPE.numberSecond,
+      },
+      {
+        metric: 'disk_writeiops',
+        valueType: VALUE_TYPE.numberSecond,
+      },
+      {
+        metric: 'inode_utilization',
+        valueType: VALUE_TYPE.percentage,
+      },
+    ],
+    network: [
+      {
+        metric: 'network_in_rate',
+        valueType: VALUE_TYPE.byteSecond,
+      },
+      {
+        metric: 'network_out_rate',
+        valueType: VALUE_TYPE.byteSecond,
+      },
+      {
+        metric: 'network_in_errs',
+        valueType: VALUE_TYPE.numberSecond,
+      },
+      {
+        metric: 'network_out_errs',
+        valueType: VALUE_TYPE.numberSecond,
+      },
+      {
+        metric: 'network_in_packets',
+        valueType: VALUE_TYPE.numberSecond,
+      },
+      {
+        metric: 'network_out_packets',
+        valueType: VALUE_TYPE.numberSecond,
+      },
+    ],
+  } :
+  {
+    cpu: [
+      {
+        metric: 'cpu_utilization',
+        valueType: VALUE_TYPE.percentage,
+      },
+      {
+        metric: 'cpu_idle',
+        valueType: VALUE_TYPE.percentage,
+      },
+      {
+        metric: 'cpu_wait',
+        valueType: VALUE_TYPE.percentage,
+      },
+      {
+        metric: 'cpu_user',
+        valueType: VALUE_TYPE.percentage,
+      },
+      {
+        metric: 'cpu_system',
+        valueType: VALUE_TYPE.percentage,
+      },
+    ],
+    memory: [
+      {
+        metric: 'memory_utilization',
+        valueType: VALUE_TYPE.percentage,
+      },
+      {
+        metric: 'memory_used',
+        valueType: VALUE_TYPE.byte,
+      },
+      {
+        metric: 'memory_free',
+        valueType: VALUE_TYPE.byte,
+      },
+    ],
+    load: [
+      {
+        metric: 'load_1m',
+        valueType: VALUE_TYPE.number,
+      },
+      {
+        metric: 'load_5m',
+        valueType: VALUE_TYPE.number,
+      },
+      {
+        metric: 'load_15m',
+        valueType: VALUE_TYPE.number,
+      },
+    ],
+    disk: [
+      {
+        metric: 'disk_used_percentage',
+        valueType: VALUE_TYPE.percentage,
+      },
+      {
+        metric: 'disk_used',
+        valueType: VALUE_TYPE.byte,
+      },
+      {
+        metric: 'disk_free',
+        valueType: VALUE_TYPE.byte,
+      },
+      {
+        metric: 'disk_readbytes',
+        valueType: VALUE_TYPE.byteSecond,
+      },
+      {
+        metric: 'disk_writebytes',
+        valueType: VALUE_TYPE.byteSecond,
+      },
+      {
+        metric: 'disk_readiops',
+        valueType: VALUE_TYPE.numberSecond,
+      },
+      {
+        metric: 'disk_writeiops',
+        valueType: VALUE_TYPE.numberSecond,
+      },
+      {
+        metric: 'inode_utilization',
+        valueType: VALUE_TYPE.percentage,
+      },
+    ],
+    network: [
+      {
+        metric: 'network_in_rate',
+        valueType: VALUE_TYPE.byteSecond,
+      },
+      {
+        metric: 'network_out_rate',
+        valueType: VALUE_TYPE.byteSecond,
+      },
+      {
+        metric: 'network_in_errs',
+        valueType: VALUE_TYPE.numberSecond,
+      },
+      {
+        metric: 'network_out_errs',
+        valueType: VALUE_TYPE.numberSecond,
+      },
+      {
+        metric: 'network_in_packets',
+        valueType: VALUE_TYPE.numberSecond,
+      },
+      {
+        metric: 'network_out_packets',
+        valueType: VALUE_TYPE.numberSecond,
+      },
+    ],
+  };
 
 export const SERVICE_SUPPORT_METRICS = {
   graph: [
@@ -437,19 +536,19 @@ export const LINUX = (cluster?) => {
     cpu_wait: `100 * (sum by (instance)(increase(node_cpu_seconds_total{mode="iowait"${clusterSuffix1}}[1m])) / sum by (instance)(increase(node_cpu_seconds_total${clusterSuffix2}[1m])))`,
     cpu_user: `100 * (sum by (instance)(increase(node_cpu_seconds_total{mode="user"${clusterSuffix1}}[1m])) / sum by (instance)(increase(node_cpu_seconds_total${clusterSuffix2}[1m])))`,
     cpu_system: `100 * (sum by (instance)(increase(node_cpu_seconds_total{mode="system"${clusterSuffix1}}[1m])) / sum by (instance)(increase(node_cpu_seconds_total${clusterSuffix2}[1m])))`,
-  
+
     // memory relative:
     memory_utilization: `(1 - (node_memory_MemFree_bytes${clusterSuffix2}+ node_memory_Buffers_bytes${clusterSuffix2}+ node_memory_Cached_bytes${clusterSuffix2}) / node_memory_MemTotal_bytes${clusterSuffix2} )* 100`,
     memory_used: `node_memory_MemTotal_bytes${clusterSuffix2} - node_memory_MemFree_bytes${clusterSuffix2}- node_memory_Buffers_bytes${clusterSuffix2}  - node_memory_Cached_bytes${clusterSuffix2}`,
     // memory_actual_used: `node_memory_MemTotal_bytes${clusterSuffix2} - node_memory_MemFree_bytes${clusterSuffix2} - node_memory_Buffers_bytes${clusterSuffix2} - node_memory_Cached_bytes${clusterSuffix2}`,
     memory_free: `node_memory_MemFree_bytes${clusterSuffix2}`,
     memory_size: `node_memory_MemTotal_bytes${clusterSuffix2}`,
-  
+
     // node load relative:
     load_1m: `node_load1${clusterSuffix2}`,
     load_5m: `node_load5${clusterSuffix2}`,
     load_15m: `node_load15${clusterSuffix2}`,
-  
+
     // disk relative:
     disk_used: `node_filesystem_size_bytes{${diskPararms}${clusterSuffix1}} - node_filesystem_free_bytes{${diskPararms}${clusterSuffix1}}`,
     disk_free: `node_filesystem_avail_bytes{${diskPararms}${clusterSuffix1}}`,
@@ -459,7 +558,7 @@ export const LINUX = (cluster?) => {
     disk_writeiops: `irate(node_disk_writes_completed_total{device=~"(sd|nvme|hd)[a-z0-9]*"${clusterSuffix1}}[1m])`,
     inode_utilization: `(1- (node_filesystem_files_free{${diskPararms}${clusterSuffix1}}) / (node_filesystem_files{mountpoint="/",fstype!="rootfs"${clusterSuffix1}})) * 100`,
     disk_used_percentage: `(node_filesystem_size_bytes{${diskPararms}${clusterSuffix1}}-node_filesystem_free_bytes{${diskPararms}${clusterSuffix1}}) *100/(node_filesystem_avail_bytes {${diskPararms}${clusterSuffix1}}+(node_filesystem_size_bytes{${diskPararms}${clusterSuffix1}}-node_filesystem_free_bytes{${diskPararms}${clusterSuffix1}}))`,
-  
+
     disk_size: `node_filesystem_size_bytes{${diskPararms}${clusterSuffix1}}`,
     network_in_rate: `ceil(sum by(instance)(irate(node_network_receive_bytes_total{device=~"(eth|en)[a-z0-9]*"${clusterSuffix1}}[1m])))`,
     network_out_rate: `ceil(sum by(instance)(irate(node_network_transmit_bytes_total{device=~"(eth|en)[a-z0-9]*"${clusterSuffix1}}[1m])))`,

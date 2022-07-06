@@ -15,7 +15,7 @@ const mapState = (state: IRootState) => {
     data: getDataByType({
       data: loadStat,
       type: metricsFilterValues.instanceList,
-      nameObj: getMetricsUniqName(MetricScene.MACHINE),
+      nameObj: getMetricsUniqName(MetricScene.LOAD),
       aliasConfig,
     }),
     valueType: VALUE_TYPE.number,

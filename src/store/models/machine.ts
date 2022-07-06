@@ -22,12 +22,12 @@ export interface IState {
   metricsFilterValues: MetricsPanelValue;
 }
 
-export function MachineModelWrapper(service, customizePromQL = (_clusterID) => ({})) {
+export function MachineModelWrapper(service, customizePromQL?) {
   const getPromQL = (clusterID) => {
-    return {
-      ...PROMQL(clusterID),
-      ...customizePromQL(clusterID)
+    if (customizePromQL) {
+      return customizePromQL(clusterID)
     }
+    return PROMQL(clusterID)
   }
   return createModel({
     state: {

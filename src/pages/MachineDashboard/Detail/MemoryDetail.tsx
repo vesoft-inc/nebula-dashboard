@@ -9,7 +9,7 @@ import { MetricScene } from '@/utils/interface';
 const mapState = (state: IRootState) => ({
   type: 'memory',
   metricOptions: SUPPORT_METRICS.memory,
-  dataTypeObj: getMetricsUniqName(MetricScene.MACHINE),
+  dataTypeObj: getMetricsUniqName(MetricScene.MEMORY),
   loading: state.loading.effects.machine.asyncGetMemoryStatByRange,
 });
 
