@@ -29,6 +29,13 @@ function SpaceChart(props: IProps) {
     setSeletedInstance('all');
   }, [instances])
 
+  const diskThs = useMemo(() => ({
+    name: diskInfos.some(i => !!i.name),
+    device: diskInfos.some(i => !!i.device),
+    mountpoint: diskInfos.some(i => !!i.mountpoint),
+    used: diskInfos.some(i => !!(i.size && i.used))
+  }), [diskInfos])
+
   const getDisplayInfos = (infos: DiskMetricInfo[]) => {
     return infos.map((info) => {
       const { used, size: bytes, device, mountpoint, name } = info;
@@ -60,41 +67,53 @@ function SpaceChart(props: IProps) {
     return curInstances.map(instance => {
       const displayInfos = getDisplayInfos(diskInfoMap[instance] || []);
       return (
-        <div key={instance} className="disk-tr">
-          <div className='disk-tr-item disk-name'>
-            <Popover
-              content={instance}
-              placement='topLeft'
-            >
-              <div className='disk-tr-item-info text-overflow'>{instance}</div>
-            </Popover>
-          </div>
-          <div className='disk-tr-item'>
-            {
-              displayInfos.map(i => i.device).map((device, i) => (
+        <div key={instance} className="disk-tr" style={{ gridTemplateColumns: gridValue }}>
+          {
+            diskThs.name && (
+              <div className='disk-tr-item disk-name'>
                 <Popover
-                  key={i}
-                  content={device}
+                  content={instance}
                   placement='topLeft'
                 >
-                  <div className='disk-tr-item-info text-overflow'>{device}</div>
+                  <div className='disk-tr-item-info text-overflow'>{instance}</div>
                 </Popover>
-              ))
-            }
-          </div>
-          <div className='disk-tr-item'>
-            {
-              displayInfos.map(i => i.mountpoint).map((mountpoint, i) => (
-                <Popover
-                  key={i}
-                  content={mountpoint}
-                  placement='top'
-                >
-                  <div className='disk-tr-item-info text-overflow'>{mountpoint}</div>
-                </Popover>
-              ))
-            }
-          </div>
+              </div>
+            )
+          }
+          {
+            diskThs.device && (
+              <div className='disk-tr-item'>
+                {
+                  displayInfos.map(i => i.device).map((device, i) => (
+                    <Popover
+                      key={i}
+                      content={device}
+                      placement='topLeft'
+                    >
+                      <div className='disk-tr-item-info text-overflow'>{device}</div>
+                    </Popover>
+                  ))
+                }
+              </div>
+            )
+          }
+          {
+            diskThs.mountpoint && (
+              <div className='disk-tr-item'>
+                {
+                  displayInfos.map(i => i.mountpoint).map((mountpoint, i) => (
+                    <Popover
+                      key={i}
+                      content={mountpoint}
+                      placement='top'
+                    >
+                      <div className='disk-tr-item-info text-overflow'>{mountpoint}</div>
+                    </Popover>
+                  ))
+                }
+              </div>
+            )
+          }
           <div className='disk-tr-item'>
             {
               displayInfos.map((displayInfo, i) => (
@@ -117,16 +136,43 @@ function SpaceChart(props: IProps) {
     })
   }
 
+  const gridValue = useMemo(() => {
+    const count = Object.values(diskThs).filter(t => t).length;
+    switch (count) {
+      case 2:
+        return '40% 60%'
+      case 3:
+        return '30% 40% 40%'
+      case 4:
+        return '20% 20% 20% 40%'
+      default:
+        return '20% 20% 20% 40%'
+    }
+  }, [diskThs])
+
+  const renderDiskTabelHead = () => {
+
+    return (
+      <div className="disk-th" style={{ gridTemplateColumns: gridValue }}>
+        {
+          diskThs.name && <div>{intl.get('base.spaceChartInstance')}</div>
+        }
+        {
+          diskThs.device && <div>{intl.get('base.spaceChartDiskname')}</div>
+        }
+        {
+          diskThs.mountpoint && <div>{intl.get('base.spaceChartMountpoint')}</div>
+        }
+        <div>{intl.get('base.spaceChartDiskused')}</div>
+      </div>
+    )
+  }
+
   return (
     <div className="nebula-chart nebula-chart-space">
       <div className='space-instance'>
         <div className="disk-info-content">
-          <div className="disk-th">
-            <div>{intl.get('base.spaceChartInstance')}</div>
-            <div>{intl.get('base.spaceChartDiskname')}</div>
-            <div>{intl.get('base.spaceChartMountpoint')}</div>
-            <div>{intl.get('base.spaceChartDiskused')}</div>
-          </div>
+          {renderDiskTabelHead()}
         </div>
         {renderDiskInfo()}
       </div>

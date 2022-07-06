@@ -80,4 +80,6 @@ export enum MetricScene {
   CPU,
   NETWORK,
   DISK,
+  MEMORY,
+  LOAD,
 }

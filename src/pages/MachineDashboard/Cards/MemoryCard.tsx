@@ -13,7 +13,7 @@ const mapState = (state: IRootState) => {
     data: getDataByType({
       data: memoryStat,
       type: metricsFilterValues.instanceList,
-      nameObj: getMetricsUniqName(MetricScene.MACHINE),
+      nameObj: getMetricsUniqName(MetricScene.MEMORY),
       aliasConfig,
     }),
     sizes: memorySizeStat,

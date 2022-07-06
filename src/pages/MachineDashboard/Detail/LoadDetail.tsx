@@ -10,7 +10,7 @@ const mapState = (state: IRootState) => ({
   type: 'load',
   instances: state.machine.instanceList,
   metricOptions: SUPPORT_METRICS.load,
-  dataTypeObj: getMetricsUniqName(MetricScene.MACHINE),
+  dataTypeObj: getMetricsUniqName(MetricScene.LOAD),
   metricsFilterValues: state.machine.metricsFilterValues,
   loading: state.loading.effects.machine.asyncGetLoadByRange,
 });

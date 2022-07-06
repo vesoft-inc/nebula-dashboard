@@ -10,7 +10,7 @@ const mapState = (state: IRootState) => ({
   type: 'disk',
   instances: state.machine.instanceList,
   metricOptions: SUPPORT_METRICS.disk,
-  dataTypeObj: getMetricsUniqName(MetricScene.MACHINE),
+  dataTypeObj: getMetricsUniqName(MetricScene.DISK),
   metricsFilterValues: state.machine.metricsFilterValues,
   loading: state.loading.effects.machine.asyncGetDiskStatByRange,
 });
