@@ -30,6 +30,7 @@
   "manual": "User Manual",
   "forum": "Forum",
   "forumLink": "https://discuss.nebula-graph.io/",
+  "configTip": "Please enter a configuration name",
   "all":"All",
   "metricLabel": "instance",
   "updateFrequency": "frequency"

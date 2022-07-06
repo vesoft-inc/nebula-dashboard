@@ -32,5 +32,6 @@
   "forumLink": "https://discuss.nebula-graph.com.cn/",
   "all":"全部",
   "updateFrequency": "更新频率",
+  "configTip": "请输入配置名进行搜索",
   "metricLabel": "实例"
 }
