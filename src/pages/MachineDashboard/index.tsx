@@ -192,7 +192,7 @@ function MachineDashboard(props: IProps) {
   }
 
   return (
-    <Spin spinning={showLoading}>
+    <Spin spinning={showLoading} wrapperClassName='machine-dashboard-spinning'>
       <div className="machine-dashboard">
         <div className='common-header' >
           <MetricsFilterPanel 

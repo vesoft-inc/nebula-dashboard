@@ -14,7 +14,7 @@ export const interceptorFn = (store) => {
   service.interceptors.response.use(
     (response: any) => {
       const { code, message } = response.data;
-      
+
       let _code;
       //HACK: get graph,storage server data
       if(response.config?.url.includes('api-graph')||response.config?.url.includes('api-storage')){
