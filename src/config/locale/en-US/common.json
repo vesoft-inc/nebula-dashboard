@@ -33,5 +33,5 @@
   "configTip": "Please enter a configuration name",
   "all":"All",
   "metricLabel": "instance",
-  "updateFrequency": "frequency"
+  "updateFrequency": "refresh frequency"
 }

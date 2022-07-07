@@ -16,7 +16,7 @@
   "partitionNum": "分片数",
   "distribution": "分布",
   "instance":"实例",
-  "period":"周期",
+  "period":"周期(秒)",
   "metric":"指标",
   "metricParams":"聚合方式",
   "queryCondition":"查询条件",

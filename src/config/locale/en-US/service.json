@@ -16,7 +16,7 @@
   "partitionNum": "Partition Number",
   "distribution": "Distribution",
   "instance":"Instance",
-  "period":"Period",
+  "period":"Period(s)",
   "metric":"Metric",
   "metricParams":"Metric Methods",
   "queryCondition":"Query Condition",
