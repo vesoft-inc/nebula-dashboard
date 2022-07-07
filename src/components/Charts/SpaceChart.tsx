@@ -117,8 +117,8 @@ function SpaceChart(props: IProps) {
           <div className='disk-tr-item'>
             {
               displayInfos.map((displayInfo, i) => (
-                <div className='disk-usage'>
-                  <div key={i} className='disk-tr-item-info disk-usage-detail' >{displayInfo.usedDesc}/{displayInfo.sizeDesc}</div>
+                <div key={i} className='disk-usage'>
+                  <div className='disk-tr-item-info disk-usage-detail' >{displayInfo.usedDesc}/{displayInfo.sizeDesc}</div>
                   <div className="wrap">
                     <div className="bar-item" style={{ width: `${displayInfo.percent}%` }}>
                       <div className="left" style={{ backgroundColor: displayInfo.color }} />

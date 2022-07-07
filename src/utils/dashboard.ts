@@ -440,7 +440,7 @@ export const getMetricsUniqName = (scene: MetricScene) => {
       }
       if (scene === MetricScene.SERVICE) {
         return {
-          name: 'kubernetes_pod_name',
+          name: 'instanceName',
           showName: (name) => name ? name.slice(name.split('-').slice(2).join('-')) : name
         }
       }

@@ -8,9 +8,10 @@ import TimeSelect from '../TimeSelect';
 import styles from './index.module.less';
 import { TIME_OPTION_TYPE } from '@/utils/dashboard';
 import Icon from '../Icon';
+import { isCloudVersion } from '@/utils';
 
 
-function FrequencySelect(props: { value?, onChange?, handleRefresh? }) {
+function FrequencySelect(props: { value?, onChange?, handleRefresh?}) {
   const { value, onChange, handleRefresh } = props;
   return (
     <div className={styles.frequency}>
@@ -109,18 +110,21 @@ const MetricsFilterPanel = (props: IProps, ref) => {
       <Form.Item name="timeRange">
         <TimeSelect onChange={handleTimeSelectChange} />
       </Form.Item>
-      <Form.Item wrapperCol={{
-      }} name="instanceList" label={intl.get('common.metricLabel')}>
-        <TreeSelect
-          style={{ minWidth: '250px', maxWidth: '500px' }}
-          treeData={treeData} treeCheckable
-          showCheckedStrategy={TreeSelect.SHOW_PARENT}
-          onChange={handleInstanceChange}
-        />
-      </Form.Item>
+      {
+        !isCloudVersion() && (
+          <Form.Item name="instanceList" label={intl.get('common.metricLabel')}>
+            <TreeSelect
+              style={{ minWidth: '250px', maxWidth: '500px' }}
+              treeData={treeData} treeCheckable
+              showCheckedStrategy={TreeSelect.SHOW_PARENT}
+              onChange={handleInstanceChange}
+            />
+          </Form.Item>
+        )
+      }
       <Form.Item name="frequency" label={intl.get('common.updateFrequency')}
       >
-        <FrequencySelect 
+        <FrequencySelect
           onChange={handleFrequencyChange}
           handleRefresh={handleRefresh}
         />
