@@ -42,7 +42,7 @@ class App extends React.Component<IProps> {
       if (match) {
         cookies.set('locale', match[1] === 'EN_US' ? 'EN_US' : 'ZH_CN');
       } else {
-        cookies.set('locale', lang === 'en' ? 'EN_US' : 'ZH_CN');
+        cookies.set('locale', lang === 'EN_US' ? 'EN_US' : 'ZH_CN');
       }
     }
 
@@ -61,7 +61,7 @@ class App extends React.Component<IProps> {
   loadIntlLocale = () => {
     intl
       .init({
-        currentLocale: this.currentLocale || 'zh_CN',
+        currentLocale: this.currentLocale || 'ZH_CN',
         locales: INTL_LOCALES,
       })
       .then(() => {
