@@ -1,9 +1,9 @@
 import { createModel } from '@rematch/core';
 import _ from 'lodash';
 import serviceApi from '@/config/service';
-import { NEED_ADD_SUM_QUERYS, getProperStep } from '@/utils/dashboard';
+import { NEED_ADD_SUM_QUERYS, getProperStep, getMetricsUniqName } from '@/utils/dashboard';
 import { LINUX } from '@/utils/promQL';
-import { IStatRangeItem, IStatSingleItem, MetricsPanelValue } from '@/utils/interface';
+import { IStatRangeItem, IStatSingleItem, MetricScene, MetricsPanelValue } from '@/utils/interface';
 import { unique } from '@/utils';
 import { InitMachineMetricsFilterValues } from '@/utils/metric';
 
@@ -22,13 +22,7 @@ export interface IState {
   metricsFilterValues: MetricsPanelValue;
 }
 
-export function MachineModelWrapper(service, customizePromQL?) {
-  const getPromQL = (clusterID) => {
-    if (customizePromQL) {
-      return customizePromQL(clusterID)
-    }
-    return PROMQL(clusterID)
-  }
+export function MachineModelWrapper(service,) {
   return createModel({
     state: {
       cpuStat: [] as IStatRangeItem[],
@@ -57,9 +51,10 @@ export function MachineModelWrapper(service, customizePromQL?) {
           ...state.metricsFilterValues,
           ...payload.metricsFilterValues
         }
+        debugger;
         return {
           ...state,
-          metricsFilterValues
+        metricsFilterValues
         }
       }
     },
@@ -68,15 +63,16 @@ export function MachineModelWrapper(service, customizePromQL?) {
         start: number;
         end: number;
         metric: string;
+        nameObj: {name: string; showName: (name: string) => void};
         clusterID?: string;
       }) {
-        const { start, end, clusterID, metric } = payload;
+        const { start, end, clusterID, metric, nameObj } = payload;
         const _start = start / 1000;
         const _end = end / 1000;
         const step = getProperStep(start, end);
         const { code, data } = (await service.execPromQLByRange({
           clusterID,
-          query: getPromQL(clusterID)[metric],
+          query: PROMQL(clusterID)[metric],
           start: _start,
           end: _end,
           step,
@@ -86,7 +82,7 @@ export function MachineModelWrapper(service, customizePromQL?) {
           if (NEED_ADD_SUM_QUERYS.includes(metric)) {
             result = (await this.asyncGetSumDataByRange({
               clusterID,
-              query: getPromQL(clusterID)[metric],
+              query: PROMQL(clusterID)[metric],
               start: _start,
               end: _end,
               step,
@@ -106,7 +102,10 @@ export function MachineModelWrapper(service, customizePromQL?) {
         metric: string;
         clusterID?: string;
       }) {
-        let cpuStat = await this.asyncGetMetricsData(payload);
+        let cpuStat = await this.asyncGetMetricsData({
+          ...payload,
+          nameObj: getMetricsUniqName(MetricScene.CPU)
+        });
         this.update({
           cpuStat,
         });
@@ -119,7 +118,10 @@ export function MachineModelWrapper(service, customizePromQL?) {
         metric: string;
         clusterID?: string;
       }) {
-        let memoryStat = await this.asyncGetMetricsData(payload);
+        let memoryStat = await this.asyncGetMetricsData({
+          ...payload,
+          nameObj: getMetricsUniqName(MetricScene.MEMORY)
+        });
         this.update({
           memoryStat,
         });
@@ -129,7 +131,7 @@ export function MachineModelWrapper(service, customizePromQL?) {
       async asyncGetMemorySizeStat(clusterID?: string) {
         const { code, data } = (await service.execPromQL({
           clusterID,
-          query: getPromQL(clusterID).memory_size,
+          query: PROMQL(clusterID).memory_size,
         })) as any;
         let memorySizeStat = [];
         if (code === 0) {
@@ -147,7 +149,10 @@ export function MachineModelWrapper(service, customizePromQL?) {
         metric: string;
         clusterID: string;
       }) {
-        let diskStat = await this.asyncGetMetricsData(payload);
+        let diskStat = await this.asyncGetMetricsData({
+          ...payload,
+          nameObj: getMetricsUniqName(MetricScene.DISK)
+        });
         this.update({
           diskStat,
         });
@@ -157,7 +162,7 @@ export function MachineModelWrapper(service, customizePromQL?) {
       async asyncGetDiskSizeStat(clusterID?: string) {
         const { code, data } = (await service.execPromQL({
           clusterID,
-          query: getPromQL(clusterID).disk_size,
+          query: PROMQL(clusterID).disk_size,
         })) as any;
         let diskSizeStat = [];
         if (code === 0) {
@@ -175,7 +180,10 @@ export function MachineModelWrapper(service, customizePromQL?) {
         metric: string;
         clusterID: string;
       }) {
-        let loadStat = await this.asyncGetMetricsData(payload);
+        let loadStat = await this.asyncGetMetricsData({
+          ...payload,
+          nameObj: getMetricsUniqName(MetricScene.LOAD)
+        });
         this.update({
           loadStat,
         });
@@ -190,7 +198,7 @@ export function MachineModelWrapper(service, customizePromQL?) {
         clusterID?: string;
       }) {
         const { start, end, metric, clusterID, inOrOut } = payload;
-        let networkStat = await this.asyncGetMetricsData({ start, end, metric, clusterID });
+        let networkStat = await this.asyncGetMetricsData({ start, end, metric, clusterID, nameObj: getMetricsUniqName(MetricScene.NETWORK) });
         switch (inOrOut) {
           case 'in':
             this.update({

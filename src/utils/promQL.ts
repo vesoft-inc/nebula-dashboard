@@ -2,8 +2,6 @@
  * EXPLAIN: beacuse the metrics in each system are different, so dashboard need to load the detailed promql used by system
  */
 
-import { isCloudVersion } from "."
-
 export const enum VALUE_TYPE {
   percentage = 'PERCENTAGE',
   byte = 'BYTE',
@@ -13,107 +11,7 @@ export const enum VALUE_TYPE {
   numberSecond = 'numberSecond',
 }
 
-export const SUPPORT_METRICS = isCloudVersion() ?
-  {
-    cpu: [
-      {
-        metric: 'cpu_utilization',
-        valueType: VALUE_TYPE.percentage,
-      },
-      {
-        metric: 'cpu_user',
-        valueType: VALUE_TYPE.percentage,
-      },
-      {
-        metric: 'cpu_system',
-        valueType: VALUE_TYPE.percentage,
-      },
-    ],
-    memory: [
-      {
-        metric: 'memory_utilization',
-        valueType: VALUE_TYPE.percentage,
-      },
-      {
-        metric: 'memory_used',
-        valueType: VALUE_TYPE.byte,
-      },
-      {
-        metric: 'memory_free',
-        valueType: VALUE_TYPE.byte,
-      },
-      {
-        metric: 'memory_size',
-        valueType: VALUE_TYPE.byte,
-      }
-    ],
-    load: [
-      {
-        metric: 'load',
-        valueType: VALUE_TYPE.number,
-      }
-    ],
-    disk: [
-      {
-        metric: 'disk_used_percentage',
-        valueType: VALUE_TYPE.percentage,
-      },
-      {
-        metric: 'disk_used',
-        valueType: VALUE_TYPE.byte,
-      },
-      {
-        metric: 'disk_free',
-        valueType: VALUE_TYPE.byte,
-      },
-      {
-        metric: 'disk_readbytes',
-        valueType: VALUE_TYPE.byteSecond,
-      },
-      {
-        metric: 'disk_writebytes',
-        valueType: VALUE_TYPE.byteSecond,
-      },
-      {
-        metric: 'disk_readiops',
-        valueType: VALUE_TYPE.numberSecond,
-      },
-      {
-        metric: 'disk_writeiops',
-        valueType: VALUE_TYPE.numberSecond,
-      },
-      {
-        metric: 'inode_utilization',
-        valueType: VALUE_TYPE.percentage,
-      },
-    ],
-    network: [
-      {
-        metric: 'network_in_rate',
-        valueType: VALUE_TYPE.byteSecond,
-      },
-      {
-        metric: 'network_out_rate',
-        valueType: VALUE_TYPE.byteSecond,
-      },
-      {
-        metric: 'network_in_errs',
-        valueType: VALUE_TYPE.numberSecond,
-      },
-      {
-        metric: 'network_out_errs',
-        valueType: VALUE_TYPE.numberSecond,
-      },
-      {
-        metric: 'network_in_packets',
-        valueType: VALUE_TYPE.numberSecond,
-      },
-      {
-        metric: 'network_out_packets',
-        valueType: VALUE_TYPE.numberSecond,
-      },
-    ],
-  } :
+export let SUPPORT_METRICS =
   {
     cpu: [
       {
@@ -325,29 +223,6 @@ export const SERVICE_SUPPORT_METRICS = {
     },
   ],
   storage: [
-    // Hack：atomic operaion is not guarateed in nebula now,thus it's will always return 0 unlesss user config it
-    // {
-    //   metric: 'add_edges_atomic_latency_us',
-    //   valueType: VALUE_TYPE.number,
-    //   metricType: [
-    //     {
-    //       key: 'avg',
-    //       value: 'nebula_storaged_add_edges_atomic_latency_us_avg_'
-    //     },
-    //     {
-    //       key: 'p75',
-    //       value: 'nebula_storaged_add_edges_atomic_latency_us_p75_'
-    //     },
-    //     {
-    //       key: 'p95',
-    //       value: 'nebula_storaged_add_edges_atomic_latency_us_p95_'
-    //     },
-    //     {
-    //       key: 'p99',
-    //       value: 'nebula_storaged_add_edges_atomic_latency_us_p99_'
-    //     },
-    //   ],
-    // },
     {
       metric: 'add_edges_latency_us',
       valueType: VALUE_TYPE.number,
@@ -525,7 +400,7 @@ export const getClusterPrefix = () => {
   return 'nebula_cluster';
 }
 
-export const LINUX = (cluster?) => {
+export let LINUX = (cluster?) : any => {
   const clusterSuffix1 = cluster ? `,${getClusterPrefix()}='${cluster}'` : '';
   const clusterSuffix2 = cluster ? `{${getClusterPrefix()}='${cluster}'}` : '';
   const diskPararms = 'fstype=~"ext.*|xfs",mountpoint !~".*pod.*"';
@@ -574,3 +449,11 @@ export const NEBULA_COUNT = {
   storage: 'nebula_storaged_count',
   meta: 'nebula_metad_count',
 };
+
+export const updatePromql = (service: {
+  SUPPORT_METRICS: typeof SUPPORT_METRICS,
+  LINUX: typeof LINUX
+}) => {
+  SUPPORT_METRICS = service.SUPPORT_METRICS
+  LINUX = service.LINUX
+}

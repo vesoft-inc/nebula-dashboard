@@ -1,8 +1,7 @@
 import dayjs from 'dayjs';
 import _ from 'lodash';
-import { DashboardType, ILineChartMetric, IStatRangeItem, MetricScene } from '@/utils/interface';
+import { ILineChartMetric, IStatRangeItem, MetricScene } from '@/utils/interface';
 import { VALUE_TYPE } from '@/utils/promQL';
-import { isCloudVersion } from '.';
 
 export const DETAIL_DEFAULT_RANGE = 60 * 60 * 24 * 1000;
 export const CARD_RANGE = 60 * 60 * 24 * 1000;
@@ -176,7 +175,7 @@ export const getDataByType = (payload: {
   return res;
 };
 
-export const getDiskData = (payload: {
+export let getDiskData = (payload: {
   data: IStatRangeItem[];
   type?: string | string[];
   aliasConfig?: any;
@@ -188,28 +187,6 @@ export const getDiskData = (payload: {
   const { type, data, nameObj } = payload;
   const { name, showName } = nameObj;
   const res = [] as ILineChartMetric[];
-  if (isCloudVersion()) {
-    data.forEach(instance => {
-      instance.values.forEach(([timstamps, value]) => {
-        const _name = instance.metric[name] || instance.metric['container'];
-        // console.log('zzz', _name);
-        let shouldPush = false;
-        if (typeof type === 'string') {
-          shouldPush = (type === 'all' && _name !== 'total') || _name === type;
-        } else if (Array.isArray(type)) {
-          shouldPush = (type.includes('all') && _name !== 'total') || !!type.find(t => _name.includes(t))
-        }
-        if (shouldPush) {
-          res.push({
-            type: showName(_name),
-            value: Number(value),
-            time: timstamps,
-          });
-        }
-      });
-    });
-    return res;
-  }
   data.forEach(instance => {
     instance.values.forEach(([timstamps, value]) => {
       const device = instance.metric['device'];
@@ -285,7 +262,7 @@ export const TIMEOPTIONS = [
   },
 ];
 
-export const NEED_ADD_SUM_QUERYS = [
+export let NEED_ADD_SUM_QUERYS = [
   // For Instanc
   'memory_used',
   // 'memory_actual_used',
@@ -416,52 +393,12 @@ export function getVersion(v: string) {
   return match ? match[0] : v;
 }
 
-export const getMetricsUniqName = (scene: MetricScene) => {
-  const dashboardType = VERSION_TYPE?.type;
-  switch (dashboardType) {
-    case DashboardType.CLOUD:
-      if (scene === MetricScene.MACHINE) {
-        return {
-          name: 'pod',
-          showName: (name) => name ? name.slice(name.lastIndexOf('-') + 1) : name
-        }
-      }
-      if (scene === MetricScene.NETWORK) {
-        return {
-          name: 'pod',
-          showName: (name) => name ? name.slice(name.lastIndexOf('-') + 1) : name
-        }
-      }
-      if (scene === MetricScene.CPU || scene === MetricScene.MEMORY || scene === MetricScene.LOAD) {
-        return {
-          name: 'container',
-          showName: (name) => name ? name.slice(name.lastIndexOf('-') + 1) : name
-        }
-      }
-      if (scene === MetricScene.SERVICE) {
-        return {
-          name: 'instanceName',
-          showName: (name) => name ? name.slice(name.split('-').slice(2).join('-')) : name
-        }
-      }
-      if (scene === MetricScene.DISK) {
-        return {
-          name: 'persistentvolumeclaim',
-          showName: (name) => name ? name.slice(name.split('-').slice(2).join('-')) : name
-        }
-      }
-      break;
-    default:
-      if (scene === MetricScene.SERVICE) {
-        return {
-          name: 'instanceName',
-          showName: (name) => name
-        }
-      }
-      return {
-        name: 'instance',
-        showName: (name) => name
-      }
+export let getMetricsUniqName = (scene: MetricScene) => {
+  if (scene === MetricScene.SERVICE) {
+    return {
+      name: 'instanceName',
+      showName: (name) => name
+    }
   }
   return {
     name: 'instance',
@@ -479,3 +416,18 @@ export const getConfigData=(data)=>{
   })
   return list;
 }
+
+export let getMachineRouterPath = (path: string, id?): string => `/clusters/${id}${path}`;
+
+export const updateService = (service: { 
+  getMetricsUniqName: typeof getMetricsUniqName,
+  getMachineRouterPath: typeof getMachineRouterPath,
+  getDiskData: typeof getDiskData,
+  NEED_ADD_SUM_QUERYS: typeof NEED_ADD_SUM_QUERYS,
+}) => {
+  getMetricsUniqName = service.getMetricsUniqName;
+  getMachineRouterPath = service.getMachineRouterPath;
+  getDiskData = service.getDiskData;
+  NEED_ADD_SUM_QUERYS = service.NEED_ADD_SUM_QUERYS;
+}
+
