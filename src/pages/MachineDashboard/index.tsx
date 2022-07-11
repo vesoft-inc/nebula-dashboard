@@ -1,5 +1,4 @@
 import DashboardCard from '@/components/DashboardCard';
-import Modal from '@/components/Modal';
 import { Col, Row, Spin } from 'antd';
 import { connect } from 'react-redux';
 import React, { useEffect, useRef, useState } from 'react';
