@@ -15,10 +15,10 @@ import {
   MACHINE_TYPE,
   getBaseLineByUnit,
   calcTimeRange,
+  getMachineRouterPath,
 } from '@/utils/dashboard';
 import BaseLineEditModal from '@/components/BaseLineEditModal';
 import MetricsFilterPanel from '@/components/MetricsFilterPanel';
-import { isCloudVersion } from '@/utils';
 
 const mapDispatch: any = (dispatch: any) => ({
   asyncGetCPUStatByRange: dispatch.machine.asyncGetCPUStatByRange,
@@ -178,10 +178,7 @@ function MachineDashboard(props: IProps) {
 
   const getViewPath = (path: string): string => {
     if (cluster?.id) {
-      if (isCloudVersion()) {
-        return `/clusters${path}`;
-      }
-      return `/clusters/${cluster.id}${path}`;
+      getMachineRouterPath(path, cluster.id);
     }
     return path;
   }

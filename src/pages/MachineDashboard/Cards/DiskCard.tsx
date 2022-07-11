@@ -22,11 +22,11 @@ const mapState = (state: IRootState) => {
         if (diskSizeStat[idx]) {
           size = Number(diskSizeStat[idx].value[1]);
         }
-        const { name } = getMetricsUniqName(MetricScene.DISK);
+        const { name, showName } = getMetricsUniqName(MetricScene.DISK);
         const { device, mountpoint } = instance.metric;
         return {
           size,
-          name: aliasConfig?.[name] || instance.metric[name],
+          name: showName(aliasConfig?.[name] || instance.metric[name]),
           used: latestValues ? Number(latestValues[1]) : 0,
           device, 
           mountpoint
