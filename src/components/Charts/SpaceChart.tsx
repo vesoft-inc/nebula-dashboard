@@ -59,8 +59,8 @@ function SpaceChart(props: IProps) {
       setCurInstances(instances);
     } else {
       setCurInstances([instance]);
-      setSeletedInstance(instance);
     }
+    setSeletedInstance(instance);
   }
 
   const renderDiskInfo = () => {

@@ -2,10 +2,11 @@ import { createModel } from '@rematch/core';
 import _ from 'lodash';
 import serviceApi from '@/config/service';
 import { IServicePanelConfig, ServiceMetricsPanelValue } from '@/utils/interface';
-import { DEFAULT_SERVICE_PANEL_CONFIG, INTERVAL_FREQUENCY_LIST, SERVICE_QUERY_PERIOD } from '@/utils/service';
-import { AGGREGATION_OPTIONS, getProperStep, TIME_INTERVAL_OPTIONS, TIME_OPTION_TYPE } from '@/utils/dashboard';
+import { DEFAULT_SERVICE_PANEL_CONFIG } from '@/utils/service';
+import { getProperStep } from '@/utils/dashboard';
 import { unique } from '@/utils';
 import { getClusterPrefix } from '@/utils/promQL';
+import { InitMetricsFilterValues } from '@/utils/metric';
 
 interface IState {
   panelConfig: {
@@ -24,14 +25,7 @@ export function SereviceModelWrapper(serviceApi) {
         ? JSON.parse(localStorage.getItem('panelConfig')!)
         : DEFAULT_SERVICE_PANEL_CONFIG,
       instanceList: [],
-      metricsFilterValues: {
-        frequency: INTERVAL_FREQUENCY_LIST[0].value,
-        instanceList: ['all'],
-        timeRange: TIME_OPTION_TYPE.DAY1,
-        space: "",
-        period: SERVICE_QUERY_PERIOD,
-        metricType: AGGREGATION_OPTIONS[0]
-      }
+      metricsFilterValues: InitMetricsFilterValues
     },
     reducers: {
       update: (state: IState, payload: any) => ({

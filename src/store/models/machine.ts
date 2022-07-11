@@ -1,11 +1,11 @@
 import { createModel } from '@rematch/core';
 import _ from 'lodash';
 import serviceApi from '@/config/service';
-import { NEED_ADD_SUM_QUERYS, getProperStep, TIME_OPTION_TYPE } from '@/utils/dashboard';
+import { NEED_ADD_SUM_QUERYS, getProperStep } from '@/utils/dashboard';
 import { LINUX } from '@/utils/promQL';
 import { IStatRangeItem, IStatSingleItem, MetricsPanelValue } from '@/utils/interface';
 import { unique } from '@/utils';
-import { INTERVAL_FREQUENCY_LIST } from '@/utils/service';
+import { InitMachineMetricsFilterValues } from '@/utils/metric';
 
 const PROMQL = LINUX;
 export interface IState {
@@ -41,11 +41,7 @@ export function MachineModelWrapper(service, customizePromQL?) {
       memorySizeStat: [] as IStatSingleItem[],
       diskSizeStat: [] as IStatSingleItem[],
       instanceList: [],
-      metricsFilterValues: {
-        frequency: INTERVAL_FREQUENCY_LIST[0].value,
-        instanceList: ['all'],
-        timeRange: TIME_OPTION_TYPE.DAY1,
-      },
+      metricsFilterValues: InitMachineMetricsFilterValues,
     },
     reducers: {
       update: (state: IState, payload: any) => ({
