@@ -178,7 +178,7 @@ function MachineDashboard(props: IProps) {
 
   const getViewPath = (path: string): string => {
     if (cluster?.id) {
-      getMachineRouterPath(path, cluster.id);
+      return getMachineRouterPath(path, cluster.id);
     }
     return path;
   }

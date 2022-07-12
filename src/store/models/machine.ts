@@ -63,10 +63,9 @@ export function MachineModelWrapper(service,) {
         start: number;
         end: number;
         metric: string;
-        nameObj: {name: string; showName: (name: string) => void};
         clusterID?: string;
       }) {
-        const { start, end, clusterID, metric, nameObj } = payload;
+        const { start, end, clusterID, metric } = payload;
         const _start = start / 1000;
         const _end = end / 1000;
         const step = getProperStep(start, end);
