@@ -22,33 +22,21 @@ export const CARD_HIGH_COLORS = 'rgba(230,113,113,1)';
 export const getProperStep = (start: number, end: number) => {
   const hours = Math.round((end - start) / (3600 * 1000));
   if (hours <= 1) {
-    return 7;
+    return 30;
   }
   if (hours <= 6) {
     // 6 hour
-    return 86;
+    return 30;
   }
   if (hours <= 12) {
     // 12hour
-    return 172;
+    return 40;
   }
   if (hours <= 24) {
     // 1 day
-    return 345;
+    return 60;
   }
-  if (hours <= 72) {
-    // 3 days
-    return 691;
-  }
-  if (hours <= 168) {
-    // 1 week
-    return 2419;
-  }
-  if (hours <= 336) {
-    // 2 week
-    return 4838;
-  }
-  return Math.round((end - start) / MAX_STEP_ALLOW);
+  return Math.ceil(hours / 24) * 60;
 };
 
 export const renderUnit = type => {
