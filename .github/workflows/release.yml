@@ -34,7 +34,9 @@ jobs:
       - name: ls
         run: ls -a
       - name: Package
-        run: bash ./source/nebula-dashboard/scripts/package.sh ./source/nebula-dashboard /source/nebula-http-gateway false ${{ secrets.GA_ID }} 
+        run: |
+          DIR=`pwd`
+          bash ./source/nebula-dashboard/scripts/package.sh ./source/nebula-dashboard /source/nebula-http-gateway $DIR/source/nebula-dashboard $DIR/source/nebula-http-gateway false ${{ secrets.GA_ID }} 
       - name: Upload to OSS
         run: bash ./source/nebula-dashboard/scripts/upload.sh ${{ secrets.OSS_ENDPOINT }} ${{ secrets.OSS_ID }} ${{ secrets.OSS_SECRET }} ${{ secrets.OSS_URL }}
 

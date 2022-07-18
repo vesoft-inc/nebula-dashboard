@@ -3,8 +3,8 @@
 set -ex
 
 DIR=`pwd`
-DASHBOARD=${1-$DIR/source/nebula-dashboard}
-GATEWAY=${2-$DIR/source/nebula-http-gateway}
+DASHBOARD=$1
+GATEWAY=$2
 NIGHTLY=$3
 GH_ID=$4
 
