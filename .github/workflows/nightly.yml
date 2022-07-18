@@ -9,10 +9,7 @@ jobs:
         os:
           - centos7
     container:
-      image: reg.vesoft-inc.com/dashboard/dashboard-dev:${{ matrix.os }}
-      credentials:
-        username: ${{ secrets.HARBOR_USERNAME }}
-        password: ${{ secrets.HARBOR_PASSWORD }}
+      image: vesoft/nebula-dev:${{ matrix.os }}
     steps:
       - name: keep workspace empty
         run: |
@@ -24,7 +21,7 @@ jobs:
         with:
           repository: vesoft-inc/nebula-http-gateway
           path: source/nebula-http-gateway
-          ref: v2.2.1
+          ref: v2.2.2
       - uses: actions/setup-go@v2
         with:
           go-version: '^1.13.1'
