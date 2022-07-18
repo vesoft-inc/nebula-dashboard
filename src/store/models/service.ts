@@ -102,8 +102,12 @@ export function SereviceModelWrapper(serviceApi) {
         const _start = start / 1000;
         const _end = end / 1000;
         let query = _query;
-        if (clusterID && !noSuffix) {
-          query = `${_query}{${getClusterPrefix()}="${clusterID}", space="${space || ''}"}`;
+        if (!noSuffix) {
+          if (clusterID) {
+            query = `${_query}{${getClusterPrefix()}="${clusterID}", space="${space || ''}"}`;
+          } else {
+            query = `${_query}{space="${space || ''}"}`;
+          }
         }
         const { code, data } = (await serviceApi.execPromQLByRange({
           clusterID,
