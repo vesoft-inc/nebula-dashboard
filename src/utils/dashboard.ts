@@ -291,7 +291,7 @@ export enum MACHINE_TYPE {
   network = 'network',
 }
 
-export const VERSIONS = ['v2.0.1', 'v2.5.1', 'v2.6.1', 'v3.0.0', 'v3.1.0'];
+export const VERSIONS = ['v2.0.1', 'v2.5.1', 'v2.6.1', 'v3.0.0', 'v3.1.0', 'v3.2.0'];
 
 export const getDefaultTimeRange = (interval?: number) => {
   const end = Date.now();
