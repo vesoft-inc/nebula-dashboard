@@ -87,7 +87,11 @@ export function MetricModelWrapper(serviceApi) {
           start, 
           end
         })) as any;
-        if (res.status === 'success') {
+        if (Array.isArray(res)) {
+          this.update({
+            spaces: res,
+          });
+        } else if (res.status === 'success') {
           this.update({
             spaces: res.data,
           });
