@@ -10,6 +10,9 @@ import {
   Switch,
   withRouter,
 } from 'react-router-dom';
+import dayjs from 'dayjs';
+import weekday from "dayjs/plugin/weekday"
+import localeData from "dayjs/plugin/localeData"
 import { handleTrackEvent, trackEvent } from './utils/stat';
 import { INTL_LOCALES } from '@/config';
 import './App.less';
@@ -17,6 +20,9 @@ import { LanguageContext } from '@/context';
 import { updateQueryStringParameter } from '@/utils';
 import AuthorizedRoute from '@/AuthorizedRoute';
 import Login from '@/pages/Login';
+
+dayjs.extend(weekday)
+dayjs.extend(localeData)
 
 // @ts-ignore
 const MainPage = lazy(() => import('@/pages/MainPage/index'));
@@ -36,7 +42,7 @@ class App extends React.Component<IProps> {
       if (match) {
         cookies.set('locale', match[1] === 'EN_US' ? 'EN_US' : 'ZH_CN');
       } else {
-        cookies.set('locale', lang === 'en' ? 'EN_US' : 'ZH_CN');
+        cookies.set('locale', lang === 'EN_US' ? 'EN_US' : 'ZH_CN');
       }
     }
 
@@ -55,7 +61,7 @@ class App extends React.Component<IProps> {
   loadIntlLocale = () => {
     intl
       .init({
-        currentLocale: this.currentLocale || 'zh_CN',
+        currentLocale: this.currentLocale || 'ZH_CN',
         locales: INTL_LOCALES,
       })
       .then(() => {

@@ -1,0 +1,24 @@
+{
+  "title": "机器",
+  "overview": "概览",
+  "cpu": "CPU",
+  "disk": "Disk",
+  "memory": "Memory",
+  "load": "Load",
+  "network": "Network",
+  "networkIn": "Network In",
+  "networkOut": "Network Out",
+  "transmitFlow": "Transmit Flow",
+  "receiveFlow": "Receive Flow",
+  "diskTip": "当前只显示使用率靠前的部分磁盘，详情信息请点击右上角图标",
+  "detail": {
+    "cpu": "CPU 监控",
+    "memory": "Memory监控",
+    "disk": "Disk监控",
+    "flow": "Network监控",
+    "up": "上行",
+    "down": "下行",
+    "average": "平均值",
+    "all": "全部"
+  }
+}

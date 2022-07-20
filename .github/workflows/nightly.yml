@@ -9,10 +9,7 @@ jobs:
         os:
           - centos7
     container:
-      image: reg.vesoft-inc.com/dashboard/dashboard-dev:${{ matrix.os }}
-      credentials:
-        username: ${{ secrets.HARBOR_USERNAME }}
-        password: ${{ secrets.HARBOR_PASSWORD }}
+      image: vesoft/nebula-dev:${{ matrix.os }}
     steps:
       - name: keep workspace empty
         run: |
@@ -24,7 +21,7 @@ jobs:
         with:
           repository: vesoft-inc/nebula-http-gateway
           path: source/nebula-http-gateway
-          ref: v2.2.1
+          ref: v3.1.4
       - uses: actions/setup-go@v2
         with:
           go-version: '^1.13.1'
@@ -34,8 +31,8 @@ jobs:
       - name: ls
         run: ls -a
       - name: Package
-        run: bash ./source/nebula-dashboard/scripts/package.sh ${{ secrets.GA_ID }}
+        run: bash ./source/nebula-dashboard/scripts/package.sh source/nebula-dashboard source/nebula-http-gateway true ${{ secrets.GA_ID }}
       - name: Upload to OSS
-        run: bash ./source/nebula-dashboard/scripts/upload.sh ${{ secrets.OSS_ENDPOINT }} ${{ secrets.OSS_ID }} ${{ secrets.OSS_SECRET }} ${{ secrets.OSS_URL }}
+        run: bash ./source/nebula-dashboard/scripts/upload.sh ${{ secrets.OSS_ENDPOINT }} ${{ secrets.OSS_ID }} ${{ secrets.OSS_SECRET }} ${{ secrets.OSS_TEST_URL }}
 
     

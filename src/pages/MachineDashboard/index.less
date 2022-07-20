@@ -1,15 +1,29 @@
+.machine-dashboard-spinning, .ant-spin-container{
+	min-height: 100%;
+}
 .machine-dashboard {
-	height: 100%;
-	overflow-y: auto;
+	min-height: 100%;
+	// overflow-y: auto;
 	display: flex;
 	flex-direction: column;
+	background-color: #fff;
+
+  .common-header {
+    background: #fff;
+	margin: 15px 0;
+	justify-content: flex-start;
+    padding-bottom: 0;
+    height: auto;
+  }
 
 	> .ant-row {
 		flex: 1;
 
 		.dashboard-card {
-			height: 100%;
-
+      height: calc((100vh - 285px)/ 3);
+			.inner{
+				border: 1px solid #D9D9D9;
+			}
 			.nebula-chart-line {
 				height: 100%;
 			}
@@ -43,4 +57,10 @@
 			margin: 10px;
 		}
 	}
+}
+
+.chart-title-desc {
+  height: 16px;
+  margin-left: 6px;
+  width: 16px;
 }

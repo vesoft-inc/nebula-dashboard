@@ -27,7 +27,7 @@
     "baseUrl": ".",
     "paths": {
       "@assets/*": ["app/assets/*"],
-      "@/*": ["src/*"],
+      "@/*": ["src/*"]
     }
   }
 }

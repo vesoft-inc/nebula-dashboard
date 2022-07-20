@@ -4,6 +4,8 @@
 import { RematchDispatch, RematchRootState, init } from '@rematch/core';
 import createLoadingPlugin from '@rematch/loading';
 
+import { interceptorFn, registResponseInterceptor } from '@/utils/http';
+
 import * as models from './models';
 
 const loading = createLoadingPlugin({});
@@ -16,6 +18,8 @@ export const store = init({
     rootReducers: { RESET_APP: () => undefined },
   },
 });
+
+registResponseInterceptor(interceptorFn, store);
 
 export type IStore = typeof store;
 export type IDispatch = RematchDispatch<typeof models>;

@@ -10,11 +10,11 @@ const Icon = (props: IProps) => {
   const { icon, className, ...others } = props;
   return (
     <svg
-      className={`dashboard-icon ${className || ''}`}
+      className={`dashboard-icon iconpark-icon ${className || ''}`}
       aria-hidden="true"
       {...others}
     >
-      <use xlinkHref={icon} />
+      <use xlinkHref={icon} href={icon}/>
     </svg>
   );
 };

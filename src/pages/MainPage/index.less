@@ -1,187 +1,194 @@
 @import '@/common.less';
 
 .nebula-stat {
-	.nebula-sider {
-		position: relative;
-		background-color: #1e2025;
+  height: 100vh !important;
 
-		.ant-layout-sider-children {
-			display: flex;
-			flex-direction: column;
-		}
+  .nebula-sider {
+    position: relative;
+    background-color: #1e2025;
+    z-index: 9;
+    height: auto;
 
-		.sidebar-header {
-			height: 80px;
-			display: flex;
-			align-items: center;
-			justify-content: center;
+    .ant-layout-sider-children {
+      display: flex;
+      flex-direction: column;
+    }
 
-			.logo {
-				width: 28px;
-				height: 28px;
-			}
+    .sidebar-header {
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
-			.title {
-				font-family: Futura-Bold, serif;
-				font-size: 12px;
-				color: #fff;
-				font-weight: 700;
-				margin-left: 7px;
-			}
-		}
+      .logo {
+        width: 28px;
+        height: 28px;
+      }
 
-		.sidebar-menu {
-			overflow: auto;
-			padding-bottom: 20px;
-			background-color: #1e2025;
+      .title {
+        font-family: Futura-Bold, serif;
+        font-size: 12px;
+        color: #fff;
+        font-weight: 700;
+        margin-left: 7px;
+      }
+    }
 
-			.ant-menu-submenu-title,
-			.ant-menu-item {
-				display: flex;
-				align-items: center;
-				margin: 0;
-			}
+    .sidebar-menu {
+      background-color: #1e2025;
+      margin-bottom: 170px;
+      flex: 1;
+      overflow-y: scroll;
 
-			.menu-icon {
-				fill: #fff;
-				width: 16px;
-				height: 16px;
-				margin-right: 10px;
-				margin-left: 6px;
-			}
+      .ant-menu-submenu-title,
+      .ant-menu-item {
+        display: flex;
+        align-items: center;
+        margin: 0;
+      }
 
-			.ant-menu-title-content {
-				margin-left: 0;
-			}
+      .menu-icon {
+        color: #fff;
+        width: 16px;
+        height: 16px;
+        margin-right: 10px;
+        margin-left: 6px;
+      }
 
-			.ant-menu-submenu-title {
-				// background-color: #1E2025;
-				.icon {
-					fill: #fff;
-					width: 16px;
-					height: 16px;
-					margin-left: 0;
-				}
-			}
-		}
+      .ant-menu-title-content {
+        margin-left: 0;
+      }
 
-		.ant-menu-item {
-			background-color: #2f3436;
-		}
+      .ant-menu-submenu-title {
 
-		.ant-menu-inline-collapsed {
-			width: 56px;
+        // background-color: #1E2025;
+        .icon {
+          color: #fff;
+          width: 16px;
+          height: 16px;
+          margin-left: 0;
+        }
+      }
+    }
 
-			.ant-menu-submenu-selected {
-				background-color: @blue;
-			}
-		}
+    .ant-menu-item {
+      background-color: #2f3436;
+    }
 
-		.sidebar-footer {
-			padding: 0 20px 20px;
-			color: #fff;
-			font-size: 14px;
-			display: flex;
-			flex-direction: column;
-			width: 100%;
-			position: absolute;
-			bottom: 0;
+    .ant-menu-inline-collapsed {
+      width: 56px;
 
-			.btn-logout {
-				display: flex;
-				align-items: center;
-				margin-bottom: 40px;
-				cursor: pointer;
+      .ant-menu-submenu-selected {
+        background-color: @blue;
+      }
+    }
 
-				.menu-btn {
-					fill: #fff;
-					width: 16px;
-					height: 16px;
-				}
+    .sidebar-footer {
+      padding: 0 20px 20px;
+      color: #fff;
+      font-size: 14px;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      position: absolute;
+      bottom: 0;
+      background-color: #1e2025;
 
-				.text-logout {
-					margin-left: 10px;
-				}
-			}
+      .btn-logout {
+        display: flex;
+        align-items: center;
+        margin-bottom: 40px;
+        cursor: pointer;
 
-			.row {
-				display: flex;
-				align-items: center;
-				margin-top: 13px;
-				justify-content: space-between;
+        .menu-btn {
+          color: #fff;
+          width: 16px;
+          height: 16px;
+        }
 
-				.help {
-					color: #fff;
-					margin-left: -40px;
-				}
-			}
+        .text-logout {
+          margin-left: 10px;
+        }
+      }
 
-			.btn-collapse {
-				display: inline-flex;
-				cursor: pointer;
+      .row {
+        display: flex;
+        align-items: center;
+        margin-top: 13px;
+        justify-content: space-between;
 
-				.menu-collapse-icon {
-					fill: #fff;
-					width: 16px;
-					height: 16px;
-				}
-			}
-		}
-	}
+        .help {
+          color: #fff;
+          margin-left: -40px;
+        }
+      }
 
-	.ant-layout-sider-collapsed {
-		.sidebar-footer {
-			padding: 0 0 20px;
-			display: flex;
-			align-items: center;
+      .btn-collapse {
+        display: inline-flex;
+        cursor: pointer;
 
-			.row {
-				margin-top: 20px;
-			}
-		}
+        .menu-collapse-icon {
+          color: #fff;
+          width: 16px;
+          height: 16px;
+        }
+      }
+    }
+  }
 
-		.dark {
-			width: 100%;
+  .ant-layout-sider-collapsed {
+    .sidebar-footer {
+      padding: 0 0 20px;
+      display: flex;
+      align-items: center;
 
-			.select-label {
-				justify-content: center;
-			}
-		}
-	}
+      .row {
+        margin-top: 20px;
+      }
+    }
 
-	.main-content {
-		padding: 15px;
-		height: 100%;
+    .dark {
+      width: 100%;
 
-		.ant-select {
-			min-width: 134px;
-		}
-	}
+      .select-label {
+        justify-content: center;
+      }
+    }
+  }
+
+  .main-content {
+    padding: 15px;
+    height: 100%;
+    overflow: scroll;
+
+    .ant-select {
+      min-width: 134px;
+    }
+  }
 }
 
 .ant-menu-vertical {
-	.ant-menu-item {
-		display: flex;
-		align-items: center;
-		background-color: #2f3436;
-		margin: 0 !important;
+  .ant-menu-item {
+    display: flex;
+    align-items: center;
+    background-color: #2f3436;
+    margin: 0 !important;
 
-		.menu-icon {
-			fill: #fff;
-		}
-	}
+    .menu-icon {
+      color: #fff;
+    }
+  }
 }
 
 .ant-dropdown-menu {
-	background-color: #2f3436;
+  background-color: #2f3436;
 
-	.ant-dropdown-menu-item {
-		color: #fff;
-		font-size: 14px;
-	}
+  .ant-dropdown-menu-item {
+    color: #fff;
+    font-size: 14px;
+  }
 
-	.ant-dropdown-menu-item:hover {
-		background-color: #4372ff;
-	}
+  .ant-dropdown-menu-item:hover {
+    background-color: #4372ff;
+  }
 }
-

@@ -1,26 +1,25 @@
-import React from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import intl from 'react-intl-universal';
 import { connect } from 'react-redux';
-import { isEqual } from 'lodash';
 import { Popover } from 'antd';
 import Icon from '@/components/Icon';
-import { IServicePanelConfig, IStatRangeItem } from '@/utils/interface';
-import { getDataByType } from '@/utils/dashboard';
-import {
-  SERVICE_DEFAULT_RANGE,
-  SERVICE_POLLING_INTERVAL,
-} from '@/utils/service';
+import { IServicePanelConfig, MetricScene } from '@/utils/interface';
+import { calcTimeRange, getDataByType, getMetricsUniqName } from '@/utils/dashboard';
 import Card from '@/components/Service/ServiceCard/Card';
 import { IDispatch, IRootState } from '@/store';
+import { shouldCheckCluster } from '@/utils';
+import classnames from "classnames";
 
 import './index.less';
 
-const mapDispatch = (dispatch: IDispatch) => ({
-  asyncGetMetricsData: dispatch.service.asyncGetMetricsData,
+const mapDispatch: any = (dispatch: IDispatch) => ({
+  asyncGetMetricsData: dispatch.service.asyncGetMetricsData as any,
 });
 
 const mapState = (state: IRootState) => ({
   aliasConfig: state.app.aliasConfig,
+  cluster: (state as any).cluster?.cluster,
+  metricsFilterValues: state.service.metricsFilterValues,
 });
 
 interface IProps
@@ -28,112 +27,104 @@ interface IProps
   ReturnType<typeof mapState> {
   onConfigPanel: () => void;
   config: IServicePanelConfig;
-  aliasConfig: any;
+  isHidePeriod?: boolean;
 }
 
-interface IState {
-  data: IStatRangeItem[];
-}
-class CustomServiceQueryPanel extends React.Component<IProps, IState> {
-  pollingTimer: any;
+function CustomServiceQueryPanel(props: IProps) {
 
-  constructor(props: IProps) {
-    super(props);
-    this.state = {
-      data: [],
-    };
-  }
+  const { config, cluster, asyncGetMetricsData, onConfigPanel, aliasConfig, metricsFilterValues, isHidePeriod } = props;
 
-  componentDidMount() {
-    this.pollingData();
-  }
+  const [data, setData] = useState<any[]>([])
 
-  componentWillUnmount() {
-    if (this.pollingTimer) {
-      clearTimeout(this.pollingTimer);
+  let pollingTimer: any = useMemo(() => undefined, []);
+
+  useEffect(() => {
+    if (pollingTimer) {
+      clearTimeout(pollingTimer);
     }
-  }
-
-  componentDidUpdate(prevProps) {
-    if (!isEqual(prevProps.config, this.props.config)) {
-      this.resetPollingData();
+    if (shouldCheckCluster()) {
+      if (cluster.id) {
+        pollingData();
+      }
+    } else {
+      pollingData();
     }
-  }
-
-  resetPollingData = () => {
-    if (this.pollingTimer) {
-      clearTimeout(this.pollingTimer);
+    return () => {
+      if (pollingTimer) {
+        clearTimeout(pollingTimer);
+      }
     }
-    this.pollingData();
-  };
+  }, [metricsFilterValues, metricsFilterValues, cluster, config])
 
-  getMetricsData = async () => {
-    const { config } = this.props;
-    const { period: metricPeriod, metricFunction } = config;
-    const end = Date.now();
-    const data = await this.props.asyncGetMetricsData({
+  const getMetricsData = async () => {
+    const { period: metricPeriod, metricFunction, space } = config;
+    const [start, end] = calcTimeRange(metricsFilterValues.timeRange);
+    const data = await asyncGetMetricsData({
       query: metricFunction + metricPeriod, // EXPLAIN: query like nebula_graphd_num_queries_rate_600
-      start: end - SERVICE_DEFAULT_RANGE,
+      start,
       end,
+      space,
+      clusterID: cluster?.id
     });
-    this.setState({
-      data,
-    });
+    setData(data)
   };
 
-  pollingData = () => {
-    this.getMetricsData();
-    this.pollingTimer = setTimeout(this.pollingData, SERVICE_POLLING_INTERVAL);
+  const pollingData = () => {
+    getMetricsData();
+    if (metricsFilterValues.frequency > 0) {
+      pollingTimer = setTimeout(() => {
+        pollingData();
+      }, metricsFilterValues.frequency);
+    }
   };
 
-  render() {
-    const { data } = this.state;
-    const {
-      config: { metric, period, metricType, baseLine },
-      aliasConfig,
-    } = this.props;
-    return (
-      <div className="service-card">
-        <div className="header">
-          <Popover
-            placement="bottomLeft"
-            content={intl.get(`metric_description.${metric}`)}
+  return (
+    <div className="service-card">
+      <div className="header">
+        <Popover
+          placement="bottomLeft"
+          content={intl.get(`metric_description.${config.metric}`)}
+        >
+          {config.metric}
+        </Popover>
+        <div>
+          {
+            !isHidePeriod && (
+              <>
+                <span>
+                  {intl.get('service.period')}: <span>{config.period}</span>
+                </span>
+                <span>
+                  {intl.get('service.metricParams')}: <span>{config.metricType}</span>
+                </span>
+              </>
+            )
+          }
+          <div
+            className={classnames('blue btn-icon-with-desc', {
+              'hide-period': isHidePeriod,
+            })}
+            onClick={onConfigPanel}
           >
-            {metric}
-          </Popover>
-          <div>
-            <span>
-              {intl.get('service.period')}: <span>{period}</span>
-            </span>
-            <span>
-              {intl.get('service.metricParams')}: <span>{metricType}</span>
-            </span>
-            <div
-              className="btn-icon-with-desc blue"
-              onClick={this.props.onConfigPanel}
-            >
-              <Icon icon="#iconSetup" />
-              <span>{intl.get('common.set')}</span>
-            </div>
+            <Icon icon="#iconSetup" />
+            <span>{intl.get('common.set')}</span>
           </div>
         </div>
-        <div className="content">
-          {data.length > 0 && (
-            <Card
-              baseLine={baseLine}
-              data={getDataByType({
-                data,
-                type: 'all',
-                name: 'instanceName',
-                aliasConfig,
-              })}
-              loading={false}
-            />
-          )}
-        </div>
       </div>
-    );
-  }
+      <div className="content">
+        <Card
+            baseLine={config.baseLine}
+            data={getDataByType({
+              data,
+              type: metricsFilterValues.instanceList,
+              nameObj: getMetricsUniqName(MetricScene.SERVICE),
+              aliasConfig,
+            })}
+            loading={false}
+          />
+      </div>
+    </div>
+  );
 }
 
 export default connect(mapState, mapDispatch)(CustomServiceQueryPanel);

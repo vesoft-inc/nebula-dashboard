@@ -1,0 +1,24 @@
+{
+  "title": "Machine",
+  "overview": "Overview",
+  "cpu": "CPU",
+  "disk": "Disk",
+  "memory": "Memory",
+  "load": "Load",
+  "network": "Network",
+  "networkIn": "Network In",
+  "networkOut": "Network Out",
+  "transmitFlow": "Transimit Speed",
+  "receiveFlow": "Receive Speed",
+  "diskTip":"For details of all disks, click the icon in the upper right corner.",
+  "detail": {
+    "cpu": "CPU Detail",
+    "memory": "Memory Detail",
+    "disk": "Disk Detail",
+    "network": "Network Detail",
+    "up": "Up",
+    "down": "Down",
+    "average": "Average",
+    "all": "All"
+  }
+}

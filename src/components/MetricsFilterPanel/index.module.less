@@ -1,0 +1,58 @@
+@import '@/common.less';
+
+.metricsFilterPanel {
+  display: flex;
+  align-items: center;
+  // width: 100%;
+  // height: 30px;
+  // flex: 1;
+  height: auto;
+  // padding-top: 20px;
+
+  :global {
+    .ant-form-item {
+      margin-bottom: 20px !important;
+      margin-right: 10px !important;
+    }
+    .ant-form-item-label {
+      display: flex !important;
+      align-items: center;
+    }
+  }
+}
+
+.frequency {
+  display: flex;
+}
+
+.freshIcon {
+  border: 1px solid #d9d9d9;
+  justify-content: center;
+  width: 42px;
+  border-right: 0;
+  align-items: center;
+  display: flex;
+  &:hover {
+    cursor: pointer;
+    border-color: @blue;
+    border-right: 1px solid @blue;
+    .freshIconItem {
+      color: @blue;
+    }
+  }
+}
+
+.freshIconItem {
+  color: rgba(0,0,0,.85);
+  width: 18px;
+  height: 18px;
+}
+
+.frequencySelect {
+  min-width: 30px !important;
+}
+
+.confirmBtn {
+  width: 120px;
+  margin-left: 24px;
+}

@@ -1,63 +1,210 @@
 .nebula-chart-space {
-	padding: 12px 0;
-	overflow: auto;
-	> .tip{
-		height: 30px;
-		color: #a5a2a2;
-		padding: 5px 0;
-		font-size: 12px;
-		text-align: left;
-	}
-	> .space-bar {
-		> .description {
-			font-size: 12px;
-			text-align: left;
+  padding: 12px 0;
+  overflow: auto;
+  height: 100%;
+  max-height: 240px;
+  overflow-y: auto;
 
-			> span + span {
-				margin-left: 20px;
-			}
-		}
+  >.tip {
+    height: 30px;
+    color: #a5a2a2;
+    padding: 5px 0;
+    font-size: 12px;
+    text-align: left;
+  }
 
-		> .wrap {
-			display: flex;
-			width: 100%;
-			height: 30px;
-			margin-top: 8px;
+  >.space-instance {
+    // padding: 24px;
+    position: relative;
+    // >.space-instance-description {
+    //   position: absolute;
+    //   top: 0;
+    //   left: 24px;
+    //   font-weight: bold;
+    // }
+    // >.space-bar {
+    //   >.description {
+    //     font-size: 12px;
+    //     text-align: left;
+
+    //     >span+span {
+    //       margin-left: 20px;
+    //     }
+    //   }
 
 
-			> .bar-item {
-				display: flex;
 
-				> .left {
-					flex: 1;
-					opacity: 0.3;
-					height: 100%;
-				}
+    // >.space-bar+.space-bar {
+    //   margin-top: 12px;
+    // }
+  }
+}
 
-				> .right {
-					width: 5px;
-					height: 100%;
-				}
-			}
+.instance-type {
+  display: flex;
+  flex-direction: row;
+  height: 30px;
+  justify-content: center;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  margin-bottom: 10px;
+}
 
-			> .empty {
-				flex: 1;
-				background: #ecf0ff;
-				opacity: 0.3;
-			}
+.instance-item {
+  display: flex;
+  align-items: center;
+}
 
-			> p {
-				padding-left: 12px;
-				width: 66px;
-				line-height: 30px;
-				font-size: 18px;
-				font-weight: 400;
-				text-align: left;
-			}
-		}
-	}
+.instance-item:not(:first-child) {
+  margin-left: 12px;
+}
 
-	> .space-bar + .space-bar {
-		margin-top: 12px;
-	}
+.instance-label {
+  width: 10px;
+  height: 2px;
+  background: red;
+  height: 2px;
+  width: 14px;
+  margin-left: 12px;
+}
+
+.instance-name {
+  font-size: 12px;
+}
+
+.instance-label-hidden {
+  background-color: #eee !important;
+}
+
+.instance-name-hidden {
+  color: #eee !important;
+}
+
+.disk-info-content {
+  display: flex;
+}
+
+.disk-th {
+  display: grid;
+  grid-template-columns: 20% 20% 20% 40%;
+  text-align: left;
+  width: 100%;
+  height: 30px;
+  line-height: 30px;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  color: #BDBDBD;
+}
+
+.disk-tr {
+  display: grid;
+  grid-template-columns: 20% 20% 20% 40%;
+  width: 100%;
+  text-align: left;
+  border-bottom: 1px solid #E8E8E8;
+  padding: 20px 0;
+}
+
+.disk-tr-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.disk-tr-item > div:not(:last-child) {
+  margin-bottom: 20px;
+}
+
+.disk-tr-item-info {
+  align-items: center;
+  display: flex;
+  font-size: 12px;
+  height: 30px;
+  overflow: hidden;
+  line-height: 30px;
+}
+
+.text-overflow {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
+  width: 90%;
+}
+
+.disk-usage-detail {
+  height: 12px;
+}
+
+.disk-usage-percent {
+  font-size: 12px !important;
+}
+
+.disk-name {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 30px;
+  color: #000000;
+}
+
+.disk-usage {
+  width: 100%;
+  // height: 30px;
+  // display: flex;
+}
+
+.wrap {
+  display: flex;
+  width: 100%;
+  flex: 1;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  height: 30px;
+
+  >.bar-item {
+    display: flex;
+    height: 100%;
+
+    >.left {
+      flex: 1;
+      opacity: 0.3;
+      height: 100%;
+    }
+
+    >.right {
+      width: 5px;
+      height: 100%;
+    }
+  }
+
+  >.empty {
+    flex: 1;
+    background: #ecf0ff;
+    opacity: 0.3;
+    height: 100%;
+  }
+
+  >p {
+    padding-left: 12px;
+    width: 66px;
+    line-height: 30px;
+    font-size: 18px;
+    font-weight: 400;
+    text-align: left;
+  }
+}
+
+.instance-select {
+  position: absolute !important;
+  top: 10px;
+  right: 70px;
+  // width: 200px;
+  > .ant-select-arrow {
+    margin-top: -8px !important;
+    color: #000 !important;
+  }
 }

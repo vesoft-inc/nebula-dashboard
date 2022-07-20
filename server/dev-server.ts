@@ -48,6 +48,22 @@ app.use('/api-nebula/*', createProxyMiddleware({
   changeOrigin: true,
 }));
 
+app.use('/api-graph/*', createProxyMiddleware({
+  target: getTargetUrl(proxy.graph.target),
+  pathRewrite: {
+    '/api-graph': '/',
+  },
+  changeOrigin: true,
+}));
+
+app.use('/api-storage/*', createProxyMiddleware({
+  target: getTargetUrl(proxy.storage.target),
+  pathRewrite: {
+    '/api-storage': '/',
+  },
+  changeOrigin: true,
+}));
+
 app.get('/api/app', (_req, res) => {
   res.send({
     version: pkg.version,

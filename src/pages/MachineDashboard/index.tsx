@@ -1,8 +1,7 @@
 import DashboardCard from '@/components/DashboardCard';
-import Modal from '@/components/Modal';
-import { Col, Row } from 'antd';
+import { Col, Row, Spin } from 'antd';
 import { connect } from 'react-redux';
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import intl from 'react-intl-universal';
 import CPUCard from './Cards/CPUCard';
 import './index.less';
@@ -13,15 +12,15 @@ import NetworkOut from './Cards/NetworkOut';
 import NetworkIn from './Cards/NetworkIn';
 import { SUPPORT_METRICS, VALUE_TYPE } from '@/utils/promQL';
 import {
-  CARD_POLLING_INTERVAL,
-  CARD_RANGE,
   MACHINE_TYPE,
   getBaseLineByUnit,
+  calcTimeRange,
+  getMachineRouterPath,
 } from '@/utils/dashboard';
-import { IDispatch, IRootState } from '@/store';
-import BaseLineEdit from '@/components/BaseLineEdit';
+import BaseLineEditModal from '@/components/BaseLineEditModal';
+import MetricsFilterPanel from '@/components/MetricsFilterPanel';
 
-const mapDispatch: any = (dispatch: IDispatch) => ({
+const mapDispatch: any = (dispatch: any) => ({
   asyncGetCPUStatByRange: dispatch.machine.asyncGetCPUStatByRange,
   asyncGetMemoryStatByRange: dispatch.machine.asyncGetMemoryStatByRange,
   asyncGetMemorySizeStat: dispatch.machine.asyncGetMemorySizeStat,
@@ -33,123 +32,132 @@ const mapDispatch: any = (dispatch: IDispatch) => ({
     dispatch.setting.update({
       [key]: value,
     }),
+  updateMetricsFiltervalues: dispatch.machine.updateMetricsFiltervalues,
 });
 
-const mapState = (state: IRootState) => ({
+const mapState = (state: any) => ({
   cpuBaseLine: state.setting.cpuBaseLine,
   memoryBaseLine: state.setting.memoryBaseLine,
   networkOutBaseLine: state.setting.networkOutBaseLine,
   networkInBaseLine: state.setting.networkInBaseLine,
   loadBaseLine: state.setting.loadBaseLine,
+  instanceList: state.machine.instanceList as any,
+  metricsFilterValues: state.machine.metricsFilterValues,
+  loading: state.loading.effects.machine.asyncGetMetricsData,
 });
 
 interface IProps
   extends ReturnType<typeof mapDispatch>,
-  ReturnType<typeof mapState> {}
-
-interface IState {
-  editPanelType: string;
+  ReturnType<typeof mapState> {
+  cluster?: any;
 }
-class MachineDashboard extends React.Component<IProps, IState> {
-  pollingTimer: any;
 
-  modalHandler;
+let pollingTimer: any;
 
-  constructor(props: IProps) {
-    super(props);
-    this.state = {
-      editPanelType: '',
-    };
-  }
+function MachineDashboard(props: IProps) {
 
-  componentDidMount() {
-    this.props.asyncGetMemorySizeStat();
-    this.props.asyncGetDiskSizeStat();
+  const { asyncGetMemorySizeStat, asyncGetDiskSizeStat, cluster, metricsFilterValues,
+    asyncUpdateBaseLine, asyncGetCPUStatByRange, asyncGetMemoryStatByRange, asyncGetDiskStatByRange,
+    asyncGetLoadByRange, asyncGetNetworkStatByRange, updateMetricsFiltervalues, instanceList,
+    loading,
+  } = props;
 
-    this.getMachineStatus();
-    this.pollingMachineStatus();
-  }
+  const [showLoading, setShowLoading] = useState<boolean>(false);
 
-  componentWillUnmount() {
-    if (this.pollingTimer) {
-      clearTimeout(this.pollingTimer);
+  useEffect(() => {
+    asyncGetMemorySizeStat(cluster?.id);
+    asyncGetDiskSizeStat(cluster?.id);
+    getMachineStatus();
+    return () => {
+      if (pollingTimer) {
+        clearTimeout(pollingTimer);
+      }
     }
-  }
+  }, [cluster])
 
-  handleConfigPanel = (editPanelType: string) => {
-    this.setState(
-      {
-        editPanelType,
-      },
-      this.modalHandler.show,
-    );
+  useEffect(() => {
+    setShowLoading(loading && metricsFilterValues.frequency === 0)
+  }, [loading, metricsFilterValues.frequency])
+
+  useEffect(() => {
+    if (pollingTimer) {
+      clearTimeout(pollingTimer);
+    }
+    pollingMachineStatus();
+  }, [metricsFilterValues.timeRange, metricsFilterValues.frequency])
+
+  const handleConfigPanel = (editPanelType: string) => {
+    BaseLineEditModal.show({
+      baseLine: props[`${editPanelType}BaseLine`],
+      valueType: getValueType(editPanelType),
+      onOk: (values) => handleBaseLineChange(values, editPanelType),
+    });
   };
 
-  handleBaseLineChange = async value => {
-    const { editPanelType } = this.state;
+  const handleBaseLineChange = async (value, editPanelType) => {
     const { baseLine, unit } = value;
-    await this.props.asyncUpdateBaseLine(
+    await asyncUpdateBaseLine(
       `${editPanelType}BaseLine`,
       getBaseLineByUnit({
         baseLine,
         unit,
-        valueType: this.getValueType(editPanelType),
+        valueType: getValueType(editPanelType),
       }),
     );
-    this.handleClose();
   };
 
-  handleClose = () => {
-    if (this.modalHandler) {
-      this.modalHandler.hide();
-    }
-  };
-
-  getMachineStatus = () => {
-    const end = Date.now();
-    const start = end - CARD_RANGE;
-    this.props.asyncGetCPUStatByRange({
+  const getMachineStatus = () => {
+    const [start, end] = calcTimeRange(metricsFilterValues.timeRange);
+    asyncGetCPUStatByRange({
       start,
       end,
       metric: SUPPORT_METRICS.cpu[0].metric,
+      clusterID: cluster?.id
     });
-    this.props.asyncGetMemoryStatByRange({
+    asyncGetMemoryStatByRange({
       start,
       end,
       metric: SUPPORT_METRICS.memory[0].metric,
+      clusterID: cluster?.id
     });
-    this.props.asyncGetDiskStatByRange({
+    asyncGetDiskStatByRange({
       start: end - 1000,
       end,
-      metric: SUPPORT_METRICS.disk[0].metric,
+      metric: SUPPORT_METRICS.disk[1].metric,
+      clusterID: cluster?.id
     });
-    this.props.asyncGetLoadByRange({
+    asyncGetLoadByRange({
       start,
       end,
       metric: SUPPORT_METRICS.load[0].metric,
+      clusterID: cluster?.id
     });
-    this.props.asyncGetNetworkStatByRange({
+    asyncGetNetworkStatByRange({
       start,
       end,
       metric: SUPPORT_METRICS.network[0].metric,
       inOrOut: 'in',
+      clusterID: cluster?.id
     });
-    this.props.asyncGetNetworkStatByRange({
+    asyncGetNetworkStatByRange({
       start,
       end,
       metric: SUPPORT_METRICS.network[1].metric,
       inOrOut: 'out',
+      clusterID: cluster?.id
     });
   };
 
-  pollingMachineStatus = () => {
-    this.pollingTimer = setTimeout(() => {
-      this.getMachineStatus();
-      this.pollingMachineStatus();
-    }, CARD_POLLING_INTERVAL);
+  const pollingMachineStatus = () => {
+    getMachineStatus();
+    if (metricsFilterValues.frequency > 0) {
+      pollingTimer = setTimeout(() => {
+        pollingMachineStatus();
+      }, metricsFilterValues.frequency);
+    }
   };
 
-  getValueType = type => {
+  const getValueType = type => {
     switch (type) {
       case MACHINE_TYPE.cpu:
       case MACHINE_TYPE.memory:
@@ -164,16 +172,38 @@ class MachineDashboard extends React.Component<IProps, IState> {
     }
   };
 
-  render() {
-    const { editPanelType } = this.state;
-    return (
+  const handleMetricsChange = (values) => {
+    updateMetricsFiltervalues(values);
+  }
+
+  const getViewPath = (path: string): string => {
+    if (cluster?.id) {
+      return getMachineRouterPath(path, cluster.id);
+    }
+    return path;
+  }
+
+  const handleRefreshData = () => {
+    getMachineStatus();
+  }
+
+  return (
+    <Spin spinning={showLoading} wrapperClassName='machine-dashboard-spinning'>
       <div className="machine-dashboard">
+        <div className='common-header' >
+          <MetricsFilterPanel 
+            onChange={handleMetricsChange} 
+            instanceList={instanceList}
+            values={metricsFilterValues}
+            onRefresh={handleRefreshData}
+          />
+        </div>
         <Row>
           <Col span={12}>
             <DashboardCard
               title={intl.get('device.cpu')}
-              viewPath="/machine/cpu"
-              onConfigPanel={() => this.handleConfigPanel(MACHINE_TYPE.cpu)}
+              viewPath={getViewPath("/machine/cpu")}
+              onConfigPanel={() => handleConfigPanel(MACHINE_TYPE.cpu)}
             >
               <CPUCard />
             </DashboardCard>
@@ -181,8 +211,8 @@ class MachineDashboard extends React.Component<IProps, IState> {
           <Col span={12}>
             <DashboardCard
               title={intl.get('device.memory')}
-              viewPath="/machine/memory"
-              onConfigPanel={() => this.handleConfigPanel(MACHINE_TYPE.memory)}
+              viewPath={getViewPath("/machine/memory")}
+              onConfigPanel={() => handleConfigPanel(MACHINE_TYPE.memory)}
             >
               <MemoryCard />
             </DashboardCard>
@@ -192,8 +222,8 @@ class MachineDashboard extends React.Component<IProps, IState> {
           <Col span={12}>
             <DashboardCard
               title={intl.get('device.load')}
-              viewPath="/machine/load"
-              onConfigPanel={() => this.handleConfigPanel(MACHINE_TYPE.load)}
+              viewPath={getViewPath("/machine/load")}
+              onConfigPanel={() => handleConfigPanel(MACHINE_TYPE.load)}
             >
               <LoadCard />
             </DashboardCard>
@@ -201,7 +231,7 @@ class MachineDashboard extends React.Component<IProps, IState> {
           <Col span={12}>
             <DashboardCard
               title={intl.get('device.disk')}
-              viewPath="/machine/disk"
+              viewPath={getViewPath("/machine/disk")}
             >
               <DiskCard />
             </DashboardCard>
@@ -211,9 +241,9 @@ class MachineDashboard extends React.Component<IProps, IState> {
           <Col span={12}>
             <DashboardCard
               title={intl.get('device.networkOut')}
-              viewPath="/machine/network"
+              viewPath={getViewPath("/machine/network")}
               onConfigPanel={() =>
-                this.handleConfigPanel(MACHINE_TYPE.networkOut)
+                handleConfigPanel(MACHINE_TYPE.networkOut)
               }
             >
               <NetworkOut />
@@ -222,32 +252,18 @@ class MachineDashboard extends React.Component<IProps, IState> {
           <Col span={12}>
             <DashboardCard
               title={intl.get('device.networkIn')}
-              viewPath="/machine/network"
+              viewPath={getViewPath("/machine/network")}
               onConfigPanel={() =>
-                this.handleConfigPanel(MACHINE_TYPE.networkIn)
+                handleConfigPanel(MACHINE_TYPE.networkIn)
               }
             >
               <NetworkIn />
             </DashboardCard>
           </Col>
         </Row>
-        <Modal
-          title="empty"
-          className="modal-baseLine"
-          width="550px"
-          handlerRef={handler => (this.modalHandler = handler)}
-          footer={null}
-        >
-          <BaseLineEdit
-            valueType={this.getValueType(editPanelType)}
-            baseLine={this.props[`${editPanelType}BaseLine`]}
-            onClose={this.handleClose}
-            onBaseLineChange={this.handleBaseLineChange}
-          />
-        </Modal>
       </div>
-    );
-  }
+    </Spin>
+  )
 }
 
 export default connect(mapState, mapDispatch)(MachineDashboard);

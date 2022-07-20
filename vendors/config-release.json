@@ -2,14 +2,20 @@
   "port": 7003,
   "proxy":{
     "gateway":{
-      "target": "http://localhost:8080"
+      "target": "nebula-http-gateway:8090"
     },
     "prometheus":{
-      "target": "192.168.8.157:9090"
+      "target": "prometheus:9090"
+    },
+    "graph":{
+      "target": "graphd:19669"
+    },
+    "storage":{
+      "target": "graphd:19779"
     }
   },
   "nebulaServer": {
-    "ip": "192.168.8.143",
+    "ip": "graphd",
     "port": 9669
   }
 }

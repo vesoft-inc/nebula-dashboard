@@ -1,7 +1,9 @@
 import _ from 'loadsh';
 import { VALUE_TYPE } from '@/utils/promQL';
+import { INTERVAL_FREQUENCY_LIST, SERVICE_QUERY_PERIOD } from './service';
+import { AGGREGATION_OPTIONS, TIME_OPTION_TYPE } from './dashboard';
 
-export const METRICS_DESCRIPTION = {
+export const METRICS_DESCRIPTION: any = {
   num_queries: 'num_queries description',
   num_slow_queries: 'num_slow_queries description',
   query_latency_us: 'query_latency_us description',
@@ -131,3 +133,18 @@ export const filterServiceMetrics = (payload: {
   });
   return metrics;
 };
+
+export const InitMetricsFilterValues: any = {
+  frequency: INTERVAL_FREQUENCY_LIST[0].value,
+  instanceList: ['all'],
+  timeRange: TIME_OPTION_TYPE.DAY1,
+  space: "",
+  period: SERVICE_QUERY_PERIOD,
+  metricType: AGGREGATION_OPTIONS[0]
+};
+
+export const InitMachineMetricsFilterValues: any = {
+  frequency: INTERVAL_FREQUENCY_LIST[0].value,
+  instanceList: ['all'],
+  timeRange: TIME_OPTION_TYPE.DAY1,
+}

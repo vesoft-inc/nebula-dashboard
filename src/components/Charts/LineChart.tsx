@@ -1,59 +1,113 @@
-import React from 'react';
-import { Chart } from '@antv/g2';
+import React, { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
+import { Chart, registerInteraction } from '@antv/g2';
 import { ChartCfg } from '@antv/g2/lib/interface';
 
 export interface IProps {
   renderChart: (chartInstance: Chart) => void;
   options?: Partial<ChartCfg>;
-  tickInterval?: number;
   baseLine?: number;
   yAxisMaximum?: number;
   isDefaultScale?: boolean;
 }
 
-class LineChart extends React.Component<IProps> {
-  chartRef: any;
+function LineChart(props: IProps, ref) {
+  const { isDefaultScale, yAxisMaximum, baseLine, options, renderChart } = props;
 
-  chartInstance: Chart;
+  const chartRef = useRef<any>();
 
-  constructor(props: IProps) {
-    super(props);
-    this.chartRef = React.createRef();
-  }
+  const chartInstanceRef = useRef<Chart>();
 
-  componentDidMount() {
-    this.renderChart();
-  }
+  const renderChartContent = () => {
+    if (!chartRef.current) return;
+    chartInstanceRef.current = new Chart({
+      container: chartRef.current,
+      autoFit: true,
+      padding: [20, 0, 0, 0],
+      ...options,
+    });
+    registerInteraction('brush', {
+      showEnable: [
+        { trigger: 'plot:mouseenter', action: 'cursor:crosshair' },
+        { trigger: 'plot:mouseleave', action: 'cursor:default' },
+      ],
+      start: [
+        {
+          trigger: 'plot:mousedown',
+          action: ['brush-x:start', 'rect-mask:start', 'rect-mask:show'],
+        },
+      ],
+      processing: [
+        {
+          trigger: 'plot:mousemove',
+          action: ['rect-mask:resize'],
+        },
+      ],
+      end: [
+        {
+          trigger: 'plot:mouseup',
+          action: ['brush-x:filter', 'brush:end', 'rect-mask:end', 'rect-mask:hide', 'reset-button:show'],
+        },
+      ],
+      rollback: [{ trigger: 'reset-button:click', action: ['brush:reset', 'reset-button:hide'] }],
+    });
+    chartInstanceRef.current.interaction('brush');
+    if (baseLine) {
+      chartInstanceRef.current.annotation().line({
+        start: ['min', baseLine],
+        end: ['max', baseLine],
+        style: {
+          stroke: '#e6522b',
+          lineWidth: 1,
+          lineDash: [3, 3],
+        },
+      });
+    }
+    showScaleByBaseLine();
+    chartInstanceRef.current.interaction('brush');
+    renderChart(chartInstanceRef.current);
+    chartInstanceRef.current.render();
+  };
 
-  componentDidUpdate() {
-    this.updateChart();
-  }
+  useEffect(() => {
+    renderChartContent();
+  }, []);
 
-  showScaleByBaseLine = () => {
-    const { isDefaultScale, yAxisMaximum, baseLine } = this.props;
+  useEffect(() => {
+    updateChart();
+  }, [options, baseLine])
+
+  useImperativeHandle(ref, () => ({
+    updateBaseline: (baseLine) => {
+      updateChart(baseLine);
+    },
+  }))
+
+  const showScaleByBaseLine = (curbaseLine?) => {
+    let baseLine = curbaseLine || props.baseLine
     if (isDefaultScale) {
-      this.chartInstance.scale({
+      chartInstanceRef.current?.scale({
         value: {
           min: 0,
           max: 100,
           tickInterval: 25,
         },
       });
-    } else if (yAxisMaximum === 0 && baseLine) {
-      this.chartInstance.scale('value', {
+    } else if ((yAxisMaximum === undefined ||  yAxisMaximum === 0) && baseLine) {
+      chartInstanceRef.current?.scale('value', {
         ticks: [0, baseLine, Math.round(baseLine * 1.5)],
       });
     } else {
-      this.chartInstance.scale('value', { ticks: [] }); // If yAxisMaximum is not 0, you do not need to set scale
+      chartInstanceRef.current?.scale('value', { ticks: [] }); // If yAxisMaximum is not 0, you do not need to set scale
     }
   };
 
-  updateChart = () => {
-    const { options, baseLine } = this.props;
+  const updateChart = (curbaseLine?) => {
+    let baseLine = curbaseLine || props.baseLine
+    if (!chartInstanceRef.current) return;
     if (baseLine !== undefined) {
       // HACK: baseLine could be 0
-      this.chartInstance.annotation().clear(true);
-      this.chartInstance.annotation().line({
+      chartInstanceRef.current?.annotation().clear(true);
+      chartInstanceRef.current?.annotation().line({
         start: ['min', baseLine],
         end: ['max', baseLine],
         style: {
@@ -63,51 +117,27 @@ class LineChart extends React.Component<IProps> {
           zIndex: 999,
         },
       });
-      this.showScaleByBaseLine();
+      showScaleByBaseLine(baseLine);
     }
     // HACK: updateOptions not work, https://github.com/antvis/G2/issues/2844
     if (options) {
-      this.chartInstance.padding = options.padding as any;
+      chartInstanceRef.current.padding = options.padding as any;
     }
     // HACK: G2 Chart autoFit don't take effect , refer: https://github.com/antvis/g2/commit/92d607ec5408d1ec949ebd95209c84b04c73b944, but not work
-    if (this.chartInstance.height < 100) {
+    if (chartInstanceRef.current.height < 100) {
       const e = document.createEvent('Event');
       e.initEvent('resize', true, true);
       window.dispatchEvent(e);
     }
-    this.chartInstance.render(true);
-  };
-
-  renderChart = () => {
-    const { options, baseLine } = this.props;
-    this.chartInstance = new Chart({
-      container: this.chartRef.current,
-      autoFit: true,
-      padding: [20, 0, 0, 0],
-      ...options,
-    });
-    if (baseLine) {
-      this.chartInstance.annotation().line({
-        start: ['min', baseLine],
-        end: ['max', baseLine],
-        style: {
-          stroke: '#e6522b',
-          lineWidth: 1,
-          lineDash: [3, 3],
-        },
-      });
+    if (chartRef.current) {
+      chartInstanceRef.current.changeSize(chartRef.current.clientWidth, chartRef.current.clientHeight);
     }
-    this.showScaleByBaseLine();
-    this.chartInstance.interaction('brush');
-    this.props.renderChart(this.chartInstance);
-    this.chartInstance.render();
+    chartInstanceRef.current!.render(true);
   };
 
-  render() {
-    return (
-      <div className="nebula-chart nebula-chart-line" ref={this.chartRef} />
-    );
-  }
+  return (
+    <div className="nebula-chart nebula-chart-line" ref={ref => chartRef.current = ref} />
+  );
 }
 
-export default LineChart;
+export default forwardRef(LineChart);

@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import _ from 'lodash';
-import { ILineChartMetric, IStatRangeItem } from '@/utils/interface';
+import { ILineChartMetric, IStatRangeItem, MetricScene } from '@/utils/interface';
 import { VALUE_TYPE } from '@/utils/promQL';
 
 export const DETAIL_DEFAULT_RANGE = 60 * 60 * 24 * 1000;
@@ -8,6 +8,7 @@ export const CARD_RANGE = 60 * 60 * 24 * 1000;
 export const CARD_POLLING_INTERVAL = 10000 * 1000;
 export const MAX_STEP_ALLOW = 11000;
 export const TIME_INTERVAL_OPTIONS = [5, 60, 600, 3600];
+export const AGGREGATION_OPTIONS = ['sum', 'rate', 'avg', 'p75', 'p95', 'p99', 'p999'];
 
 export const THRESHOLDS = {
   low: 60,
@@ -21,33 +22,21 @@ export const CARD_HIGH_COLORS = 'rgba(230,113,113,1)';
 export const getProperStep = (start: number, end: number) => {
   const hours = Math.round((end - start) / (3600 * 1000));
   if (hours <= 1) {
-    return 7;
+    return 30;
   }
   if (hours <= 6) {
     // 6 hour
-    return 86;
+    return 30;
   }
   if (hours <= 12) {
     // 12hour
-    return 172;
+    return 40;
   }
   if (hours <= 24) {
     // 1 day
-    return 345;
+    return 60;
   }
-  if (hours <= 72) {
-    // 3 days
-    return 691;
-  }
-  if (hours <= 168) {
-    // 1 week
-    return 2419;
-  }
-  if (hours <= 336) {
-    // 2 week
-    return 4838;
-  }
-  return Math.round((end - start) / MAX_STEP_ALLOW);
+  return Math.ceil(hours / 24) * 60;
 };
 
 export const renderUnit = type => {
@@ -66,11 +55,6 @@ export const renderUnit = type => {
   }
 };
 export const VERSION_REGEX = /\d+\.{1}\d+\.{1}\d+/;
-// 0.0.1 means unknow version
-export function getVersion(v: string) {
-  const match = v?.match(VERSION_REGEX);
-  return match ? match[0] : v;
-}
 
 export const getBaseLineByUnit = (config: {
   baseLine: number;
@@ -148,18 +132,28 @@ export const getProperByteDesc = (bytes: any, conversion: number) => {
 
 export const getDataByType = (payload: {
   data: IStatRangeItem[];
-  type?: string;
-  name: string;
+  type?: string | string[];
+  nameObj: {
+    name: string;
+    showName: (name: string) => string;
+  };
   aliasConfig?: any;
 }) => {
-  const { name, type, data, aliasConfig } = payload;
+  const { nameObj, type, data, aliasConfig } = payload;
+  const { name, showName } = nameObj;
   const res = [] as ILineChartMetric[];
   data.forEach(instance => {
     instance.values.forEach(([timstamps, value]) => {
       const _name = instance.metric[name];
-      if ((type === 'all' && _name !== 'total') || _name === type) {
+      let shouldPush = false;
+      if (typeof type === 'string') {
+        shouldPush = (type === 'all' && _name !== 'total') || _name === type;
+      } else if (Array.isArray(type)) {
+        shouldPush = (type.includes('all') && _name !== 'total') || !!type.find(t => _name.includes(t))
+      }
+      if (shouldPush) {
         res.push({
-          type: aliasConfig && aliasConfig[_name] ? aliasConfig[_name] : _name,
+          type: showName(aliasConfig && aliasConfig[_name] ? aliasConfig[_name] : _name),
           value: Number(value),
           time: timstamps,
         });
@@ -168,6 +162,40 @@ export const getDataByType = (payload: {
   });
   return res;
 };
+
+export let getDiskData = (payload: {
+  data: IStatRangeItem[];
+  type?: string | string[];
+  aliasConfig?: any;
+  nameObj: {
+    name: string;
+    showName: (name: string) => string;
+  };
+}) => {
+  const { type, data, nameObj } = payload;
+  const { name, showName } = nameObj;
+  const res = [] as ILineChartMetric[];
+  data.forEach(instance => {
+    instance.values.forEach(([timstamps, value]) => {
+      const device = instance.metric['device'];
+      const _name = instance.metric[name];
+      let shouldPush = false;
+      if (typeof type === 'string') {
+        shouldPush = (type === 'all' && _name !== 'total') || _name === type;
+      } else if (Array.isArray(type)) {
+        shouldPush = (type.includes('all') && _name !== 'total') || !!type.find(t => _name.includes(t))
+      }
+      if (shouldPush) {
+        res.push({
+          type: `${showName(_name)}-${device}`,
+          value: Number(value),
+          time: timstamps,
+        });
+      }
+    });
+  });
+  return res;
+}
 
 export const getProperTickInterval = period => {
   switch (period) {
@@ -181,41 +209,51 @@ export const getProperTickInterval = period => {
   }
 };
 
+export enum TIME_OPTION_TYPE {
+  HOUR1 = '1hour',
+  HOUR6 = '6hour',
+  HOUR12 = '12hour',
+  DAY1 = '1day',
+  DAY3 = '3day',
+  DAY7 = '7day',
+  DAY14 = '14day',
+}
+
 export const TIMEOPTIONS = [
   {
-    name: '1hour',
+    name: TIME_OPTION_TYPE.HOUR1,
     value: 60 * 60 * 1000,
   },
   {
-    name: '6hour',
+    name: TIME_OPTION_TYPE.HOUR6,
     value: 60 * 60 * 6 * 1000,
   },
   {
-    name: '12hour',
+    name: TIME_OPTION_TYPE.HOUR12,
     value: 60 * 60 * 12 * 1000,
   },
   {
-    name: '1day',
+    name: TIME_OPTION_TYPE.DAY1,
     value: 60 * 60 * 24 * 1000,
   },
   {
-    name: '3day',
+    name: TIME_OPTION_TYPE.DAY3,
     value: 60 * 60 * 24 * 3 * 1000,
   },
   {
-    name: '7day',
+    name: TIME_OPTION_TYPE.DAY7,
     value: 60 * 60 * 24 * 7 * 1000,
   },
   {
-    name: '14day',
+    name: TIME_OPTION_TYPE.DAY14,
     value: 60 * 60 * 24 * 14 * 1000,
   },
 ];
 
-export const NEED_ADD_SUM_QUERYS = [
+export let NEED_ADD_SUM_QUERYS = [
   // For Instanc
   'memory_used',
-  'memory_actual_used',
+  // 'memory_actual_used',
   'memory_free',
   'disk_used',
   'disk_free',
@@ -232,6 +270,17 @@ export const NEED_ADD_SUM_QUERYS = [
   'num_slow_queries',
 ];
 
+export const calcTimeRange = (timeRange: TIME_OPTION_TYPE | [number, number]): [number, number] => {
+  const end = Date.now();
+  if (typeof timeRange === 'string') {
+    const value = TIMEOPTIONS.find(t => t.name === timeRange)?.value!;
+    return [end - value, end];
+  } else if (typeof timeRange === 'object' && timeRange.length === 2) {
+    return timeRange;
+  }
+  throw new Error('timeRange is not valid');
+}
+
 export enum MACHINE_TYPE {
   cpu = 'cpu',
   memory = 'memory',
@@ -242,7 +291,7 @@ export enum MACHINE_TYPE {
   network = 'network',
 }
 
-export const VERSIONS = ['v2.0.1', 'v2.5.1', 'v2.6.1', 'v3.0.0', 'v3.1.0'];
+export const VERSIONS = ['v2.0.1', 'v2.5.1', 'v2.6.1', 'v3.0.0', 'v3.1.0', 'v3.2.0'];
 
 export const getDefaultTimeRange = (interval?: number) => {
   const end = Date.now();
@@ -292,3 +341,81 @@ export const getMaxNumAndLength = (payload: {
   }
   return { maxNum, maxNumLen };
 };
+
+export function compareVersion(v1, v2) {
+  // if not version format, return -1;
+  if (!v1.match(VERSION_REGEX) || !v2.match(VERSION_REGEX)) {
+    return -1;
+  }
+  v1 = v1.split('.');
+  v2 = v2.split('.');
+  const len = Math.max(v1.length, v2.length);
+
+  while (v1.length < len) {
+    v1.push('0');
+  }
+  while (v2.length < len) {
+    v2.push('0');
+  }
+
+  for (let i = 0; i < len; i++) {
+    const num1 = parseInt(v1[i], 10);
+    const num2 = parseInt(v2[i], 10);
+
+    if (num1 > num2) {
+      return 1;
+    }
+    if (num1 < num2) {
+      return -1;
+    }
+  }
+
+  return 0;
+}
+
+export const UNKONW_VERSION = 'unknow';
+
+// 0.0.1 means unknow version
+export function getVersion(v: string) {
+  const match = v?.match(VERSION_REGEX);
+  return match ? match[0] : v;
+}
+
+export let getMetricsUniqName = (scene: MetricScene) => {
+  if (scene === MetricScene.SERVICE) {
+    return {
+      name: 'instanceName',
+      showName: (name) => name
+    }
+  }
+  return {
+    name: 'instance',
+    showName: (name) => name
+  }
+}
+
+export const getConfigData=(data)=>{
+  let list = [] as any;
+  data.split('\n')?.forEach(item =>{
+    const [name, value] =item.split('=')
+    if(name){
+      list.push({name, value})
+    }
+  })
+  return list;
+}
+
+export let getMachineRouterPath = (path: string, id?): string => `/clusters/${id}${path}`;
+
+export const updateService = (service: { 
+  getMetricsUniqName: typeof getMetricsUniqName,
+  getMachineRouterPath: typeof getMachineRouterPath,
+  getDiskData: typeof getDiskData,
+  NEED_ADD_SUM_QUERYS: typeof NEED_ADD_SUM_QUERYS,
+}) => {
+  getMetricsUniqName = service.getMetricsUniqName;
+  getMachineRouterPath = service.getMachineRouterPath;
+  getDiskData = service.getDiskData;
+  NEED_ADD_SUM_QUERYS = service.NEED_ADD_SUM_QUERYS;
+}
+

@@ -2,23 +2,25 @@ import { connect } from 'react-redux';
 import { IRootState } from '@/store';
 
 import LineCard from '@/components/DashboardCard/LineCard';
-import { getDataByType } from '@/utils/dashboard';
+import { getDataByType, getMetricsUniqName } from '@/utils/dashboard';
 import { VALUE_TYPE } from '@/utils/promQL';
+import { MetricScene } from '@/utils/interface';
 
 const mapState = (state: IRootState) => {
-  const { cpuStat } = state.machine;
+  const { cpuStat, metricsFilterValues } = state.machine;
   const { cpuBaseLine } = state.setting;
   const { aliasConfig } = state.app;
+
   return {
     baseLine: cpuBaseLine,
     data: getDataByType({
       data: cpuStat,
-      type: 'all',
-      name: 'instance',
+      type: metricsFilterValues.instanceList,
+      nameObj: getMetricsUniqName(MetricScene.CPU),
       aliasConfig,
     }),
     valueType: VALUE_TYPE.percentage,
-    loading: !!state.loading.effects.machine.asyncGetCPUStatByRange,
+    loading: false,
   };
 };
 export default connect(mapState)(LineCard);

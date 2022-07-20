@@ -11,118 +11,119 @@ export const enum VALUE_TYPE {
   numberSecond = 'numberSecond',
 }
 
-export const SUPPORT_METRICS = {
-  cpu: [
-    {
-      metric: 'cpu_utilization',
-      valueType: VALUE_TYPE.percentage,
-    },
-    {
-      metric: 'cpu_idle',
-      valueType: VALUE_TYPE.percentage,
-    },
-    {
-      metric: 'cpu_wait',
-      valueType: VALUE_TYPE.percentage,
-    },
-    {
-      metric: 'cpu_user',
-      valueType: VALUE_TYPE.percentage,
-    },
-    {
-      metric: 'cpu_system',
-      valueType: VALUE_TYPE.percentage,
-    },
-  ],
-  memory: [
-    {
-      metric: 'memory_utilization',
-      valueType: VALUE_TYPE.percentage,
-    },
-    {
-      metric: 'memory_used',
-      valueType: VALUE_TYPE.byte,
-    },
-    {
-      metric: 'memory_actual_used',
-      valueType: VALUE_TYPE.byte,
-    },
-    {
-      metric: 'memory_free',
-      valueType: VALUE_TYPE.byte,
-    },
-  ],
-  load: [
-    {
-      metric: 'load_1m',
-      valueType: VALUE_TYPE.number,
-    },
-    {
-      metric: 'load_5m',
-      valueType: VALUE_TYPE.number,
-    },
-    {
-      metric: 'load_15m',
-      valueType: VALUE_TYPE.number,
-    },
-  ],
-  disk: [
-    {
-      metric: 'disk_used',
-      valueType: VALUE_TYPE.byte,
-    },
-    {
-      metric: 'disk_free',
-      valueType: VALUE_TYPE.byte,
-    },
-    {
-      metric: 'disk_readbytes',
-      valueType: VALUE_TYPE.byteSecond,
-    },
-    {
-      metric: 'disk_writebytes',
-      valueType: VALUE_TYPE.byteSecond,
-    },
-    {
-      metric: 'disk_readiops',
-      valueType: VALUE_TYPE.numberSecond,
-    },
-    {
-      metric: 'disk_writeiops',
-      valueType: VALUE_TYPE.numberSecond,
-    },
-    {
-      metric: 'inode_utilization',
-      valueType: VALUE_TYPE.percentage,
-    },
-  ],
-  network: [
-    {
-      metric: 'network_in_rate',
-      valueType: VALUE_TYPE.byteSecond,
-    },
-    {
-      metric: 'network_out_rate',
-      valueType: VALUE_TYPE.byteSecond,
-    },
-    {
-      metric: 'network_in_errs',
-      valueType: VALUE_TYPE.numberSecond,
-    },
-    {
-      metric: 'network_out_errs',
-      valueType: VALUE_TYPE.numberSecond,
-    },
-    {
-      metric: 'network_in_packets',
-      valueType: VALUE_TYPE.numberSecond,
-    },
-    {
-      metric: 'network_out_packets',
-      valueType: VALUE_TYPE.numberSecond,
-    },
-  ],
-};
+export let SUPPORT_METRICS =
+  {
+    cpu: [
+      {
+        metric: 'cpu_utilization',
+        valueType: VALUE_TYPE.percentage,
+      },
+      {
+        metric: 'cpu_idle',
+        valueType: VALUE_TYPE.percentage,
+      },
+      {
+        metric: 'cpu_wait',
+        valueType: VALUE_TYPE.percentage,
+      },
+      {
+        metric: 'cpu_user',
+        valueType: VALUE_TYPE.percentage,
+      },
+      {
+        metric: 'cpu_system',
+        valueType: VALUE_TYPE.percentage,
+      },
+    ],
+    memory: [
+      {
+        metric: 'memory_utilization',
+        valueType: VALUE_TYPE.percentage,
+      },
+      {
+        metric: 'memory_used',
+        valueType: VALUE_TYPE.byte,
+      },
+      {
+        metric: 'memory_free',
+        valueType: VALUE_TYPE.byte,
+      },
+    ],
+    load: [
+      {
+        metric: 'load_1m',
+        valueType: VALUE_TYPE.number,
+      },
+      {
+        metric: 'load_5m',
+        valueType: VALUE_TYPE.number,
+      },
+      {
+        metric: 'load_15m',
+        valueType: VALUE_TYPE.number,
+      },
+    ],
+    disk: [
+      {
+        metric: 'disk_used_percentage',
+        valueType: VALUE_TYPE.percentage,
+      },
+      {
+        metric: 'disk_used',
+        valueType: VALUE_TYPE.byte,
+      },
+      {
+        metric: 'disk_free',
+        valueType: VALUE_TYPE.byte,
+      },
+      {
+        metric: 'disk_readbytes',
+        valueType: VALUE_TYPE.byteSecond,
+      },
+      {
+        metric: 'disk_writebytes',
+        valueType: VALUE_TYPE.byteSecond,
+      },
+      {
+        metric: 'disk_readiops',
+        valueType: VALUE_TYPE.numberSecond,
+      },
+      {
+        metric: 'disk_writeiops',
+        valueType: VALUE_TYPE.numberSecond,
+      },
+      {
+        metric: 'inode_utilization',
+        valueType: VALUE_TYPE.percentage,
+      },
+    ],
+    network: [
+      {
+        metric: 'network_in_rate',
+        valueType: VALUE_TYPE.byteSecond,
+      },
+      {
+        metric: 'network_out_rate',
+        valueType: VALUE_TYPE.byteSecond,
+      },
+      {
+        metric: 'network_in_errs',
+        valueType: VALUE_TYPE.numberSecond,
+      },
+      {
+        metric: 'network_out_errs',
+        valueType: VALUE_TYPE.numberSecond,
+      },
+      {
+        metric: 'network_in_packets',
+        valueType: VALUE_TYPE.numberSecond,
+      },
+      {
+        metric: 'network_out_packets',
+        valueType: VALUE_TYPE.numberSecond,
+      },
+    ],
+  };
 
 export const SERVICE_SUPPORT_METRICS = {
   graph: [
@@ -222,29 +223,6 @@ export const SERVICE_SUPPORT_METRICS = {
     },
   ],
   storage: [
-    // Hack：atomic operaion is not guarateed in nebula now,thus it's will always return 0 unlesss user config it
-    // {
-    //   metric: 'add_edges_atomic_latency_us',
-    //   valueType: VALUE_TYPE.number,
-    //   metricType: [
-    //     {
-    //       key: 'avg',
-    //       value: 'nebula_storaged_add_edges_atomic_latency_us_avg_'
-    //     },
-    //     {
-    //       key: 'p75',
-    //       value: 'nebula_storaged_add_edges_atomic_latency_us_p75_'
-    //     },
-    //     {
-    //       key: 'p95',
-    //       value: 'nebula_storaged_add_edges_atomic_latency_us_p95_'
-    //     },
-    //     {
-    //       key: 'p99',
-    //       value: 'nebula_storaged_add_edges_atomic_latency_us_p99_'
-    //     },
-    //   ],
-    // },
     {
       metric: 'add_edges_latency_us',
       valueType: VALUE_TYPE.number,
@@ -418,86 +396,52 @@ export const SERVICE_SUPPORT_METRICS = {
   ],
 };
 
-export const MAC_OS = {
-  // cpu relative:
-  cpu_utilization:
-    '100 * (1 - sum by (instance)(increase(node_cpu_seconds_total{mode="idle"}[5m])) / sum by (instance)(increase(node_cpu_seconds_total[5m])))',
-  cpu_idle:
-    '100 * (sum by (instance)(increase(node_cpu_seconds_total{mode="idle"}[5m])) / sum by (instance)(increase(node_cpu_seconds_total[5m])))',
-  cpu_wait:
-    '100 * (sum by (instance)(increase(node_cpu_seconds_total{mode="iowait"}[5m])) / sum by (instance)(increase(node_cpu_seconds_total[5m])))',
-  cpu_user:
-    '100 * (sum by (instance)(increase(node_cpu_seconds_total{mode="user"}[5m])) / sum by (instance)(increase(node_cpu_seconds_total[5m])))',
-  cpu_system:
-    '100 * (sum by (instance)(increase(node_cpu_seconds_total{mode="system"}[5m])) / sum by (instance)(increase(node_cpu_seconds_total[5m])))',
+export const getClusterPrefix = () => {
+  return 'nebula_cluster';
+}
 
-  // memory relative
-  memory_util:
-    '(1 - avg_over_time(node_memory_free_bytes[1m]) / avg_over_time(node_memory_total_bytes[1m]) )* 100',
-  memory_size: 'node_memory_total_bytes',
-  disk_usage_rate:
-    '(1 - (node_filesystem_avail_bytes{mountpoint="/",fstype!="rootfs"} ) /  node_filesystem_size_bytes{mountpoint="/",fstype!="rootfs"})* 100',
-  disk_size: 'node_filesystem_size_bytes{mountpoint="/",fstype!="rootfs"}',
-  network_flow_down:
-    'sum by(instance)(rate(node_network_receive_bytes_total{device=~"en[0-9]*"}[1m]))',
-  network_flow_up:
-    'sum by(instance)(rate(node_network_transmit_bytes_total{device=~"en[0-9]*"}[1m]))',
-  node_load5: 'node_load5',
-};
+export let LINUX = (cluster?) : any => {
+  const clusterSuffix1 = cluster ? `,${getClusterPrefix()}='${cluster}'` : '';
+  const clusterSuffix2 = cluster ? `{${getClusterPrefix()}='${cluster}'}` : '';
+  const diskPararms = 'fstype=~"ext.*|xfs",mountpoint !~".*pod.*"';
+  return {
+    // cpu relative:
+    cpu_utilization: `100 * (1 - sum by (instance)(increase(node_cpu_seconds_total{mode="idle"${clusterSuffix1}}[1m])) / sum by (instance)(increase(node_cpu_seconds_total${clusterSuffix2}[1m])))`,
+    cpu_idle: `100 * (sum by (instance)(increase(node_cpu_seconds_total{mode="idle"${clusterSuffix1}}[1m])) / sum by (instance)(increase(node_cpu_seconds_total${clusterSuffix2}[1m])))`,
+    cpu_wait: `100 * (sum by (instance)(increase(node_cpu_seconds_total{mode="iowait"${clusterSuffix1}}[1m])) / sum by (instance)(increase(node_cpu_seconds_total${clusterSuffix2}[1m])))`,
+    cpu_user: `100 * (sum by (instance)(increase(node_cpu_seconds_total{mode="user"${clusterSuffix1}}[1m])) / sum by (instance)(increase(node_cpu_seconds_total${clusterSuffix2}[1m])))`,
+    cpu_system: `100 * (sum by (instance)(increase(node_cpu_seconds_total{mode="system"${clusterSuffix1}}[1m])) / sum by (instance)(increase(node_cpu_seconds_total${clusterSuffix2}[1m])))`,
 
-export const LINUX = {
-  // cpu relative:
-  cpu_utilization:
-    '100 * (1 - sum by (instance)(increase(node_cpu_seconds_total{mode="idle"}[5m])) / sum by (instance)(increase(node_cpu_seconds_total[5m])))',
-  cpu_idle:
-    '100 * (sum by (instance)(increase(node_cpu_seconds_total{mode="idle"}[5m])) / sum by (instance)(increase(node_cpu_seconds_total[5m])))',
-  cpu_wait:
-    '100 * (sum by (instance)(increase(node_cpu_seconds_total{mode="iowait"}[5m])) / sum by (instance)(increase(node_cpu_seconds_total[5m])))',
-  cpu_user:
-    '100 * (sum by (instance)(increase(node_cpu_seconds_total{mode="user"}[5m])) / sum by (instance)(increase(node_cpu_seconds_total[5m])))',
-  cpu_system:
-    '100 * (sum by (instance)(increase(node_cpu_seconds_total{mode="system"}[5m])) / sum by (instance)(increase(node_cpu_seconds_total[5m])))',
+    // memory relative:
+    memory_utilization: `(1 - (node_memory_MemFree_bytes${clusterSuffix2}+ node_memory_Buffers_bytes${clusterSuffix2}+ node_memory_Cached_bytes${clusterSuffix2}) / node_memory_MemTotal_bytes${clusterSuffix2} )* 100`,
+    memory_used: `node_memory_MemTotal_bytes${clusterSuffix2} - node_memory_MemFree_bytes${clusterSuffix2}- node_memory_Buffers_bytes${clusterSuffix2}  - node_memory_Cached_bytes${clusterSuffix2}`,
+    // memory_actual_used: `node_memory_MemTotal_bytes${clusterSuffix2} - node_memory_MemFree_bytes${clusterSuffix2} - node_memory_Buffers_bytes${clusterSuffix2} - node_memory_Cached_bytes${clusterSuffix2}`,
+    memory_free: `node_memory_MemFree_bytes${clusterSuffix2}`,
+    memory_size: `node_memory_MemTotal_bytes${clusterSuffix2}`,
 
-  // memory relative:
-  memory_utilization: `(1 - (node_memory_MemFree_bytes+ node_memory_Buffers_bytes+ node_memory_Cached_bytes) / node_memory_MemTotal_bytes )* 100`,
-  memory_used: `node_memory_MemTotal_bytes - node_memory_MemFree_bytes- node_memory_Buffers_bytes  - node_memory_Cached_bytes`,
-  memory_actual_used: `node_memory_MemTotal_bytes - node_memory_MemFree_bytes - node_memory_Buffers_bytes - node_memory_Cached_bytes`,
-  memory_free: `node_memory_MemFree_bytes`,
-  memory_size: `node_memory_MemTotal_bytes`,
+    // node load relative:
+    load_1m: `node_load1${clusterSuffix2}`,
+    load_5m: `node_load5${clusterSuffix2}`,
+    load_15m: `node_load15${clusterSuffix2}`,
 
-  // node load relative:
-  load_1m: 'node_load1',
-  load_5m: 'node_load5',
-  load_15m: 'node_load15',
+    // disk relative:
+    disk_used: `node_filesystem_size_bytes{${diskPararms}${clusterSuffix1}} - node_filesystem_free_bytes{${diskPararms}${clusterSuffix1}}`,
+    disk_free: `node_filesystem_avail_bytes{${diskPararms}${clusterSuffix1}}`,
+    disk_readbytes: `irate(node_disk_read_bytes_total{device=~"(sd|nvme|hd)[a-z0-9]*"${clusterSuffix1}}[1m])`,
+    disk_writebytes: `irate(node_disk_written_bytes_total{device=~"(sd|nvme|hd)[a-z0-9]*"${clusterSuffix1}}[1m])`,
+    disk_readiops: `irate(node_disk_reads_completed_total{device=~"(sd|nvme|hd)[a-z0-9]*"${clusterSuffix1}}[1m])`,
+    disk_writeiops: `irate(node_disk_writes_completed_total{device=~"(sd|nvme|hd)[a-z0-9]*"${clusterSuffix1}}[1m])`,
+    inode_utilization: `(1- (node_filesystem_files_free{${diskPararms}${clusterSuffix1}}) / (node_filesystem_files{mountpoint="/",fstype!="rootfs"${clusterSuffix1}})) * 100`,
+    disk_used_percentage: `(node_filesystem_size_bytes{${diskPararms}${clusterSuffix1}}-node_filesystem_free_bytes{${diskPararms}${clusterSuffix1}}) *100/(node_filesystem_avail_bytes {${diskPararms}${clusterSuffix1}}+(node_filesystem_size_bytes{${diskPararms}${clusterSuffix1}}-node_filesystem_free_bytes{${diskPararms}${clusterSuffix1}}))`,
 
-  // disk relative:
-  disk_used:
-    'node_filesystem_size_bytes{mountpoint="/",fstype!="rootfs"} - node_filesystem_avail_bytes{mountpoint="/",fstype!="rootfs"}',
-  disk_free: 'node_filesystem_avail_bytes{mountpoint="/",fstype!="rootfs"}',
-  disk_readbytes:
-    'irate(node_disk_read_bytes_total{device=~"(sd|nvme|hd)[a-z0-9]*"}[1m])',
-  disk_writebytes:
-    'irate(node_disk_written_bytes_total{device=~"(sd|nvme|hd)[a-z0-9]*"}[1m])',
-  disk_readiops:
-    'irate(node_disk_reads_completed_total{device=~"(sd|nvme|hd)[a-z0-9]*"}[1m])',
-  disk_writeiops:
-    'irate(node_disk_writes_completed_total{device=~"(sd|nvme|hd)[a-z0-9]*"}[1m])',
-  inode_utilization:
-    '(1- (node_filesystem_files_free{mountpoint="/",fstype!="rootfs"}) / (node_filesystem_files{mountpoint="/",fstype!="rootfs"})) * 100',
-
-  disk_size: 'node_filesystem_size_bytes{mountpoint="/",fstype!="rootfs"}',
-  network_in_rate:
-    'sum by(instance)(irate(node_network_receive_bytes_total{device=~"(eth|en)[a-z0-9]*"}[1m]))',
-  network_out_rate:
-    'sum by(instance)(irate(node_network_transmit_bytes_total{device=~"(eth|en)[a-z0-9]*"}[1m]))',
-  network_in_errs:
-    'sum by(instance)(irate(node_network_receive_errs_total{device=~"(eth|en)[a-z0-9]*"}[1m]))',
-  network_out_errs:
-    'sum by(instance)(irate(node_network_transmit_errs_total{device=~"(eth|en)[a-z0-9]*"}[1m]))',
-  network_in_packets:
-    'sum by(instance)(irate(node_network_receive_packets_total{device=~"(eth|en)[a-z0-9]*"}[1m]))',
-  network_out_packets:
-    'sum by(instance)(irate(node_network_transmit_packets_total{device=~"(eth|en)[a-z0-9]*"}[1m]))',
+    disk_size: `node_filesystem_size_bytes{${diskPararms}${clusterSuffix1}}`,
+    network_in_rate: `ceil(sum by(instance)(irate(node_network_receive_bytes_total{device=~"(eth|en)[a-z0-9]*"${clusterSuffix1}}[1m])))`,
+    network_out_rate: `ceil(sum by(instance)(irate(node_network_transmit_bytes_total{device=~"(eth|en)[a-z0-9]*"${clusterSuffix1}}[1m])))`,
+    network_in_errs: `ceil(sum by(instance)(irate(node_network_receive_errs_total{device=~"(eth|en)[a-z0-9]*"${clusterSuffix1}}[1m])))`,
+    network_out_errs: `ceil(sum by(instance)(irate(node_network_transmit_errs_total{device=~"(eth|en)[a-z0-9]*"${clusterSuffix1}}[1m])))`,
+    network_in_packets: `ceil(sum by(instance)(irate(node_network_receive_packets_total{device=~"(eth|en)[a-z0-9]*"${clusterSuffix1}}[1m])))`,
+    network_out_packets: `ceil(sum by(instance)(irate(node_network_transmit_packets_total{device=~"(eth|en)[a-z0-9]*"${clusterSuffix1}}[1m])))`,
+  }
 };
 
 export const NEBULA_COUNT = {
@@ -505,3 +449,11 @@ export const NEBULA_COUNT = {
   storage: 'nebula_storaged_count',
   meta: 'nebula_metad_count',
 };
+
+export const updatePromql = (service: {
+  SUPPORT_METRICS: typeof SUPPORT_METRICS,
+  LINUX: typeof LINUX
+}) => {
+  SUPPORT_METRICS = service.SUPPORT_METRICS
+  LINUX = service.LINUX
+}

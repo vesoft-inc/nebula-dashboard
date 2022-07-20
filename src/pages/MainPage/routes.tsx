@@ -1,4 +1,4 @@
-import { lazy } from 'react';
+// import { lazy } from 'react';
 import intl from 'react-intl-universal';
 import LoadDetail from '../MachineDashboard/Detail/LoadDetail';
 import MachineDashboard from '@/pages/MachineDashboard';
@@ -63,7 +63,7 @@ export const MenuList = [
   {
     key: 'service',
     title: intl.get('common.service'),
-    icon: '#iconnav-service',
+    icon: '#iconnav-servise',
     children: [
       {
         key: 'service-overview',

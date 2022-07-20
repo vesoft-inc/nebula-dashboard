@@ -1,14 +1,23 @@
 .service-table {
-	height: 100%;
-	overflow-y: auto;
+	min-height: 100%;
+	background-color: #fff;
 	display: flex;
 	flex-direction: column;
+
+  .common-header {
+    background: #fff;
+	margin: 15px 0;
+	justify-content: flex-start;
+    height: auto;
+    padding-bottom: 0;
+  }
 
 	> .service-table-item {
 		flex: 1;
 		background: #fff;
-		margin-bottom: 30px;
-		border: 1px solid #dcdcdc;
+		// margin-bottom: 30px;
+		padding-top: 10px;
+		border-top: 1px solid #dcdcdc;
 
 		> .ant-row {
 			height: calc(100% - 50px);
