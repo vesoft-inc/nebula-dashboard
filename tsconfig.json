@@ -26,7 +26,8 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
-      "@assets/*": ["app/assets/*"]
+      "@assets/*": ["app/assets/*"],
+      "@/*": ["src/*"]
     }
   }
 }
