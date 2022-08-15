@@ -14,10 +14,12 @@ interface IProps {
   onChange?: (values) => void;
   values?: any;
   onRefresh?: (values: any) => void;
+  metrics?: string[];
+  onMetricsChange?: (metrics: string[]) => void;
 }
 
 function ServiceMetricsFilterPanel(props: IProps) {
-  const { spaces, instanceList, onChange, values, onRefresh } = props;
+  const { spaces, instanceList, onChange, values, onRefresh, metrics, onMetricsChange } = props;
 
   const panelRef = useRef<any>()
 
@@ -65,6 +67,8 @@ function ServiceMetricsFilterPanel(props: IProps) {
         ref={panelRef}
         onChange={handleFilterPanelChange}
         onRefresh={onRefresh}
+        metrics={metrics}
+        onMetricsChange={onMetricsChange}
       >
         {
           spaces && (

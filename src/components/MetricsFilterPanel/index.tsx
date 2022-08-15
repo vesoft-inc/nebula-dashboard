@@ -38,11 +38,13 @@ interface IProps {
   initialValues?: any;
   values?: any;
   onRefresh?: (values) => void;
+  metrics?: string[];
+  onMetricsChange?: (metrics: string[]) => void;
 }
 
 const MetricsFilterPanel = (props: IProps, ref) => {
 
-  const { instanceList, onChange, children, values = {}, onRefresh } = props;
+  const { instanceList, onChange, children, values = {}, onRefresh, metrics, onMetricsChange } = props;
 
   const [form] = Form.useForm();
 
@@ -100,6 +102,10 @@ const MetricsFilterPanel = (props: IProps, ref) => {
     onRefresh?.(form.getFieldsValue())
   }
 
+  const handleMetricsSelectChange = (values) => {
+    onMetricsChange?.(values);
+  }
+
   return (
     <Form
       className={styles.metricsFilterPanel}
@@ -129,6 +135,24 @@ const MetricsFilterPanel = (props: IProps, ref) => {
           handleRefresh={handleRefresh}
         />
       </Form.Item>
+      {
+        metrics && (
+          <Form.Item name="metrics" label={intl.get('common.metric')} wrapperCol={{span: 18}}>
+            <Select 
+              allowClear
+              className={styles.metricSelect} 
+              mode="multiple" 
+              onChange={handleMetricsSelectChange}
+              style={{ minWidth: '250px', maxWidth: '500px' }}>
+              {
+                metrics.map((metric, i) => (
+                  <Select.Option value={metric} key={i}>{metric}</Select.Option>
+                ))
+              }
+            </Select>
+          </Form.Item>
+        )
+      }
       {
         children ? children : null
       }

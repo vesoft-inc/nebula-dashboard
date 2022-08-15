@@ -1,4 +1,5 @@
 import { TIME_OPTION_TYPE } from "./dashboard";
+import { VALUE_TYPE } from "./promQL";
 
 export interface IMetric {
   instance: string;
@@ -82,4 +83,9 @@ export enum MetricScene {
   DISK,
   MEMORY,
   LOAD,
+}
+
+export interface IMachineMetricOption {
+  metric: string;
+  valueType: VALUE_TYPE;
 }
