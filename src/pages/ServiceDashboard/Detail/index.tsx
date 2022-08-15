@@ -126,6 +126,12 @@ function ServiceDetail(props: IProps) {
     return map;
   }, [metricOptions]);
 
+  const metricNameList: string[] = useMemo(() => (
+    (metricOptions || []).map((metric) => metric.metric)
+  ), [metricOptions]);
+
+  const [curMetricOptions, setMetricOptions] = useState<IMetricOption[]>(metricOptions);
+
   useEffect(() => {
     const match = /(\w+)-metrics/g.exec(location.pathname);
     let serviceType = '';
@@ -170,6 +176,10 @@ function ServiceDetail(props: IProps) {
       clearTimeout(pollingTimer);
     }
   };
+
+  useEffect(() => {
+    setMetricOptions(metricOptions)
+  }, [metricOptions])
 
   useEffect(() => {
     if (dataSources.length === 0) return;
@@ -265,6 +275,18 @@ function ServiceDetail(props: IProps) {
     asyncGetMetricsData();
   }
 
+  const handleMetricsChange = (values) => {
+    if (values.length === 0) {
+      setMetricOptions(metricOptions);
+    } else {
+      setMetricOptions(metricOptions.filter(metric => values.includes(metric.metric)));
+    }
+  }
+
+  const shouldShow = (metricItem) => {
+    return curMetricOptions.find(item => item.metric === metricItem.metric)
+  }
+
   return (
     <Spin spinning={showLoading} wrapperClassName="service-detail">
       <div className='dashboard-detail'>
@@ -275,12 +297,14 @@ function ServiceDetail(props: IProps) {
             spaces={serviceType === 'graph' ? serviceMetric.spaces : undefined}
             values={metricsFilterValues}
             onRefresh={handleRefresh}
+            metrics={metricNameList}
+            onMetricsChange={handleMetricsChange}
           />
         </div>
         <div className='detail-content'>
           {
             metricCharts.map((metricChart, i) => (
-              <div key={i} className='chart-item'>
+              <div key={i} className='chart-item' style={{ display: shouldShow(metricChart.metric) ? 'flex': 'none' }}>
                 <div className='chart-title'>
                   {metricChart.metric.metric}
                   <Popover

@@ -56,3 +56,13 @@
   width: 120px;
   margin-left: 24px;
 }
+
+.metricSelect {
+  :global {
+    .ant-select-selection-overflow-item {
+      &:not(:first-child) {
+        margin-left: 6px;
+      }
+    }
+  }
+}

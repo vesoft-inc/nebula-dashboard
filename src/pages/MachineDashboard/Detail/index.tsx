@@ -20,6 +20,7 @@ import MetricsFilterPanel from '@/components/MetricsFilterPanel';
 import Icon from '@/components/Icon';
 import BaseLineEditModal from '@/components/BaseLineEditModal';
 import './index.less';
+import { IMachineMetricOption } from '@/utils/interface';
 
 const mapDispatch: any = (dispatch: IDispatch) => ({
   asyncUpdateBaseLine: (key, value) =>
@@ -45,10 +46,7 @@ interface IProps
     metric: string;
     clusterID?: string;
   }) => Promise<any>;
-  metricOptions: {
-    metric: string;
-    valueType: VALUE_TYPE;
-  }[];
+  metricOptions: IMachineMetricOption[];
   loading: true;
   dataTypeObj: any;
 }
@@ -62,6 +60,8 @@ function Detail(props: IProps) {
   const [maxNum, setMaxNum] = useState<number>(0);
   const [dataSources, setDataSources] = useState<any[]>([]);
 
+  const [curMetricOptions, setMetricOptions] = useState<IMachineMetricOption[]>(metricOptions);
+
   const [showLoading, setShowLoading] = useState<boolean>(false);
 
   const metricCharts: any = useMemo(() => (metricOptions || []).map(
@@ -71,6 +71,10 @@ function Detail(props: IProps) {
       index: i,
       baseLine: undefined,
     })
+  ), [metricOptions]);
+
+  const metricNameList: string[] = useMemo(() => (
+    (metricOptions || []).map((metric) => metric.metric)
   ), [metricOptions]);
 
   useEffect(() => {
@@ -191,6 +195,18 @@ function Detail(props: IProps) {
     getData();
   }
 
+  const handleMetricsChange = (values) => {
+    if (values.length === 0) {
+      setMetricOptions(metricOptions);
+    } else {
+      setMetricOptions(metricOptions.filter(metric => values.includes(metric.metric)));
+    }
+  }
+
+  const shouldShow = (metricItem) => {
+    return curMetricOptions.find(item => item.metric === metricItem.metric)
+  }
+
   return (
     <Spin spinning={showLoading} wrapperClassName="machine-detail">
       <div className="dashboard-detail">
@@ -199,13 +215,15 @@ function Detail(props: IProps) {
             onChange={handleMetricChange} 
             instanceList={instances} 
             values={metricsFilterValues} 
-            onRefresh={handleRefreshData} 
+            onRefresh={handleRefreshData}
+            metrics={metricNameList}
+            onMetricsChange={handleMetricsChange}
           />
         </div>
         <div className='detail-content'>
           {
             metricCharts.map((metricChart, i) => (
-              <div key={i} className='chart-item'>
+              <div key={i} className='chart-item' style={{ display: shouldShow(metricChart.metric) ? 'flex': 'none' }}>
                 <div className='chart-title'>
                   {metricChart.metric.metric}
                   <Popover
