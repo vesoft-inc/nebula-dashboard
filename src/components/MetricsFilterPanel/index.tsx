@@ -142,6 +142,7 @@ const MetricsFilterPanel = (props: IProps, ref) => {
               allowClear
               className={styles.metricSelect} 
               mode="multiple" 
+              placeholder={intl.get('base.searchMetric')}
               onChange={handleMetricsSelectChange}
               style={{ minWidth: '250px', maxWidth: '500px' }}>
               {

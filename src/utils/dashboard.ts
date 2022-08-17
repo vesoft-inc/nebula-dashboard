@@ -30,13 +30,13 @@ export const getProperStep = (start: number, end: number) => {
   }
   if (hours <= 12) {
     // 12hour
-    return 40;
+    return 120;
   }
   if (hours <= 24) {
     // 1 day
-    return 60;
+    return 240;
   }
-  return Math.ceil(hours / 24) * 60;
+  return Math.ceil(hours / 24) * 240;
 };
 
 export const renderUnit = type => {

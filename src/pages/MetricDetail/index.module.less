@@ -1,0 +1,66 @@
+.dashboard-detail {
+  height: 100%;
+}
+
+.common-header {
+  background: #fff;
+  padding: 15px;
+  justify-content: flex-start;
+  padding-bottom: 0;
+  height: auto;
+}
+
+.detail-content {
+  margin-top: 24px;
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+
+  :global {
+    .chart-item {
+      height: calc(100vh - 290px);
+      border: 2px solid rgba(0, 0, 0, .06);
+      width: 100%;
+      margin-bottom: 24px;
+      border-radius: 3px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      margin-right: 15px;
+
+      .chart-title {
+        width: 100%;
+        line-height: 30px;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        margin-top: 12px;
+        font-size: 20px;
+      }
+
+      .chart-content {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+
+        .nebula-chart {
+          height: 100%;
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+    }
+  }
+}
