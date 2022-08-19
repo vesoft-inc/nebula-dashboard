@@ -1,7 +1,7 @@
 import { Popover, Spin } from 'antd';
 import React, { useEffect, useMemo, useState } from 'react';
 import intl from 'react-intl-universal';
-import { RouteComponentProps, useLocation, withRouter } from 'react-router-dom';
+import { RouteComponentProps, useHistory, useLocation, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Chart } from '@antv/g2';
 import {
@@ -11,6 +11,7 @@ import {
   getBaseLineByUnit,
   getMaxNum,
   getMetricsUniqName,
+  getMachineRouterPath,
 } from '@/utils/dashboard';
 import { IDispatch, IRootState } from '@/store';
 import { VALUE_TYPE } from '@/utils/promQL';
@@ -62,12 +63,14 @@ function ServiceDetail(props: IProps) {
   const [dataSources, setDataSources] = useState<any[]>([]);
   const [showLoading, setShowLoading] = useState<boolean>(false);
 
+  const history = useHistory();
+
   useEffect(() => {
     setShowLoading(loading && metricsFilterValues.frequency === 0)
   }, [loading, metricsFilterValues.frequency]);
 
   useEffect(() => {
-    const [ start, end ] = calcTimeRange(metricsFilterValues.timeRange);
+    const [start, end] = calcTimeRange(metricsFilterValues.timeRange);
     if (shouldCheckCluster()) {
       if (cluster?.id) {
         asyncGetSpaces({
@@ -164,8 +167,8 @@ function ServiceDetail(props: IProps) {
     } else {
       pollingData();
     }
-  }, [metricsFilterValues.timeRange, metricsFilterValues.frequency, 
-    metricsFilterValues.metricType, metricsFilterValues.period, metricsFilterValues.space, cluster, metricCharts]);
+  }, [metricsFilterValues.timeRange, metricsFilterValues.frequency,
+  metricsFilterValues.metricType, metricsFilterValues.period, metricsFilterValues.space, cluster, metricCharts]);
 
   useEffect(() => () => {
     clearPolling();
@@ -287,6 +290,17 @@ function ServiceDetail(props: IProps) {
     return curMetricOptions.find(item => item.metric === metricItem.metric)
   }
 
+  const getViewPath = (path: string): string => {
+    if (cluster?.id) {
+      return getMachineRouterPath(path, cluster.id);
+    }
+    return path;
+  }
+
+  const handleViewDetail = (metricItem) => () => {
+    history.push(getViewPath(`/metrics-detail/${serviceType}d/${metricItem.metric.metric}`));
+  }
+
   return (
     <Spin spinning={showLoading} wrapperClassName="service-detail">
       <div className='dashboard-detail'>
@@ -304,12 +318,11 @@ function ServiceDetail(props: IProps) {
         <div className='detail-content'>
           {
             metricCharts.map((metricChart, i) => (
-              <div key={i} className='chart-item' style={{ display: shouldShow(metricChart.metric) ? 'flex': 'none' }}>
+              <div key={i} className='chart-item' style={{ display: shouldShow(metricChart.metric) ? 'flex' : 'none' }}>
                 <div className='chart-title'>
                   {metricChart.metric.metric}
                   <Popover
                     className={"chart-title-popover"}
-                    // trigger="click"
                     content={
                       <div>{intl.get(`metric_description.${metricChart.metric.metric}`)}</div>
                     }
@@ -329,12 +342,20 @@ function ServiceDetail(props: IProps) {
                     renderChart={renderChart(i)}
                   />
                 </div>
-                <div
-                  className="btn-icon-with-desc blue base-line"
-                  onClick={handleBaseLineEdit(metricChart)}
-                >
-                  <Icon icon="#iconSetup" />
-                  <span>{intl.get('common.baseLine')}</span>
+                <div className="action-icons">
+                  <div
+                    className="btn-icon-with-desc blue view-detail"
+                    onClick={handleViewDetail(metricChart)}
+                  >
+                    <Icon icon="#iconwatch" />
+                  </div>
+                  <div
+                    className="btn-icon-with-desc blue base-line"
+                    onClick={handleBaseLineEdit(metricChart)}
+                  >
+                    <Icon icon="#iconSetup" />
+                    <span>{intl.get('common.baseLine')}</span>
+                  </div>
                 </div>
               </div>
             ))

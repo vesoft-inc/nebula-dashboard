@@ -9,6 +9,7 @@ import {
   getBaseLineByUnit,
   getDataByType,
   getDiskData,
+  getMachineRouterPath,
   getProperTickInterval,
 } from '@/utils/dashboard';
 import { configDetailChart, updateDetailChart } from '@/utils/chart/chart';
@@ -21,6 +22,7 @@ import Icon from '@/components/Icon';
 import BaseLineEditModal from '@/components/BaseLineEditModal';
 import './index.less';
 import { IMachineMetricOption } from '@/utils/interface';
+import { RouteProps, useHistory } from 'react-router-dom';
 
 const mapDispatch: any = (dispatch: IDispatch) => ({
   asyncUpdateBaseLine: (key, value) =>
@@ -38,7 +40,7 @@ const mapState = (state: IRootState) => ({
 });
 interface IProps
   extends ReturnType<typeof mapState>,
-  ReturnType<typeof mapDispatch> {
+  ReturnType<typeof mapDispatch>, RouteProps {
   type: string;
   asyncGetDataSourceByRange: (params: {
     start: number;
@@ -63,6 +65,8 @@ function Detail(props: IProps) {
   const [curMetricOptions, setMetricOptions] = useState<IMachineMetricOption[]>(metricOptions);
 
   const [showLoading, setShowLoading] = useState<boolean>(false);
+
+  const history = useHistory();
 
   const metricCharts: any = useMemo(() => (metricOptions || []).map(
     (metric, i) => ({
@@ -159,23 +163,27 @@ function Detail(props: IProps) {
     const [startTimestamps, endTimestamps] = calcTimeRange(metricsFilterValues.timeRange);
     metricCharts.forEach((chart, i) => {
       if (chart.chartInstance) {
-        const data = type === 'disk' ? 
-        getDiskData({
-          data: dataSources[i] || [],
-          type: metricsFilterValues.instanceList,
-          nameObj: dataTypeObj,
-          aliasConfig,
-        }) :
-        getDataByType({
-          data: dataSources[i] || [],
-          type: metricsFilterValues.instanceList,
-          nameObj: dataTypeObj,
-          aliasConfig,
-        });
-        setMaxNum(100);
+        const data = type === 'disk' ?
+          getDiskData({
+            data: dataSources[i] || [],
+            type: metricsFilterValues.instanceList,
+            nameObj: dataTypeObj,
+            aliasConfig,
+          }) :
+          getDataByType({
+            data: dataSources[i] || [],
+            type: metricsFilterValues.instanceList,
+            nameObj: dataTypeObj,
+            aliasConfig,
+          });
+        const values = data.map(d => d.value) as number[] ;
+        const maxNum = values.length > 0 ? Math.floor(Math.max(...values) * 100) / 100 : undefined;
+        const minNum = values.length > 0 ? Math.floor(Math.min(...values) * 100) / 100 : undefined;
         updateDetailChart(chart.chartInstance, {
           type,
           tickInterval: getProperTickInterval(endTimestamps - startTimestamps),
+          maxNum,
+          minNum
         }).changeData(data);
         chart.chartInstance.autoFit = true;
       }
@@ -203,18 +211,29 @@ function Detail(props: IProps) {
     }
   }
 
+  const getViewPath = (path: string): string => {
+    if (cluster?.id) {
+      return getMachineRouterPath(path, cluster.id);
+    }
+    return path;
+  }
+
   const shouldShow = (metricItem) => {
     return curMetricOptions.find(item => item.metric === metricItem.metric)
+  }
+
+  const handleViewDetail = (metricItem) => () => {
+    history.push(getViewPath(`/metrics-detail/${type}/${metricItem.metric.metric}`));
   }
 
   return (
     <Spin spinning={showLoading} wrapperClassName="machine-detail">
       <div className="dashboard-detail">
         <div className="filter">
-          <MetricsFilterPanel 
-            onChange={handleMetricChange} 
-            instanceList={instances} 
-            values={metricsFilterValues} 
+          <MetricsFilterPanel
+            onChange={handleMetricChange}
+            instanceList={instances}
+            values={metricsFilterValues}
             onRefresh={handleRefreshData}
             metrics={metricNameList}
             onMetricsChange={handleMetricsChange}
@@ -223,7 +242,7 @@ function Detail(props: IProps) {
         <div className='detail-content'>
           {
             metricCharts.map((metricChart, i) => (
-              <div key={i} className='chart-item' style={{ display: shouldShow(metricChart.metric) ? 'flex': 'none' }}>
+              <div key={i} className='chart-item' style={{ display: shouldShow(metricChart.metric) ? 'flex' : 'none' }}>
                 <div className='chart-title'>
                   {metricChart.metric.metric}
                   <Popover
@@ -247,12 +266,20 @@ function Detail(props: IProps) {
                     renderChart={renderChart(i)}
                   />
                 </div>
-                <div
-                  className="btn-icon-with-desc blue base-line"
-                  onClick={handleBaseLineEdit(metricChart)}
-                >
-                  <Icon icon="#iconSetup" />
-                  <span>{intl.get('common.baseLine')}</span>
+                <div className="action-icons">
+                  <div
+                      className="btn-icon-with-desc blue view-detail"
+                      onClick={handleViewDetail(metricChart)}
+                    >
+                      <Icon icon="#iconwatch" />
+                  </div>
+                  <div
+                    className="btn-icon-with-desc blue base-line"
+                    onClick={handleBaseLineEdit(metricChart)}
+                  >
+                    <Icon icon="#iconSetup" />
+                    <span>{intl.get('common.baseLine')}</span>
+                  </div>
                 </div>
               </div>
             ))

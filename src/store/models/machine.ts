@@ -51,7 +51,6 @@ export function MachineModelWrapper(service,) {
           ...state.metricsFilterValues,
           ...payload.metricsFilterValues
         }
-        debugger;
         return {
           ...state,
         metricsFilterValues

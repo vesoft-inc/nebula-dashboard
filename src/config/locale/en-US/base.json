@@ -4,5 +4,8 @@
   "spaceChartInstance": "instance",
   "spaceChartDiskname": "Disk Name",
   "spaceChartMountpoint": "Mount Point",
-  "spaceChartDiskused": "Disk Used"
+  "spaceChartDiskused": "Disk Used",
+  "metricDetail": "Metric Detail",
+  "metricMonitor": "Metric Monitor",
+  "searchMetric": "Please Search Metric"
 }

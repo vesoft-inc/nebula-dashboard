@@ -1,4 +1,3 @@
-// import { lazy } from 'react';
 import intl from 'react-intl-universal';
 import LoadDetail from '../MachineDashboard/Detail/LoadDetail';
 import MachineDashboard from '@/pages/MachineDashboard';
@@ -15,6 +14,7 @@ import CPUDetail from '@/pages/MachineDashboard/Detail/CPUDetail';
 import DiskDetail from '@/pages/MachineDashboard/Detail/DiskDetail';
 import NetworkDetail from '@/pages/MachineDashboard/Detail/NetworkDetail';
 import MemoryDetail from '@/pages/MachineDashboard/Detail/MemoryDetail';
+import MetricDetail from '@/pages/MetricDetail';
 
 export const MenuList = [
   {
@@ -163,6 +163,21 @@ export const RoutesList: any = [
     },
   },
   {
+    path: '/metrics-detail/:metricType/:metricName',
+    component: MetricDetail,
+    exact: true,
+    headerConfig: {
+      breadcrumb: [
+        {
+          path: '#',
+          breadcrumbName: intl.get('common.dashboard'),
+        },
+      ],
+      showBackBtn: true,
+      title: intl.get('common.machine'),
+    },
+  },
+  {
     path: '/machine/cpu',
     component: CPUDetail,
     exact: true,
@@ -294,6 +309,21 @@ export const RoutesList: any = [
       ],
       title: intl.get('common.service'),
       extra: SERVICE_VIEWS,
+    },
+  },
+  {
+    path: '/service-metrics/detail/:metricName',
+    component: MetricDetail,
+    exact: true,
+    headerConfig: {
+      breadcrumb: [
+        {
+          path: '#',
+          breadcrumbName: intl.get('common.dashboard'),
+        },
+      ],
+      showBackBtn: true,
+      title: intl.get('common.machine'),
     },
   },
   {
