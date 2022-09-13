@@ -45,7 +45,7 @@ export interface IMetricOption {
   metric: string;
   isSpaceMetric: boolean;
   metricType: IMetricType[];
-  valueType: string;
+  valueType: VALUE_TYPE;
 }
 
 export interface MetricsPanelValue {
@@ -88,4 +88,14 @@ export enum MetricScene {
 export interface IMachineMetricOption {
   metric: string;
   valueType: VALUE_TYPE;
+}
+
+export interface IServiceMetricItem {
+  metric: string;
+  valueType: VALUE_TYPE;
+  isSpaceMetric: boolean;
+  isRawMetric: boolean;
+  aggregations: string[];
+  prefixMetric: string;
+  metricFunction?: string;
 }
