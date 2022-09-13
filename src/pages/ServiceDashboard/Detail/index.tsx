@@ -12,10 +12,11 @@ import {
   getMaxNum,
   getMetricsUniqName,
   getMachineRouterPath,
+  AggregationType,
 } from '@/utils/dashboard';
 import { IDispatch, IRootState } from '@/store';
 import { VALUE_TYPE } from '@/utils/promQL';
-import { IMetricOption, MetricScene, ServiceMetricsPanelValue } from '@/utils/interface';
+import { IMetricOption, IServiceMetricItem, MetricScene, ServiceMetricsPanelValue } from '@/utils/interface';
 
 import LineChart from '@/components/Charts/LineChart';
 import { configDetailChart, updateDetailChart } from '@/utils/chart/chart';
@@ -87,42 +88,36 @@ function ServiceDetail(props: IProps) {
     }
   }, [metricsFilterValues.timeRange, cluster])
 
-  const metricOptions = useMemo<IMetricOption[]>(() => {
+  const metricOptions = useMemo<IServiceMetricItem[]>(() => {
     if (serviceMetric.graphd.length === 0
       || serviceMetric.storaged.length === 0
       || serviceMetric.metad.length === 0) {
       return [];
     }
-    let options = [];
+    let options: IServiceMetricItem[] = [];
     if (serviceType) {
-      options = serviceMetric[`${serviceType}d`].map(item => {
-        return {
-          metric: item.metric,
-          isSpaceMetric: item.isSpaceMetric,
-          metricType: item.metricType,
-          valueType: item.valueType,
-        }
-      })
+      options = serviceMetric[`${serviceType}d`];
     }
     return options;
   }, [serviceType, serviceMetric.graphd, serviceMetric.metad, serviceMetric.storaged]);
 
-  const metricTypeMap = useMemo(() => {
-    const map = {};
+  const metricTypeMap: Map<AggregationType, IServiceMetricItem[]> = useMemo(() => {
+    const map: Map<AggregationType, IServiceMetricItem[]> = {} as any;
     metricOptions.forEach(option => {
-      option.metricType.forEach(type => {
-        const { key, value } = type;
-        const metricItem = {
-          metric: option.metric,
-          isSpaceMetric: option.isSpaceMetric,
-          metricType: option.metricType,
-          valueType: option.valueType,
-          metricFunction: value,
-        };
-        if (!map[key]) {
-          map[key] = [metricItem];
+      option.aggregations.forEach(type => {
+        // const { key, value } = type;
+        // const metricItem: IServiceMetricItem = {
+        //   metric: option.metric,
+        //   isSpaceMetric: option.isSpaceMetric,
+        //   metricType: option.metricType,
+        //   valueType: option.valueType,
+        //   isRawMetric: option.isRawMetric,
+        //   metricFunction: value,
+        // };
+        if (!map[type]) {
+          map[type] = [option];
         } else {
-          map[key].push(metricItem)
+          map[type].push(option)
         }
       })
     })
@@ -133,7 +128,7 @@ function ServiceDetail(props: IProps) {
     (metricOptions || []).map((metric) => metric.metric)
   ), [metricOptions]);
 
-  const [curMetricOptions, setMetricOptions] = useState<IMetricOption[]>(metricOptions);
+  const [curMetricOptions, setMetricOptions] = useState<IServiceMetricItem[]>(metricOptions);
 
   useEffect(() => {
     const match = /(\w+)-metrics/g.exec(location.pathname);
@@ -147,12 +142,22 @@ function ServiceDetail(props: IProps) {
   const metricCharts: any = useMemo(() => {
     if (Object.keys(metricTypeMap).length === 0) return [];
     const { metricType } = metricsFilterValues;
-    const charts = metricTypeMap[metricType].map((metric, i) => ({
-      metric,
-      chartInstance: undefined,
-      index: i,
-      baseLine: undefined,
-    }));
+    let charts: any = [];
+    if (metricType === 'all') {
+      charts = metricOptions.map((metric, i) => ({
+        metric,
+        chartInstance: undefined,
+        index: i,
+        baseLine: undefined,
+      }))
+    } else {
+      charts = metricTypeMap[metricType].map((metric, i) => ({
+        metric,
+        chartInstance: undefined,
+        index: i,
+        baseLine: undefined,
+      }));
+    }
     return charts;
   }, [metricTypeMap, metricsFilterValues.metricType])
 
@@ -194,9 +199,9 @@ function ServiceDetail(props: IProps) {
     const [startTime, endTime] = calcTimeRange(timeRange);
     const getPromise = (chart) => {
       return new Promise((resolve, reject) => {
-        const item = metricTypeMap[metricType].find(metricItem => metricItem.metric === chart.metric.metric);
+        const item: IServiceMetricItem = metricTypeMap[metricType].find(metricItem => metricItem.metric === chart.metric.metric);
         asyncFetchMetricsData({
-          query: item.metricFunction + period,
+          query: item.isRawMetric ? item.prefixMetric : `${item.prefixMetric}_${metricType}_${period}`,
           start: startTime,
           end: endTime,
           space: serviceType === 'graph' ? space : undefined,
