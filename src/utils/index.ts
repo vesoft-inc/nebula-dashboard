@@ -1,4 +1,5 @@
-import { DashboardType } from './interface';
+import { DashboardType, NebulaVersionType } from './interface';
+import intl from 'react-intl-universal';
 
 /**
  * this folder for utils
@@ -27,4 +28,14 @@ export const shouldCheckCluster = () => {
 
 export const unique = (arr) => {
   return arr.reduce((prev,cur) => prev.includes(cur) ? prev : [...prev,cur],[]);
+}
+
+export let getNebulaVersionName = (_versionType: NebulaVersionType, version) => {
+  return `${intl.get('common.nebulaVersion.community')} ${version}`;
+}
+
+export const updateFn = (service: { 
+  getNebulaVersionName: typeof getNebulaVersionName
+}) => {
+  getNebulaVersionName = service.getNebulaVersionName;
 }

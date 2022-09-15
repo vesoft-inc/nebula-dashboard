@@ -27,6 +27,7 @@ import ServiceMetricsFilterPanel from '@/components/ServiceMetricsFilterPanel';
 import { shouldCheckCluster } from '@/utils';
 
 import './index.less';
+import { getQueryByMetricType } from '@/utils/metric';
 
 const mapDispatch: any = (dispatch: IDispatch) => ({
   asyncGetStatus: dispatch.service.asyncGetStatus,
@@ -201,7 +202,7 @@ function ServiceDetail(props: IProps) {
       return new Promise((resolve, reject) => {
         const item: IServiceMetricItem = metricTypeMap[metricType].find(metricItem => metricItem.metric === chart.metric.metric);
         asyncFetchMetricsData({
-          query: item.isRawMetric ? item.prefixMetric : `${item.prefixMetric}_${metricType}_${period}`,
+          query: getQueryByMetricType(item, metricType, period),
           start: startTime,
           end: endTime,
           space: serviceType === 'graph' ? space : undefined,

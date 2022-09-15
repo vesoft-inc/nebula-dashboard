@@ -26,6 +26,7 @@
   "editBaseLine": "Edit Base Line",
   "baseLineTip": "Please enter a number greater than 0",
   "unit": "Unit",
+  "detail": "Detail",
   "help": "Help",
   "manual": "User Manual",
   "forum": "Forum",
@@ -33,5 +34,11 @@
   "configTip": "Please enter a configuration name",
   "all":"All",
   "metricLabel": "instance",
-  "updateFrequency": "refresh frequency"
+  "updateFrequency": "refresh frequency",
+  "overviewInfo": "Overview Info",
+  "nebulaVersion": {
+		"enterprise": "Enterprise",
+		"community": "Community"
+	},
+  "noData": "No Data"
 }

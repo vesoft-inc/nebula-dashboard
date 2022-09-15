@@ -22,5 +22,6 @@
   "queryCondition":"Query Condition",
   "serviceMetricsDetails": "Service Metrics Details",
   "chooseSpace": "Please Choose Space",
-  "enterPartitionId": "Please enter the partitionId"
+  "enterPartitionId": "Please enter the partitionId",
+  "chooseHost":"Please choose Host"
 }
