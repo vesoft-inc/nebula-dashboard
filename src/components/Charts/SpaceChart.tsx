@@ -32,20 +32,18 @@ function SpaceChart(props: IProps) {
   const diskThs = useMemo(() => ({
     name: diskInfos.some(i => !!i.name),
     device: diskInfos.some(i => !!i.device),
-    mountpoint: diskInfos.some(i => !!i.mountpoint),
     used: diskInfos.some(i => !!(i.size && i.used))
   }), [diskInfos])
 
   const getDisplayInfos = (infos: DiskMetricInfo[]) => {
     return infos.map((info) => {
-      const { used, size: bytes, device, mountpoint, name } = info;
+      const { used, size: bytes, device, name } = info;
       const percent = Math.round((used / bytes) * 100);
       const { desc: sizeDesc } = getProperByteDesc(bytes, 1024);
       const { desc: usedDesc } = getProperByteDesc(used, 1024);
       return {
         percent: percent < 1 ? Number(percent.toFixed(2)) : percent,
         device,
-        mountpoint,
         sizeDesc,
         usedDesc,
         name,
@@ -97,23 +95,6 @@ function SpaceChart(props: IProps) {
               </div>
             )
           }
-          {
-            diskThs.mountpoint && (
-              <div className='disk-tr-item'>
-                {
-                  displayInfos.map(i => i.mountpoint).map((mountpoint, i) => (
-                    <Popover
-                      key={i}
-                      content={mountpoint}
-                      placement='top'
-                    >
-                      <div className='disk-tr-item-info text-overflow'>{mountpoint}</div>
-                    </Popover>
-                  ))
-                }
-              </div>
-            )
-          }
           <div className='disk-tr-item'>
             {
               displayInfos.map((displayInfo, i) => (
@@ -142,7 +123,7 @@ function SpaceChart(props: IProps) {
       case 2:
         return '40% 60%'
       case 3:
-        return '30% 40% 40%'
+        return '25% 25% 50%'
       case 4:
         return '20% 20% 20% 40%'
       default:
@@ -159,9 +140,6 @@ function SpaceChart(props: IProps) {
         }
         {
           diskThs.device && <div>{intl.get('base.spaceChartDiskname')}</div>
-        }
-        {
-          diskThs.mountpoint && <div>{intl.get('base.spaceChartMountpoint')}</div>
         }
         <div>{intl.get('base.spaceChartDiskused')}</div>
       </div>

@@ -400,10 +400,14 @@ export const getClusterPrefix = () => {
   return 'nebula_cluster';
 }
 
-export let LINUX = (cluster?) : any => {
+export const diskPararms = 'fstype=~"ext.*|xfs",mountpoint !~".*pod.*"';
+
+export let LINUX = (cluster?,device?:string) : any => {
   const clusterSuffix1 = cluster ? `,${getClusterPrefix()}='${cluster}'` : '';
   const clusterSuffix2 = cluster ? `{${getClusterPrefix()}='${cluster}'}` : '';
-  const diskPararms = 'fstype=~"ext.*|xfs",mountpoint !~".*pod.*"';
+  const devicePararms = device? `,device=~"${device}"`: '';
+
+  
   return {
     // cpu relative:
     cpu_utilization: `100 * (1 - sum by (instance)(increase(node_cpu_seconds_total{mode="idle"${clusterSuffix1}}[1m])) / sum by (instance)(increase(node_cpu_seconds_total${clusterSuffix2}[1m])))`,
@@ -425,16 +429,16 @@ export let LINUX = (cluster?) : any => {
     load_15m: `node_load15${clusterSuffix2}`,
 
     // disk relative:
-    disk_used: `node_filesystem_size_bytes{${diskPararms}${clusterSuffix1}} - node_filesystem_free_bytes{${diskPararms}${clusterSuffix1}}`,
-    disk_free: `node_filesystem_avail_bytes{${diskPararms}${clusterSuffix1}}`,
-    disk_readbytes: `irate(node_disk_read_bytes_total{device=~"(sd|nvme|hd)[a-z0-9]*"${clusterSuffix1}}[1m])`,
-    disk_writebytes: `irate(node_disk_written_bytes_total{device=~"(sd|nvme|hd)[a-z0-9]*"${clusterSuffix1}}[1m])`,
-    disk_readiops: `irate(node_disk_reads_completed_total{device=~"(sd|nvme|hd)[a-z0-9]*"${clusterSuffix1}}[1m])`,
-    disk_writeiops: `irate(node_disk_writes_completed_total{device=~"(sd|nvme|hd)[a-z0-9]*"${clusterSuffix1}}[1m])`,
-    inode_utilization: `(1- (node_filesystem_files_free{${diskPararms}${clusterSuffix1}}) / (node_filesystem_files{mountpoint="/",fstype!="rootfs"${clusterSuffix1}})) * 100`,
-    disk_used_percentage: `(node_filesystem_size_bytes{${diskPararms}${clusterSuffix1}}-node_filesystem_free_bytes{${diskPararms}${clusterSuffix1}}) *100/(node_filesystem_avail_bytes {${diskPararms}${clusterSuffix1}}+(node_filesystem_size_bytes{${diskPararms}${clusterSuffix1}}-node_filesystem_free_bytes{${diskPararms}${clusterSuffix1}}))`,
+    disk_used: `node_filesystem_size_bytes{${diskPararms}${devicePararms}${clusterSuffix1}} - node_filesystem_free_bytes{${diskPararms}${devicePararms}${clusterSuffix1}}`,
+    disk_free: `node_filesystem_avail_bytes{${diskPararms}${devicePararms}${clusterSuffix1}}`,
+    disk_readbytes: `irate(node_disk_read_bytes_total{${devicePararms? devicePararms: 'device=~"(sd|nvme|hd)[a-z0-9]*"'}${clusterSuffix1}}[1m])`,
+    disk_writebytes: `irate(node_disk_written_bytes_total{${devicePararms? devicePararms: 'device=~"(sd|nvme|hd)[a-z0-9]*"'}${clusterSuffix1}}[1m])`,
+    disk_readiops: `irate(node_disk_reads_completed_total{${devicePararms? devicePararms: 'device=~"(sd|nvme|hd)[a-z0-9]*"'}${clusterSuffix1}}[1m])`,
+    disk_writeiops: `irate(node_disk_writes_completed_total{${devicePararms? devicePararms: 'device=~"(sd|nvme|hd)[a-z0-9]*"'}${clusterSuffix1}}[1m])`,
+    inode_utilization: `(1- (node_filesystem_files_free{${diskPararms}${devicePararms}${clusterSuffix1}}) / (node_filesystem_files{mountpoint="/",fstype!="rootfs"${clusterSuffix1}})) * 100`,
+    disk_used_percentage: `(node_filesystem_size_bytes{${diskPararms}${devicePararms}${clusterSuffix1}}-node_filesystem_free_bytes{${diskPararms}${devicePararms}${clusterSuffix1}}) *100/(node_filesystem_avail_bytes {${diskPararms}${devicePararms}${clusterSuffix1}}+(node_filesystem_size_bytes{${diskPararms}${devicePararms}${clusterSuffix1}}-node_filesystem_free_bytes{${diskPararms}${devicePararms}${clusterSuffix1}}))`,
+    disk_size: `node_filesystem_size_bytes{${diskPararms}${devicePararms}${clusterSuffix1}}`,
 
-    disk_size: `node_filesystem_size_bytes{${diskPararms}${clusterSuffix1}}`,
     network_in_rate: `ceil(sum by(instance)(irate(node_network_receive_bytes_total{device=~"(eth|en)[a-z0-9]*"${clusterSuffix1}}[1m])))`,
     network_out_rate: `ceil(sum by(instance)(irate(node_network_transmit_bytes_total{device=~"(eth|en)[a-z0-9]*"${clusterSuffix1}}[1m])))`,
     network_in_errs: `ceil(sum by(instance)(irate(node_network_receive_errs_total{device=~"(eth|en)[a-z0-9]*"${clusterSuffix1}}[1m])))`,

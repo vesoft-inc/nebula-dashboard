@@ -6,6 +6,8 @@ const connectDB = post('/api-nebula/db/connect');
 
 const getSpaces = get('/api-metrics/label/space/values');
 
+const getDevices = get('/api-metrics/label/device/values');
+
 const getMetrics = get('/api-metrics/label/__name__/values');
 
 const execPromQL = get('/api-metrics/query');
@@ -23,6 +25,7 @@ export default {
   execNGQL,
   connectDB,
   getSpaces,
+  getDevices,
   getMetrics,
   getAppInfo,
   execPromQL,
