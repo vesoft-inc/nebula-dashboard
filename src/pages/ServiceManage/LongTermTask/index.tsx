@@ -108,7 +108,7 @@ const LongTermTask: React.FC<IProps> = props => {
   ];
 
   useEffect(() => {
-    if (cluster.id) {
+    if (cluster?.id) {
       init();
     }
   }, [cluster]);
