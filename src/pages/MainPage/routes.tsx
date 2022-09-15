@@ -180,7 +180,6 @@ export const RoutesList: any = [
           breadcrumbName: intl.get('common.dashboard'),
         },
       ],
-      showBackBtn: true,
       title: intl.get('common.machine'),
     },
   },
@@ -203,7 +202,6 @@ export const RoutesList: any = [
           breadcrumbName: intl.get('device.cpu'),
         },
       ],
-      showBackBtn: true,
       title: intl.get('device.cpu'),
     },
   },
@@ -226,7 +224,6 @@ export const RoutesList: any = [
           breadcrumbName: intl.get('device.disk'),
         },
       ],
-      showBackBtn: true,
       title: intl.get('device.disk'),
     },
   },
@@ -249,7 +246,6 @@ export const RoutesList: any = [
           breadcrumbName: intl.get('device.memory'),
         },
       ],
-      showBackBtn: true,
       title: intl.get('device.memory'),
     },
   },
@@ -272,7 +268,6 @@ export const RoutesList: any = [
           breadcrumbName: intl.get('device.load'),
         },
       ],
-      showBackBtn: true,
       title: intl.get('device.load'),
     },
   },
@@ -295,7 +290,6 @@ export const RoutesList: any = [
           breadcrumbName: intl.get('device.network'),
         },
       ],
-      showBackBtn: true,
       title: intl.get('device.network'),
     },
   },
@@ -329,7 +323,6 @@ export const RoutesList: any = [
           breadcrumbName: intl.get('common.dashboard'),
         },
       ],
-      showBackBtn: true,
       title: intl.get('common.machine'),
     },
   },
@@ -353,7 +346,6 @@ export const RoutesList: any = [
         },
       ],
       title: 'Graph',
-      showBackBtn: true,
       extra: SERVICE_VIEWS,
     },
   },
@@ -377,7 +369,6 @@ export const RoutesList: any = [
         },
       ],
       title: 'Meta',
-      showBackBtn: true,
       extra: SERVICE_VIEWS,
     },
   },
@@ -401,7 +392,6 @@ export const RoutesList: any = [
         },
       ],
       title: 'Storage',
-      showBackBtn: true,
       extra: SERVICE_VIEWS,
     },
   },
@@ -421,7 +411,6 @@ export const RoutesList: any = [
         },
       ],
       title: intl.get('common.overviewInfo'),
-      showBackBtn: true,
     },
   },
   {
@@ -435,8 +424,8 @@ export const RoutesList: any = [
           breadcrumbName: intl.get('common.dashboard'),
         },
         {
-          path: '/management/overview',
-          breadcrumbName: intl.get('common.service'),
+          path: '/management/service-manage',
+          breadcrumbName: intl.get('common.overviewInfo'),
         },
         {
           path: '/management/version-statistics',
@@ -459,8 +448,8 @@ export const RoutesList: any = [
           breadcrumbName: intl.get('common.dashboard'),
         },
         {
-          path: '/management/overview',
-          breadcrumbName: intl.get('common.service'),
+          path: '/management/service-manage',
+          breadcrumbName: intl.get('common.overviewInfo'),
         },
         {
           path: '/management/leader-distribution',
@@ -483,8 +472,8 @@ export const RoutesList: any = [
           breadcrumbName: intl.get('common.dashboard'),
         },
         {
-          path: '/management/overview',
-          breadcrumbName: intl.get('common.service'),
+          path: '/management/service-manage',
+          breadcrumbName: intl.get('common.overviewInfo'),
         },
         {
           path: '/management/partition-distribution',
@@ -507,6 +496,10 @@ export const RoutesList: any = [
           breadcrumbName: intl.get('common.serviceManagement'),
         },
         {
+          path: '/management/service-manage',
+          breadcrumbName: intl.get('common.overviewInfo'),
+        },
+        {
           path: '/management/service-info',
           breadcrumbName: intl.get('common.serviceInfo'),
         },
@@ -523,6 +516,10 @@ export const RoutesList: any = [
         {
           path: '#',
           breadcrumbName: intl.get('common.serviceManagement'),
+        },
+        {
+          path: '/management/service-manage',
+          breadcrumbName: intl.get('common.overviewInfo'),
         },
         {
           path: '/management/partition-info',

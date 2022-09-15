@@ -1,10 +1,10 @@
+import React, { useEffect } from 'react';
 import _ from 'lodash';
-import React from 'react';
 import { Input, Table } from 'antd';
 import { connect } from 'react-redux';
 import intl from 'react-intl-universal';
+
 import { IDispatch, IRootState } from '@/store';
-import service from '@/config/service';
 import { DashboardSelect, Option } from '@/components/DashboardSelect';
 import { TitleInstruction } from '@/components/Instruction';
 import { trackEvent } from '@/utils/stat';
@@ -16,91 +16,99 @@ const mapState = (state: IRootState) => ({
   spaces: state.nebula.spaces,
   parts: state.nebula.parts,
   currentSpace: state.nebula.currentSpace,
+  address: state.nebula.address,
+  port: state.nebula.port,
 });
 
 const mapDispatch: any = (dispatch: IDispatch) => ({
   asyncGetSpaces: dispatch.nebula.asyncGetSpaces,
   asyncGetParts: dispatch.nebula.asyncGetParts,
-  updateSpace: space =>
-    dispatch.nebula.update({
-      currentSpace: space,
-    }),
+  asyncUseSpaces: dispatch.nebula.asyncUseSpaces,
 });
 interface IProps
   extends ReturnType<typeof mapState>,
-  ReturnType<typeof mapDispatch> {}
+    ReturnType<typeof mapDispatch> {
+  isOverview: boolean;
+}
 
-class PartitionInfo extends React.Component<IProps> {
-  componentDidMount() {
-    this.props.asyncGetSpaces();
-  }
+const PartitionInfo: React.FC<IProps> = (props: IProps) => {
+  const { address, port, currentSpace, loading, parts, spaces, isOverview } =
+    props;
 
-  handleSpaceChange = async space => {
-    const { code } = (await service.execNGQL({
-      gql: `USE ${space}`,
-    })) as any;
+  useEffect(() => {
+    if (address && port) {
+      props.asyncGetSpaces();
+    }
+  }, [address, port]);
+
+  useEffect(() => {
+    if (currentSpace) {
+      props.asyncGetParts();
+    }
+  }, [currentSpace]);
+
+  const handleSpaceChange = async space => {
+    const { code } = (await props.asyncUseSpaces(space)) as any;
     if (code === 0) {
-      this.props.asyncGetParts();
-      this.props.updateSpace(space);
+      props.asyncGetParts();
       trackEvent('partition_info', 'select_space');
     }
   };
 
-  handleSearchPartitionId = value => {
-    this.props.asyncGetParts(value);
+  const handleSearchPartitionId = value => {
+    props.asyncGetParts(value);
     trackEvent('partition_info', 'search_partitionId');
   };
 
-  render() {
-    const { spaces, parts, currentSpace, loading } = this.props;
-    const columns = [
-      {
-        title: (
-          <TitleInstruction
-            title="PartitionId"
-            description={intl.get('description.partitionId')}
-          />
-        ),
-        dataIndex: 'Partition ID',
-      },
-      {
-        title: (
-          <TitleInstruction
-            title="Leader"
-            description={intl.get('description.leader')}
-          />
-        ),
-        dataIndex: 'Leader',
-      },
-      {
-        title: (
-          <TitleInstruction
-            title="Peers"
-            description={intl.get('description.peers')}
-          />
-        ),
-        dataIndex: 'Peers',
-      },
-      {
-        title: (
-          <TitleInstruction
-            title="Losts"
-            description={intl.get('description.losts')}
-          />
-        ),
-        dataIndex: 'Losts',
-        render: losts => <span>{losts || '-'}</span>,
-      },
-    ];
-    return (
-      <div className="service-info service-partition">
+  const columns = [
+    {
+      title: (
+        <TitleInstruction
+          title="PartitionId"
+          description={intl.get('description.partitionId')}
+        />
+      ),
+      dataIndex: 'Partition ID',
+    },
+    {
+      title: (
+        <TitleInstruction
+          title="Leader"
+          description={intl.get('description.leader')}
+        />
+      ),
+      dataIndex: 'Leader',
+    },
+    {
+      title: (
+        <TitleInstruction
+          title="Peers"
+          description={intl.get('description.peers')}
+        />
+      ),
+      dataIndex: 'Peers',
+    },
+    {
+      title: (
+        <TitleInstruction
+          title="Losts"
+          description={intl.get('description.losts')}
+        />
+      ),
+      dataIndex: 'Losts',
+      render: losts => <span>{losts || '-'}</span>,
+    },
+  ];
+  return (
+    <div className="service-info service-partition">
+      {!isOverview && (
         <div className="common-header">
           <div className="service-screen">
             <span>{intl.get('service.spaces')}:</span>
             <DashboardSelect
               placeholder={intl.get('service.chooseSpace')}
               value={currentSpace || undefined}
-              onChange={this.handleSpaceChange}
+              onChange={handleSpaceChange}
               style={{
                 width: 220,
               }}
@@ -115,21 +123,22 @@ class PartitionInfo extends React.Component<IProps> {
           <div className="service-screen">
             <span>{intl.get('service.partition')}:</span>
             <Input.Search
-              allowClear={true}
+              allowClear
+              className="text-center"
               placeholder={intl.get('service.enterPartitionId')}
-              onSearch={this.handleSearchPartitionId}
+              onSearch={handleSearchPartitionId}
             />
           </div>
         </div>
-        <Table
-          loading={!!loading}
-          rowKey={(record: any) => record['Partition ID']}
-          dataSource={parts}
-          columns={columns}
-        />
-      </div>
-    );
-  }
-}
+      )}
+      <Table
+        loading={!!loading}
+        rowKey={(record: any) => record['Partition ID']}
+        dataSource={parts}
+        columns={columns}
+      />
+    </div>
+  );
+};
 
 export default connect(mapState, mapDispatch)(PartitionInfo);

@@ -47,6 +47,15 @@ interface IState {
   collapsed: boolean;
 }
 
+const clusterInfoList = [
+  'version-statistics',
+  'leader-distribution',
+  'partition-distribution',
+  'service-info',
+  'partition-info',
+  'long-term-task'
+]
+
 class MainPage extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
@@ -111,6 +120,7 @@ class MainPage extends React.Component<IProps, IState> {
     const { appVersion } = this.props;
     const [, activeOpenSubMenu, activeMenu] =
       this.props.location.pathname.split('/');
+      debugger;
     let activeKey =
       activeMenu === 'overview'
         ? `${activeOpenSubMenu}-${activeMenu}`
@@ -124,12 +134,8 @@ class MainPage extends React.Component<IProps, IState> {
     if (activeKey === undefined) {
       activeKey = 'machine-overview';
     }
-    if (
-      activeKey === 'version-statistics' ||
-      activeKey === 'leader-distribution' ||
-      activeKey === 'partition-distribution'
-    ) {
-      activeKey = 'service-overview';
+    if (clusterInfoList.includes(activeKey)) {
+      activeKey = 'service-manage';
     }
     return (
       <Layout className="nebula-stat">
