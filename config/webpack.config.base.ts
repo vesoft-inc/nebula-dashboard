@@ -1,9 +1,9 @@
 import path from 'path';
-import { Configuration } from 'webpack';
+import { Configuration, DefinePlugin } from 'webpack';
 import CopyPlugin from 'copy-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-// import pkg from '../package.json';
+import pkg from '../package.json';
 
 const isDevEnv = () => process.env.NODE_ENV === 'development';
 
@@ -108,6 +108,12 @@ const baseConifg: Configuration = {
     }
   },
   plugins: [
+    new DefinePlugin({
+      'process.env': {
+        DASHBOARD_VERSION: JSON.stringify(pkg.version),
+        NEBULA_VERSION: JSON.stringify(pkg.nebulaVersion),
+      },
+    }),
     new CopyPlugin({
       patterns: [
         {

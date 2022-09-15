@@ -1,4 +1,4 @@
-import { TIME_OPTION_TYPE } from "./dashboard";
+import { AggregationType, TIME_OPTION_TYPE } from "./dashboard";
 import { VALUE_TYPE } from "./promQL";
 
 export interface IMetric {
@@ -56,7 +56,7 @@ export interface MetricsPanelValue {
 
 export interface ServiceMetricsPanelValue extends MetricsPanelValue {
   space: string;
-  metricType: string;
+  metricType: AggregationType | 'all';
   period: string;
 }
 
@@ -98,4 +98,9 @@ export interface IServiceMetricItem {
   aggregations: string[];
   prefixMetric: string;
   metricFunction?: string;
+}
+
+export enum NebulaVersionType {
+  COMMUNITY = 'community',
+  ENTERPRISE = 'enterprise',
 }

@@ -1,7 +1,13 @@
 import dayjs from 'dayjs';
 import _ from 'lodash';
+import semver from 'semver';
+import cookies from 'js-cookie';
+
 import { ILineChartMetric, IStatRangeItem, MetricScene } from '@/utils/interface';
 import { VALUE_TYPE } from '@/utils/promQL';
+
+// used in nightly version;
+export const DEFAULT_VERSION = process.env.NEBULA_VERSION!;
 
 export const DETAIL_DEFAULT_RANGE = 60 * 60 * 24 * 1000;
 export const CARD_RANGE = 60 * 60 * 24 * 1000;
@@ -412,6 +418,16 @@ export const getConfigData=(data)=>{
     }
   })
   return list;
+}
+
+export function formatVersion(version?: string): string {
+  if (!version) {
+    version = cookies.get('version');
+  }
+  if (semver.valid(version)) {
+    return semver.clean(version!) ?? DEFAULT_VERSION;
+  }
+  return DEFAULT_VERSION;
 }
 
 export let getMachineRouterPath = (path: string, id?): string => `/clusters/${id}${path}`;

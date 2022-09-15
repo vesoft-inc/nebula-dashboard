@@ -26,6 +26,7 @@
   "editBaseLine": "编辑基线",
   "baseLineTip": "请输入大于0的值",
   "unit": "单位",
+  "detail": "详情",
   "help": "帮助",
   "manual": "使用手册",
   "forum": "求助论坛",
@@ -33,5 +34,11 @@
   "all":"全部",
   "updateFrequency": "更新频率",
   "configTip": "请输入配置名进行搜索",
-  "metricLabel": "实例"
+  "metricLabel": "实例",
+  "overviewInfo": "信息总览",
+  "nebulaVersion": {
+		"enterprise": "企业版",
+		"community": "社区版"
+	},
+  "noData": "没有数据"
 }

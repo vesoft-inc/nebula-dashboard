@@ -3,9 +3,9 @@ import LoadDetail from '../MachineDashboard/Detail/LoadDetail';
 import MachineDashboard from '@/pages/MachineDashboard';
 import ServiceDashboard from '@/pages/ServiceDashboard';
 import ServiceDetail from '@/pages/ServiceDashboard/Detail';
-import VersionStatistic from '@/pages/VersionStatistic';
-import LeaderDistribution from '@/pages/LeaderDistribution';
-import PartitionDistribution from '@/pages/PartitionDistribution';
+import VersionStatistic from '@/pages/ServiceManage/VersionStatistic';
+import LeaderDistribution from '@/pages/ServiceManage/LeaderDistribution';
+import PartitionDistribution from '@/pages/ServiceManage/PartitionDistribution';
 import ServiceInfo from '@/pages/ServiceManage/ServiceInfo';
 import PartitionInfo from '@/pages/ServiceManage/PartitionInfo';
 import ConfigInfo from '@/pages/ServiceManage/ConfigInfo';
@@ -15,6 +15,7 @@ import DiskDetail from '@/pages/MachineDashboard/Detail/DiskDetail';
 import NetworkDetail from '@/pages/MachineDashboard/Detail/NetworkDetail';
 import MemoryDetail from '@/pages/MachineDashboard/Detail/MemoryDetail';
 import MetricDetail from '@/pages/MetricDetail';
+import Overview from '@/pages/ServiceManage/Overview';
 
 export const MenuList = [
   {
@@ -97,28 +98,34 @@ export const MenuList = [
     icon: '#iconnav-serverControl',
     children: [
       {
-        key: 'service-info',
-        title: intl.get('common.serviceInfo'),
-        icon: '#iconnav-serverInfo',
-        path: '/management/service-info',
+        key: 'service-manage',
+        title: intl.get('common.overviewInfo'),
+        icon: '#iconnav-versionManagement',
+        path: '/management/service-manage',
       },
-      {
-        key: 'partition-info',
-        title: intl.get('common.partitionInfo'),
-        icon: '#iconnav-partitionInfo',
-        path: '/management/partition-info',
-      },
+      // {
+      //   key: 'service-info',
+      //   title: intl.get('common.serviceInfo'),
+      //   icon: '#iconnav-serverInfo',
+      //   path: '/management/service-info',
+      // },
+      // {
+      //   key: 'partition-info',
+      //   title: intl.get('common.partitionInfo'),
+      //   icon: '#iconnav-partitionInfo',
+      //   path: '/management/partition-info',
+      // },
+      // {
+      //   key: 'long-term-task',
+      //   title: intl.get('common.longTermTask'),
+      //   icon: '#iconnav-timeConsuming',
+      //   path: '/management/long-term-task',
+      // },
       {
         key: 'config-info',
         title: intl.get('common.config'),
         icon: '#iconnav-configuration',
         path: '/management/config-info',
-      },
-      {
-        key: 'long-term-task',
-        title: intl.get('common.longTermTask'),
-        icon: '#iconnav-timeConsuming',
-        path: '/management/long-term-task',
       },
     ],
   },
@@ -129,18 +136,18 @@ const SERVICE_VIEWS = [
     label: intl.get('common.overview'),
     value: '/service/overview',
   },
-  {
-    label: intl.get('common.version'),
-    value: '/service/version-statistics',
-  },
-  {
-    label: 'Leader',
-    value: '/service/leader-distribution',
-  },
-  {
-    label: 'Partition',
-    value: '/service/partition-distribution',
-  },
+  // {
+  //   label: intl.get('common.version'),
+  //   value: '/service/version-statistics',
+  // },
+  // {
+  //   label: 'Leader',
+  //   value: '/service/leader-distribution',
+  // },
+  // {
+  //   label: 'Partition',
+  //   value: '/service/partition-distribution',
+  // },
 ];
 
 export const RoutesList: any = [
@@ -399,7 +406,26 @@ export const RoutesList: any = [
     },
   },
   {
-    path: '/service/version-statistics',
+    path: '/management/service-manage',
+    component: Overview,
+    exact: true,
+    headerConfig: {
+      breadcrumb: [
+        {
+          path: '#',
+          breadcrumbName: intl.get('common.dashboard'),
+        },
+        {
+          path: '/management/service-manage',
+          breadcrumbName: intl.get('common.overviewInfo'),
+        },
+      ],
+      title: intl.get('common.overviewInfo'),
+      showBackBtn: true,
+    },
+  },
+  {
+    path: '/management/version-statistics',
     component: VersionStatistic,
     exact: true,
     headerConfig: {
@@ -409,11 +435,11 @@ export const RoutesList: any = [
           breadcrumbName: intl.get('common.dashboard'),
         },
         {
-          path: '/service/overview',
+          path: '/management/overview',
           breadcrumbName: intl.get('common.service'),
         },
         {
-          path: '/service/version-statistics',
+          path: '/management/version-statistics',
           breadcrumbName: intl.get('service.serviceMetricsDetails'),
         },
       ],
@@ -423,7 +449,7 @@ export const RoutesList: any = [
     },
   },
   {
-    path: '/service/leader-distribution',
+    path: '/management/leader-distribution',
     component: LeaderDistribution,
     exact: true,
     headerConfig: {
@@ -433,11 +459,11 @@ export const RoutesList: any = [
           breadcrumbName: intl.get('common.dashboard'),
         },
         {
-          path: '/service/overview',
+          path: '/management/overview',
           breadcrumbName: intl.get('common.service'),
         },
         {
-          path: '/service/leader-distribution',
+          path: '/management/leader-distribution',
           breadcrumbName: intl.get('service.serviceMetricsDetails'),
         },
       ],
@@ -447,7 +473,7 @@ export const RoutesList: any = [
     },
   },
   {
-    path: '/service/partition-distribution',
+    path: '/management/partition-distribution',
     component: PartitionDistribution,
     exact: true,
     headerConfig: {
@@ -457,11 +483,11 @@ export const RoutesList: any = [
           breadcrumbName: intl.get('common.dashboard'),
         },
         {
-          path: '/service/overview',
+          path: '/management/overview',
           breadcrumbName: intl.get('common.service'),
         },
         {
-          path: '/service/partition-distribution',
+          path: '/management/partition-distribution',
           breadcrumbName: intl.get('service.serviceMetricsDetails'),
         },
       ],

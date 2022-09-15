@@ -457,3 +457,11 @@ export const updatePromql = (service: {
   SUPPORT_METRICS = service.SUPPORT_METRICS
   LINUX = service.LINUX
 }
+
+// export const serviceProcessPromql = (cluster?) => {
+//   const clusterSuffix = cluster ? `${getClusterPrefix()}='${cluster}'` : '';
+//   return {
+//     // cpu_utilization
+//     "cpu_used": `100 * sum by (nebula_cluster)(increase(nebula_graphd_cpu_seconds_total{${clusterSuffix}}[1m])) / sum by (nebula_cluster)(increase(node_cpu_seconds_total{${clusterSuffix}}[1m]))`,
+//   }
+// }
