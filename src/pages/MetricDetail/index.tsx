@@ -18,6 +18,7 @@ import { shouldCheckCluster } from '@/utils';
 import { Popover, Spin } from 'antd';
 import Icon from '@/components/Icon';
 import BaseLineEditModal from '@/components/BaseLineEditModal';
+import { getQueryByMetricType } from '@/utils/metric';
 
 interface Props
   extends ReturnType<typeof mapDispatch>,
@@ -100,20 +101,16 @@ function MetricDetail(props: Props) {
   const metricOption = useMemo(() => {
     let metrics: any[] = [];
     if (isServiceMetric(metricType)) {
-      metrics = serviceMetric[metricType].map(item => (
-        {
-          metric: item.metric,
-          isSpaceMetric: item.isSpaceMetric,
-          metricType: item.metricType,
-          valueType: item.valueType,
-        }))
+      metrics = serviceMetric[metricType];
     } else {
       metrics = SUPPORT_METRICS[metricType];
     }
+    console.log('metrics', metrics)
     const metricItem = metrics.find(item => item.metric === metricName) || {
       metric: '',
       valueType: '',
       metricType: [],
+      aggregations: [],
     }
     return metricItem
   }, [metricName, metricType, serviceMetric])
@@ -222,19 +219,11 @@ function MetricDetail(props: Props) {
   const metricTypeMap = useMemo(() => {
     const map = {};
     if (metricOption && isServiceMetric(metricType)) {
-      metricOption.metricType.forEach(type => {
-        const { key, value } = type;
-        const metricItem = {
-          metric: metricOption.metric,
-          isSpaceMetric: metricOption.isSpaceMetric,
-          metricType: metricOption.metricType,
-          valueType: metricOption.valueType,
-          metricFunction: value,
-        };
-        if (!map[key]) {
-          map[key] = [metricItem];
+      metricOption.aggregations.forEach(type => {
+        if (!map[type]) {
+          map[type] = [metricOption];
         } else {
-          map[key].push(metricItem)
+          map[type].push(metricOption)
         }
       })
     }
@@ -248,7 +237,7 @@ function MetricDetail(props: Props) {
       const item = metricTypeMap[aggregration]?.find(metricItem => metricItem.metric === metricChart.metric.metric);
       if (item) {
         asyncFetchServiceMetricsData({
-          query: item.metricFunction + period,
+          query: getQueryByMetricType(item, aggregration, period),
           start: startTimestamps,
           end: endTimestamps,
           space: metricType === MetricTypeName.Graphd ? space : undefined,
