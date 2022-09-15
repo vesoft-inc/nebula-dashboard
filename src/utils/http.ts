@@ -3,8 +3,20 @@ import { message as AntdMessage } from 'antd';
 import intl from 'react-intl-universal';
 import { HttpSeriveManager } from './HttpServiceManager';
 import { trackEvent } from './stat';
+import Cookie from 'js-cookie';
 
 const service = HttpSeriveManager._axiosInstance;
+
+service.interceptors.request.use(config => {
+  if (!config.headers['Content-Type']) {
+    config.headers['Content-Type'] = 'application/json';
+  }
+  const token = Cookie.get('dashboard_token');
+  if (token && !config.headers.Authorization) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
 
 export const registResponseInterceptor = (interceptorFn, store) => {
   interceptorFn(store);

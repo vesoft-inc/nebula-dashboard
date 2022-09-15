@@ -3,13 +3,14 @@ import _ from 'lodash';
 import { compare } from 'compare-versions';
 import service from '@/config/service';
 import { filterServiceMetrics } from '@/utils/metric';
-import { getClusterPrefix } from '@/utils/promQL';
+import { getClusterPrefix, diskPararms } from '@/utils/promQL';
 
 interface IState {
   graphd: any[];
   metad: any;
   storaged: any[];
-  spaces: string;
+  spaces: string[];
+  devices: string[]
 }
 
 export function MetricModelWrapper(serviceApi) {
@@ -19,6 +20,7 @@ export function MetricModelWrapper(serviceApi) {
       metad: [],
       storaged: [],
       spaces: [],
+      devices: []
     },
     reducers: {
       update: (state: IState, payload: any) => ({
@@ -91,9 +93,23 @@ export function MetricModelWrapper(serviceApi) {
           this.update({
             spaces: res,
           });
-        } else if (res.status === 'success') {
+        } else if (res.code === 0) {
           this.update({
             spaces: res.data,
+          });
+        }
+      },
+      async asyncDevices(clusterID ) {
+        const { data: res } = (await service.getDevices({ 
+          'match[]': clusterID ? `{${diskPararms}, ${getClusterPrefix()}='${clusterID}'}` : undefined,
+        })) as any;
+        if (Array.isArray(res)) {
+          this.update({
+            devices: res,
+          });
+        } else if (res.code === 0) {
+          this.update({
+            devices: res.data,
           });
         }
       },

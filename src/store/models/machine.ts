@@ -158,10 +158,10 @@ export function MachineModelWrapper(service,) {
       },
   
       async asyncGetDiskSizeStat(clusterID?: string) {
-        const { code, data } = (await service.execPromQL({
+        const { code, data } = await service.execPromQL({
           clusterID,
           query: PROMQL(clusterID).disk_size,
-        })) as any;
+        });
         let diskSizeStat = [];
         if (code === 0) {
           diskSizeStat = data.result;
