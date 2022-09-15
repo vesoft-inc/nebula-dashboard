@@ -44,7 +44,7 @@ const LeaderDistribution: React.FC<IProps> = (props: IProps) => {
   const [data, setData] = useState<IChaerData[]>([]);
   const [chartInstance, setChartInstance] = useState<Chart>();
 
-  const { address, cluster, port, loading, isOverview, baseRouter = '/management' } = props;
+  const { address, cluster = {}, port, loading, isOverview, baseRouter = '/management' } = props;
 
   useEffect(() => {
     if (isCommunityVersion() || (address && port)) {

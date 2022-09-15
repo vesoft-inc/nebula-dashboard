@@ -29,7 +29,7 @@ interface IProps
     ReturnType<typeof mapDispatch> {}
 
 const LongTermTask: React.FC<IProps> = props => {
-  const { currentSpace, spaces, jobs, loading, cluster } = props;
+  const { currentSpace, spaces, jobs, loading, cluster = {} } = props;
 
   const handleSpaceChange = async space => {
     const { code } = await props.asyncUseSpaces(space);
