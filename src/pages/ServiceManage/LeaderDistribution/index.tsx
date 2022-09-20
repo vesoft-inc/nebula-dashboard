@@ -14,7 +14,7 @@ import classnames from 'classnames';
 import SelectSpace from '../SelectSpace';
 import './index.less';
 import { isCommunityVersion } from '@/utils';
-import { DEFAULT_VERSION } from '@/utils/dashboard';
+import { DEFAULT_VERSION, formatVersion } from '@/utils/dashboard';
 
 const mapDispatch: any = (dispatch: IDispatch) => ({
   asyncGetHostsInfo: dispatch.nebula.asyncGetHostsInfo,
@@ -90,7 +90,7 @@ const LeaderDistribution: React.FC<IProps> = (props: IProps) => {
 
   const handleBalance = async () => {
     let code = -1;
-    if (compare(cluster?.version || DEFAULT_VERSION, 'v3.0.0', '<')) {
+    if (compare(formatVersion(cluster?.version || DEFAULT_VERSION), 'v3.0.0', '<')) {
       code = await props.asyncExecNGQL('BALANCE LEADER');
       if (code === 0) {
         message.success(intl.get('common.succeed'));

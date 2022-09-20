@@ -53,6 +53,7 @@ export function NebulaModelWrapper(serviceApi, state, _effects) {
           this.update({
             jobs: data.tables,
           });
+          return data.tables;
         }
       },
   
