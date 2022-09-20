@@ -104,3 +104,13 @@ export enum NebulaVersionType {
   COMMUNITY = 'community',
   ENTERPRISE = 'enterprise',
 }
+
+interface VersionFeatureItem {
+  [propName: string]: boolean;
+}
+
+export interface VersionFeatureInfo {
+  version: string;
+  type: NebulaVersionType;
+  feature: VersionFeatureItem;
+}
