@@ -11,7 +11,7 @@ import Icon from '../Icon';
 import { isCloudVersion } from '@/utils';
 
 
-function FrequencySelect(props: { value?, onChange?, handleRefresh?}) {
+export function FrequencySelect(props: { value?, onChange?, handleRefresh?}) {
   const { value, onChange, handleRefresh } = props;
   return (
     <div className={styles.frequency}>

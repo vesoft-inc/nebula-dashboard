@@ -4,6 +4,7 @@ import { compare } from 'compare-versions';
 import service from '@/config/service';
 import { filterServiceMetrics } from '@/utils/metric';
 import { getClusterPrefix, diskPararms } from '@/utils/promQL';
+import { formatVersion } from '@/utils/dashboard';
 
 interface IState {
   graphd: any[];
@@ -37,9 +38,10 @@ export function MetricModelWrapper(serviceApi) {
         const { componentType, version, clusterID } = payload;
         let metricList = [];
         let spaceMetricList = [];
+        const curVersion = formatVersion(version);
         const clusterSuffix1 = clusterID ? `,${getClusterPrefix()}='${clusterID}'` : '';
         switch (true) {
-          case compare(version, 'v3.0.0', '<'): {
+          case compare(curVersion, 'v3.0.0', '<'): {
             const { code, data } = (await serviceApi.getMetrics({
               clusterID,
               'match[]': `{componentType="${componentType}",__name__!~"ALERTS.*",__name__!~".*count"${clusterSuffix1}}`,
@@ -49,7 +51,7 @@ export function MetricModelWrapper(serviceApi) {
             }
             break;
           }
-          case compare(version, 'v3.0.0', '>='):
+          case compare(curVersion, 'v3.0.0', '>='):
             {
               const { code, data } = (await serviceApi.getMetrics({
                 clusterID,
