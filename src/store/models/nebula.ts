@@ -1,9 +1,9 @@
 import { createModel } from '@rematch/core';
 import _ from 'lodash';
-import cookies from 'js-cookie';
 import service from '@/config/service';
 import { getConfigData } from "@/utils/dashboard";
 import { NebulaVersionType } from '@/utils/interface';
+import { SessionStorageUtil } from '@/utils';
 
 interface IState {
   configs: any[];
@@ -25,8 +25,8 @@ export function NebulaModelWrapper(serviceApi, state, _effects) {
       spaces: [] as any,
       parts: [],
       services: [],
-      currentSpace: cookies.get('dashboard_space'),
-      version: cookies.get('version') || '',
+      currentSpace: SessionStorageUtil.getItem('currentSpace'),
+      version: SessionStorageUtil.getItem('version') || '',
       ...state,
     },
     reducers: {
@@ -77,7 +77,7 @@ export function NebulaModelWrapper(serviceApi, state, _effects) {
           (this as any).update({
             currentSpace: space,
           });
-          cookies.set('dashboard_space', space);
+          SessionStorageUtil.setItem('currentSpace', space);
         }
         return { code, data };
       },

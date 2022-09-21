@@ -39,3 +39,20 @@ export const updateFn = (service: {
 }) => {
   getNebulaVersionName = service.getNebulaVersionName;
 }
+
+export class SessionStorageUtil {
+  static setItem<T>(key: string, value: T) {
+    sessionStorage.setItem(key, JSON.stringify(value));
+  }
+
+  static getItem<T>(key: string): T | undefined {
+    const item = sessionStorage.getItem(key);
+    if (item) {
+      return JSON.parse(item);
+    }
+  }
+
+  static removeItem(key: string) {
+    sessionStorage.removeItem(key);
+  }
+}

@@ -114,3 +114,8 @@ export interface VersionFeatureInfo {
   type: NebulaVersionType;
   feature: VersionFeatureItem;
 }
+
+export interface NebulaConnectInfo {
+  address: string;
+  port: number;
+}

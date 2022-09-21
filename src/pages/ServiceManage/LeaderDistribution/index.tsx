@@ -23,8 +23,7 @@ const mapDispatch: any = (dispatch: IDispatch) => ({
 
 const mapState = (state: IRootState) => ({
   loading: state.loading.effects.nebula.asyncGetHostsInfo,
-  address: (state.nebula as any).address,
-  port: (state.nebula as any).port,
+  nebulaConnect: (state.nebula as any).nebulaConnect,
 });
 
 interface IProps
@@ -44,14 +43,14 @@ const LeaderDistribution: React.FC<IProps> = (props: IProps) => {
   const [data, setData] = useState<IChaerData[]>([]);
   const [chartInstance, setChartInstance] = useState<Chart>();
 
-  const { address, cluster = {}, port, loading, isOverview, baseRouter = '/management' } = props;
+  const { nebulaConnect, cluster = {}, loading, isOverview, baseRouter = '/management' } = props;
 
   useEffect(() => {
-    if (isCommunityVersion() || (address && port)) {
+    if (isCommunityVersion() || nebulaConnect) {
       getStorageInfo();
     }
     return () => setData([]);
-  }, [address, port]);
+  }, [nebulaConnect]);
 
   useEffect(() => {
     if (chartInstance) {

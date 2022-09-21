@@ -3,7 +3,6 @@ import { Button, Form, Input, Select } from 'antd';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { connect } from 'react-redux';
-import cookies from 'js-cookie';
 import { RouteComponentProps } from 'react-router-dom';
 import {
   passwordRulesFn,
@@ -16,6 +15,7 @@ import './index.less';
 import nebulaLogo from '@/static/images/nebula_logo.png';
 import { IDispatch, IRootState } from '@/store';
 import { LanguageContext } from '@/context';
+import { SessionStorageUtil } from '@/utils';
 
 const FormItem = Form.Item;
 
@@ -58,7 +58,7 @@ class ConfigServerForm extends React.Component<IProps> {
       ...values,
     });
     if (ok) {
-      cookies.set('version', values.version);
+      SessionStorageUtil.setItem('version', values.version)
       this.props.updateVersion(values.version);
       this.props.history.push('/machine/overview');
     }
