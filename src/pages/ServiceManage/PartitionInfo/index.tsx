@@ -16,8 +16,7 @@ const mapState = (state: IRootState) => ({
   spaces: state.nebula.spaces,
   parts: state.nebula.parts,
   currentSpace: state.nebula.currentSpace,
-  address: state.nebula.address,
-  port: state.nebula.port,
+  nebulaConnect: state.nebula.nebulaConnect,
 });
 
 const mapDispatch: any = (dispatch: IDispatch) => ({
@@ -32,14 +31,14 @@ interface IProps
 }
 
 const PartitionInfo: React.FC<IProps> = (props: IProps) => {
-  const { address, port, currentSpace, loading, parts, spaces, isOverview } =
+  const { nebulaConnect, currentSpace, loading, parts, spaces, isOverview } =
     props;
 
   useEffect(() => {
-    if (address && port) {
+    if (nebulaConnect) {
       props.asyncGetSpaces();
     }
-  }, [address, port]);
+  }, [nebulaConnect]);
 
   useEffect(() => {
     if (currentSpace) {

@@ -14,8 +14,7 @@ import { isCommunityVersion } from '@/utils';
 const mapState = (state: IRootState) => ({
   loading: state.loading.effects.nebula.asyncGetServices,
   services: state.nebula.services,
-  address: (state.nebula as any).address,
-  port: (state.nebula as any).port,
+  nebulaConnect: (state.nebula as any).nebulaConnect,
 });
 
 const mapDispatch: any = (dispatch: IDispatch) => ({
@@ -30,15 +29,15 @@ class ServiceInfo extends React.Component<IProps> {
   modalHandler;
 
   componentDidMount() {
-    const { address, port } = this.props;
-    if (isCommunityVersion() || (address && port)) {
+    const { nebulaConnect } = this.props;
+    if (isCommunityVersion() || nebulaConnect) {
       this.props.asyncGetServices();
     }
   }
 
   componentDidUpdate(prevProps) {
-    const { address, port } = this.props;
-    if (address !== prevProps.address && port !== prevProps.port) {
+    const { nebulaConnect } = this.props;
+    if (nebulaConnect !== prevProps.nebulaConnect) {
       this.props.asyncGetServices();
     }
   }

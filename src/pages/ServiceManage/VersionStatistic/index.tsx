@@ -11,8 +11,7 @@ const mapDispatch: any = (dispatch: IDispatch) => ({
 });
 
 const mapState = (state: IRootState) => ({
-  address: (state.nebula as any).address,
-  port: (state.nebula as any).port,
+  nebulaConnect: (state.nebula as any).nebulaConnect,
 });
 
 interface IProps
@@ -37,15 +36,15 @@ class VersionStatistic extends React.Component<IProps, IState> {
   }
 
   componentDidMount() {
-    const { address, port } = this.props;
-    if (isCommunityVersion() || (address && port)) {
+    const { nebulaConnect } = this.props;
+    if (isCommunityVersion() || nebulaConnect) {
       this.getVersion();
     }
   }
 
   componentDidUpdate(prevProps) {
-    const { address, port } = this.props;
-    if (address !== prevProps.address && port !== prevProps.port) {
+    const { nebulaConnect } = this.props;
+    if (nebulaConnect !== prevProps.nebulaConnect) {
       this.getVersion();
     }
   }

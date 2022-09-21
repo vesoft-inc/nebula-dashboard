@@ -23,8 +23,7 @@ const mapState = (state: IRootState) => ({
   spaces: state.nebula.spaces,
   loading: state.loading.models.nebula,
   currentSpace: state.nebula.currentSpace,
-  address: state.nebula.address,
-  port: state.nebula.port,
+  nebulaConnect: state.nebula.nebulaConnect,
 });
 
 interface IProps
@@ -51,8 +50,8 @@ class PartitionDistribution extends React.Component<IProps, IState> {
   }
 
   async componentDidMount() {
-    const { address, port } = this.props;
-    if (isCommunityVersion() || (address && port)) {
+    const { nebulaConnect } = this.props;
+    if (isCommunityVersion() || (nebulaConnect)) {
       await this.props.asyncGetSpaces();
       const { currentSpace } = this.props;
       if (currentSpace) {
@@ -62,9 +61,9 @@ class PartitionDistribution extends React.Component<IProps, IState> {
   }
 
   async componentDidUpdate(prevProps) {
-    const { address, port, currentSpace } = this.props;
-    if (address !== prevProps.address && port !== prevProps.port) {
-      if (isCommunityVersion() || (address && port)) {
+    const { nebulaConnect, currentSpace } = this.props;
+    if (nebulaConnect !== prevProps.nebulaConnect) {
+      if (isCommunityVersion() || nebulaConnect) {
         await this.props.asyncGetSpaces();
         const { currentSpace } = this.props;
         if (currentSpace) {

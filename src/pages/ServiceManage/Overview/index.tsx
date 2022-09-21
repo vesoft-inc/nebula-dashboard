@@ -71,7 +71,7 @@ const Overview: React.FC<IProps> = (props: IProps) => {
     }
   };
 
-  const balanceDataa = async () => {
+  const balanceData = async () => {
     const code = await props.asyncExecNGQL('submit job balance data');
     if (code === 0) {
       message.success(intl.get('common.succeed'));
@@ -84,7 +84,7 @@ const Overview: React.FC<IProps> = (props: IProps) => {
       content: intl.get('common.confirmAction'),
       okText: intl.get('common.confirm'),
       cancelText: intl.get('common.cancel'),
-      onOk: () => balanceDataa(),
+      onOk: () => balanceData(),
     });
   };
 
