@@ -51,7 +51,7 @@ class PartitionDistribution extends React.Component<IProps, IState> {
 
   async componentDidMount() {
     const { nebulaConnect } = this.props;
-    if (isCommunityVersion() || (nebulaConnect)) {
+    if (isCommunityVersion() || nebulaConnect) {
       await this.props.asyncGetSpaces();
       const { currentSpace } = this.props;
       if (currentSpace) {

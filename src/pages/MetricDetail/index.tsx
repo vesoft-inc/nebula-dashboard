@@ -105,7 +105,6 @@ function MetricDetail(props: Props) {
     } else {
       metrics = SUPPORT_METRICS[metricType];
     }
-    console.log('metrics', metrics)
     const metricItem = metrics.find(item => item.metric === metricName) || {
       metric: '',
       valueType: '',

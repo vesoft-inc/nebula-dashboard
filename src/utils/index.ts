@@ -1,5 +1,6 @@
-import { DashboardType, NebulaVersionType } from './interface';
+import { DashboardType, NebulaConnectInfo, NebulaVersionType } from './interface';
 import intl from 'react-intl-universal';
+import cookies from 'js-cookie';
 
 /**
  * this folder for utils
@@ -34,10 +35,16 @@ export let getNebulaVersionName = (_versionType: NebulaVersionType, version) => 
   return `${intl.get('common.nebulaVersion.community')} ${version}`;
 }
 
+export let hasNebulaConnected = (nebulaConnect?: NebulaConnectInfo, clusterID?: number): boolean => {
+  return !!nebulaConnect
+}
+
 export const updateFn = (service: { 
   getNebulaVersionName: typeof getNebulaVersionName
+  hasNebulaConnected: typeof hasNebulaConnected
 }) => {
   getNebulaVersionName = service.getNebulaVersionName;
+  hasNebulaConnected = service.hasNebulaConnected;
 }
 
 export class SessionStorageUtil {
@@ -55,4 +62,9 @@ export class SessionStorageUtil {
   static removeItem(key: string) {
     sessionStorage.removeItem(key);
   }
+}
+
+export const clearNebulaConnection = () => {
+  SessionStorageUtil.removeItem('nebulaConnect');
+  cookies.remove('nsid');
 }

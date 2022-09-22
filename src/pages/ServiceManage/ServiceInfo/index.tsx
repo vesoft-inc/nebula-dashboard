@@ -23,7 +23,7 @@ const mapDispatch: any = (dispatch: IDispatch) => ({
 });
 interface IProps
   extends ReturnType<typeof mapState>,
-    ReturnType<typeof mapDispatch> {}
+  ReturnType<typeof mapDispatch> { }
 
 class ServiceInfo extends React.Component<IProps> {
   modalHandler;

@@ -6,7 +6,7 @@ import './index.less';
 export const DashboardSelect = (props: SelectProps<any>) => (
   <AntSelect
     suffixIcon={<Icon className="select-icon" icon="#iconnav-foldTriangle" />}
-    className="dashboard-select"
+    className={`dashboard-select ${props.className || ''}`}
     {...props}
   />
 );

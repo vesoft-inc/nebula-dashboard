@@ -118,4 +118,5 @@ export interface VersionFeatureInfo {
 export interface NebulaConnectInfo {
   address: string;
   port: number;
+  clusterID: number;
 }
