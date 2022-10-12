@@ -95,6 +95,7 @@ export interface IServiceMetricItem {
   valueType: VALUE_TYPE;
   isSpaceMetric: boolean;
   isRawMetric: boolean;
+  isRawMetric: boolean;
   aggregations: string[];
   prefixMetric: string;
   metricFunction?: string;

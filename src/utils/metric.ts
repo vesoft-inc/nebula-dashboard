@@ -81,6 +81,15 @@ export const FILTER_METRICS = [
   'num_auth_failed_sessions_out_of_max_allowed',
 ];
 
+export const ProcessMetrics = [
+  'cpu_seconds_total',
+  'read_bytes_total',
+  'write_bytes_total',
+  'context_switches_total',
+  'memory_bytes_gauge',
+  'open_filedesc_gauge'
+]
+
 export const METRIC_PROCESS_TYPES = ['graphd', 'storaged', 'metad'];
 
 export const calcMetricInfo = (rawMetric: string) => {
@@ -131,7 +140,7 @@ export const filterServiceMetrics = (payload: {
           metric: metricValue,
           valueType: VALUE_TYPE.number,
           isSpaceMetric: !!isSpaceMetric,
-          isRawMetric: !key, // if metrics don't have sum / avg / p99 
+          isRawMetric: ProcessMetrics.includes(metricValue), // if metrics don't have sum / avg / p99 
           prefixMetric: `${metricFieldType}_${componentType}`,
           aggregations: key ? [key] : METRIC_FUNCTIONS,
         });
