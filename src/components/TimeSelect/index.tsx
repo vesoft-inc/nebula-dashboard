@@ -12,11 +12,12 @@ import styles from './index.module.less';
 interface IProps {
   value?: TIME_OPTION_TYPE | number[];
   onChange?: (value: any) => void;
+  timeOptions?: any[]; 
 }
 
 const TimeSelect = (props: IProps) => {
 
-  const { value, onChange } = props;
+  const { value, timeOptions, onChange } = props;
 
   const [curTimeOption, setCurTimeOption ] = useState<TIME_OPTION_TYPE>();
 
@@ -61,7 +62,7 @@ const TimeSelect = (props: IProps) => {
         onChange={handleTimeButtonClick}
         value={curTimeOption}
       >
-        {TIMEOPTIONS.map(option => (
+        {(timeOptions||TIMEOPTIONS).map(option => (
           <Radio.Button key={option.value} value={option.name}>
             {intl.get(`component.dashboardDetail.${option.name}`)}
           </Radio.Button>
