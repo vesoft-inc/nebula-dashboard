@@ -73,23 +73,23 @@ export const MenuList = [
         path: '/service/overview',
       },
       {
-        key: 'graph-metrics',
+        key: 'graphd-metrics',
         title: 'Graph',
         icon: '#iconnav-graph',
-        path: '/service/graph-metrics',
+        path: '/service/graphd-metrics',
       },
       {
-        key: 'meta-metrics',
+        key: 'metad-metrics',
         title: 'Meta',
         icon: '#iconnav-meta',
-        path: '/service/meta-metrics',
+        path: '/service/metad-metrics',
       },
       {
-        key: 'storage-metrics',
+        key: 'storaged-metrics',
         title: 'Storage',
         icon: '#iconnav-storage',
-        path: '/service/storage-metrics',
-      },
+        path: '/service/storaged-metrics',
+      }
     ],
   },
   {
@@ -176,11 +176,16 @@ export const RoutesList: any = [
     headerConfig: {
       breadcrumb: [
         {
-          path: '#',
+          path: '/',
           breadcrumbName: intl.get('common.dashboard'),
         },
+        {
+          path: '#',
+          breadcrumbName: intl.get('base.metricDetail'),
+        }
       ],
-      title: intl.get('common.machine'),
+      showBackBtn: true,
+      title: intl.get('base.metricDetail'),
     },
   },
   {
@@ -312,22 +317,23 @@ export const RoutesList: any = [
       extra: SERVICE_VIEWS,
     },
   },
+  // {
+  //   path: '/service-metrics/detail/:metricName',
+  //   component: MetricDetail,
+  //   exact: true,
+  //   headerConfig: {
+  //     breadcrumb: [
+  //       {
+  //         path: '#',
+  //         breadcrumbName: intl.get('common.dashboard'),
+  //       },
+  //     ],
+  //     showBackBtn: true,
+  //     title: intl.get('base.metricDetail'),
+  //   },
+  // },
   {
-    path: '/service-metrics/detail/:metricName',
-    component: MetricDetail,
-    exact: true,
-    headerConfig: {
-      breadcrumb: [
-        {
-          path: '#',
-          breadcrumbName: intl.get('common.dashboard'),
-        },
-      ],
-      title: intl.get('common.machine'),
-    },
-  },
-  {
-    path: '/service/graph-metrics',
+    path: '/service/graphd-metrics',
     component: ServiceDetail,
     exact: true,
     headerConfig: {
@@ -341,7 +347,7 @@ export const RoutesList: any = [
           breadcrumbName: intl.get('common.service'),
         },
         {
-          path: '/service/graph-metrics',
+          path: '/service/graphd-metrics',
           breadcrumbName: 'Graph',
         },
       ],
@@ -350,7 +356,7 @@ export const RoutesList: any = [
     },
   },
   {
-    path: '/service/meta-metrics',
+    path: '/service/metad-metrics',
     component: ServiceDetail,
     exact: true,
     headerConfig: {
@@ -364,7 +370,7 @@ export const RoutesList: any = [
           breadcrumbName: intl.get('common.service'),
         },
         {
-          path: '/service/meta-metrics',
+          path: '/service/metad-metrics',
           breadcrumbName: 'Meta',
         },
       ],
@@ -373,7 +379,7 @@ export const RoutesList: any = [
     },
   },
   {
-    path: '/service/storage-metrics',
+    path: '/service/storaged-metrics',
     component: ServiceDetail,
     exact: true,
     headerConfig: {
@@ -387,7 +393,7 @@ export const RoutesList: any = [
           breadcrumbName: intl.get('common.service'),
         },
         {
-          path: '/service/storage-metrics',
+          path: '/service/storaged-metrics',
           breadcrumbName: 'Storage',
         },
       ],

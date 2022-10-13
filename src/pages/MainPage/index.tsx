@@ -120,7 +120,6 @@ class MainPage extends React.Component<IProps, IState> {
     const { appVersion } = this.props;
     const [, activeOpenSubMenu, activeMenu] =
       this.props.location.pathname.split('/');
-      debugger;
     let activeKey =
       activeMenu === 'overview'
         ? `${activeOpenSubMenu}-${activeMenu}`

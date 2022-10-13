@@ -3,21 +3,23 @@ import Icon from '@/components/Icon';
 import metadIcon from '@/static/images/Metad-icon60.png';
 import graphdIcon from '@/static/images/Graphd-icon60.png';
 import storagedIcon from '@/static/images/Storaged-icon60.png';
+import { ServiceName } from '@/utils/interface';
 import './index.less';
 
 interface IProps {
+  serviceType: ServiceName;
   title: string;
   icon?: string;
 }
 class ServiceHeader extends React.PureComponent<IProps> {
   getLogo = () => {
-    const { title } = this.props;
-    switch (title) {
-      case 'Graph Service':
+    const { serviceType } = this.props;
+    switch (serviceType) {
+      case ServiceName.GRAPHD:
         return graphdIcon;
-      case 'Storage Service':
+      case ServiceName.STORAGED:
         return storagedIcon;
-      case 'Meta Service':
+      case ServiceName.METAD:
         return metadIcon;
       default:
         break;

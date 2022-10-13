@@ -58,6 +58,7 @@ export interface ServiceMetricsPanelValue extends MetricsPanelValue {
   space: string;
   metricType: AggregationType | 'all';
   period: string;
+  serviceType: ServiceName;
 }
 
 export interface DiskMetricInfo {
@@ -119,4 +120,22 @@ export interface NebulaConnectInfo {
   address: string;
   port: number;
   clusterID: number;
+}
+
+export enum ServiceName {
+  GRAPHD = 'graphd',
+  METAD = 'metad',
+  STORAGED = 'storaged',
+  MetadListener = 'metad-listener',
+  StoragedListener = 'storaged-listener',
+  Drainer = 'drainerd',
+}
+
+export interface IPanelConfig {
+  [ServiceName.GRAPHD]: IServicePanelConfig[];
+  [ServiceName.STORAGED]: IServicePanelConfig[];
+  [ServiceName.METAD]: IServicePanelConfig[];
+  [ServiceName.MetadListener]: IServicePanelConfig[];
+  [ServiceName.StoragedListener]: IServicePanelConfig[];
+  [ServiceName.Drainer]: IServicePanelConfig[];
 }

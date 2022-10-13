@@ -34,9 +34,9 @@ class Header extends React.PureComponent<IProps, IState> {
   };
 
   handleBack = () => {
-    const { breadcrumb } = this.props.config;
-    const path = breadcrumb[breadcrumb.length - 2].path;
-    this.props.history.push(path);
+    // const { breadcrumb } = this.props.config;
+    // const path = breadcrumb[breadcrumb.length - 2].path;
+    this.props.history.goBack();
   };
 
   render() {

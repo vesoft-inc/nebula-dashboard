@@ -2,11 +2,12 @@ import React, { useEffect, useMemo, useRef } from 'react';
 import { Form } from 'antd';
 import intl from 'react-intl-universal';
 
+import { AGGREGATION_OPTIONS, TIME_INTERVAL_OPTIONS } from '@/utils/dashboard';
+import { ServiceName } from '@/utils/interface';
 import MetricsFilterPanel from '../MetricsFilterPanel';
 import { DashboardSelect, Option } from '../DashboardSelect';
 
 import styles from './index.module.less';
-import { AGGREGATION_OPTIONS, TIME_INTERVAL_OPTIONS } from '@/utils/dashboard';
 
 interface IProps {
   spaces?: string[];
@@ -16,10 +17,11 @@ interface IProps {
   onRefresh?: (values: any) => void;
   metrics?: string[];
   onMetricsChange?: (metrics: string[]) => void;
+  serviceTypes?: ServiceName[];
 }
 
 function ServiceMetricsFilterPanel(props: IProps) {
-  const { spaces, instanceList, onChange, values, onRefresh, metrics, onMetricsChange } = props;
+  const { spaces, instanceList, onChange, values, onRefresh, metrics, onMetricsChange, serviceTypes } = props;
 
   const panelRef = useRef<any>()
 
@@ -60,6 +62,14 @@ function ServiceMetricsFilterPanel(props: IProps) {
     onChange?.(form.getFieldsValue());
   }
 
+  const handleServiceTypeChange = (value) => {
+    if (!form) return;
+    form.setFieldsValue({
+      serviceType: value,
+    });
+    onChange?.(form.getFieldsValue());
+  }
+
   return (
     <div className={styles.filterPanelContent}>
       <MetricsFilterPanel
@@ -70,6 +80,19 @@ function ServiceMetricsFilterPanel(props: IProps) {
         metrics={metrics}
         onMetricsChange={onMetricsChange}
       >
+        {
+          serviceTypes && (
+            <Form.Item label={intl.get('service.serviceType')} name="serviceType">
+              <DashboardSelect onChange={handleServiceTypeChange}>
+                {serviceTypes.map(serviceType => (
+                  <Option key={serviceType} value={serviceType}>
+                    {serviceType}
+                  </Option>
+                ))}
+              </DashboardSelect>
+            </Form.Item>
+          )
+        }
         {
           spaces && (
             <Form.Item label={intl.get('service.spaces')} name="space">

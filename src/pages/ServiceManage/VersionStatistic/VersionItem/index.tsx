@@ -7,7 +7,7 @@ import { IRootState } from '@/store';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 import PieChart from '@/components/Charts/PieChart';
-import { IVersionItem, NebulaVersionType } from '@/utils/interface';
+import { IVersionItem, NebulaVersionType, ServiceName } from '@/utils/interface';
 import { renderPieChartTpl } from '@/utils/chart/chart';
 import ServiceHeader from '@/components/Service/ServiceHeader';
 
@@ -21,6 +21,7 @@ interface IProps extends ReturnType<typeof mapState> {
   icon: string;
   data: IVersionItem[];
   isOverview: boolean;
+  serviceType: ServiceName;
 }
 
 interface IState {}
@@ -71,7 +72,7 @@ class VersionItem extends React.PureComponent<IProps, IState> {
   };
 
   render() {
-    const { title, icon, data, isOverview, loading } = this.props;
+    const { title, icon, data, isOverview, loading, serviceType } = this.props;
     const columns = [
       {
         title: intl.get('common.service'),
@@ -90,7 +91,7 @@ class VersionItem extends React.PureComponent<IProps, IState> {
             'version-statistic-overview': isOverview,
           })}
         >
-          <ServiceHeader title={title} icon={!isOverview ? icon : undefined} />
+          <ServiceHeader serviceType={serviceType} title={title} icon={!isOverview ? icon : undefined} />
           <div
             className={classnames('version-content', {
               'version-overview': isOverview,
@@ -117,4 +118,6 @@ class VersionItem extends React.PureComponent<IProps, IState> {
     );
   }
 }
+
+// @ts-ignore
 export default connect(mapState)(VersionItem);

@@ -1,4 +1,5 @@
 import { SERVICE_SUPPORT_METRICS } from '@/utils/promQL';
+import { ServiceName } from './interface';
 
 export const SERVICE_POLLING_INTERVAL = 10 * 1000;
 export const SERVICE_QUERY_PERIOD = 10 * 60;
@@ -79,7 +80,7 @@ export const LINE_COLORS = [
 ];
 
 export const DEFAULT_SERVICE_PANEL_CONFIG = {
-  graph: [
+  [ServiceName.GRAPHD]: [
     {
       period: 60,
       metric: SERVICE_SUPPORT_METRICS.graph[0].metric,
@@ -93,7 +94,7 @@ export const DEFAULT_SERVICE_PANEL_CONFIG = {
       metricType: SERVICE_SUPPORT_METRICS.graph[1].metricType[0].key,
     },
   ],
-  storage: [
+  [ServiceName.STORAGED]: [
     {
       period: 60,
       metric: SERVICE_SUPPORT_METRICS.storage[0].metric,
@@ -107,7 +108,7 @@ export const DEFAULT_SERVICE_PANEL_CONFIG = {
       metricType: SERVICE_SUPPORT_METRICS.storage[1].metricType[0].key,
     },
   ],
-  meta: [
+  [ServiceName.METAD]: [
     {
       period: 60,
       metric: SERVICE_SUPPORT_METRICS.meta[0].metric,
@@ -121,4 +122,7 @@ export const DEFAULT_SERVICE_PANEL_CONFIG = {
       metricType: SERVICE_SUPPORT_METRICS.meta[1].metricType[0].key,
     },
   ],
+  [ServiceName.MetadListener]: [],
+  [ServiceName.StoragedListener]: [],
+  [ServiceName.Drainer]: []
 };

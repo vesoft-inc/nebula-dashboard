@@ -6,19 +6,15 @@ import intl from 'react-intl-universal';
 import { TIME_INTERVAL_OPTIONS } from '@/utils/dashboard';
 import { DashboardSelect, Option } from '@/components/DashboardSelect';
 import { MetricPopover } from '@/components/MetricPopover';
-import { IServicePanelConfig } from '@/utils/interface';
+import { IPanelConfig, ServiceName } from '@/utils/interface';
 
 import './index.less';
 
 interface IProps {
-  editType: string;
+  editType: ServiceName;
   editIndex: number;
   serviceMetric: any;
-  panelConfig: {
-    graph: IServicePanelConfig[];
-    storage: IServicePanelConfig[];
-    meta: IServicePanelConfig[];
-  };
+  panelConfig: IPanelConfig;
   onClose: () => void;
   onPanelConfigUpdate: (values) => void;
 }

@@ -1,4 +1,4 @@
-import { Popover, Spin } from 'antd';
+import { Empty, Popover, Spin } from 'antd';
 import React, { useEffect, useMemo, useState } from 'react';
 import intl from 'react-intl-universal';
 import { RouteComponentProps, useHistory, useLocation, withRouter } from 'react-router-dom';
@@ -16,7 +16,7 @@ import {
 } from '@/utils/dashboard';
 import { IDispatch, IRootState } from '@/store';
 import { VALUE_TYPE } from '@/utils/promQL';
-import { IMetricOption, IServiceMetricItem, MetricScene, ServiceMetricsPanelValue } from '@/utils/interface';
+import { IServiceMetricItem, MetricScene, ServiceMetricsPanelValue, ServiceName } from '@/utils/interface';
 
 import LineChart from '@/components/Charts/LineChart';
 import { configDetailChart, updateDetailChart } from '@/utils/chart/chart';
@@ -27,7 +27,7 @@ import ServiceMetricsFilterPanel from '@/components/ServiceMetricsFilterPanel';
 import { shouldCheckCluster } from '@/utils';
 
 import './index.less';
-import { getQueryByMetricType } from '@/utils/metric';
+import { ClusterServiceNameMap, DEPENDENCY_PROCESS_TYPES, getQueryByMetricType } from '@/utils/metric';
 
 const mapDispatch: any = (dispatch: IDispatch) => ({
   asyncGetStatus: dispatch.service.asyncGetStatus,
@@ -64,6 +64,7 @@ function ServiceDetail(props: IProps) {
   const [serviceType, setServiceType] = useState<string>('');
   const [dataSources, setDataSources] = useState<any[]>([]);
   const [showLoading, setShowLoading] = useState<boolean>(false);
+  const [isDependencyService, setIsDependencyService] = useState<boolean>(false);
 
   const history = useHistory();
 
@@ -92,29 +93,21 @@ function ServiceDetail(props: IProps) {
   const metricOptions = useMemo<IServiceMetricItem[]>(() => {
     if (serviceMetric.graphd.length === 0
       || serviceMetric.storaged.length === 0
-      || serviceMetric.metad.length === 0) {
+      || serviceMetric.metad.length === 0
+    ) {
       return [];
     }
     let options: IServiceMetricItem[] = [];
     if (serviceType) {
-      options = serviceMetric[`${serviceType}d`];
+      options = serviceMetric[serviceType];
     }
     return options;
-  }, [serviceType, serviceMetric.graphd, serviceMetric.metad, serviceMetric.storaged]);
+  }, [serviceType, serviceMetric.graphd, serviceMetric.metad, serviceMetric.storaged, serviceMetric.drainerd, serviceMetric['metad-listener'], serviceMetric['storaged-listener']]);
 
   const metricTypeMap: Map<AggregationType, IServiceMetricItem[]> = useMemo(() => {
     const map: Map<AggregationType, IServiceMetricItem[]> = {} as any;
     metricOptions.forEach(option => {
       option.aggregations.forEach(type => {
-        // const { key, value } = type;
-        // const metricItem: IServiceMetricItem = {
-        //   metric: option.metric,
-        //   isSpaceMetric: option.isSpaceMetric,
-        //   metricType: option.metricType,
-        //   valueType: option.valueType,
-        //   isRawMetric: option.isRawMetric,
-        //   metricFunction: value,
-        // };
         if (!map[type]) {
           map[type] = [option];
         } else {
@@ -135,7 +128,8 @@ function ServiceDetail(props: IProps) {
     const match = /(\w+)-metrics/g.exec(location.pathname);
     let serviceType = '';
     if (match) {
-      serviceType = match[1] || 'graph';
+      setIsDependencyService(match[1] === 'dependency');
+      serviceType =  match[1] === 'dependency' ? metricsFilterValues.serviceType : match[1] || 'graphd';
     }
     setServiceType(serviceType);
   }, [location]);
@@ -152,7 +146,7 @@ function ServiceDetail(props: IProps) {
         baseLine: undefined,
       }))
     } else {
-      charts = metricTypeMap[metricType].map((metric, i) => ({
+      charts = (metricTypeMap[metricType] || []).map((metric, i) => ({
         metric,
         chartInstance: undefined,
         index: i,
@@ -205,7 +199,7 @@ function ServiceDetail(props: IProps) {
           query: getQueryByMetricType(item, metricType, period),
           start: startTime,
           end: endTime,
-          space: serviceType === 'graph' ? space : undefined,
+          space: serviceType === ServiceName.GRAPHD ? space : undefined,
           clusterID: cluster?.id,
         }).then(res => {
           resolve(res);
@@ -277,6 +271,7 @@ function ServiceDetail(props: IProps) {
 
   const handleMetricChange = async values => {
     updateMetricsFiltervalues(values);
+    setServiceType(values.serviceType);
   };
 
   const handleRefresh = () => {
@@ -304,8 +299,22 @@ function ServiceDetail(props: IProps) {
   }
 
   const handleViewDetail = (metricItem) => () => {
-    history.push(getViewPath(`/metrics-detail/${serviceType}d/${metricItem.metric.metric}`));
+    history.push(getViewPath(`/metrics-detail/${serviceType}/${metricItem.metric.metric}`));
   }
+
+  const getDependencyTypes = () => {
+    if (!cluster?.id) return [];
+    return DEPENDENCY_PROCESS_TYPES.filter(serviceType => {
+      return cluster[ClusterServiceNameMap[serviceType]].length > 0;
+    });
+  }
+
+  useEffect(() => {
+    const dependencies = getDependencyTypes();
+    updateMetricsFiltervalues({
+      serviceType: dependencies[0],
+    });
+  }, [cluster])
 
   return (
     <Spin spinning={showLoading} wrapperClassName="service-detail">
@@ -314,57 +323,64 @@ function ServiceDetail(props: IProps) {
           <ServiceMetricsFilterPanel
             onChange={handleMetricChange}
             instanceList={instanceList}
-            spaces={serviceType === 'graph' ? serviceMetric.spaces : undefined}
+            spaces={serviceType === ServiceName.GRAPHD ? serviceMetric.spaces : undefined}
             values={metricsFilterValues}
             onRefresh={handleRefresh}
             metrics={metricNameList}
             onMetricsChange={handleMetricsChange}
+            serviceTypes={isDependencyService ? getDependencyTypes() : undefined}
           />
         </div>
         <div className='detail-content'>
           {
-            metricCharts.map((metricChart, i) => (
-              <div key={i} className='chart-item' style={{ display: shouldShow(metricChart.metric) ? 'flex' : 'none' }}>
-                <div className='chart-title'>
-                  {metricChart.metric.metric}
-                  <Popover
-                    className={"chart-title-popover"}
-                    content={
-                      <div>{intl.get(`metric_description.${metricChart.metric.metric}`)}</div>
-                    }
-                  >
-                    <Icon className="metric-info-icon blue chart-title-desc" icon="#iconnav-serverInfo" />
-                  </Popover>
-                </div>
-                <div className='chart-content'>
-                  <LineChart
-                    isDefaultScale={
-                      metricChart.valueType === VALUE_TYPE.percentage
-                    }
-                    yAxisMaximum={metricChart.maxNum}
-                    baseLine={metricChart.baseLine}
-                    options={{ padding: [20, 20, 60, 50] }}
-                    ref={ref => metricChart.chartRef = ref}
-                    renderChart={renderChart(i)}
-                  />
-                </div>
-                <div className="action-icons">
-                  <div
-                    className="btn-icon-with-desc blue view-detail"
-                    onClick={handleViewDetail(metricChart)}
-                  >
-                    <Icon icon="#iconwatch" />
+            metricCharts.length ? (
+              metricCharts.map((metricChart, i) => (
+                <div key={i} className='chart-item' style={{ display: shouldShow(metricChart.metric) ? 'flex' : 'none' }}>
+                  <div className='chart-title'>
+                    {metricChart.metric.metric}
+                    <Popover
+                      className={"chart-title-popover"}
+                      content={
+                        <div>{intl.get(`metric_description.${metricChart.metric.metric}`)}</div>
+                      }
+                    >
+                      <Icon className="metric-info-icon blue chart-title-desc" icon="#iconnav-serverInfo" />
+                    </Popover>
                   </div>
-                  <div
-                    className="btn-icon-with-desc blue base-line"
-                    onClick={handleBaseLineEdit(metricChart)}
-                  >
-                    <Icon icon="#iconSetup" />
-                    <span>{intl.get('common.baseLine')}</span>
+                  <div className='chart-content'>
+                    <LineChart
+                      isDefaultScale={
+                        metricChart.valueType === VALUE_TYPE.percentage
+                      }
+                      yAxisMaximum={metricChart.maxNum}
+                      baseLine={metricChart.baseLine}
+                      options={{ padding: [20, 20, 60, 50] }}
+                      ref={ref => metricChart.chartRef = ref}
+                      renderChart={renderChart(i)}
+                    />
+                  </div>
+                  <div className="action-icons">
+                    <div
+                      className="btn-icon-with-desc blue view-detail"
+                      onClick={handleViewDetail(metricChart)}
+                    >
+                      <Icon icon="#iconwatch" />
+                    </div>
+                    <div
+                      className="btn-icon-with-desc blue base-line"
+                      onClick={handleBaseLineEdit(metricChart)}
+                    >
+                      <Icon icon="#iconSetup" />
+                      <span>{intl.get('common.baseLine')}</span>
+                    </div>
                   </div>
                 </div>
+              ))
+            ) : (
+              <div className="no-data-content">
+                <Empty description={intl.get('service.noServiceInstalled')} />
               </div>
-            ))
+            )
           }
         </div>
       </div>

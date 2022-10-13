@@ -1,7 +1,7 @@
 import { createModel } from '@rematch/core';
 import _ from 'lodash';
 import serviceApi from '@/config/service';
-import { IServicePanelConfig, ServiceMetricsPanelValue } from '@/utils/interface';
+import { IPanelConfig, IServicePanelConfig, ServiceMetricsPanelValue, ServiceName } from '@/utils/interface';
 import { DEFAULT_SERVICE_PANEL_CONFIG } from '@/utils/service';
 import { getProperStep } from '@/utils/dashboard';
 import { unique } from '@/utils';
@@ -9,11 +9,7 @@ import { getClusterPrefix } from '@/utils/promQL';
 import { InitMetricsFilterValues } from '@/utils/metric';
 
 interface IState {
-  panelConfig: {
-    graph: IServicePanelConfig[];
-    storage: IServicePanelConfig[];
-    meta: IServicePanelConfig[];
-  };
+  panelConfig: IPanelConfig;
   instanceList: string[];
   metricsFilterValues: ServiceMetricsPanelValue;
 }
