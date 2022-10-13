@@ -129,7 +129,7 @@ function ServiceDetail(props: IProps) {
     let serviceType = '';
     if (match) {
       setIsDependencyService(match[1] === 'dependency');
-      serviceType =  match[1] === 'dependency' ? metricsFilterValues.serviceType : match[1] || 'graphd';
+      serviceType = match[1] === 'dependency' ? metricsFilterValues.serviceType : match[1] || 'graphd';
     }
     setServiceType(serviceType);
   }, [location]);
@@ -350,11 +350,11 @@ function ServiceDetail(props: IProps) {
                   <div className='chart-content'>
                     <LineChart
                       isDefaultScale={
-                        metricChart.valueType === VALUE_TYPE.percentage
+                        metricChart.metric?.valueType === VALUE_TYPE.percentage
                       }
                       yAxisMaximum={metricChart.maxNum}
                       baseLine={metricChart.baseLine}
-                      options={{ padding: [20, 20, 60, 50] }}
+                      options={metricChart.metric?.valueType === VALUE_TYPE.number ?  { padding: [20, 20, 60, 50] } : { padding: [20, 20, 60, 70] }}
                       ref={ref => metricChart.chartRef = ref}
                       renderChart={renderChart(i)}
                     />

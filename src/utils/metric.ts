@@ -108,6 +108,19 @@ export const calcMetricInfo = (rawMetric: string) => {
   }
 }
 
+const calcServiceMetricValueType = (metricName: string): VALUE_TYPE => {
+  let valueType = VALUE_TYPE.number;
+  const valueTypes = Object.keys(ServiceMetricValueTypeMap) as VALUE_TYPE[];
+  for(let i = 0; i < valueTypes.length; i++) {
+    const curValueType = valueTypes[i];
+    if (ServiceMetricValueTypeMap[curValueType].includes(metricName)) {
+      valueType = curValueType as VALUE_TYPE;
+      break;
+    }
+  }
+  return valueType;
+}
+
 export const filterServiceMetrics = (payload: {
   metricList: string[];
   spaceMetricList: string[];
@@ -143,7 +156,7 @@ export const filterServiceMetrics = (payload: {
       } else {
         metrics.push({
           metric: metricValue,
-          valueType: VALUE_TYPE.number,
+          valueType: calcServiceMetricValueType(metricValue),
           isSpaceMetric: !!isSpaceMetric,
           isRawMetric: !key, // if metrics don't have sum / avg / p99 
           prefixMetric: `${metricFieldType}_${componentType.replace('-', '_')}`,
@@ -162,7 +175,6 @@ export const InitMetricsFilterValues: any = {
   space: "",
   period: SERVICE_QUERY_PERIOD,
   metricType: AGGREGATION_OPTIONS[0],
-  // serviceType: DEPENDENCY_PROCESS_TYPES[0],
 };
 
 export const InitMachineMetricsFilterValues: any = {
@@ -198,6 +210,12 @@ export const RawServiceMetrics = [
   "read_bytes_total",
   "write_bytes_total",
 ]
+
+export const ServiceMetricValueTypeMap = {
+  [VALUE_TYPE.byte]: ["write_bytes_total", "memory_bytes_gauge"],
+  [VALUE_TYPE.byteSecond]: ["memory_bytes_gauge"],
+  [VALUE_TYPE.numberSecond]: ["cpu_seconds_total"]
+}
 
 export const getQueryMap = (metricItem: IServiceMetricItem) => {
   const res = {};

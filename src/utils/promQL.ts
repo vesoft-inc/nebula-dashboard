@@ -2,8 +2,6 @@
  * EXPLAIN: beacuse the metrics in each system are different, so dashboard need to load the detailed promql used by system
  */
 
-import { ServiceName } from "./interface";
-
 export const enum VALUE_TYPE {
   percentage = 'PERCENTAGE',
   byte = 'BYTE',
