@@ -2,7 +2,7 @@ import _ from 'loadsh';
 import { VALUE_TYPE } from '@/utils/promQL';
 import { INTERVAL_FREQUENCY_LIST, SERVICE_QUERY_PERIOD } from './service';
 import { AggregationType, AGGREGATION_OPTIONS, TIME_OPTION_TYPE } from './dashboard';
-import { IServiceMetricItem } from './interface';
+import { IServiceMetricItem, ServiceName } from './interface';
 
 export const METRICS_DESCRIPTION: any = {
   num_queries: 'num_queries description',
@@ -20,8 +20,6 @@ export const METRICS_DESCRIPTION: any = {
   heartbeat_latency_us: 'heartbeat_latency_us description',
   num_heartbeats: 'num_heartbeats description',
 };
-
-export const METRIC_SERVICE_TYPES = ['graph', 'storage', 'meta'];
 
 export const METRIC_FUNCTIONS: AggregationType[] = Object.values(AggregationType);
 
@@ -81,7 +79,23 @@ export const FILTER_METRICS = [
   'num_auth_failed_sessions_out_of_max_allowed',
 ];
 
-export const METRIC_PROCESS_TYPES = ['graphd', 'storaged', 'metad'];
+export const METRIC_PROCESS_TYPES = [
+  ServiceName.GRAPHD,
+  ServiceName.STORAGED,
+  ServiceName.METAD,
+];
+
+export const DEPENDENCY_PROCESS_TYPES = [
+  ServiceName.MetadListener,
+  ServiceName.StoragedListener,
+  ServiceName.Drainer,
+];
+
+export const ClusterServiceNameMap = {
+  [ServiceName.MetadListener]: 'metadListener',
+  [ServiceName.StoragedListener]: 'storagedListener',
+  [ServiceName.Drainer]: 'drainerd',
+}
 
 export const calcMetricInfo = (rawMetric: string) => {
   if (METRIC_FUNCTIONS.some(fn => rawMetric.includes(fn))) {
@@ -103,7 +117,7 @@ export const filterServiceMetrics = (payload: {
   const { metricList, spaceMetricList = [], componentType } = payload;
   const metrics: IServiceMetricItem[] = [];
   metricList.map(item => {
-    const [metricFieldType, metricFields] = item.split(`_${componentType}_`); // Example: nebula_graphd_num_queries_sum_60 =>  nebula, num_queries_sum_60
+    const [metricFieldType, metricFields] = item.split(`_${componentType.replace('-', '_')}_`); // Example: nebula_graphd_num_queries_sum_60 =>  nebula, num_queries_sum_60
     if (metricFieldType && metricFields) {
       const { key, metricValue } = calcMetricInfo(metricFields)
       const metricItem = _.find(metrics, m => m.metric === metricValue);
@@ -132,7 +146,7 @@ export const filterServiceMetrics = (payload: {
           valueType: VALUE_TYPE.number,
           isSpaceMetric: !!isSpaceMetric,
           isRawMetric: !key, // if metrics don't have sum / avg / p99 
-          prefixMetric: `${metricFieldType}_${componentType}`,
+          prefixMetric: `${metricFieldType}_${componentType.replace('-', '_')}`,
           aggregations: key ? [key] : METRIC_FUNCTIONS,
         });
       }
@@ -147,7 +161,8 @@ export const InitMetricsFilterValues: any = {
   timeRange: TIME_OPTION_TYPE.DAY1,
   space: "",
   period: SERVICE_QUERY_PERIOD,
-  metricType: AGGREGATION_OPTIONS[0]
+  metricType: AGGREGATION_OPTIONS[0],
+  // serviceType: DEPENDENCY_PROCESS_TYPES[0],
 };
 
 export const InitMachineMetricsFilterValues: any = {

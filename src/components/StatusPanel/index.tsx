@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import intl from 'react-intl-universal';
 import { connect } from 'react-redux';
-import { NEBULA_COUNT } from '@/utils/promQL';
 import { DETAIL_DEFAULT_RANGE } from '@/utils/dashboard';
 import { shouldCheckCluster } from '@/utils';
+import { ServiceName } from '@/utils/interface';
 import './index.less';
 
 const mapState = (state: any) => ({
@@ -14,7 +14,7 @@ const mapState = (state: any) => ({
 const mapDispatch = (dispatch) => ({});
 
 interface IProps extends ReturnType<typeof mapState>  {
-  type: string;
+  type: ServiceName;
   clusterID?: string;
   getStatus: (payload) => void;
 }
@@ -50,7 +50,7 @@ function StatusPanel(props: IProps) {
 
   const asyncGetStatus = async () => {
     const { normal, abnormal } = (await getStatus({
-      query: NEBULA_COUNT[type],
+      query: `nebula_${type}_count`,
       end: Date.now(),
       interval: DETAIL_DEFAULT_RANGE,
       clusterID: cluster?.id,

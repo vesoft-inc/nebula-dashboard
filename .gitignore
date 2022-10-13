@@ -34,3 +34,4 @@ docker/data
 docker/tmp
 .travis.yml
 appveyor.yml
+server/config.json

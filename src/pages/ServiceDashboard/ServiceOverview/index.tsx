@@ -1,22 +1,21 @@
-import { Col, Row } from 'antd';
 import React from 'react';
+import { Col, Row } from 'antd';
 import intl from 'react-intl-universal';
 import _ from 'lodash';
 import CustomServiceQueryPanel from './CustomServiceQueryPanel';
 import ServiceHeader from '@/components/Service/ServiceHeader';
-import { IServicePanelConfig } from '@/utils/interface';
+import { IServicePanelConfig, ServiceName } from '@/utils/interface';
 import StatusPanel from '@/components/StatusPanel';
 import Icon from '@/components/Icon';
 import { trackPageView } from '@/utils/stat';
 import './index.less';
 
 interface IProps {
-  serviceType: string;
-  icon: string;
+  serviceType: ServiceName;
   configs: IServicePanelConfig[];
-  onConfigPanel: (serviceType: string, index: number) => void;
+  onConfigPanel: (serviceType: ServiceName, index: number) => void;
   getStatus: (payload) => void;
-  onView: (serviceType: string) => void;
+  onView: (serviceType: ServiceName) => void;
 }
 
 class ServiceOverview extends React.Component<IProps> {
@@ -27,10 +26,10 @@ class ServiceOverview extends React.Component<IProps> {
   };
 
   render() {
-    const { serviceType, icon, configs, getStatus } = this.props;
+    const { serviceType, configs, getStatus } = this.props;
     return (
       <div className="service-table-item">
-        <ServiceHeader title={`${serviceType} Service`} icon={icon}>
+        <ServiceHeader serviceType={serviceType} title={`${serviceType} Service`}>
           <StatusPanel type={serviceType} getStatus={getStatus} />
           <div className="btn-icon-with-desc blue" onClick={this.handleView}>
             <Icon icon="#iconwatch" />

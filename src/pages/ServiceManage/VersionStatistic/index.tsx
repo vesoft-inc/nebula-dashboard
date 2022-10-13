@@ -1,7 +1,7 @@
 import React from 'react';
 import { IRootState, IDispatch } from '@/store';
 import { connect } from 'react-redux';
-import { IVersionItem } from '@/utils/interface';
+import { IVersionItem, ServiceName } from '@/utils/interface';
 import VersionItem from './VersionItem';
 import { isCommunityVersion } from '@/utils';
 
@@ -77,21 +77,26 @@ class VersionStatistic extends React.Component<IProps, IState> {
           title="Graph Service"
           icon="#iconservice-graph"
           data={graph}
+          serviceType={ServiceName.GRAPHD}
         />
         <VersionItem
           isOverview={!!isOverview}
           title="Storage Service"
           icon="#iconservice-storage"
           data={storage}
+          serviceType={ServiceName.STORAGED}
         />
         <VersionItem
           isOverview={!!isOverview}
           title="Meta Service"
           icon="#iconservice-meta"
           data={meta}
+          serviceType={ServiceName.METAD}
         />
       </div>
     );
   }
 }
+
+//  @ts-ignore
 export default connect(mapState, mapDispatch)(VersionStatistic);

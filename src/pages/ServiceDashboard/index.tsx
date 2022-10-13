@@ -7,11 +7,11 @@ import ServiceOverview from './ServiceOverview';
 import { IDispatch, IRootState } from '@/store';
 import Modal from '@/components/Modal';
 import ServiceCardEdit from '@/components/Service/ServiceCardEdit';
-import { METRIC_SERVICE_TYPES } from '@/utils/metric';
+import { DEPENDENCY_PROCESS_TYPES, METRIC_PROCESS_TYPES } from '@/utils/metric';
 import MetricsFilterPanel from '@/components/MetricsFilterPanel';
 
 import './index.less';
-import { ServiceMetricsPanelValue } from '@/utils/interface';
+import { ServiceMetricsPanelValue, ServiceName } from '@/utils/interface';
 import { calcTimeRange } from '@/utils/dashboard';
 import { shouldCheckCluster } from '@/utils';
 
@@ -36,23 +36,23 @@ const mapState: any = (state: IRootState) => ({
 
 interface IProps
   extends RouteComponentProps, ReturnType<typeof mapDispatch>,
-  ReturnType<typeof mapState> { 
-    onView: (serviceType: string) => void;
+  ReturnType<typeof mapState> {
+  onView: (serviceType: ServiceName) => void;
 }
 
-function ServiceDashboard(props: IProps){
+function ServiceDashboard(props: IProps) {
 
   const { panelConfig, serviceMetric, updatePanelConfig, asyncGetStatus, onView, instanceList, updateMetricsFiltervalues, metricsFilterValues, asyncGetSpaces, cluster } = props;
 
-  const [editPanelType, setEditPanelType ] = useState('');
-  const [editPanelIndex, setEditPanelIndex ] = useState(0)
+  const [editPanelType, setEditPanelType] = useState('');
+  const [editPanelIndex, setEditPanelIndex] = useState(0)
 
   const history = useHistory();
 
   const modalHandlerRef = useRef<any>();
 
   useEffect(() => {
-    const [ start, end ] = calcTimeRange(metricsFilterValues.timeRange);
+    const [start, end] = calcTimeRange(metricsFilterValues.timeRange);
     if (shouldCheckCluster()) {
       if (cluster?.id) {
         asyncGetSpaces({
@@ -69,7 +69,7 @@ function ServiceDashboard(props: IProps){
     }
   }, [metricsFilterValues.timeRange, cluster])
 
-  const handleConfigPanel = (serviceType: string, index: number) => {
+  const handleConfigPanel = (serviceType: ServiceName, index: number) => {
     setEditPanelIndex(index);
     setEditPanelType(serviceType);
     modalHandlerRef.current.show();
@@ -81,8 +81,8 @@ function ServiceDashboard(props: IProps){
     }
   }
 
-  const handleView = (serviceType: string) => {
-      history.push(`/service/${serviceType}-metrics`);
+  const handleView = (serviceType: ServiceName) => {
+    history.push(`/service/${serviceType}-metrics`);
   };
 
   const handleMetricsChange = (values) => {
@@ -97,18 +97,18 @@ function ServiceDashboard(props: IProps){
     <>
       <div className="service-table">
         <div className='common-header' >
-          <MetricsFilterPanel 
-            onChange={handleMetricsChange} 
+          <MetricsFilterPanel
+            onChange={handleMetricsChange}
             instanceList={instanceList}
             values={metricsFilterValues}
             onRefresh={handleRefreshData}
           />
         </div>
-        {METRIC_SERVICE_TYPES.map(type => (
+        {METRIC_PROCESS_TYPES.map(type => (
           <ServiceOverview
             key={type}
             serviceType={type}
-            icon={`#iconnav-${type}`}
+            // icon={`#iconnav-${type}`}
             configs={panelConfig[type]}
             getStatus={asyncGetStatus}
             onConfigPanel={handleConfigPanel}

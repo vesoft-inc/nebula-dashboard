@@ -2,6 +2,8 @@
  * EXPLAIN: beacuse the metrics in each system are different, so dashboard need to load the detailed promql used by system
  */
 
+import { ServiceName } from "./interface";
+
 export const enum VALUE_TYPE {
   percentage = 'PERCENTAGE',
   byte = 'BYTE',
@@ -446,12 +448,6 @@ export let LINUX = (cluster?,device?:string) : any => {
     network_in_packets: `ceil(sum by(instance)(irate(node_network_receive_packets_total{device=~"(eth|en)[a-z0-9]*"${clusterSuffix1}}[1m])))`,
     network_out_packets: `ceil(sum by(instance)(irate(node_network_transmit_packets_total{device=~"(eth|en)[a-z0-9]*"${clusterSuffix1}}[1m])))`,
   }
-};
-
-export const NEBULA_COUNT = {
-  graph: 'nebula_graphd_count',
-  storage: 'nebula_storaged_count',
-  meta: 'nebula_metad_count',
 };
 
 export const updatePromql = (service: {

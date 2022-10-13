@@ -119,7 +119,13 @@
   "num_delete_vertices":	"删除点的次数。",
   "num_lookup":	"LookupProcessor 执行的次数。",
   "disk_used_percentage":	"磁盘使用率",
-  "num_sync_data": "The number of times the storage synchronizes data from drainer.",
-  "num_sync_data_errors": "The number of errors the storage synchronizes data from drainer.",
+  "num_sync_data": "Storage 同步 Drainer 数据的次数。",
+  "num_sync_data_errors": "Storage 同步 Drainer 数据出错的次数。",
+  "context_switches_total": "线程切换次数。",
+  "cpu_seconds_total": "CPU 使用时间(s)。",
+  "memory_bytes_gauge": "内存使用量。",
+  "open_filedesc_gauge": "打开的文件描述符数量。",
+  "read_bytes_total": "读取的字节数。",
+  "write_bytes_total": "写入的字节数。",
   "more": "更多参数说明"
 }

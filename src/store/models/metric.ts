@@ -5,6 +5,7 @@ import service from '@/config/service';
 import { filterServiceMetrics } from '@/utils/metric';
 import { getClusterPrefix, diskPararms } from '@/utils/promQL';
 import { formatVersion } from '@/utils/dashboard';
+import { ServiceName } from '@/utils/interface';
 
 interface IState {
   graphd: any[];
@@ -17,9 +18,12 @@ interface IState {
 export function MetricModelWrapper(serviceApi) {
   return createModel({
     state: {
-      graphd: [],
-      metad: [],
-      storaged: [],
+      [ServiceName.GRAPHD]: [],
+      [ServiceName.METAD]: [],
+      [ServiceName.STORAGED]: [],
+      [ServiceName.MetadListener]: [],
+      [ServiceName.StoragedListener]: [],
+      [ServiceName.Drainer]: [],
       spaces: [],
       devices: []
     },

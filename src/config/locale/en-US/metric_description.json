@@ -118,7 +118,13 @@
   "num_delete_vertices":	"The number of times that vertices are deleted.",
   "num_lookup":	"The number of executions for the LookupProcessor.",
   "disk_used_percentage":  "The percentage of disk used.",
-  "num_sync_data": "Storage 同步 Drainer 数据的次数。",
-  "num_sync_data_errors": "Storage 同步 Drainer 数据出错的次数。",
+  "num_sync_data": "The number of times the storage synchronizes data from drainer.",
+  "num_sync_data_errors": "The number of errors the storage synchronizes data from drainer.",
+  "context_switches_total": "The total num of context switches.",
+  "cpu_seconds_total": "The total num of cpu seconds.",
+  "memory_bytes_gauge": "The memory bytes.",
+  "open_filedesc_gauge": "The open file descriptor.",
+  "read_bytes_total": "The total num of read bytes.",
+  "write_bytes_total": "The total num of write bytes.",
   "more": "More"
 }
