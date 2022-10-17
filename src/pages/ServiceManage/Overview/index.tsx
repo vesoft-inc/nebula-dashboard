@@ -16,6 +16,7 @@ import { DEFAULT_VERSION, formatVersion } from '@/utils/dashboard';
 
 import styles from './index.module.less';
 import { isCommunityVersion } from '@/utils';
+import { ICluster } from '@base/utils/interface';
 
 const mapDispatch: any = (dispatch: IDispatch) => ({
   asyncUseSpaces: dispatch.nebula.asyncUseSpaces,
@@ -38,6 +39,7 @@ interface IProps
   ReturnType<typeof mapDispatch>,
   RouteComponentProps {
   baseRouter?: string;
+  cluster?: ICluster;
 }
 
 const OverviewCardHeader = (props: IHaderProps) => {
@@ -110,13 +112,14 @@ const Overview: React.FC<IProps> = (props: IProps) => {
     return getVersionFeatures(version, cluster?.nebulaType);
   }, [cluster]);
 
+
   return (
     <div>
       <div className={styles.top}>
         <div className={styles.left}>
           <div className={styles.leader}>
             {/* @ts-ignore */}
-            <LeaderDistribution isOverview baseRouter={baseRouter} />
+            <LeaderDistribution isOverview baseRouter={baseRouter} cluster={cluster}/>
           </div>
           <div className={styles.serviceInfo}>
             <OverviewCardHeader
