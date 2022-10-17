@@ -15,6 +15,7 @@ import SelectSpace from '../SelectSpace';
 import './index.less';
 import { isCommunityVersion } from '@/utils';
 import { DEFAULT_VERSION, formatVersion } from '@/utils/dashboard';
+import { ICluster } from '@base/utils/interface';
 
 const mapDispatch: any = (dispatch: IDispatch) => ({
   asyncGetHostsInfo: dispatch.nebula.asyncGetHostsInfo,
@@ -31,6 +32,7 @@ interface IProps
     ReturnType<typeof mapDispatch> {
   isOverview?: boolean;
   baseRouter?: string;
+  cluster?: ICluster;
 }
 
 interface IChaerData {
@@ -43,7 +45,7 @@ const LeaderDistribution: React.FC<IProps> = (props: IProps) => {
   const [data, setData] = useState<IChaerData[]>([]);
   const [chartInstance, setChartInstance] = useState<Chart>();
 
-  const { nebulaConnect, cluster = {}, loading, isOverview, baseRouter = '/management' } = props;
+  const { nebulaConnect, cluster = {} as ICluster, loading, isOverview, baseRouter = '/management' } = props;
 
   useEffect(() => {
     if (isCommunityVersion() || nebulaConnect) {

@@ -11,6 +11,7 @@ import { DashboardSelect, Option } from '@/components/DashboardSelect';
 import { compareVersion, DEFAULT_VERSION, getVersion } from '@/utils/dashboard';
 
 import './index.less';
+import { ICluster } from 'src/utils/interface';
 
 const mapState = (state: IRootState) => ({
   loading: state.loading.effects.nebula.asyncGetJobs,
@@ -26,7 +27,9 @@ const mapDispatch: any = (dispatch: IDispatch) => ({
 });
 interface IProps
   extends ReturnType<typeof mapState>,
-    ReturnType<typeof mapDispatch> {}
+    ReturnType<typeof mapDispatch> {
+      cluster: ICluster;
+    }
 
 const LongTermTask: React.FC<IProps> = props => {
   const { currentSpace, spaces, jobs, loading, cluster = {} } = props;
