@@ -6,14 +6,15 @@ export interface IProps {
   renderChart: (chartInstance: Chart) => void;
   options?: Partial<ChartCfg>;
   baseLine?: number;
-  yAxisMaximum?: number;
-  isDefaultScale?: boolean;
 }
 
 function LineChart(props: IProps, ref) {
-  const { isDefaultScale, yAxisMaximum, baseLine, options, renderChart } = props;
+  const { baseLine, options, renderChart } = props;
 
   const chartRef = useRef<any>();
+
+  const yMin = useRef<number>(0);
+  const yMax = useRef<number>(100);
 
   const chartInstanceRef = useRef<Chart>();
 
@@ -80,24 +81,58 @@ function LineChart(props: IProps, ref) {
     updateBaseline: (baseLine) => {
       updateChart(baseLine);
     },
-  }))
+    updateDetailChart,
+  }));
 
-  const showScaleByBaseLine = (curbaseLine?) => {
-    let baseLine = curbaseLine || props.baseLine
-    if (isDefaultScale) {
-      chartInstanceRef.current?.scale({
+  const updateDetailChart = (
+    options: {
+      type: string;
+      tickInterval: number;
+      statSizes?: any;
+      maxNum?: number;
+      minNum?: number;
+    },
+  ) => {
+    if (!chartInstanceRef.current) return;
+    chartInstanceRef.current.scale({
+      time: {
+        tickInterval: options.tickInterval,
+      },
+    });
+    const { maxNum, minNum } = options
+    if (typeof maxNum === 'number' && typeof minNum === 'number') {
+      yMin.current = minNum || 0,
+      yMax.current = maxNum || 100
+      chartInstanceRef.current.scale({
         value: {
-          min: 0,
-          max: 100,
-          tickInterval: 25,
+          min: yMin.current,
+          max: yMax.current,
+          tickInterval: Math.round((Math.sign(maxNum - minNum) * ((maxNum - minNum) / 5))),
         },
       });
-    } else if ((yAxisMaximum === undefined ||  yAxisMaximum === 0) && baseLine) {
-      chartInstanceRef.current?.scale('value', {
-        ticks: [0, baseLine, Math.round(baseLine * 1.5)],
-      });
-    } else {
-      chartInstanceRef.current?.scale('value', { ticks: [] }); // If yAxisMaximum is not 0, you do not need to set scale
+    }
+    return chartInstanceRef.current;
+  };
+
+  const showScaleByBaseLine = (curbaseLine?) => {
+    if (!chartInstanceRef.current) return;
+    let baseLine = curbaseLine || props.baseLine
+    if (baseLine) {
+      if (baseLine >= yMax.current) {
+        const val = Math.round(baseLine + (yMax.current - yMin.current) / 5);
+        chartInstanceRef.current?.scale('value', {
+          min: yMin.current,
+          max: Math.round(val),
+          ticks: [yMin.current, baseLine, Math.round(val)],
+        });
+      } else if (baseLine <= yMin.current) {
+        const val = Math.round(baseLine - (yMax.current - yMin.current) / 5);
+        chartInstanceRef.current?.scale('value', {
+          min: Math.round(val),
+          max: yMax.current,
+          ticks: [Math.round(val), baseLine, yMax.current],
+        });
+      }
     }
   };
 

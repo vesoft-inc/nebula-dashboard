@@ -13,13 +13,14 @@ import {
   getMetricsUniqName,
   getMachineRouterPath,
   AggregationType,
+  getMinNum,
 } from '@/utils/dashboard';
 import { IDispatch, IRootState } from '@/store';
 import { VALUE_TYPE } from '@/utils/promQL';
 import { IServiceMetricItem, MetricScene, ServiceMetricsPanelValue, ServiceName } from '@/utils/interface';
 
 import LineChart from '@/components/Charts/LineChart';
-import { configDetailChart, updateDetailChart } from '@/utils/chart/chart';
+import { configDetailChart } from '@/utils/chart/chart';
 import Icon from '@/components/Icon';
 import BaseLineEditModal from '@/components/BaseLineEditModal';
 
@@ -71,6 +72,11 @@ function ServiceDetail(props: IProps) {
   useEffect(() => {
     setShowLoading(loading && metricsFilterValues.frequency === 0)
   }, [loading, metricsFilterValues.frequency]);
+
+  useEffect(() => {
+    const { serviceType } = metricsFilterValues
+    serviceType && setServiceType(serviceType);
+  },[metricsFilterValues.serviceType])
 
   useEffect(() => {
     const [start, end] = calcTimeRange(metricsFilterValues.timeRange);
@@ -232,10 +238,12 @@ function ServiceDetail(props: IProps) {
           nameObj: getMetricsUniqName(MetricScene.SERVICE),
           aliasConfig,
         });
-        chart.maxNum = getMaxNum(data);
-        updateDetailChart(chart.chartInstance, {
+        // chart.maxNum = getMaxNum(data);
+        chart.chartRef.updateDetailChart({
           type: serviceType,
           tickInterval: getProperTickInterval(endTimestamps - startTimestamps),
+          maxNum: getMaxNum(data),
+          minNum: getMinNum(data),
         }).changeData(data);
         chart.chartInstance.autoFit = true;
       }
@@ -271,7 +279,9 @@ function ServiceDetail(props: IProps) {
 
   const handleMetricChange = async values => {
     updateMetricsFiltervalues(values);
-    setServiceType(values.serviceType);
+    if (values.serviceType) {
+      setServiceType(values.serviceType);
+    }
   };
 
   const handleRefresh = () => {
@@ -316,6 +326,8 @@ function ServiceDetail(props: IProps) {
     });
   }, [cluster])
 
+  console.log('serviceType', serviceType);
+
   return (
     <Spin spinning={showLoading} wrapperClassName="service-detail">
       <div className='dashboard-detail'>
@@ -349,10 +361,6 @@ function ServiceDetail(props: IProps) {
                   </div>
                   <div className='chart-content'>
                     <LineChart
-                      isDefaultScale={
-                        metricChart.metric?.valueType === VALUE_TYPE.percentage
-                      }
-                      yAxisMaximum={metricChart.maxNum}
                       baseLine={metricChart.baseLine}
                       options={metricChart.metric?.valueType === VALUE_TYPE.number ?  { padding: [20, 20, 60, 50] } : { padding: [20, 20, 60, 70] }}
                       ref={ref => metricChart.chartRef = ref}
