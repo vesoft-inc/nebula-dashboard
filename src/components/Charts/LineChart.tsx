@@ -107,7 +107,7 @@ function LineChart(props: IProps, ref) {
         value: {
           min: yMin.current,
           max: yMax.current,
-          tickInterval: Math.round((Math.sign(maxNum - minNum) * ((maxNum - minNum) / 5))),
+          tickInterval: Math.max(Math.round(((maxNum - minNum) / 5)), 0.01),
         },
       });
     }
