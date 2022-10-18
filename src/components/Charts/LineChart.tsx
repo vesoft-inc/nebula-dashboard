@@ -84,6 +84,20 @@ function LineChart(props: IProps, ref) {
     updateDetailChart,
   }));
 
+  const calcScaleOption = (max: number = 100, min: number = 0) => {
+    if ((max - min) < 5) {
+      max = max + 5;
+      min = min - 5;
+    }
+    yMin.current = min;
+    yMax.current = max;
+    return {
+      min: yMin.current,
+      max: yMax.current,
+      tickInterval: Math.round((max - min) / 5),
+    }
+  }
+
   const updateDetailChart = (
     options: {
       type: string;
@@ -100,18 +114,14 @@ function LineChart(props: IProps, ref) {
       },
     });
     const { maxNum, minNum } = options
-    if (typeof maxNum === 'number' && typeof minNum === 'number') {
-      yMin.current = minNum || 0,
-      yMax.current = maxNum || 100
-      // const tickInterval = ;
-      chartInstanceRef.current.scale({
-        value: {
-          min: yMin.current,
-          max: yMax.current,
-          tickInterval: Math.round(((maxNum - minNum) / 5)),
-        },
-      });
-    }
+    const { min, max, tickInterval } = calcScaleOption(maxNum, minNum);
+    chartInstanceRef.current.scale({
+      value: {
+        min,
+        max,
+        tickInterval,
+      },
+    });
     return chartInstanceRef.current;
   };
 

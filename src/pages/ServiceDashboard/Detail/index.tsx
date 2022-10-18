@@ -326,8 +326,6 @@ function ServiceDetail(props: IProps) {
     });
   }, [cluster])
 
-  console.log('serviceType', serviceType);
-
   return (
     <Spin spinning={showLoading} wrapperClassName="service-detail">
       <div className='dashboard-detail'>
