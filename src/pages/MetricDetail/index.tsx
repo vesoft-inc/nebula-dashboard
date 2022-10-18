@@ -10,10 +10,10 @@ import styles from './index.module.less';
 import LineChart from '@/components/Charts/LineChart';
 import { useParams } from 'react-router-dom';
 import { calcTimeRange, getBaseLineByUnit, getDataByType, getDiskData, getMetricsUniqName, getProperTickInterval } from '@/utils/dashboard';
-import { MetricScene } from '@/utils/interface';
+import { MetricScene, ServiceName } from '@/utils/interface';
 import { SUPPORT_METRICS } from '@/utils/promQL';
 import { Chart } from '@antv/g2';
-import { configDetailChart, updateDetailChart } from '@/utils/chart/chart';
+import { configDetailChart } from '@/utils/chart/chart';
 import { shouldCheckCluster } from '@/utils';
 import { Popover, Spin } from 'antd';
 import Icon from '@/components/Icon';
@@ -37,7 +37,9 @@ enum MetricTypeName {
 }
 
 function isServiceMetric(metricType: MetricTypeName) {
-  return metricType === MetricTypeName.Metad || metricType === MetricTypeName.Graphd || metricType === MetricTypeName.Storaged;
+  return [MetricTypeName.Metad, MetricTypeName.Storaged, MetricTypeName.Graphd,
+  ServiceName.MetadListener, ServiceName.StoragedListener,
+  ServiceName.Drainer].includes(metricType);
 }
 
 function getMetricSecene(metricType: MetricTypeName) {
@@ -205,7 +207,7 @@ function MetricDetail(props: Props) {
       const values = data.map(d => d.value) as number[];
       const maxNum = values.length > 0 ? Math.floor(Math.max(...values) * 100) / 100 : undefined;
       const minNum = values.length > 0 ? Math.floor(Math.min(...values) * 100) / 100 : undefined;
-      updateDetailChart(metricChart.chartInstance, {
+      metricChart.chartRef.updateDetailChart({
         type,
         tickInterval: getProperTickInterval(endTimestamps - startTimestamps),
         maxNum,
@@ -339,8 +341,6 @@ function MetricDetail(props: Props) {
             </div>
             <div className={styles.chartContent}>
               <LineChart
-                isDefaultScale
-                yAxisMaximum={100}
                 options={{ padding: [10, 70, 70, 70] }}
                 ref={ref => metricChart.chartRef = ref}
                 renderChart={renderChart}

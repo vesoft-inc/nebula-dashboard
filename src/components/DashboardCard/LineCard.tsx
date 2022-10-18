@@ -52,7 +52,7 @@ class LineCard extends React.Component<IProps> {
 
   render() {
     const { loading, data, valueType, baseLine } = this.props;
-    const { maxNum, maxNumLen } = getMaxNumAndLength({
+    const { maxNumLen } = getMaxNumAndLength({
       data,
       valueType,
       baseLine,
@@ -62,9 +62,7 @@ class LineCard extends React.Component<IProps> {
     }
     return (
       <LineChart
-        isDefaultScale={valueType === VALUE_TYPE.percentage} // VALUE_TYPE.percentage has a default Scale
         baseLine={baseLine}
-        yAxisMaximum={maxNum}
         renderChart={this.renderLineChart}
         options={{ padding: [20, 20, 60, 6 * maxNumLen + 30] }}
       />

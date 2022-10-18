@@ -319,6 +319,11 @@ export const getMaxNum = data => {
   return max ? max.value : 0;
 };
 
+export const getMinNum = data => {
+  const min = _.minBy(data, item => item.value) as any;
+  return min ? min.value : 0;
+};
+
 export const getMaxNumAndLength = (payload: {
   data: any[];
   valueType: string;

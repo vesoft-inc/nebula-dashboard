@@ -179,7 +179,7 @@ function Detail(props: IProps) {
         const values = data.map(d => d.value) as number[] ;
         const maxNum = values.length > 0 ? Math.floor(Math.max(...values) * 100) / 100 : undefined;
         const minNum = values.length > 0 ? Math.floor(Math.min(...values) * 100) / 100 : undefined;
-        updateDetailChart(chart.chartInstance, {
+        chart.chartRef.updateDetailChart({
           type,
           tickInterval: getProperTickInterval(endTimestamps - startTimestamps),
           maxNum,
@@ -256,10 +256,6 @@ function Detail(props: IProps) {
                 </div>
                 <div className='chart-content'>
                   <LineChart
-                    isDefaultScale={
-                      metricChart.metric.valueType === VALUE_TYPE.percentage
-                    }
-                    yAxisMaximum={maxNum}
                     baseLine={metricChart.baseLine}
                     options={{ padding: [10, 70, 70, 70] }}
                     ref={ref => metricChart.chartRef = ref}

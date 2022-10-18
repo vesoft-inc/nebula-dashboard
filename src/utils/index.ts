@@ -68,3 +68,22 @@ export const clearNebulaConnection = () => {
   SessionStorageUtil.removeItem('nebulaConnect');
   cookies.remove('nsid');
 }
+
+export const getMenuPathByKey = (menuList: any[], activeKey: string): string[] => {
+  let path: string[] = [];
+  for(let i = 0; i < menuList.length; i++) {
+    const item = menuList[i];
+    if (item.key === activeKey) {
+      path = [item.key];
+      break;
+    }
+    if (item.children) {
+      const childPath = getMenuPathByKey(item.children, activeKey);
+      if (childPath) {
+        path = [item.key, ...childPath];
+        break;
+      }
+    }
+  }
+  return path;
+}

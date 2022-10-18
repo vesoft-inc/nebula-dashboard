@@ -74,7 +74,7 @@ function BaseLineEditModal(props: IProps) {
               { required: true, message: intl.get('common.baseLineTip') },
             ]}
           >
-            <InputNumber type="number" min={0} max={valueType === VALUE_TYPE.percentage ? 100 : undefined} />
+            <InputNumber type="number" max={valueType === VALUE_TYPE.percentage ? 100 : undefined} />
           </Form.Item>
           {units.length !== 0 && (
             <Form.Item

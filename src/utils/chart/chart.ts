@@ -192,33 +192,33 @@ export const configDetailChart = (
   return chartInstance;
 };
 
-export const updateDetailChart = (
-  chartInstance: Chart,
-  options: {
-    type: string;
-    tickInterval: number;
-    statSizes?: any;
-    maxNum?: number;
-    minNum?: number;
-  },
-): Chart => {
-  chartInstance.scale({
-    time: {
-      tickInterval: options.tickInterval,
-    },
-  });
-  const { maxNum, minNum } = options
-  if (typeof maxNum === 'number' && typeof minNum === 'number' && maxNum >= 0 && minNum >= 0) {
-    chartInstance.scale({
-      value: {
-        min: minNum || 0,
-        max: maxNum || 100,
-        tickInterval: +((maxNum - minNum) / 5).toFixed(2),
-      },
-    });
-  }
-  return chartInstance;
-};
+// export const updateDetailChart = (
+//   chartInstance: Chart,
+//   options: {
+//     type: string;
+//     tickInterval: number;
+//     statSizes?: any;
+//     maxNum?: number;
+//     minNum?: number;
+//   },
+// ): Chart => {
+//   chartInstance.scale({
+//     time: {
+//       tickInterval: options.tickInterval,
+//     },
+//   });
+//   const { maxNum, minNum } = options
+//   if (typeof maxNum === 'number' && typeof minNum === 'number' && maxNum >= 0 && minNum >= 0) {
+//     chartInstance.scale({
+//       value: {
+//         min: minNum || 0,
+//         max: maxNum || 100,
+//         tickInterval: +((maxNum - minNum) / 5).toFixed(2),
+//       },
+//     });
+//   }
+//   return chartInstance;
+// };
 
 export const renderPieChartTpl = (chartInstance: Chart, _options?): Chart => {
   chartInstance.coordinate('theta', {

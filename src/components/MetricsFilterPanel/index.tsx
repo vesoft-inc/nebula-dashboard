@@ -1,6 +1,7 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useMemo } from 'react';
+import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useState } from 'react';
 import { Form, FormInstance, Select, TreeSelect } from 'antd';
 import intl from 'react-intl-universal';
+import debounce from 'lodash.debounce';
 
 import { INTERVAL_FREQUENCY_LIST } from '@/utils/service';
 import TimeSelect from '../TimeSelect';
@@ -47,6 +48,20 @@ const MetricsFilterPanel = (props: IProps, ref) => {
   const { instanceList, onChange, children, values = {}, onRefresh, metrics, onMetricsChange } = props;
 
   const [form] = Form.useForm();
+
+  const [showedMetrics, setShowedMetrics] = useState<string[] | undefined>(metrics);
+
+  const [metricSearchValue, setMetricSearchValue] = useState<string>('');
+
+  useEffect(() => {
+    if (metrics) {
+      if (metricSearchValue.length) {
+        setShowedMetrics(metrics.filter(m => m.includes(metricSearchValue)));
+      } else {
+        setShowedMetrics(metrics);
+      }
+    }
+  }, [metrics, metricSearchValue]);
 
   const treeData = useMemo(() => (
     [
@@ -106,6 +121,10 @@ const MetricsFilterPanel = (props: IProps, ref) => {
     onMetricsChange?.(values);
   }
 
+  const handleSearchMetric = debounce((value: string) => {
+    setMetricSearchValue(value);
+  }, 1000);
+
   return (
     <Form
       className={styles.metricsFilterPanel}
@@ -136,17 +155,19 @@ const MetricsFilterPanel = (props: IProps, ref) => {
         />
       </Form.Item>
       {
-        metrics && (
+        showedMetrics && (
           <Form.Item name="metrics" label={intl.get('common.metric')} wrapperCol={{span: 18}}>
             <Select 
               allowClear
               className={styles.metricSelect} 
               mode="multiple" 
+              showSearch
+              onSearch={handleSearchMetric}
               placeholder={intl.get('base.searchMetric')}
               onChange={handleMetricsSelectChange}
               style={{ minWidth: '250px', maxWidth: '500px' }}>
               {
-                metrics.map((metric, i) => (
+                showedMetrics.map((metric, i) => (
                   <Select.Option value={metric} key={i}>{metric}</Select.Option>
                 ))
               }
