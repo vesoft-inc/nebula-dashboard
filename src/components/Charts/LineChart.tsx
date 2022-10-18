@@ -103,11 +103,12 @@ function LineChart(props: IProps, ref) {
     if (typeof maxNum === 'number' && typeof minNum === 'number') {
       yMin.current = minNum || 0,
       yMax.current = maxNum || 100
+      // const tickInterval = ;
       chartInstanceRef.current.scale({
         value: {
           min: yMin.current,
           max: yMax.current,
-          tickInterval: Math.max(Math.round(((maxNum - minNum) / 5)), 0.01),
+          tickInterval: Math.round(((maxNum - minNum) / 5)),
         },
       });
     }
