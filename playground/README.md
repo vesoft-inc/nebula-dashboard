@@ -1,6 +1,6 @@
 ## Run a released Dashboard version
 
-Start a nebula graph cluster.
+Start a NebulaGraph cluster.
 ```bash
 cd playground
 docker-compose -f docker-compose-nebula-graph.yaml up -d
@@ -15,7 +15,7 @@ docker-compose up -d
 
 ## Run for Dashbaord development
 
-Start a nebula graph cluster.
+Start a NebulaGraph cluster.
 ```bash
 cd playground
 docker-compose -f docker-compose-nebula-graph.yaml up -d

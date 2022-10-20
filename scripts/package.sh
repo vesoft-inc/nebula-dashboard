@@ -33,7 +33,7 @@ mv  $DASHBOARD/vendors/node-exporter/ $TARGET/$VENDOR_DIR
 mv $DASHBOARD/vendors/prometheus/ $TARGET/$VENDOR_DIR
 mv $DASHBOARD/docker-compose/docker-compose.yaml $TARGET/
 
-### Nebula Graph Dashboard relative ###
+### NebulaGraph Dashboard relative ###
 cd $DASHBOARD
 VERSION=`cat package.json | grep '"version":' | awk 'NR==1{print $2}' | awk -F'"' '{print $2}'`
 bash $DASHBOARD/scripts/setEventTracking.sh $GH_ID

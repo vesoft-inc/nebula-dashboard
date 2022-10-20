@@ -1,5 +1,5 @@
-## Nebula Graph Dashboard Contributing Guide
-Thank you for being interested in contributing to Nebula Graph Dashboard. Before submitting your contribution, please make sure to take a moment and read through the following guidelines
+## NebulaGraph Dashboard Contributing Guide
+Thank you for being interested in contributing to NebulaGraph Dashboard. Before submitting your contribution, please make sure to take a moment and read through the following guidelines
 
 A high level overview of tools used:
 
