@@ -3,7 +3,7 @@ import intl from 'react-intl-universal';
 import { connect } from 'react-redux';
 import { Popover } from 'antd';
 import Icon from '@/components/Icon';
-import { IServicePanelConfig, MetricScene } from '@/utils/interface';
+import { IServiceMetricItem, IServicePanelConfig, MetricScene, ServiceName } from '@/utils/interface';
 import { calcTimeRange, getDataByType, getMetricsUniqName } from '@/utils/dashboard';
 import Card from '@/components/Service/ServiceCard/Card';
 import { IDispatch, IRootState } from '@/store';
@@ -11,6 +11,7 @@ import { shouldCheckCluster } from '@/utils';
 import classnames from "classnames";
 
 import './index.less';
+import { getQueryByMetricType } from '@/utils/metric';
 
 const mapDispatch: any = (dispatch: IDispatch) => ({
   asyncGetMetricsData: dispatch.service.asyncGetMetricsData as any,
@@ -20,19 +21,21 @@ const mapState = (state: IRootState) => ({
   aliasConfig: state.app.aliasConfig,
   cluster: (state as any).cluster?.cluster,
   metricsFilterValues: state.service.metricsFilterValues,
+  serviceMetric: state.serviceMetric,
 });
 
 interface IProps
   extends ReturnType<typeof mapDispatch>,
   ReturnType<typeof mapState> {
   onConfigPanel: () => void;
+  serviceType: ServiceName;
   config: IServicePanelConfig;
   isHidePeriod?: boolean;
 }
 
 function CustomServiceQueryPanel(props: IProps) {
 
-  const { config, cluster, asyncGetMetricsData, onConfigPanel, aliasConfig, metricsFilterValues, isHidePeriod } = props;
+  const { config, cluster, asyncGetMetricsData, onConfigPanel, aliasConfig, metricsFilterValues, isHidePeriod, serviceMetric, serviceType } = props;
 
   const [data, setData] = useState<any[]>([])
 
@@ -54,19 +57,22 @@ function CustomServiceQueryPanel(props: IProps) {
         clearTimeout(pollingTimer);
       }
     }
-  }, [metricsFilterValues, metricsFilterValues, cluster, config])
+  }, [metricsFilterValues, metricsFilterValues, cluster, config, serviceMetric])
 
   const getMetricsData = async () => {
-    const { period: metricPeriod, metricFunction, space } = config;
+    const { period: metricPeriod, space, metric, aggregation } = config;
     const [start, end] = calcTimeRange(metricsFilterValues.timeRange);
-    const data = await asyncGetMetricsData({
-      query: metricFunction + metricPeriod, // EXPLAIN: query like nebula_graphd_num_queries_rate_600
-      start,
-      end,
-      space,
-      clusterID: cluster?.id
-    });
-    setData(data)
+    const item = (serviceMetric[serviceType] as IServiceMetricItem[]).find((metricItem: IServiceMetricItem) => metricItem.metric === metric);
+    if (item) {
+      const data = await asyncGetMetricsData({
+        query: getQueryByMetricType(item, aggregation, metricPeriod.toString()), // EXPLAIN: query like nebula_graphd_num_queries_rate_600
+        start,
+        end,
+        space,
+        clusterID: cluster?.id
+      });
+      setData(data)
+    }
   };
 
   const pollingData = () => {

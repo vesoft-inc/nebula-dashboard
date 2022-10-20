@@ -1,15 +1,18 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import { Chart, registerInteraction } from '@antv/g2';
 import { ChartCfg } from '@antv/g2/lib/interface';
+import dayjs from 'dayjs';
+import { VALUE_TYPE } from '@/utils/promQL';
+import { LINE_CHART_COLORS } from '@/utils/chart/chart';
+import { getProperByteDesc } from '@/utils/dashboard';
 
 export interface IProps {
   renderChart: (chartInstance: Chart) => void;
   options?: Partial<ChartCfg>;
-  baseLine?: number;
 }
 
 function LineChart(props: IProps, ref) {
-  const { baseLine, options, renderChart } = props;
+  const { options, renderChart } = props;
 
   const chartRef = useRef<any>();
 
@@ -52,17 +55,6 @@ function LineChart(props: IProps, ref) {
       rollback: [{ trigger: 'reset-button:click', action: ['brush:reset', 'reset-button:hide'] }],
     });
     chartInstanceRef.current.interaction('brush');
-    if (baseLine) {
-      chartInstanceRef.current.annotation().line({
-        start: ['min', baseLine],
-        end: ['max', baseLine],
-        style: {
-          stroke: '#e6522b',
-          lineWidth: 1,
-          lineDash: [3, 3],
-        },
-      });
-    }
     showScaleByBaseLine();
     chartInstanceRef.current.interaction('brush');
     renderChart(chartInstanceRef.current);
@@ -75,13 +67,15 @@ function LineChart(props: IProps, ref) {
 
   useEffect(() => {
     updateChart();
-  }, [options, baseLine])
+  }, [options])
 
   useImperativeHandle(ref, () => ({
     updateBaseline: (baseLine) => {
       updateChart(baseLine);
     },
     updateDetailChart,
+    configDetailChart,
+    changeData,
   }));
 
   const calcScaleOption = (max: number = 100, min: number = 0) => {
@@ -97,6 +91,176 @@ function LineChart(props: IProps, ref) {
       tickInterval: Math.round((max - min) / 5),
     }
   }
+
+  const changeData = (data) => {
+    if (!chartInstanceRef.current) return;
+    chartInstanceRef.current.changeData(data);
+  };
+
+  const configDetailChart = (
+    options: {
+      tickInterval?: number;
+      sizes?: any;
+      valueType?: VALUE_TYPE;
+      isCard?: boolean;
+      maxNum?: number;
+    }
+  ) => {
+    if (!chartInstanceRef.current) return;
+    chartInstanceRef.current
+      .axis('time', {
+        label: {
+          formatter: time => dayjs(Number(time) * 1000).format('HH:mm'),
+        },
+        grid: options.isCard
+          ? null
+          : {
+            line: {
+              type: 'line',
+              style: {
+                fill: '#d9d9d9',
+                opacity: 0.5,
+              },
+            },
+          },
+      })
+      .legend({
+        position: 'bottom',
+      })
+      .scale({
+        time: {
+          tickInterval: options.tickInterval,
+        },
+        temperature: {
+          nice: true,
+        },
+      })
+      .line()
+      .position('time*value')
+      .color('type', LINE_CHART_COLORS);
+
+    const tooltipTitle = time =>
+      dayjs(Number(time) * 1000).format('YYYY-MM-DD HH:mm:ss');
+
+    switch (options.valueType) {
+      case VALUE_TYPE.percentage:
+        chartInstanceRef.current.axis('value', {
+          label: {
+            formatter: percent => `${percent}%`,
+          },
+        });
+        chartInstanceRef.current.tooltip({
+          customItems: items =>
+            items.map(item => {
+              const value = `${Number(item.value).toFixed(2)}%`;
+              return {
+                ...item,
+                value,
+              };
+            }),
+          showCrosshairs: true,
+          shared: true,
+          title: tooltipTitle,
+        });
+        chartInstanceRef.current.scale({
+          value: {
+            min: 0,
+            max: options.maxNum || 100,
+            tickInterval: options.maxNum ? (options.maxNum % 10 + 10) / 5 : 25,
+          },
+        });
+        break;
+      case VALUE_TYPE.byte:
+      case VALUE_TYPE.byteSecond:
+        chartInstanceRef.current.axis('value', {
+          label: {
+            formatter: bytes => {
+              const { value, unit } = getProperByteDesc(Number(bytes));
+              let _unit = unit;
+              if (options.valueType === VALUE_TYPE.byteSecond) {
+                _unit = `${unit}/s`;
+              }
+
+              return `${value} ${_unit}`;
+            },
+          },
+        });
+        chartInstanceRef.current.tooltip({
+          customItems: items =>
+            items.map(item => {
+              const { value, unit } = getProperByteDesc(Number(item.value));
+              let _unit = unit;
+              if (options.valueType === VALUE_TYPE.byteSecond) {
+                _unit = `${unit}/s`;
+              }
+              return {
+                ...item,
+                value: `${value} ${_unit}`,
+              };
+            }),
+          showCrosshairs: true,
+          shared: true,
+          title: tooltipTitle,
+        });
+        break;
+      case VALUE_TYPE.byteSecondNet:
+        chartInstanceRef.current.axis('value', {
+          label: {
+            formatter: bytes => {
+              const { value, unit } = getProperByteDesc(Number(bytes));
+              const _unit = `${unit}/s`;
+              return `${value} ${_unit}`;
+            },
+          },
+        });
+        chartInstanceRef.current.tooltip({
+          customItems: items =>
+            items.map(item => {
+              const { value, unit } = getProperByteDesc(Number(item.value));
+              const _unit = `${unit}/s`;
+              return {
+                ...item,
+                value: `${value} ${_unit}`,
+              };
+            }),
+          showCrosshairs: true,
+          shared: true,
+          title: tooltipTitle,
+        });
+        break;
+      case VALUE_TYPE.number:
+      case VALUE_TYPE.numberSecond:
+        chartInstanceRef.current.axis('value', {
+          label: {
+            formatter: processNum => {
+              if (options.valueType === VALUE_TYPE.numberSecond) {
+                return `${processNum}/s`;
+              }
+              return processNum;
+            },
+          },
+        });
+        chartInstanceRef.current.tooltip({
+          customItems: items =>
+            items.map(item => {
+              let value = item.value;
+              if (options.valueType === VALUE_TYPE.numberSecond) {
+                value = `${value}/s`;
+              }
+              return {
+                ...item,
+                value,
+              };
+            }),
+          showCrosshairs: true,
+          shared: true,
+          title: tooltipTitle,
+        });
+        break;
+      default:
+    }
+    return chartInstanceRef.current;
+  };
 
   const updateDetailChart = (
     options: {
@@ -127,7 +291,7 @@ function LineChart(props: IProps, ref) {
 
   const showScaleByBaseLine = (curbaseLine?) => {
     if (!chartInstanceRef.current) return;
-    let baseLine = curbaseLine || props.baseLine
+    let baseLine = curbaseLine;
     if (baseLine) {
       if (baseLine >= yMax.current) {
         const val = Math.round(baseLine + (yMax.current - yMin.current) / 5);
@@ -148,10 +312,9 @@ function LineChart(props: IProps, ref) {
   };
 
   const updateChart = (curbaseLine?) => {
-    let baseLine = curbaseLine || props.baseLine
+    let baseLine = curbaseLine
     if (!chartInstanceRef.current) return;
     if (baseLine !== undefined) {
-      // HACK: baseLine could be 0
       chartInstanceRef.current?.annotation().clear(true);
       chartInstanceRef.current?.annotation().line({
         start: ['min', baseLine],

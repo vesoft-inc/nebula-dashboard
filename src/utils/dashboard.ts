@@ -109,41 +109,27 @@ export const getWhichColor = value => {
   return CARD_HIGH_COLORS;
 };
 
-export const getProperByteDesc = (bytes: any, conversion: number) => {
-  const kb = conversion;
-  const mb = conversion * conversion;
-  const gb = mb * conversion;
-  const tb = gb * conversion;
-  const nt = bytes / tb;
-  const ng = bytes / gb;
-  const nm = bytes / mb;
-  const nk = bytes / kb;
-  let value = 0;
-  let unit = '';
-
-  if (nt >= 1) {
-    value = Number(nt.toFixed(2));
-    unit = 'TB';
-  } else if (ng >= 1) {
-    value = Number(ng.toFixed(2));
-    unit = 'GB';
-  } else if (nm >= 1) {
-    value = Number(nm.toFixed(2));
-    unit = 'MB';
-  } else if (nk >= 1) {
-    value = Number(nk.toFixed(2));
-    unit = 'KB';
-  } else {
-    value = bytes;
-    unit = 'Bytes';
+export const getProperByteDesc = (bytes: number) => {
+  if (!+bytes) return {
+    value: 0, 
+    unit: 'Bytes',
+    desc: '0 Bytes',
   }
 
+  const k = 1024
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+
+  const i = Math.floor(Math.log(bytes) / Math.log(k))
+
+  const value = parseFloat((bytes / Math.pow(k, i)).toFixed(2));
+  const unit = sizes[i];
+
   return {
-    value,
+    value, 
     unit,
     desc: value + unit,
-  };
-};
+  }
+}
 
 export const getDataByType = (payload: {
   data: IStatRangeItem[];
@@ -341,7 +327,7 @@ export const getMaxNumAndLength = (payload: {
       break;
     case VALUE_TYPE.byte:
     case VALUE_TYPE.byteSecond: {
-      const { value, unit } = getProperByteDesc(maxNum, 1024);
+      const { value, unit } = getProperByteDesc(maxNum);
       if (valueType === VALUE_TYPE.byteSecond) {
         maxNumLen = unit.length + value.toString().length + 2;
       }
@@ -349,7 +335,7 @@ export const getMaxNumAndLength = (payload: {
       break;
     }
     case VALUE_TYPE.byteSecondNet: {
-      const { value, unit } = getProperByteDesc(maxNum, 1000);
+      const { value, unit } = getProperByteDesc(maxNum);
       maxNumLen = unit.length + value.toString().length + 2;
       break;
     }
@@ -414,12 +400,12 @@ export let getMetricsUniqName = (scene: MetricScene) => {
   }
 }
 
-export const getConfigData=(data)=>{
+export const getConfigData = (data) => {
   let list = [] as any;
-  data.split('\n')?.forEach(item =>{
-    const [name, value] =item.split('=')
-    if(name){
-      list.push({name, value})
+  data.split('\n')?.forEach(item => {
+    const [name, value] = item.split('=')
+    if (name) {
+      list.push({ name, value })
     }
   })
   return list;
@@ -437,7 +423,7 @@ export function formatVersion(version?: string): string {
 
 export let getMachineRouterPath = (path: string, id?): string => `/clusters/${id}${path}`;
 
-export const updateService = (service: { 
+export const updateService = (service: {
   getMetricsUniqName: typeof getMetricsUniqName,
   getMachineRouterPath: typeof getMachineRouterPath,
   getDiskData: typeof getDiskData,

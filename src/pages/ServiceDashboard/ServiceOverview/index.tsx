@@ -41,6 +41,7 @@ class ServiceOverview extends React.Component<IProps> {
             <Col span={12} key={index}>
               <CustomServiceQueryPanel
                 config={config}
+                serviceType={serviceType}
                 onConfigPanel={() =>
                   this.props.onConfigPanel(serviceType, index)
                 }
