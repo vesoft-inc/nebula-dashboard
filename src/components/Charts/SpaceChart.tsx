@@ -39,8 +39,8 @@ function SpaceChart(props: IProps) {
     return infos.map((info) => {
       const { used, size: bytes, device, name } = info;
       const percent = Math.round((used / bytes) * 100);
-      const { desc: sizeDesc } = getProperByteDesc(bytes, 1024);
-      const { desc: usedDesc } = getProperByteDesc(used, 1024);
+      const { desc: sizeDesc } = getProperByteDesc(bytes);
+      const { desc: usedDesc } = getProperByteDesc(used);
       return {
         percent: percent < 1 ? Number(percent.toFixed(2)) : percent,
         device,

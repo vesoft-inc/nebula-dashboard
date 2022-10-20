@@ -44,7 +44,7 @@ function ServiceDashboard(props: IProps) {
 
   const { panelConfig, serviceMetric, updatePanelConfig, asyncGetStatus, onView, instanceList, updateMetricsFiltervalues, metricsFilterValues, asyncGetSpaces, cluster } = props;
 
-  const [editPanelType, setEditPanelType] = useState('');
+  const [editPanelType, setEditPanelType] = useState<ServiceName>();
   const [editPanelIndex, setEditPanelIndex] = useState(0)
 
   const history = useHistory();
@@ -124,7 +124,7 @@ function ServiceDashboard(props: IProps) {
         >
           <ServiceCardEdit
             serviceMetric={serviceMetric}
-            editType={editPanelType}
+            editType={editPanelType!}
             editIndex={editPanelIndex}
             panelConfig={panelConfig}
             onClose={handleModalClose}

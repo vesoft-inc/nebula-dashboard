@@ -12,7 +12,6 @@ import {
   getMachineRouterPath,
   getProperTickInterval,
 } from '@/utils/dashboard';
-import { configDetailChart, updateDetailChart } from '@/utils/chart/chart';
 import { IDispatch, IRootState } from '@/store';
 import { VALUE_TYPE } from '@/utils/promQL';
 
@@ -153,7 +152,7 @@ function Detail(props: IProps) {
   const renderChart = (i: number) => (chartInstance: Chart) => {
     const [startTimestamps, endTimestamps] = calcTimeRange(metricsFilterValues.timeRange);
     metricCharts[i].chartInstance = chartInstance;
-    configDetailChart(chartInstance, {
+    metricCharts[i].chartRef.configDetailChart({
       tickInterval: getProperTickInterval(endTimestamps - startTimestamps),
       valueType: metricCharts[i].metric.valueType,
     });

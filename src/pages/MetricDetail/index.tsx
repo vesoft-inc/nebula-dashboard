@@ -13,7 +13,6 @@ import { calcTimeRange, getBaseLineByUnit, getDataByType, getDiskData, getMetric
 import { MetricScene, ServiceName } from '@/utils/interface';
 import { SUPPORT_METRICS } from '@/utils/promQL';
 import { Chart } from '@antv/g2';
-import { configDetailChart } from '@/utils/chart/chart';
 import { shouldCheckCluster } from '@/utils';
 import { Popover, Spin } from 'antd';
 import Icon from '@/components/Icon';
@@ -279,7 +278,7 @@ function MetricDetail(props: Props) {
   const renderChart = (chartInstance: Chart) => {
     const [startTimestamps, endTimestamps] = calcTimeRange(curMetricsFilterValues.timeRange);
     metricChart.chartInstance = chartInstance;
-    configDetailChart(chartInstance, {
+    metricChart.chartRef.configDetailChart({
       tickInterval: getProperTickInterval(endTimestamps - startTimestamps),
       valueType: metricChart.metric.valueType,
     });

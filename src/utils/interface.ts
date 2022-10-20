@@ -30,10 +30,10 @@ export interface ILineChartMetric {
 export interface IServicePanelConfig {
   period: number;
   metric: string;
-  metricFunction: string;
+  aggregation: AggregationType;
   space?: string;
-  metricType: string;
-  baseLine: number | undefined;
+  // metricType: string;
+  baseLine?: number;
 }
 
 export interface IMetricType {

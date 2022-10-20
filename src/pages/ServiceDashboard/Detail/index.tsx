@@ -20,7 +20,6 @@ import { VALUE_TYPE } from '@/utils/promQL';
 import { IServiceMetricItem, MetricScene, ServiceMetricsPanelValue, ServiceName } from '@/utils/interface';
 
 import LineChart from '@/components/Charts/LineChart';
-import { configDetailChart } from '@/utils/chart/chart';
 import Icon from '@/components/Icon';
 import BaseLineEditModal from '@/components/BaseLineEditModal';
 
@@ -76,7 +75,7 @@ function ServiceDetail(props: IProps) {
   useEffect(() => {
     const { serviceType } = metricsFilterValues
     serviceType && setServiceType(serviceType);
-  },[metricsFilterValues.serviceType])
+  }, [metricsFilterValues.serviceType])
 
   useEffect(() => {
     const [start, end] = calcTimeRange(metricsFilterValues.timeRange);
@@ -253,7 +252,7 @@ function ServiceDetail(props: IProps) {
   const renderChart = (i: number) => (chartInstance: Chart) => {
     const [startTimestamps, endTimestamps] = calcTimeRange(metricsFilterValues.timeRange);
     metricCharts[i].chartInstance = chartInstance;
-    configDetailChart(chartInstance, {
+    metricCharts[i].chartRef.configDetailChart({
       tickInterval: getProperTickInterval(endTimestamps - startTimestamps),
       valueType: metricCharts[i].metric.valueType,
     });
@@ -320,11 +319,13 @@ function ServiceDetail(props: IProps) {
   }
 
   useEffect(() => {
-    const dependencies = getDependencyTypes();
-    updateMetricsFiltervalues({
-      serviceType: dependencies[0],
-    });
-  }, [cluster])
+    if (isDependencyService) {
+      const dependencies = getDependencyTypes();
+      updateMetricsFiltervalues({
+        serviceType: dependencies[0],
+      });
+    }
+  }, [cluster, isDependencyService])
 
   return (
     <Spin spinning={showLoading} wrapperClassName="service-detail">
@@ -360,7 +361,7 @@ function ServiceDetail(props: IProps) {
                   <div className='chart-content'>
                     <LineChart
                       baseLine={metricChart.baseLine}
-                      options={metricChart.metric?.valueType === VALUE_TYPE.number ?  { padding: [20, 20, 60, 50] } : { padding: [20, 20, 60, 70] }}
+                      options={metricChart.metric?.valueType === VALUE_TYPE.number ? { padding: [20, 20, 60, 50] } : { padding: [20, 20, 60, 70] }}
                       ref={ref => metricChart.chartRef = ref}
                       renderChart={renderChart(i)}
                     />

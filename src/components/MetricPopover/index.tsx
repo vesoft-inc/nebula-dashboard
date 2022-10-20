@@ -7,6 +7,7 @@ import Icon from '../Icon';
 import styles from './index.module.less';
 
 export const MetricPopover = (props: { list }) => {
+  const { list } = props;
   const locale = cookies.get('locale');
   const manualHref =
     locale === 'ZH_CN'
@@ -25,7 +26,7 @@ export const MetricPopover = (props: { list }) => {
               labelCol={{ span: 13 }}
               wrapperCol={{ span: 11 }}
             >
-              {props.list.map(option => {
+              {list.map(option => {
                 if (intl.get(`metric_description.${option.metric}`)) {
                   return (
                     <Form.Item key={option.metric} label={option.metric}>

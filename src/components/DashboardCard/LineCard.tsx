@@ -1,12 +1,10 @@
-import React from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import _ from 'lodash';
-import { Chart, Geometry } from '@antv/g2';
 import { Spin } from 'antd';
 import LineChart from '@/components/Charts/LineChart';
 import { ILineChartMetric, IStatSingleItem } from '@/utils/interface';
-import { configDetailChart } from '@/utils/chart/chart';
 import { VALUE_TYPE } from '@/utils/promQL';
-import { getMaxNumAndLength } from '@/utils/dashboard';
+import { getMaxNum, getMaxNumAndLength, getMinNum } from '@/utils/dashboard';
 
 interface IProps {
   data: ILineChartMetric[];
@@ -16,58 +14,57 @@ interface IProps {
   baseLine?: number;
 }
 
-class LineCard extends React.Component<IProps> {
-  chartInstance: Chart;
+function LineCard(props: IProps) {
+  const chartRef = useRef<any>();
 
-  areaGeometry: Geometry;
+  const { loading, data = [], valueType, sizes, baseLine } = props;
 
-  lineGeometry: Geometry;
-
-  componentDidUpdate() {
-    /*
-     * HACK: it now will conflict with the same request loading in detail component
-     * issue: https://github.com/vesoft-inc-private/nebula-dashboard/issues/34
-     * */
-    const { loading } = this.props;
-    if (!loading) {
-      this.updateChart();
+  useEffect(() => {
+    if (!loading && chartRef.current) {
+      updateChart();
     }
-  }
+  }, [loading, chartRef.current]);
 
-  renderLineChart = (chartInstance: Chart) => {
-    const { valueType, sizes } = this.props;
-    this.chartInstance = chartInstance;
-    configDetailChart(this.chartInstance, {
+  useEffect(() => {
+    if (baseLine && chartRef.current) {
+      chartRef.current.updateBaseline(baseLine);
+    }
+  }, [baseLine, chartRef.current]);
+
+  const renderLineChart = () => {
+    chartRef.current.configDetailChart({
       valueType,
       sizes,
       isCard: true,
     });
-    this.updateChart();
+    updateChart();
   };
 
-  updateChart = () => {
-    const { data = [] } = this.props;
-    this.chartInstance.changeData(data);
+  const updateChart = () => {
+    chartRef.current.updateDetailChart({
+      type: valueType,
+      maxNum: getMaxNum(data),
+      minNum: getMinNum(data),
+    }).changeData(data);
   };
 
-  render() {
-    const { loading, data, valueType, baseLine } = this.props;
+  const maxNumLen = useMemo(() => {
     const { maxNumLen } = getMaxNumAndLength({
       data,
       valueType,
       baseLine,
-    });
-    if (loading) {
-      return <Spin />;
-    }
-    return (
-      <LineChart
-        baseLine={baseLine}
-        renderChart={this.renderLineChart}
-        options={{ padding: [20, 20, 60, 6 * maxNumLen + 30] }}
-      />
-    );
-  }
+    })
+    return maxNumLen;
+  }, [data, valueType, baseLine])
+
+  return (
+    loading ? <Spin /> : (
+    <LineChart
+      renderChart={renderLineChart}
+      ref={ref => chartRef.current = ref}
+      options={{ padding: [20, 20, 60, 6 * maxNumLen + 30] }}
+    />)
+  );
 }
 
 export default LineCard;

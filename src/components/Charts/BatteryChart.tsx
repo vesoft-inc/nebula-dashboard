@@ -27,8 +27,8 @@ const Battery = (props: IBatteryProps) => {
   const color = getBatteryColor(percent);
   const _percent =
     percent < 1 ? Number(percent.toFixed(2)) : Math.round(percent);
-  const { desc: valueDesc } = getProperByteDesc(value, 1024);
-  const { desc: sizeDesc } = getProperByteDesc(size, 1024);
+  const { desc: valueDesc } = getProperByteDesc(value);
+  const { desc: sizeDesc } = getProperByteDesc(size);
 
   return (
     <div className="nebula-battery">

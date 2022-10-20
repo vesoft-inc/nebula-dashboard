@@ -1,4 +1,4 @@
-import { SERVICE_SUPPORT_METRICS } from '@/utils/promQL';
+import { AggregationType } from './dashboard';
 import { ServiceName } from './interface';
 
 export const SERVICE_POLLING_INTERVAL = 10 * 1000;
@@ -83,44 +83,38 @@ export const DEFAULT_SERVICE_PANEL_CONFIG = {
   [ServiceName.GRAPHD]: [
     {
       period: 60,
-      metric: SERVICE_SUPPORT_METRICS.graph[0].metric,
-      metricFunction: SERVICE_SUPPORT_METRICS.graph[0].metricType[0].value,
-      metricType: SERVICE_SUPPORT_METRICS.graph[0].metricType[0].key,
+      metric: 'num_queries',
+      aggregation: AggregationType.Rate,
     },
     {
       period: 60,
-      metric: SERVICE_SUPPORT_METRICS.graph[1].metric,
-      metricFunction: SERVICE_SUPPORT_METRICS.graph[1].metricType[0].value,
-      metricType: SERVICE_SUPPORT_METRICS.graph[1].metricType[0].key,
+      metric: 'num_slow_queries',
+      aggregation: AggregationType.Rate,
     },
   ],
   [ServiceName.STORAGED]: [
     {
       period: 60,
-      metric: SERVICE_SUPPORT_METRICS.storage[0].metric,
-      metricFunction: SERVICE_SUPPORT_METRICS.storage[0].metricType[0].value,
-      metricType: SERVICE_SUPPORT_METRICS.storage[0].metricType[0].key,
+      metric: 'add_edges_latency_us',
+      aggregation: AggregationType.Avg,
     },
     {
       period: 60,
-      metric: SERVICE_SUPPORT_METRICS.storage[1].metric,
-      metricFunction: SERVICE_SUPPORT_METRICS.storage[1].metricType[0].value,
-      metricType: SERVICE_SUPPORT_METRICS.storage[1].metricType[0].key,
-    },
+      metric: 'add_vertices_latency_us',
+      aggregation: AggregationType.Avg,
+    }
   ],
   [ServiceName.METAD]: [
     {
       period: 60,
-      metric: SERVICE_SUPPORT_METRICS.meta[0].metric,
-      metricFunction: SERVICE_SUPPORT_METRICS.meta[0].metricType[0].value,
-      metricType: SERVICE_SUPPORT_METRICS.meta[0].metricType[0].key,
+      metric: 'heartbeat_latency_us',
+      aggregation: AggregationType.Avg,
     },
     {
       period: 60,
-      metric: SERVICE_SUPPORT_METRICS.meta[1].metric,
-      metricFunction: SERVICE_SUPPORT_METRICS.meta[1].metricType[0].value,
-      metricType: SERVICE_SUPPORT_METRICS.meta[1].metricType[0].key,
-    },
+      metric: 'num_heartbeats',
+      aggregation: AggregationType.Avg,
+    }
   ],
   [ServiceName.MetadListener]: [],
   [ServiceName.StoragedListener]: [],
