@@ -6,7 +6,7 @@ Refer：[Production Guide](./DEPLOY.md)
 
 ## Start to use
 1. Sign in
-    Input the username/password to connect to the nebula graph db
+    Input the username/password to connect to the NebulaGraph db
     
     ![login](./doc/images/login.jpg)
 

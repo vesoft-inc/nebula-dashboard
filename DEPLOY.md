@@ -1,4 +1,4 @@
-# Nebula Graph Dashboard Production Guide（Linux)
+# NebulaGraph Dashboard Production Guide（Linux)
 
 ## Environment
 - Node.js (>= 10.12.0)
@@ -14,7 +14,7 @@
 ## Directory descrption
 Five packages in nebula-graph-dashboard 
 - nebula-graph-dashboard ------------------------- FE service
-- nebula-stats-exporter --------------------- Nebula Graph Metric Service
+- nebula-stats-exporter --------------------- NebulaGraph Metric Service
 - node-exporter ----------------------------- Machine Metric Service
 - prometheus -------------------------------- Data saving Service
 - nebula-http-gateway ----------------------- Network Service
@@ -34,10 +34,10 @@ Attention: the file under these packages is compiled under Linux environment, ca
   ```
   Service address: http://127.0.0.1:9100
 
-2. Nebula-stats-exporter：for nebula graph metrics
+2. Nebula-stats-exporter：for NebulaGraph metrics
 - packages: `nebula-stats-exporter`
 - location：in the same machine with nebula-graph-dashboard
-- dependency: modify ：`config.yml` according to nebula graph service address
+- dependency: modify ：`config.yml` according to NebulaGraph service address
   Start：
   ```bash
   $ cd /nebula-dashboard/vendors/nebula-stats-exporter
@@ -78,8 +78,8 @@ Attention: the file under these packages is compiled under Linux environment, ca
     prometheus:
       target: "127.0.0.1:9091"  // change prometheus service proxy
     nebulaServer:
-      "ip": "192.168.8.143"  // change to nebula graph service ip
-      "port": 9669 // change to nebula graph service port
+      "ip": "192.168.8.143"  // change to NebulaGraph service ip
+      "port": 9669 // change to NebulaGraph service port
   ```
 - Start:
   ```bash
@@ -87,7 +87,7 @@ Attention: the file under these packages is compiled under Linux environment, ca
   ```
 - service address: http://127.0.0.1:7003
 
-1. Open Nebula Graph Dashboard in browser
+1. Open NebulaGraph Dashboard in browser
 url: http://{{ip}}:7003
 
 

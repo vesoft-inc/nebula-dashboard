@@ -1,5 +1,5 @@
 <!--
-Thank you for contributing to **Nebula Graph Dashboard**! 
+Thank you for contributing to **NebulaGraph Dashboard**! 
 -->
 
 ### What changes were proposed in this pull request?

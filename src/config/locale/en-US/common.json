@@ -23,6 +23,7 @@
   "confirm": "Confirm",
   "overview": "Overview",
   "baseLine": "Base Line",
+  "succeed": "Succeed",
   "editBaseLine": "Edit Base Line",
   "baseLineTip": "Please enter a number greater than 0",
   "unit": "Unit",

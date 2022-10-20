@@ -266,7 +266,7 @@ export let NEED_ADD_SUM_QUERYS = [
   'network_out_errs',
   'network_in_packets',
   'network_out_packet',
-  // For Nebula Graph Service
+  // For NebulaGraph Service
   'num_queries',
   'num_slow_queries',
 ];

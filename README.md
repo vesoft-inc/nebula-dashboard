@@ -1,5 +1,5 @@
-# Nebula Graph Dashboard
-Nebula Graph Dashboard is a tool that assists Nebula Graph in daily service monitoring and management
+# NebulaGraph Dashboard
+NebulaGraph Dashboard is a tool that assists NebulaGraph in daily service monitoring and management
 
 ![](introduction.png)
 
@@ -13,7 +13,7 @@ If you plan to set up dashboard in production, refer to：[production guide](DEP
 #### Prerequisites
 - Node.js (>= 10.12.0)
 - Go 1.13+ and beego
-- Nebula Graph (>=2.0)
+- NebulaGraph (>=2.0)
 
 #### Quick Start
 1. Set up `node-exporter` service where you want to collect machine metrics such as local dev.
@@ -25,7 +25,7 @@ If you plan to set up dashboard in production, refer to：[production guide](DEP
         $ ./node_exporter --web.listen-address=":9100"
       ```
 
-2. Set up `nebula-stats-exporter` to collect your nebula graph service metrics.
+2. Set up `nebula-stats-exporter` to collect your NebulaGraph service metrics.
     - Download nebula-stats-exporter and build
     - Run
       ```
@@ -46,7 +46,7 @@ If you plan to set up dashboard in production, refer to：[production guide](DEP
               endpointPort: 32839 // metrics service Ports
               componentType: metad // metrics service type, should be one of metad,graphd or storaged
             ```
-      [More about the nebula graph metrics](https://docs.nebula-graph.com.cn/2.5.0/6.monitor-and-metrics/1.query-performance-metrics/)
+      [More about the NebulaGraph metrics](https://docs.nebula-graph.com.cn/2.5.0/6.monitor-and-metrics/1.query-performance-metrics/)
     - Run
       ```
       ./nebula-stats-exporter --listen-address=":9200" --bare-metal --bare-metal-config={pwd}/nebula-graph-dashboard/vendors/nebula-stats-exporter/config.yaml &
@@ -95,8 +95,8 @@ If you plan to set up dashboard in production, refer to：[production guide](DEP
         prometheus:
           target: "127.0.0.1:9091"  // change prometheus service proxy
         nebulaServer:
-          "ip": "192.168.8.143"  // change to nebula graph service ip
-          "port": 9669 // change to nebula graph service port
+          "ip": "192.168.8.143"  // change to NebulaGraph service ip
+          "port": 9669 // change to NebulaGraph service port
       ```
 
     - Start
