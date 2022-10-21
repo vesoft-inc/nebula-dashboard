@@ -142,6 +142,7 @@ const MetricsFilterPanel = (props: IProps, ref) => {
               style={{ minWidth: '250px', maxWidth: '500px' }}
               treeData={treeData} treeCheckable
               showCheckedStrategy={TreeSelect.SHOW_PARENT}
+              getPopupContainer={triggerNode => triggerNode.parentElement}
               onChange={handleInstanceChange}
             />
           </Form.Item>
@@ -165,6 +166,7 @@ const MetricsFilterPanel = (props: IProps, ref) => {
               onSearch={handleSearchMetric}
               placeholder={intl.get('base.searchMetric')}
               onChange={handleMetricsSelectChange}
+              getPopupContainer={triggerNode => triggerNode.parentElement}
               style={{ minWidth: '250px', maxWidth: '500px' }}>
               {
                 showedMetrics.map((metric, i) => (

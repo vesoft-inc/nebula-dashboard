@@ -143,7 +143,7 @@ function ServiceCardEdit(props: IProps) {
           }}
         </Form.Item>
         <Form.Item label={intl.get('common.baseLine')} name="baseLine">
-          <InputNumber min={0} />
+          <InputNumber />
         </Form.Item>
         <div className="footer-btns">
           <Button htmlType="button" onClick={onClose}>

@@ -26,7 +26,7 @@ function SpaceChart(props: IProps) {
 
   useEffect(() => {
     setCurInstances(instances);
-    setSeletedInstance('all');
+    // setSeletedInstance('all');
   }, [instances])
 
   const diskThs = useMemo(() => ({

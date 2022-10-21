@@ -113,7 +113,7 @@ export const DEFAULT_SERVICE_PANEL_CONFIG = {
     {
       period: 60,
       metric: 'num_heartbeats',
-      aggregation: AggregationType.Avg,
+      aggregation: AggregationType.Rate,
     }
   ],
   [ServiceName.MetadListener]: [],

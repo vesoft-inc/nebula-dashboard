@@ -122,6 +122,7 @@
   "disk_used_percentage":  "The percentage of disk used.",
   "num_sync_data": "The number of times the storage synchronizes data from drainer.",
   "num_sync_data_errors": "The number of errors the storage synchronizes data from drainer.",
+  "sync_data_latency_us": "The latency of the Storage service synchronizing data from the Drainer.",
   "context_switches_total": "The total num of context switches.",
   "cpu_seconds_total": "The total num of cpu seconds.",
   "memory_bytes_gauge": "The memory bytes.",
