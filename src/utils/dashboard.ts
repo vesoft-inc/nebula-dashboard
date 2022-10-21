@@ -110,18 +110,22 @@ export const getWhichColor = value => {
 };
 
 export const getProperByteDesc = (bytes: number) => {
-  if (!+bytes) return {
-    value: 0, 
-    unit: 'Bytes',
-    desc: '0 Bytes',
-  }
+  const sign = Math.sign(bytes);
+
+  bytes = Math.abs(bytes);
 
   const k = 1024
-  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+  const sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'] as const;
+
+  if (bytes === 0) return {
+    value: 0, 
+    unit: '',
+    desc: '0',
+  }
 
   const i = Math.floor(Math.log(bytes) / Math.log(k))
 
-  const value = parseFloat((bytes / Math.pow(k, i)).toFixed(2));
+  const value = sign * parseFloat((bytes / Math.pow(k, i)).toFixed(2));
   const unit = sizes[i];
 
   return {

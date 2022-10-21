@@ -72,6 +72,7 @@ const TimeSelect = (props: IProps) => {
         disabledDate={disabledDate}
         size="small"
         format="YYYY-MM-DD HH:mm"
+        getPopupContainer={trigger => trigger.parentNode}
         showTime={true}
         value={cusTimeRange ? [dayjs(cusTimeRange[0]), dayjs(cusTimeRange[1])] as any : undefined}
         onChange={handleDataPickerChange}
