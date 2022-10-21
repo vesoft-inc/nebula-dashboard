@@ -36,7 +36,7 @@
   "all":"All",
   "metricLabel": "instance",
   "updateFrequency": "refresh frequency",
-  "overviewInfo": "Overview Info",
+  "overviewInfo": "Info Overview",
   "nebulaVersion": {
 		"enterprise": "Enterprise",
 		"community": "Community"

@@ -64,6 +64,7 @@
   "num_get_prop": "The number of executions for the GetPropProcessor.",
   "num_get_neighbors_errors":	"The number of execution errors for the GetNeighborsProcessor.",
   "num_get_dst_by_src_errors": "The number of execution errors for the GetDstBySrcProcessor.",
+  "get_dst_by_src_latency_us": "The average latency of the GetDstBySrcProcessor.",
   "get_prop_latency_us":	"The average latency of executions for the GetPropProcessor.",
   "num_edges_deleted":	"The number of deleted edges.",
   "num_edges_inserted":	"The number of inserted edges.",
@@ -131,5 +132,6 @@
   "write_bytes_total": "The total num of write bytes.",
   "num_appendLogs_errors": "The number of errors when appending logs.",
   "num_appendLogs": "The number of times that logs are appended.",
+  "appendLogs_latency_us": "The latency of appending logs.",
   "more": "More"
 }

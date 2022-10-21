@@ -81,6 +81,7 @@
   "num_get_prop": "GetPropProcessor 执行的次数。",
   "num_get_neighbors_errors":	"GetNeighborsProcessor 执行出错的次数。",
   "num_get_dst_by_src_errors": "GetDstBySrcProcessor 执行出错的次数。",
+  "get_dst_by_src_latency_us": "GetDstBySrcProcessor 执行的平均延迟。",
   "get_prop_latency_us":	"GetPropProcessor 执行的延迟时间。",
   "lookup_latency_us":	"LookupProcessor 执行的延迟时间。",
   "num_lookup_errors":	"LookupProcessor 执行时出错的次数。",
@@ -132,5 +133,6 @@
   "write_bytes_total": "写入的字节数。",
   "num_appendLogs_errors": "添加日志出错的次数。",
   "num_appendLogs": "写日志次数。",
+  "appendLogs_latency_us": "写日志的延迟时间。",
   "more": "更多参数说明"
 }
