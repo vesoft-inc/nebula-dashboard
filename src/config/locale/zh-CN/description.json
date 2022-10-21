@@ -14,7 +14,7 @@
   "partitionId":  "分片序号",
   "leader":  "分片的leader的IP地址和端口",
   "peers":  "分片所有副本的IP地址和端口",
-  "losts":  "分片的故障离线副本的的IP地址和端口",
+  "losts":  "分片的故障离线副本的IP地址和端口",
   "jobId":  "第一行显示作业ID，其他行显示作业相关的任务ID。",
   "command":  "第一行显示执行的作业命令名称，其他行显示任务对应的nebula-storaged进程。",
   "longTermStatus":  "显示作业或任务的状态。",
