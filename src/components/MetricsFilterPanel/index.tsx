@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useState } from 'react';
+import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useState } from 'react';
 import { Form, FormInstance, Select, TreeSelect } from 'antd';
 import intl from 'react-intl-universal';
 import debounce from 'lodash.debounce';
@@ -121,9 +121,9 @@ const MetricsFilterPanel = (props: IProps, ref) => {
     onMetricsChange?.(values);
   }
 
-  const handleSearchMetric = debounce((value: string) => {
+  const handleSearchMetric = useCallback((value: string) => debounce(() => {
     setMetricSearchValue(value);
-  }, 1000);
+  }, 1000), []);
 
   return (
     <Form
@@ -139,7 +139,7 @@ const MetricsFilterPanel = (props: IProps, ref) => {
         !isCloudVersion() && (
           <Form.Item name="instanceList" label={intl.get('common.metricLabel')}>
             <TreeSelect
-              style={{ minWidth: '250px', maxWidth: '500px' }}
+              style={{ width: '220px', maxWidth: '500px' }}
               treeData={treeData} treeCheckable
               showCheckedStrategy={TreeSelect.SHOW_PARENT}
               getPopupContainer={triggerNode => triggerNode.parentElement}
@@ -157,11 +157,11 @@ const MetricsFilterPanel = (props: IProps, ref) => {
       </Form.Item>
       {
         showedMetrics && (
-          <Form.Item name="metrics" label={intl.get('common.metric')} wrapperCol={{span: 18}}>
-            <Select 
+          <Form.Item label={intl.get('common.metric')} wrapperCol={{ span: 18 }}>
+            <Select
               allowClear
-              className={styles.metricSelect} 
-              mode="multiple" 
+              className={styles.metricSelect}
+              mode="multiple"
               showSearch
               onSearch={handleSearchMetric}
               placeholder={intl.get('base.searchMetric')}

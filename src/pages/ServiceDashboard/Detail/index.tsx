@@ -240,6 +240,7 @@ function ServiceDetail(props: IProps) {
         // chart.maxNum = getMaxNum(data);
         chart.chartRef.updateDetailChart({
           type: serviceType,
+          valueType: chart.metric.valueType,
           tickInterval: getProperTickInterval(endTimestamps - startTimestamps),
           maxNum: getMaxNum(data),
           minNum: getMinNum(data),
@@ -360,8 +361,8 @@ function ServiceDetail(props: IProps) {
                   </div>
                   <div className='chart-content'>
                     <LineChart
-                      baseLine={metricChart.baseLine}
-                      options={metricChart.metric?.valueType === VALUE_TYPE.number ? { padding: [20, 20, 60, 50] } : { padding: [20, 20, 60, 70] }}
+                      // baseLine={metricChart.baseLine}
+                      options={{ padding: [20, 20, 60, 50] }}
                       ref={ref => metricChart.chartRef = ref}
                       renderChart={renderChart(i)}
                     />

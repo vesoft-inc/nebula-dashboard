@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef } from 'react';
 import _ from 'lodash';
 import { Spin } from 'antd';
 import LineChart from '@/components/Charts/LineChart';
-import { ILineChartMetric, IStatSingleItem } from '@/utils/interface';
+import { ILineChartMetric, IStatSingleItem, ServiceName } from '@/utils/interface';
 import { VALUE_TYPE } from '@/utils/promQL';
 import { getMaxNum, getMaxNumAndLength, getMinNum } from '@/utils/dashboard';
 
@@ -42,9 +42,9 @@ function LineCard(props: IProps) {
 
   const updateChart = () => {
     chartRef.current.updateDetailChart({
-      type: valueType,
       maxNum: getMaxNum(data),
       minNum: getMinNum(data),
+      valueType,
     }).changeData(data);
   };
 

@@ -13,7 +13,6 @@ import {
   getProperTickInterval,
 } from '@/utils/dashboard';
 import { IDispatch, IRootState } from '@/store';
-import { VALUE_TYPE } from '@/utils/promQL';
 
 import { shouldCheckCluster } from '@/utils';
 import MetricsFilterPanel from '@/components/MetricsFilterPanel';
@@ -58,7 +57,6 @@ function Detail(props: IProps) {
 
   const { metricOptions, loading, aliasConfig, asyncGetDataSourceByRange, asyncUpdateBaseLine, cluster, instances, metricsFilterValues, updateMetricsFiltervalues, type, dataTypeObj } = props;
 
-  const [maxNum, setMaxNum] = useState<number>(0);
   const [dataSources, setDataSources] = useState<any[]>([]);
 
   const [curMetricOptions, setMetricOptions] = useState<IMachineMetricOption[]>(metricOptions);
@@ -180,6 +178,7 @@ function Detail(props: IProps) {
         const minNum = values.length > 0 ? Math.floor(Math.min(...values) * 100) / 100 : undefined;
         chart.chartRef.updateDetailChart({
           type,
+          valueType: chart.metric.valueType,
           tickInterval: getProperTickInterval(endTimestamps - startTimestamps),
           maxNum,
           minNum

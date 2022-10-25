@@ -5,6 +5,7 @@ import dayjs from 'dayjs';
 import { VALUE_TYPE } from '@/utils/promQL';
 import { LINE_CHART_COLORS } from '@/utils/chart/chart';
 import { getProperByteDesc } from '@/utils/dashboard';
+import { ServiceName } from '@/utils/interface';
 
 export interface IProps {
   renderChart: (chartInstance: Chart) => void;
@@ -12,7 +13,7 @@ export interface IProps {
 }
 
 function LineChart(props: IProps, ref) {
-  const { options, renderChart } = props;
+  const { options = {}, renderChart } = props;
 
   const chartRef = useRef<any>();
 
@@ -26,7 +27,7 @@ function LineChart(props: IProps, ref) {
     chartInstanceRef.current = new Chart({
       container: chartRef.current,
       autoFit: true,
-      padding: [20, 0, 0, 0],
+      padding: [20, 20, 60, 50],
       ...options,
     });
     registerInteraction('brush', {
@@ -75,8 +76,33 @@ function LineChart(props: IProps, ref) {
     },
     updateDetailChart,
     configDetailChart,
+    autoAdjustPadding,
     changeData,
   }));
+
+  const autoAdjustPadding = (type: VALUE_TYPE) => {
+    if (!chartInstanceRef.current) return;
+    const max = yMax.current;
+    const min = yMin.current;
+    const mid = ((max + min) / 2).toFixed(2);
+    let leftOffset = 0;
+    if (type === VALUE_TYPE.byte) {
+      const { desc } = getProperByteDesc(Number(mid));
+      leftOffset = desc === '0' ? 36 : (desc.length) * 12;
+    } else if (type === VALUE_TYPE.byteSecond || type == VALUE_TYPE.byteSecondNet) {
+      const { desc } = getProperByteDesc(Number(mid));
+      leftOffset = desc === '0' ? 36 : (desc.length) * 12;
+    } else if (type = VALUE_TYPE.number) {
+      leftOffset = (mid.toString().length) * 8;
+    } else {
+      leftOffset = (mid.toString().length + 2) * 10;
+    }
+    if (options?.padding) {
+      options.padding[3] = leftOffset;
+    }
+    chartInstanceRef.current.padding = options.padding as any;
+    chartInstanceRef.current.render(true);
+  }
 
   const calcScaleOption = (max: number = 100, min: number = 0) => {
     if ((max - min) < 5) {
@@ -259,13 +285,15 @@ function LineChart(props: IProps, ref) {
         break;
       default:
     }
+    // autoAdjustPadding(options.valueType!);
     return chartInstanceRef.current;
   };
 
   const updateDetailChart = (
     options: {
-      type: string;
+      type?: ServiceName;
       tickInterval: number;
+      valueType: VALUE_TYPE;
       statSizes?: any;
       maxNum?: number;
       minNum?: number;
@@ -286,6 +314,7 @@ function LineChart(props: IProps, ref) {
         tickInterval,
       },
     });
+    autoAdjustPadding(options.valueType);
     return chartInstanceRef.current;
   };
 

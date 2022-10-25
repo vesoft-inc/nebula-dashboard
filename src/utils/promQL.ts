@@ -6,7 +6,7 @@ export const enum VALUE_TYPE {
   percentage = 'PERCENTAGE',
   byte = 'BYTE',
   byteSecond = 'BYTE_SECOND',
-  byteSecondNet = 'BYTE_SECOND_ENT',
+  byteSecondNet = 'BYTE_SECOND_NET',
   number = 'NUMBER',
   numberSecond = 'numberSecond',
 }
@@ -42,6 +42,10 @@ export let SUPPORT_METRICS =
       },
       {
         metric: 'memory_used',
+        valueType: VALUE_TYPE.byte,
+      },
+      {
+        metric: 'memory_actual_used',
         valueType: VALUE_TYPE.byte,
       },
       {
@@ -147,8 +151,8 @@ export let LINUX = (cluster?,device?:string) : any => {
 
     // memory relative:
     memory_utilization: `(1 - (node_memory_MemFree_bytes${clusterSuffix2}+ node_memory_Buffers_bytes${clusterSuffix2}+ node_memory_Cached_bytes${clusterSuffix2}) / node_memory_MemTotal_bytes${clusterSuffix2} )* 100`,
-    memory_used: `node_memory_MemTotal_bytes${clusterSuffix2} - node_memory_MemFree_bytes${clusterSuffix2}- node_memory_Buffers_bytes${clusterSuffix2}  - node_memory_Cached_bytes${clusterSuffix2}`,
-    // memory_actual_used: `node_memory_MemTotal_bytes${clusterSuffix2} - node_memory_MemFree_bytes${clusterSuffix2} - node_memory_Buffers_bytes${clusterSuffix2} - node_memory_Cached_bytes${clusterSuffix2}`,
+    memory_used: `node_memory_MemTotal_bytes${clusterSuffix2} - node_memory_MemFree_bytes${clusterSuffix2}- node_memory_Buffers_bytes${clusterSuffix2}`,
+    memory_actual_used: `node_memory_MemTotal_bytes${clusterSuffix2} - node_memory_MemFree_bytes${clusterSuffix2} - node_memory_Buffers_bytes${clusterSuffix2} - node_memory_Cached_bytes${clusterSuffix2}`,
     memory_free: `node_memory_MemFree_bytes${clusterSuffix2}`,
     memory_size: `node_memory_MemTotal_bytes${clusterSuffix2}`,
 
