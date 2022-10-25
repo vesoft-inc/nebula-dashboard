@@ -247,7 +247,9 @@ export function MachineModelWrapper(service,) {
 
       updateMetricsFiltervalues(values: MetricsPanelValue) {
         this.updateMetricsFilterValues({
-          metricsFilterValues: values,
+          metricsFilterValues: {
+            ...values,
+          },
         });
       }
     }),

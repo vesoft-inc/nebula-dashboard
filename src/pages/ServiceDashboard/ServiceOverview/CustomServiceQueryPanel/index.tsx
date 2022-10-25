@@ -126,6 +126,7 @@ function CustomServiceQueryPanel(props: IProps) {
               nameObj: getMetricsUniqName(MetricScene.SERVICE),
               aliasConfig,
             })}
+            serviceType={serviceType}
             loading={false}
           />
       </div>
