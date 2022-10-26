@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useMemo, useRef, useState, useEffect } from 'react';
 import { Button, Modal as AntModal, message } from 'antd';
 import { connect } from 'react-redux';
 import intl from 'react-intl-universal';
@@ -59,13 +59,21 @@ const Overview: React.FC<IProps> = (props: IProps) => {
   const modalHandler = useRef<any>();
   const [hosts, setHosts] = useState([]);
 
+  useEffect(() => {
+    asyncGetHostsInfo();
+  }, []);
+
   const handleSpaceChange = async space => {
     const { code } = await props.asyncUseSpaces(space);
     if (code === 0) {
-      const res = await props.asyncGetHostsInfo();
-      setHosts(res);
+      asyncGetHostsInfo();
     }
   };
+
+  const asyncGetHostsInfo = async () => {
+    const res = await props.asyncGetHostsInfo();
+    setHosts(res);
+  }
 
   const handleModalClose = () => {
     if (modalHandler.current) {

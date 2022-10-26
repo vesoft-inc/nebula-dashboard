@@ -135,7 +135,6 @@ function MetricDetail(props: Props) {
     }
     const res = {
       metric: metricOption,
-      chartInstance: undefined,
       baseLine: undefined,
     }
     metricChartRef.current = res;
@@ -189,31 +188,28 @@ function MetricDetail(props: Props) {
   const updateChart = () => {
     const [startTimestamps, endTimestamps] = calcTimeRange(curMetricsFilterValues.timeRange);
     const metricScene = getMetricSecene(metricType);
-    if (metricChart.chartInstance) {
-      const data = metricType === MetricTypeName.Disk ?
-        getDiskData({
-          data: dataSource || [],
-          type: curMetricsFilterValues.instanceList,
-          nameObj: getMetricsUniqName(metricScene),
-          aliasConfig,
-        }) :
-        getDataByType({
-          data: dataSource || [],
-          type: curMetricsFilterValues.instanceList,
-          nameObj: getMetricsUniqName(metricScene),
-          aliasConfig,
-        });
-      const values = data.map(d => d.value) as number[];
-      const maxNum = values.length > 0 ? Math.floor(Math.max(...values) * 100) / 100 : undefined;
-      const minNum = values.length > 0 ? Math.floor(Math.min(...values) * 100) / 100 : undefined;
-      metricChart.chartRef.updateDetailChart({
-        type,
-        tickInterval: getProperTickInterval(endTimestamps - startTimestamps),
-        maxNum,
-        minNum,
-      }).changeData(data);
-      metricChart.chartInstance.autoFit = true;
-    }
+    const data = metricType === MetricTypeName.Disk ?
+      getDiskData({
+        data: dataSource || [],
+        type: curMetricsFilterValues.instanceList,
+        nameObj: getMetricsUniqName(metricScene),
+        aliasConfig,
+      }) :
+      getDataByType({
+        data: dataSource || [],
+        type: curMetricsFilterValues.instanceList,
+        nameObj: getMetricsUniqName(metricScene),
+        aliasConfig,
+      });
+    const values = data.map(d => d.value) as number[];
+    const maxNum = values.length > 0 ? Math.floor(Math.max(...values) * 100) / 100 : undefined;
+    const minNum = values.length > 0 ? Math.floor(Math.min(...values) * 100) / 100 : undefined;
+    metricChart.chartRef.updateDetailChart({
+      type,
+      tickInterval: getProperTickInterval(endTimestamps - startTimestamps),
+      maxNum,
+      minNum,
+    }).changeData(data);
   };
 
   const metricTypeMap = useMemo(() => {
@@ -275,9 +271,8 @@ function MetricDetail(props: Props) {
     getData();
   }
 
-  const renderChart = (chartInstance: Chart) => {
+  const renderChart = () => {
     const [startTimestamps, endTimestamps] = calcTimeRange(curMetricsFilterValues.timeRange);
-    metricChart.chartInstance = chartInstance;
     metricChart.chartRef.configDetailChart({
       tickInterval: getProperTickInterval(endTimestamps - startTimestamps),
       valueType: metricChart.metric.valueType,

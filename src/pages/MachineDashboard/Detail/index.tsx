@@ -68,7 +68,6 @@ function Detail(props: IProps) {
   const metricCharts: any = useMemo(() => (metricOptions || []).map(
     (metric, i) => ({
       metric,
-      chartInstance: undefined,
       index: i,
       baseLine: undefined,
     })
@@ -147,9 +146,8 @@ function Detail(props: IProps) {
     metricChart.chartRef.updateBaseline(metricChart.baseLine);
   };
 
-  const renderChart = (i: number) => (chartInstance: Chart) => {
+  const renderChart = (i: number) => () => {
     const [startTimestamps, endTimestamps] = calcTimeRange(metricsFilterValues.timeRange);
-    metricCharts[i].chartInstance = chartInstance;
     metricCharts[i].chartRef.configDetailChart({
       tickInterval: getProperTickInterval(endTimestamps - startTimestamps),
       valueType: metricCharts[i].metric.valueType,
@@ -159,32 +157,29 @@ function Detail(props: IProps) {
   const updateChart = () => {
     const [startTimestamps, endTimestamps] = calcTimeRange(metricsFilterValues.timeRange);
     metricCharts.forEach((chart, i) => {
-      if (chart.chartInstance) {
-        const data = type === 'disk' ?
-          getDiskData({
-            data: dataSources[i] || [],
-            type: metricsFilterValues.instanceList,
-            nameObj: dataTypeObj,
-            aliasConfig,
-          }) :
-          getDataByType({
-            data: dataSources[i] || [],
-            type: metricsFilterValues.instanceList,
-            nameObj: dataTypeObj,
-            aliasConfig,
-          });
-        const values = data.map(d => d.value) as number[] ;
-        const maxNum = values.length > 0 ? Math.floor(Math.max(...values) * 100) / 100 : undefined;
-        const minNum = values.length > 0 ? Math.floor(Math.min(...values) * 100) / 100 : undefined;
-        chart.chartRef.updateDetailChart({
-          type,
-          valueType: chart.metric.valueType,
-          tickInterval: getProperTickInterval(endTimestamps - startTimestamps),
-          maxNum,
-          minNum
-        }).changeData(data);
-        chart.chartInstance.autoFit = true;
-      }
+      const data = type === 'disk' ?
+        getDiskData({
+          data: dataSources[i] || [],
+          type: metricsFilterValues.instanceList,
+          nameObj: dataTypeObj,
+          aliasConfig,
+        }) :
+        getDataByType({
+          data: dataSources[i] || [],
+          type: metricsFilterValues.instanceList,
+          nameObj: dataTypeObj,
+          aliasConfig,
+        });
+      const values = data.map(d => d.value) as number[];
+      const maxNum = values.length > 0 ? Math.floor(Math.max(...values) * 100) / 100 : undefined;
+      const minNum = values.length > 0 ? Math.floor(Math.min(...values) * 100) / 100 : undefined;
+      chart.chartRef.updateDetailChart({
+        type,
+        valueType: chart.metric.valueType,
+        tickInterval: getProperTickInterval(endTimestamps - startTimestamps),
+        maxNum,
+        minNum
+      }).changeData(data);
     })
   };
 
@@ -262,10 +257,10 @@ function Detail(props: IProps) {
                 </div>
                 <div className="action-icons">
                   <div
-                      className="btn-icon-with-desc blue view-detail"
-                      onClick={handleViewDetail(metricChart)}
-                    >
-                      <Icon icon="#iconwatch" />
+                    className="btn-icon-with-desc blue view-detail"
+                    onClick={handleViewDetail(metricChart)}
+                  >
+                    <Icon icon="#iconwatch" />
                   </div>
                   <div
                     className="btn-icon-with-desc blue base-line"

@@ -121,9 +121,7 @@ const MetricsFilterPanel = (props: IProps, ref) => {
     onMetricsChange?.(values);
   }
 
-  const handleSearchMetric = useCallback((value: string) => debounce(() => {
-    setMetricSearchValue(value);
-  }, 1000), []);
+  const handleSearchMetric = useCallback(debounce(setMetricSearchValue, 1000), []);
 
   return (
     <Form
