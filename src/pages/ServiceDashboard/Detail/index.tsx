@@ -146,14 +146,12 @@ function ServiceDetail(props: IProps) {
     if (metricType === 'all') {
       charts = metricOptions.map((metric, i) => ({
         metric,
-        chartInstance: undefined,
         index: i,
         baseLine: undefined,
       }))
     } else {
       charts = (metricTypeMap[metricType] || []).map((metric, i) => ({
         metric,
-        chartInstance: undefined,
         index: i,
         baseLine: undefined,
       }));
@@ -230,29 +228,24 @@ function ServiceDetail(props: IProps) {
     const { instanceList } = metricsFilterValues;
     const [startTimestamps, endTimestamps] = calcTimeRange(metricsFilterValues.timeRange);
     metricCharts.forEach((chart, i) => {
-      if (chart.chartInstance) {
-        const data = getDataByType({
-          data: dataSources[i] || [],
-          type: instanceList,
-          nameObj: getMetricsUniqName(MetricScene.SERVICE),
-          aliasConfig,
-        });
-        // chart.maxNum = getMaxNum(data);
-        chart.chartRef.updateDetailChart({
-          type: serviceType,
-          valueType: chart.metric.valueType,
-          tickInterval: getProperTickInterval(endTimestamps - startTimestamps),
-          maxNum: getMaxNum(data),
-          minNum: getMinNum(data),
-        }).changeData(data);
-        chart.chartInstance.autoFit = true;
-      }
+      const data = getDataByType({
+        data: dataSources[i] || [],
+        type: instanceList,
+        nameObj: getMetricsUniqName(MetricScene.SERVICE),
+        aliasConfig,
+      });
+      chart.chartRef.updateDetailChart({
+        type: serviceType,
+        valueType: chart.metric.valueType,
+        tickInterval: getProperTickInterval(endTimestamps - startTimestamps),
+        maxNum: getMaxNum(data),
+        minNum: getMinNum(data),
+      }).changeData(data);
     })
   };
 
-  const renderChart = (i: number) => (chartInstance: Chart) => {
+  const renderChart = (i: number) => () => {
     const [startTimestamps, endTimestamps] = calcTimeRange(metricsFilterValues.timeRange);
-    metricCharts[i].chartInstance = chartInstance;
     metricCharts[i].chartRef.configDetailChart({
       tickInterval: getProperTickInterval(endTimestamps - startTimestamps),
       valueType: metricCharts[i].metric.valueType,
