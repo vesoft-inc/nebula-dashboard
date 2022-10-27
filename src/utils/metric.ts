@@ -1,4 +1,5 @@
 import _ from 'loadsh';
+
 import { VALUE_TYPE } from '@/utils/promQL';
 import { INTERVAL_FREQUENCY_LIST, SERVICE_QUERY_PERIOD } from './service';
 import { AggregationType, AGGREGATION_OPTIONS, TIME_OPTION_TYPE } from './dashboard';
@@ -134,7 +135,6 @@ export const filterServiceMetrics = (payload: {
     if (metricFieldType && metricFields) {
       const { key, metricValue } = calcMetricInfo(metricFields)
       const metricItem = _.find(metrics, m => m.metric === metricValue);
-
       if (_.includes(FILTER_METRICS, metricValue)) {
         // is filter metric
         return;
