@@ -28,11 +28,13 @@ const fomrItemLayout = {
 const mapState = (state: IRootState) => ({
   appVersion: state.app.version,
   connection: state.app.connection,
+  currentSpace: state.app.currentSpace
 });
 
 const mapDispatch: any = (dispatch: IDispatch) => ({
   asyncLogin: dispatch.app.asyncLogin,
   asyncGetAppInfo: dispatch.app.asyncGetAppInfo,
+  asyncUseSpaces: dispatch.app.asyncUseSpaces,
   asyncGetCustomConfig: dispatch.app.asyncGetCustomConfig,
   updateVersion: values =>
     dispatch.nebula.update({
@@ -51,7 +53,7 @@ class ConfigServerForm extends React.Component<IProps> {
   }
 
   onConfig = async (values: any) => {
-    const { connection } = this.props;
+    const { connection,currentSpace } = this.props;
     const ok = await this.props.asyncLogin({
       ip: connection.ip,
       port: connection.port,
@@ -61,6 +63,9 @@ class ConfigServerForm extends React.Component<IProps> {
       SessionStorageUtil.setItem('version', values.version)
       this.props.updateVersion(values.version);
       this.props.history.push('/machine/overview');
+      if(currentSpace){
+        this.props.asyncUseSpaces(currentSpace)
+      }
     }
   };
 
