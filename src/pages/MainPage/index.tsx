@@ -30,12 +30,16 @@ const mapDispatch: any = (dispatch: IDispatch) => ({
   asyncGetAppInfo: dispatch.app.asyncGetAppInfo,
   asyncGetCustomConfig: dispatch.app.asyncGetCustomConfig,
   asyncGetServiceMetric: dispatch.serviceMetric.asyncGetServiceMetric,
-  asyncGetSpaces: dispatch.nebula.asyncGetSpaces
+  asyncGetSpaces: dispatch.nebula.asyncGetSpaces,
+  asyncUseSpaces: dispatch.nebula.asyncUseSpaces,
 });
 
 const mapState = (state: IRootState) => ({
   appVersion: state.app.version,
+  username: state.app.username,
   nebluaVersion: state.nebula.version,
+  currentSpace: state.nebula.currentSpace,
+  
 });
 
 interface IProps
@@ -65,7 +69,7 @@ class MainPage extends React.Component<IProps, IState> {
   }
 
   componentDidMount() {
-    const { appVersion, nebluaVersion } = this.props;
+    const { appVersion, nebluaVersion,username, currentSpace } = this.props;
     this.props.asyncGetCustomConfig();
     if (appVersion === '') {
       this.props.asyncGetAppInfo();
@@ -78,6 +82,9 @@ class MainPage extends React.Component<IProps, IState> {
           version: nebluaVersion,
         }),
       );
+    }
+    if(currentSpace && username){
+      this.props.asyncUseSpaces(currentSpace)
     }
   }
 
