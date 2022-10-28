@@ -28,6 +28,7 @@ const mapDispatch: any = (dispatch: IDispatch) => ({
 const mapState = (state: IRootState) => ({
   spaces: state.nebula.spaces,
   currentSpace: state.nebula.currentSpace,
+  nebulaConnect: state.nebula.nebulaConnect,
 });
 
 interface IHaderProps {
@@ -54,14 +55,16 @@ const OverviewCardHeader = (props: IHaderProps) => {
 
 const Overview: React.FC<IProps> = (props: IProps) => {
 
-  const { cluster, currentSpace, spaces, baseRouter = '/management' } = props;
+  const { cluster, currentSpace, spaces, baseRouter = '/management', nebulaConnect } = props;
 
   const modalHandler = useRef<any>();
   const [hosts, setHosts] = useState([]);
 
   useEffect(() => {
-    asyncGetHostsInfo();
-  }, []);
+    if (nebulaConnect) {
+      asyncGetHostsInfo();
+    }
+  }, [nebulaConnect]);
 
   const handleSpaceChange = async space => {
     const { code } = await props.asyncUseSpaces(space);
