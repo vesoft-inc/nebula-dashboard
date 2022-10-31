@@ -32,6 +32,7 @@ const mapDispatch: any = (dispatch: IDispatch) => ({
   asyncGetServiceMetric: dispatch.serviceMetric.asyncGetServiceMetric,
   asyncGetSpaces: dispatch.nebula.asyncGetSpaces,
   asyncUseSpaces: dispatch.nebula.asyncUseSpaces,
+  asyncGetNebulaVersion: dispatch.nebula.asyncGetNebulaVersion,
 });
 
 const mapState = (state: IRootState) => ({
@@ -39,7 +40,6 @@ const mapState = (state: IRootState) => ({
   username: state.app.username,
   nebluaVersion: state.nebula.version,
   currentSpace: state.nebula.currentSpace,
-  
 });
 
 interface IProps
@@ -74,6 +74,7 @@ class MainPage extends React.Component<IProps, IState> {
     if (appVersion === '') {
       this.props.asyncGetAppInfo();
     }
+    this.props.asyncGetNebulaVersion();
     if (nebluaVersion) {
       this.props.asyncGetSpaces();
       METRIC_PROCESS_TYPES.map(item =>
@@ -86,6 +87,17 @@ class MainPage extends React.Component<IProps, IState> {
     if(currentSpace && username){
       this.props.asyncUseSpaces(currentSpace)
     }
+  }
+
+  componentDidUpdate(prevProps: Readonly<IProps>, prevState: Readonly<IState>, snapshot?: any): void {
+      if (prevProps.nebluaVersion !== this.props.nebluaVersion) {
+        METRIC_PROCESS_TYPES.map(item =>
+          this.props.asyncGetServiceMetric({
+            componentType: item,
+            version: this.props.nebluaVersion,
+          }),
+        );
+      }
   }
 
   renderMenu = list => {

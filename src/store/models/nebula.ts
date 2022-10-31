@@ -1,8 +1,8 @@
 import { createModel } from '@rematch/core';
 import _ from 'lodash';
 import service from '@/config/service';
-import { getConfigData } from "@/utils/dashboard";
-import { NebulaVersionType } from '@/utils/interface';
+import { getConfigData, getVersion } from "@/utils/dashboard";
+import { NebulaVersionType, ServiceName } from '@/utils/interface';
 import { SessionStorageUtil } from '@/utils';
 
 interface IState {
@@ -26,7 +26,7 @@ export function NebulaModelWrapper(serviceApi, state, _effects) {
       parts: [],
       services: [],
       currentSpace: SessionStorageUtil.getItem('currentSpace'),
-      version: SessionStorageUtil.getItem('version') || '',
+      // version: SessionStorageUtil.getItem('version') || '',
       ...state,
     },
     reducers: {
@@ -37,8 +37,8 @@ export function NebulaModelWrapper(serviceApi, state, _effects) {
     },
     effects: (dispatch: any) => ({
       async asyncGetServiceConfigs(module) {
-        const data = module === 'graph'?await serviceApi.getGraphConfig(): await serviceApi.getStorageConfig() as any;
-  
+        const data = module === 'graph' ? await serviceApi.getGraphConfig() : await serviceApi.getStorageConfig() as any;
+
         if (data) {
           this.update({
             configs: getConfigData(data),
@@ -56,7 +56,17 @@ export function NebulaModelWrapper(serviceApi, state, _effects) {
           return data.tables;
         }
       },
-  
+
+      async asyncGetNebulaVersion() {
+        const res: any = await this.asyncGetServiceVersion('GRAPH');
+        if (res.length) {
+          const version = getVersion(res[0].version);
+          this.update({
+            version,
+          });
+        }
+      },
+
       async asyncGetSpaces() {
         const { code, data } = (await serviceApi.execNGQL({
           gql: 'SHOW SPACES',
@@ -68,7 +78,7 @@ export function NebulaModelWrapper(serviceApi, state, _effects) {
         }
         return { code };
       },
-  
+
       async asyncUseSpaces(space) {
         const { code, data } = (await serviceApi.execNGQL({
           gql: `USE \`${space}\``,
@@ -81,7 +91,7 @@ export function NebulaModelWrapper(serviceApi, state, _effects) {
         }
         return { code, data };
       },
-  
+
       async asyncGetParts(partId?: string) {
         const { code, data } = (await serviceApi.execNGQL({
           gql: partId ? `SHOW PARTS ${partId}` : 'SHOW PARTS',
@@ -93,7 +103,7 @@ export function NebulaModelWrapper(serviceApi, state, _effects) {
         }
         return data.tables;
       },
-  
+
       async asyncGetServices() {
         const hostData = await dispatch.nebula.asyncGetHostsInfo();
         let data = [];
@@ -113,7 +123,7 @@ export function NebulaModelWrapper(serviceApi, state, _effects) {
           services: data,
         });
       },
-  
+
       async asyncGetHostsInfo(type?: IServiceType) {
         const res = (await serviceApi.execNGQL({
           gql: `SHOW HOSTS ${type || ''}`,
@@ -124,22 +134,23 @@ export function NebulaModelWrapper(serviceApi, state, _effects) {
         }
         return data;
       },
-  
+
       async asyncExecNGQL(gql) {
         const res = (await serviceApi.execNGQL({ gql })) as any;
         return res.code;
       },
-  
+
       async asyncGetServiceVersion(type?: IServiceType) {
         // HACK: user git info instead of version
-      const res = await dispatch.nebula.asyncGetHostsInfo(type);
-      return res.map(item => ({
-        name: `${item.Host}:${item.Port}`,
-        version: item.Version || item['Git Info Sha'],
-        type: (item.Version || item['Git Info Sha']).includes('ent')
-          ? NebulaVersionType.ENTERPRISE
-          : NebulaVersionType.COMMUNITY,
-      }));
+        const res = await dispatch.nebula.asyncGetHostsInfo(type);
+        const versionInfos = res.map(item => ({
+          name: `${item.Host}:${item.Port}`,
+          version: item.Version || item['Git Info Sha'],
+          type: (item.Version || item['Git Info Sha']).includes('ent')
+            ? NebulaVersionType.ENTERPRISE
+            : NebulaVersionType.COMMUNITY,
+        }));
+        return versionInfos;
       },
       ..._effects(dispatch),
     }),

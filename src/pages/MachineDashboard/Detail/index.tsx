@@ -173,9 +173,6 @@ function Detail(props: IProps) {
       const values = data.map(d => d.value) as number[];
       const maxNum = values.length > 0 ? Math.floor(Math.max(...values) * 100) / 100 : undefined;
       const minNum = values.length > 0 ? Math.floor(Math.min(...values) * 100) / 100 : undefined;
-      if (chart.metric.metric === 'disk_writebytes') {
-        debugger;
-      }
       chart.chartRef.updateDetailChart({
         type,
         valueType: chart.metric.valueType,

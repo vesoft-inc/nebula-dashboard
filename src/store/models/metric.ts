@@ -45,7 +45,7 @@ export function MetricModelWrapper(serviceApi) {
         const curVersion = formatVersion(version);
         const clusterSuffix1 = clusterID ? `,${getClusterPrefix()}='${clusterID}'` : '';
         switch (true) {
-          case compare(curVersion, 'v3.0.0', '<'): {
+          case compare(curVersion, '3.0.0', '<'): {
             const { code, data } = (await serviceApi.getMetrics({
               clusterID,
               'match[]': `{componentType="${componentType}",__name__!~"ALERTS.*",__name__!~".*count"${clusterSuffix1}}`,
@@ -55,7 +55,7 @@ export function MetricModelWrapper(serviceApi) {
             }
             break;
           }
-          case compare(curVersion, 'v3.0.0', '>='):
+          case compare(curVersion, '3.0.0', '>='):
             {
               if (componentType === ServiceName.GRAPHD) {
                 const { code, data } = (await serviceApi.getMetrics({

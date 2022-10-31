@@ -7,15 +7,15 @@ import { RouteComponentProps } from 'react-router-dom';
 import {
   passwordRulesFn,
   usernameRulesFn,
-  versionRulesFn,
+  // versionRulesFn,
 } from '@/config/rules';
 import LanguageSelect from '@/components/LanguageSelect';
-import { VERSIONS } from '@/utils/dashboard';
+// import { VERSIONS } from '@/utils/dashboard';
 import './index.less';
 import nebulaLogo from '@/static/images/nebula_logo.png';
 import { IDispatch, IRootState } from '@/store';
 import { LanguageContext } from '@/context';
-import { SessionStorageUtil } from '@/utils';
+// import { SessionStorageUtil } from '@/utils';
 
 const FormItem = Form.Item;
 
@@ -38,10 +38,10 @@ const mapDispatch: any = (dispatch: IDispatch) => ({
   asyncUseSpaces: dispatch.nebula.asyncUseSpaces,
   asyncGetSpaces: dispatch.nebula.asyncGetSpaces,
   asyncGetCustomConfig: dispatch.app.asyncGetCustomConfig,
-  updateVersion: values =>
-    dispatch.nebula.update({
-      version: values,
-    }),
+  // updateVersion: values =>
+  //   dispatch.nebula.update({
+  //     version: values,
+  //   }),
 });
 
 interface IProps
@@ -62,8 +62,8 @@ class ConfigServerForm extends React.Component<IProps> {
       ...values,
     });
     if (ok) {
-      SessionStorageUtil.setItem('version', values.version)
-      this.props.updateVersion(values.version);
+      // SessionStorageUtil.setItem('version', values.version)
+      // this.props.updateVersion(values.version);
       this.props.history.push('/machine/overview');
       await this.props.asyncGetSpaces()
       if(currentSpace && this.props.spaces.includes(currentSpace)){
@@ -101,7 +101,7 @@ class ConfigServerForm extends React.Component<IProps> {
                 bordered={false}
               />
             </FormItem>
-            <FormItem name="version" rules={versionRulesFn(intl)}>
+            {/* <FormItem name="version" rules={versionRulesFn(intl)}>
               <Select>
                 {VERSIONS.map(version => (
                   <Select.Option value={version} key={version}>
@@ -109,7 +109,7 @@ class ConfigServerForm extends React.Component<IProps> {
                   </Select.Option>
                 ))}
               </Select>
-            </FormItem>
+            </FormItem> */}
             <Button className="btn-submit" type="primary" htmlType="submit">
               {intl.get('common.login')}
             </Button>

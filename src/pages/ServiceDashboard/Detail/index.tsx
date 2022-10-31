@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import intl from 'react-intl-universal';
 import { RouteComponentProps, useHistory, useLocation, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Chart } from '@antv/g2';
+// import { Chart } from '@antv/g2';
 import {
   getDataByType,
   getProperTickInterval,
@@ -16,7 +16,7 @@ import {
   getMinNum,
 } from '@/utils/dashboard';
 import { IDispatch, IRootState } from '@/store';
-import { VALUE_TYPE } from '@/utils/promQL';
+// import { VALUE_TYPE } from '@/utils/promQL';
 import { IServiceMetricItem, MetricScene, ServiceMetricsPanelValue, ServiceName } from '@/utils/interface';
 
 import LineChart from '@/components/Charts/LineChart';
