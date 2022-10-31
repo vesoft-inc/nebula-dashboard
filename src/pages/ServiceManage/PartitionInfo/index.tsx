@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import _ from 'lodash';
 import { Input, Table } from 'antd';
 import { connect } from 'react-redux';
@@ -26,25 +26,22 @@ const mapDispatch: any = (dispatch: IDispatch) => ({
 });
 interface IProps
   extends ReturnType<typeof mapState>,
-    ReturnType<typeof mapDispatch> {
+  ReturnType<typeof mapDispatch> {
   isOverview: boolean;
 }
 
 const PartitionInfo: React.FC<IProps> = (props: IProps) => {
-  const { nebulaConnect, currentSpace, loading, parts, spaces, isOverview } =
+  const { nebulaConnect, currentSpace, loading, parts, spaces, isOverview, asyncGetSpaces, asyncGetParts } =
     props;
 
   useEffect(() => {
     if (nebulaConnect) {
-      props.asyncGetSpaces();
+      asyncGetSpaces();
+      if (currentSpace) {
+        asyncGetParts();
+      }
     }
-  }, [nebulaConnect]);
-
-  useEffect(() => {
-    if (currentSpace) {
-      props.asyncGetParts();
-    }
-  }, [currentSpace]);
+  }, [nebulaConnect, currentSpace]);
 
   const handleSpaceChange = async space => {
     const { code } = (await props.asyncUseSpaces(space)) as any;
@@ -59,45 +56,48 @@ const PartitionInfo: React.FC<IProps> = (props: IProps) => {
     trackEvent('partition_info', 'search_partitionId');
   };
 
-  const columns = [
-    {
-      title: (
-        <TitleInstruction
-          title="PartitionId"
-          description={intl.get('description.partitionId')}
-        />
-      ),
-      dataIndex: 'Partition ID',
-    },
-    {
-      title: (
-        <TitleInstruction
-          title="Leader"
-          description={intl.get('description.leader')}
-        />
-      ),
-      dataIndex: 'Leader',
-    },
-    {
-      title: (
-        <TitleInstruction
-          title="Peers"
-          description={intl.get('description.peers')}
-        />
-      ),
-      dataIndex: 'Peers',
-    },
-    {
-      title: (
-        <TitleInstruction
-          title="Losts"
-          description={intl.get('description.losts')}
-        />
-      ),
-      dataIndex: 'Losts',
-      render: losts => <span>{losts || '-'}</span>,
-    },
-  ];
+  const columns = useMemo(() => (
+    [
+      {
+        title: (
+          <TitleInstruction
+            title="PartitionId"
+            description={intl.get('description.partitionId')}
+          />
+        ),
+        dataIndex: 'Partition ID',
+      },
+      {
+        title: (
+          <TitleInstruction
+            title="Leader"
+            description={intl.get('description.leader')}
+          />
+        ),
+        dataIndex: 'Leader',
+      },
+      {
+        title: (
+          <TitleInstruction
+            title="Peers"
+            description={intl.get('description.peers')}
+          />
+        ),
+        dataIndex: 'Peers',
+      },
+      {
+        title: (
+          <TitleInstruction
+            title="Losts"
+            description={intl.get('description.losts')}
+          />
+        ),
+        dataIndex: 'Losts',
+        render: losts => <span>{losts || '-'}</span>,
+      },
+    ]
+  ), []);
+
   return (
     <div className="service-info service-partition">
       {!isOverview && (
