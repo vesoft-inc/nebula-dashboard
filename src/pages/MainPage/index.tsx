@@ -177,7 +177,7 @@ class MainPage extends React.Component<IProps, IState> {
                 <span className="text-logout">{intl.get('common.logout')}</span>
               )}
             </div>
-            <LanguageContext.Consumer>
+            {!collapsed && <LanguageContext.Consumer>
               {({ currentLocale, toggleLanguage }) => (
                 <LanguageSelect
                   mode="dark"
@@ -186,7 +186,7 @@ class MainPage extends React.Component<IProps, IState> {
                   toggleLanguage={toggleLanguage}
                 />
               )}
-            </LanguageContext.Consumer>
+            </LanguageContext.Consumer>}
             <div className="row">
               {!collapsed && <span className="version">v {appVersion}</span>}
               {!collapsed && (
