@@ -31,8 +31,15 @@ export const unique = (arr) => {
   return arr.reduce((prev,cur) => prev.includes(cur) ? prev : [...prev,cur],[]);
 }
 
-export let getNebulaVersionName = (_versionType: NebulaVersionType, version) => {
-  return `${intl.get('common.nebulaVersion.community')} ${version}`;
+export let getNebulaVersionName = (versionType: NebulaVersionType, version) => {
+  switch (versionType) {
+    case NebulaVersionType.ENTERPRISE:
+      return `${intl.get('common.nebulaVersion.enterprise')} ${version}`;
+    case NebulaVersionType.COMMUNITY:
+      return `${intl.get('common.nebulaVersion.community')} ${version}`;
+    default:
+      return `${intl.get('common.nebulaVersion.community')} ${version}`;
+  }
 }
 
 export let hasNebulaConnected = (nebulaConnect?: NebulaConnectInfo, clusterID?: number): boolean => {
@@ -40,10 +47,8 @@ export let hasNebulaConnected = (nebulaConnect?: NebulaConnectInfo, clusterID?: 
 }
 
 export const updateFn = (service: { 
-  getNebulaVersionName: typeof getNebulaVersionName
   hasNebulaConnected: typeof hasNebulaConnected
 }) => {
-  getNebulaVersionName = service.getNebulaVersionName;
   hasNebulaConnected = service.hasNebulaConnected;
 }
 
