@@ -190,7 +190,7 @@ function ServiceDetail(props: IProps) {
   useEffect(() => {
     if (dataSources.length === 0) return;
     updateChart();
-  }, [metricsFilterValues.instanceList, dataSources])
+  }, [metricsFilterValues.instanceList, dataSources, curMetricOptions])
 
   const asyncGetMetricsData = async () => {
     const { timeRange, period, space, metricType } = metricsFilterValues;
@@ -355,7 +355,7 @@ function ServiceDetail(props: IProps) {
                   <div className='chart-content'>
                     <LineChart
                       // baseLine={metricChart.baseLine}
-                      options={{ padding: [20, 20, 60, 50] }}
+                      // options={{ padding: [20, 20, 60, 50] }}
                       ref={ref => metricChart.chartRef = ref}
                       renderChart={renderChart(i)}
                     />
