@@ -28,13 +28,15 @@ const fomrItemLayout = {
 const mapState = (state: IRootState) => ({
   appVersion: state.app.version,
   connection: state.app.connection,
-  currentSpace: state.app.currentSpace
+  currentSpace: state.nebula.currentSpace,
+  spaces: state.nebula.spaces,
 });
 
 const mapDispatch: any = (dispatch: IDispatch) => ({
   asyncLogin: dispatch.app.asyncLogin,
   asyncGetAppInfo: dispatch.app.asyncGetAppInfo,
-  asyncUseSpaces: dispatch.app.asyncUseSpaces,
+  asyncUseSpaces: dispatch.nebula.asyncUseSpaces,
+  asyncGetSpaces: dispatch.nebula.asyncGetSpaces,
   asyncGetCustomConfig: dispatch.app.asyncGetCustomConfig,
   updateVersion: values =>
     dispatch.nebula.update({
@@ -63,7 +65,8 @@ class ConfigServerForm extends React.Component<IProps> {
       SessionStorageUtil.setItem('version', values.version)
       this.props.updateVersion(values.version);
       this.props.history.push('/machine/overview');
-      if(currentSpace){
+      await this.props.asyncGetSpaces()
+      if(currentSpace && this.props.spaces.includes(currentSpace)){
         this.props.asyncUseSpaces(currentSpace)
       }
     }
@@ -75,7 +78,10 @@ class ConfigServerForm extends React.Component<IProps> {
       <div className="page-login">
         <div className="right">
           <img src={nebulaLogo} className="logo" />
-          <p className="title">Nebula Dashboard</p>
+          <div className="title">
+            <p>NebulaGraph</p>
+            <p>Dashboard</p>
+          </div>
           <p className="form-header">{intl.get('common.account')}</p>
           <Form
             layout="horizontal"
