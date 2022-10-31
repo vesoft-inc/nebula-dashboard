@@ -154,7 +154,10 @@ class MainPage extends React.Component<IProps, IState> {
         >
           <div className="sidebar-header">
             <img src={nebulaLogo} className="logo" />
-            {!collapsed && <p className="title">Nebula Dashboard</p>}
+            {!collapsed && <div className="title">
+              <p>NebulaGraph</p>
+              <p>Dashboard</p>
+            </div>}
           </div>
           <Menu
             className="sidebar-menu"
