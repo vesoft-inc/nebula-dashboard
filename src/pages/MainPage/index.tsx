@@ -69,7 +69,7 @@ class MainPage extends React.Component<IProps, IState> {
   }
 
   componentDidMount() {
-    const { appVersion, nebluaVersion,username, currentSpace } = this.props;
+    const { appVersion, nebluaVersion, username, currentSpace } = this.props;
     this.props.asyncGetCustomConfig();
     if (appVersion === '') {
       this.props.asyncGetAppInfo();
@@ -84,20 +84,20 @@ class MainPage extends React.Component<IProps, IState> {
         }),
       );
     }
-    if(currentSpace && username){
+    if (currentSpace && username) {
       this.props.asyncUseSpaces(currentSpace)
     }
   }
 
   componentDidUpdate(prevProps: Readonly<IProps>, prevState: Readonly<IState>, snapshot?: any): void {
-      if (prevProps.nebluaVersion !== this.props.nebluaVersion) {
-        METRIC_PROCESS_TYPES.map(item =>
-          this.props.asyncGetServiceMetric({
-            componentType: item,
-            version: this.props.nebluaVersion,
-          }),
-        );
-      }
+    if (prevProps.nebluaVersion !== this.props.nebluaVersion) {
+      METRIC_PROCESS_TYPES.map(item =>
+        this.props.asyncGetServiceMetric({
+          componentType: item,
+          version: this.props.nebluaVersion,
+        }),
+      );
+    }
   }
 
   renderMenu = list => {
@@ -189,21 +189,21 @@ class MainPage extends React.Component<IProps, IState> {
                 <span className="text-logout">{intl.get('common.logout')}</span>
               )}
             </div>
-            {!collapsed && <LanguageContext.Consumer>
-              {({ currentLocale, toggleLanguage }) => (
-                <LanguageSelect
-                  mode="dark"
-                  showIcon={!collapsed}
-                  currentLocale={currentLocale}
-                  toggleLanguage={toggleLanguage}
-                />
-              )}
-            </LanguageContext.Consumer>}
-            <div className="row">
-              {!collapsed && <span className="version">v {appVersion}</span>}
-              {!collapsed && (
+            {!collapsed && (
+              <div className="sidebar-footer-action">
+                <LanguageContext.Consumer>
+                  {({ currentLocale, toggleLanguage }) => (
+                    <LanguageSelect
+                      mode="dark"
+                      showIcon={!collapsed}
+                      currentLocale={currentLocale}
+                      toggleLanguage={toggleLanguage}
+                    />
+                  )}
+                </LanguageContext.Consumer>
                 <Dropdown
                   placement="topCenter"
+                  className="manual-dropdown"
                   overlay={
                     <Menu>
                       <Menu.Item>
@@ -223,9 +223,12 @@ class MainPage extends React.Component<IProps, IState> {
                     </Menu>
                   }
                 >
-                  <span className="help">{intl.get('common.help')}</span>
+                  <div className="help">{intl.get('common.help')}</div>
                 </Dropdown>
-              )}
+              </div>
+            )}
+            <div className="row">
+              {!collapsed && <span className="version">v {appVersion}</span>}
               <div className="btn-collapse" onClick={this.toggleMenu}>
                 {!collapsed && (
                   <Icon className="menu-collapse-icon" icon="#iconnav-fold" />
