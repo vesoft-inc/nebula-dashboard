@@ -7,13 +7,14 @@ import ServiceOverview from './ServiceOverview';
 import { IDispatch, IRootState } from '@/store';
 import Modal from '@/components/Modal';
 import ServiceCardEdit from '@/components/Service/ServiceCardEdit';
-import { DEPENDENCY_PROCESS_TYPES, METRIC_PROCESS_TYPES } from '@/utils/metric';
+import { METRIC_PROCESS_TYPES } from '@/utils/metric';
 import MetricsFilterPanel from '@/components/MetricsFilterPanel';
-
-import './index.less';
 import { ServiceMetricsPanelValue, ServiceName } from '@/utils/interface';
 import { calcTimeRange } from '@/utils/dashboard';
 import { shouldCheckCluster } from '@/utils';
+
+import './index.less';
+
 
 const mapDispatch: any = (dispatch: IDispatch) => ({
   asyncGetStatus: dispatch.service.asyncGetStatus,

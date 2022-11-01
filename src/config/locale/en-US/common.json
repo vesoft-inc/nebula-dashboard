@@ -41,5 +41,6 @@
 		"enterprise": "Enterprise",
 		"community": "Community"
 	},
-  "noData": "No Data"
+  "noData": "No Data",
+  "powerInfo": "Powered by NebulaGraph"
 }

@@ -41,5 +41,6 @@
 		"enterprise": "企业版",
 		"community": "社区版"
 	},
-  "noData": "没有数据"
+  "noData": "没有数据",
+  "powerInfo": "版权归 NebulaGraph 所有"
 }

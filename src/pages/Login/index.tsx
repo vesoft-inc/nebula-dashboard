@@ -47,7 +47,7 @@ const mapDispatch: any = (dispatch: IDispatch) => ({
 interface IProps
   extends ReturnType<typeof mapState>,
   ReturnType<typeof mapDispatch>,
-  RouteComponentProps {}
+  RouteComponentProps { }
 class ConfigServerForm extends React.Component<IProps> {
   componentDidMount() {
     this.props.asyncGetAppInfo();
@@ -55,7 +55,7 @@ class ConfigServerForm extends React.Component<IProps> {
   }
 
   onConfig = async (values: any) => {
-    const { connection,currentSpace } = this.props;
+    const { connection, currentSpace } = this.props;
     const ok = await this.props.asyncLogin({
       ip: connection.ip,
       port: connection.port,
@@ -66,7 +66,7 @@ class ConfigServerForm extends React.Component<IProps> {
       // this.props.updateVersion(values.version);
       this.props.history.push('/machine/overview');
       await this.props.asyncGetSpaces()
-      if(currentSpace && this.props.spaces.includes(currentSpace)){
+      if (currentSpace && this.props.spaces.includes(currentSpace)) {
         this.props.asyncUseSpaces(currentSpace)
       }
     }
@@ -115,18 +115,23 @@ class ConfigServerForm extends React.Component<IProps> {
             </Button>
           </Form>
           <div className="footer">
-            <div className="version">
-              {intl.get('common.version')}：{appVersion}
+            <div className="footer-action">
+              <span>
+                <LanguageContext.Consumer>
+                  {({ currentLocale, toggleLanguage }) => (
+                    <LanguageSelect
+                      showIcon
+                      currentLocale={currentLocale}
+                      toggleLanguage={toggleLanguage}
+                    />
+                  )}
+                </LanguageContext.Consumer>
+              </span>
+              <span className="version">
+                {intl.get('common.version')}：{appVersion}
+              </span>
             </div>
-            <LanguageContext.Consumer>
-              {({ currentLocale, toggleLanguage }) => (
-                <LanguageSelect
-                  showIcon={true}
-                  currentLocale={currentLocale}
-                  toggleLanguage={toggleLanguage}
-                />
-              )}
-            </LanguageContext.Consumer>
+            <div className="power-info">{intl.get('common.powerInfo')}</div>
           </div>
         </div>
       </div>

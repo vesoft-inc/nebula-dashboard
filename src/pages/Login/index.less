@@ -49,18 +49,39 @@
 		}
 
 		.footer {
-			margin-bottom: 25px;
-			flex: 1;
-			display: flex;
-			align-items: flex-end;
-			align-self: flex-end;
-      width: 100%;
+      margin-bottom: 25px;
+      flex: 1;
+      display: flex;
+      align-items: flex-end;
+      align-self: flex-end;
+      justify-content: space-between;
+      margin-bottom: 17px;
 
 			.version {
 				font-size: 14px;
 				padding-right: 15px;
-        width: 200px;
+        line-height: 33px;
 			}
+
+      .footer-action {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        bottom: 10px;
+        left: 25px;
+      }
+      
+      .power-info {
+        font-style: normal;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 20px;
+        text-align: right;
+        color: #000000;
+        margin-left: 0px;
+      }
 		}
 	}
 }
