@@ -371,7 +371,7 @@ function ServiceDetail(props: IProps) {
                       className="btn-icon-with-desc blue base-line"
                       onClick={handleBaseLineEdit(metricChart)}
                     >
-                      <Icon icon="#iconSetup" />
+                      <Icon icon="#iconSet_up" />
                       <span>{intl.get('common.baseLine')}</span>
                     </div>
                   </div>

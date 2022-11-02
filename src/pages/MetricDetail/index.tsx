@@ -12,7 +12,6 @@ import { useParams } from 'react-router-dom';
 import { calcTimeRange, getBaseLineByUnit, getDataByType, getDiskData, getMetricsUniqName, getProperTickInterval } from '@/utils/dashboard';
 import { MetricScene, ServiceName } from '@/utils/interface';
 import { SUPPORT_METRICS } from '@/utils/promQL';
-import { Chart } from '@antv/g2';
 import { shouldCheckCluster } from '@/utils';
 import { Popover, Spin } from 'antd';
 import Icon from '@/components/Icon';
@@ -335,7 +334,7 @@ function MetricDetail(props: Props) {
             </div>
             <div className={styles.chartContent}>
               <LineChart
-                options={{ padding: [10, 70, 70, 70] }}
+                // options={{ padding: [10, 70, 70, 70] }}
                 ref={ref => metricChart.chartRef = ref}
                 renderChart={renderChart}
               />
@@ -345,7 +344,7 @@ function MetricDetail(props: Props) {
                 className="btn-icon-with-desc blue base-line"
                 onClick={handleBaseLineEdit}
               >
-                <Icon icon="#iconSetup" />
+                <Icon icon="#iconSet_up" />
                 <span>{intl.get('common.baseLine')}</span>
               </div>
             </div>
