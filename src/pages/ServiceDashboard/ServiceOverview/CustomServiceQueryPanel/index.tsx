@@ -112,7 +112,7 @@ function CustomServiceQueryPanel(props: IProps) {
             })}
             onClick={onConfigPanel}
           >
-            <Icon icon="#iconSetup" />
+            <Icon icon="#iconSet_up" />
             <span>{intl.get('common.set')}</span>
           </div>
         </div>

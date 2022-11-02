@@ -37,7 +37,7 @@ class DashboardCard extends React.PureComponent<IProps> {
             {onConfigPanel && (
               <Icon
                 className="icon-setup blue"
-                icon="#iconSetup"
+                icon="#iconSet_up"
                 onClick={onConfigPanel}
               />
             )}
