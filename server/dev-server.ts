@@ -8,13 +8,13 @@ import pkg from '../package.json';
 
 const path = require('path');
 // change node config dir 
-process.env.NODE_CONFIG_DIR = path.resolve('./server') ;
-process.env.NODE_ENV= "config";
-import _config from "config";
-_config
-const port = _config.get('port');
-const nebulaServer = _config.get('nebulaServer');
-const proxy = _config.get('proxy');
+// process.env.NODE_CONFIG_DIR = path.resolve('./server') ;
+// process.env.NODE_ENV= "config";
+// import _config from "config";
+// _config
+// const port = _config.get('port');
+// const nebulaServer = _config.get('nebulaServer');
+// const proxy = _config.get('proxy');
 
 const app = express();
 const compiler = webpack(config);

@@ -6,13 +6,18 @@ on:
 jobs:
   package:
     name: build package
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, nebula-fast]
     strategy:
       matrix:
         os:
           - centos7
+        cpu_arch:
+          - [amd64, nebula-fast]
     container:
-      image: vesoft/nebula-dev:${{ matrix.os }}
+      image: reg.vesoft-inc.com/dashboard/dashboard-dev:amd64-${{ matrix.os }}-latest
+      credentials:
+        username: ${{ secrets.HARBOR_USERNAME }}
+        password: ${{ secrets.HARBOR_PASSWORD }}
     steps:
       - name: keep workspace empty
         run: |
@@ -34,7 +39,7 @@ jobs:
       - name: ls
         run: ls -a
       - name: Package
-        run: bash ./source/nebula-dashboard/scripts/package.sh source/nebula-dashboard source/nebula-http-gateway false ${{ secrets.GA_ID }} 
+        run: bash ./source/nebula-dashboard/scripts/package.sh source/nebula-dashboard source/nebula-http-gateway false ${{ matrix.cpu_arch[0] }} ${{ secrets.GA_ID }} 
       - name: Upload to OSS
         run: bash ./source/nebula-dashboard/scripts/upload.sh ${{ secrets.OSS_ENDPOINT }} ${{ secrets.OSS_ID }} ${{ secrets.OSS_SECRET }} ${{ secrets.OSS_URL }}
 
