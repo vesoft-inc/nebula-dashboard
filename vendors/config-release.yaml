@@ -1,0 +1,39 @@
+port: 7001 ## webserver port, which you can access in web
+gateway: 
+  ip: 192.168.8.44
+  port: 8090
+  https: false
+  runmode: dev
+stats-exporter:
+  ip: 192.168.8.44
+  port: 9200
+  https: false
+node-exporter:
+  - ip: 192.168.8.134
+    port: 9100
+    https: false
+prometheus: 
+  ip: 192.168.8.44
+  port: 9090
+  https: false
+  scrape_interval: 5s
+  evaluation_interval: 5s
+# the cluster node info
+nebula-cluster:
+  name: 'default' # cluster name
+  metad: 
+    - name: metad0
+      endpointIP: 192.168.8.134
+      port: 9559
+      endpointPort: 19559
+  graphd:
+    - name: graphd0
+      endpointIP: 192.168.8.134
+      port: 9669
+      endpointPort: 19669
+  storaged:
+    - name: storaged0
+      endpointIP: 192.168.8.143
+      port: 9779
+      endpointPort: 19779
+    
