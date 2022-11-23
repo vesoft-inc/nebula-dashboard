@@ -19,9 +19,9 @@ function INFO(...info) {
   console.log(chalk.green(info.join(' ')))
 }
 
-function getFullUrl({ https, host, port }) {
+function getFullUrl({ https, ip, port }) {
   const protocol = https ? 'https' : 'http';
-  return `${protocol}://${host}:${port}`;
+  return `${protocol}://${ip}:${port}`;
 }
 
 function getServiceTarget(type) {

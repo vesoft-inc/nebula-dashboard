@@ -88,8 +88,7 @@ async function updateGatewayConfig() {
     if (err) {
       return INFO(err);
     }
-    let result = data.replace(/httpport = \S*/g, `httpport = ${gatewayConfig.port}`);
-    // result = result.replace(/httpaddr = \S*/g, `httpaddr = ${gatewayConfig.host}`);
+    let result = data.replace(/httpport = \S*/g, `httpport = ${gatewayConfig.ip}`);
     result = result.replace(/runmode = \S*/g, `runmode = ${gatewayConfig.runmode}`);
     fs.writeFileSync(gatewayPath, result, 'utf8');
   });
@@ -135,7 +134,7 @@ function updatePrometheusConfig() {
         job_name: 'node-exporter',
         static_configs: [
           {
-            targets: config['node-exporter'].map(item => `${item.host}:${item.port}`)
+            targets: config['node-exporter'].map(item => `${item.ip}:${item.port}`)
           }
         ]
       },
@@ -143,7 +142,7 @@ function updatePrometheusConfig() {
         job_name: 'nebula-stats-exporter',
         static_configs: [
           {
-            targets: [`${config['stats-exporter'].host}:${config['stats-exporter'].port}`]
+            targets: [`${config['stats-exporter'].ip}:${config['stats-exporter'].port}`]
           }
         ]
       }
