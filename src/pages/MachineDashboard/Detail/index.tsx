@@ -10,7 +10,9 @@ import {
   getDataByType,
   getDiskData,
   getMachineRouterPath,
+  getProperStep,
   getProperTickInterval,
+  getTickIntervalByGap,
 } from '@/utils/dashboard';
 import { IDispatch, IRootState } from '@/store';
 
@@ -173,10 +175,12 @@ function Detail(props: IProps) {
       const values = data.map(d => d.value) as number[];
       const maxNum = values.length > 0 ? Math.floor(Math.max(...values) * 100) / 100 : undefined;
       const minNum = values.length > 0 ? Math.floor(Math.min(...values) * 100) / 100 : undefined;
+      const realRange = data.length>0?(data[data.length-1].time - data[0].time):0;
+      let tickInterval = getTickIntervalByGap(Math.floor(realRange / 10)); // 10 ticks max
       chart.chartRef.updateDetailChart({
         type,
         valueType: chart.metric.valueType,
-        tickInterval: getProperTickInterval(endTimestamps - startTimestamps),
+        tickInterval,
         maxNum,
         minNum
       }).changeData(data);

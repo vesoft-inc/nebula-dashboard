@@ -64,15 +64,17 @@ export function MachineModelWrapper(service,) {
         metric: string;
         clusterID?: string;
       }) {
-        const { start, end, clusterID, metric } = payload;
-        const _start = start / 1000;
-        const _end = end / 1000;
+        let { start, end, clusterID, metric } = payload;
         const step = getProperStep(start, end);
+        start = start / 1000;
+        end = end / 1000;
+        start = start - start % step;
+        end = end + (step - end % step);
         const { code, data } = (await service.execPromQLByRange({
           clusterID,
           query: PROMQL(clusterID)[metric],
-          start: _start,
-          end: _end,
+          start,
+          end,
           step,
         })) as any;
         let result:any = [];
@@ -81,8 +83,8 @@ export function MachineModelWrapper(service,) {
             result = (await this.asyncGetSumDataByRange({
               clusterID,
               query: PROMQL(clusterID)[metric],
-              start: _start,
-              end: _end,
+              start: start,
+              end: end,
               step,
               data: data.result,
             })) as any;
@@ -93,7 +95,8 @@ export function MachineModelWrapper(service,) {
         const instanceList = result.map(item => item.metric.instance).filter(instance => instance !== 'total');
         this.updateInstanceList(instanceList);
         return result;
-    },
+      },
+
       async asyncGetCPUStatByRange(payload: {
         start: number;
         end: number;

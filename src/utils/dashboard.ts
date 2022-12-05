@@ -37,22 +37,40 @@ export const CARD_HIGH_COLORS = 'rgba(230,113,113,1)';
 export const getProperStep = (start: number, end: number) => {
   const hours = Math.round((end - start) / (3600 * 1000));
   if (hours <= 1) {
-    return 30;
+    return 15;//15s
   }
   if (hours <= 6) {
     // 6 hour
-    return 30;
+    return 60;//1min
   }
   if (hours <= 12) {
     // 12hour
-    return 120;
+    return 300;//5min
   }
-  if (hours <= 24) {
-    // 1 day
-    return 240;
+  if (hours <= 72) {
+    // <3 day
+    return 1800; //30min
   }
-  return Math.ceil(hours / 24) * 240;
+  return 3600;
 };
+export const getTickIntervalByGap = (gap: number) => {
+  if (gap <= 10*60) {// 15min
+    return 10*60;
+  }
+  if (gap <= 30*60) {//30min
+    return 30*60;
+  }
+  if (gap <= 60*60*6) {//<3hour
+    return 60*60*2;
+  }
+  if (gap <= 10 * 60 * 60) {//6hour
+    return 60*60*6;
+  }
+  if (gap <= 24 * 60 * 60) {//10hour
+    return 60*60*24;
+  }
+  return gap - gap%60*60*24;
+}
 
 export const renderUnit = type => {
   switch (type) {
@@ -203,6 +221,7 @@ export let getDiskData = (payload: {
 }
 
 export const getProperTickInterval = period => {
+  period/=1000;
   switch (period) {
     // past one hour
     case 24 * 60 * 60:
