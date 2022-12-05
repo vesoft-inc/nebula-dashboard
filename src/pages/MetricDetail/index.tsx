@@ -9,7 +9,7 @@ import { IDispatch, IRootState } from '@/store';
 import styles from './index.module.less';
 import LineChart from '@/components/Charts/LineChart';
 import { useParams } from 'react-router-dom';
-import { calcTimeRange, getBaseLineByUnit, getDataByType, getDiskData, getMetricsUniqName, getProperTickInterval } from '@/utils/dashboard';
+import { calcTimeRange, getBaseLineByUnit, getDataByType, getDiskData, getMetricsUniqName, getProperStep, getProperTickInterval, getTickIntervalByGap } from '@/utils/dashboard';
 import { MetricScene, ServiceName } from '@/utils/interface';
 import { SUPPORT_METRICS } from '@/utils/promQL';
 import { shouldCheckCluster } from '@/utils';
@@ -203,9 +203,11 @@ function MetricDetail(props: Props) {
     const values = data.map(d => d.value) as number[];
     const maxNum = values.length > 0 ? Math.floor(Math.max(...values) * 100) / 100 : undefined;
     const minNum = values.length > 0 ? Math.floor(Math.min(...values) * 100) / 100 : undefined;
+    const realRange = data.length>0?(data[data.length-1].time - data[0].time):0;
+    let tickInterval = getTickIntervalByGap(Math.floor(realRange / 10)); // 10 ticks max
     metricChart.chartRef.updateDetailChart({
       type,
-      tickInterval: getProperTickInterval(endTimestamps - startTimestamps),
+      tickInterval,
       maxNum,
       minNum,
     }).changeData(data);

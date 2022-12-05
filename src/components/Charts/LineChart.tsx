@@ -1,6 +1,6 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import { Chart, registerInteraction } from '@antv/g2';
-import { ChartCfg } from '@antv/g2/lib/interface';
+import { ChartCfg, Options } from '@antv/g2/lib/interface';
 import dayjs from 'dayjs';
 import { VALUE_TYPE } from '@/utils/promQL';
 import { LINE_CHART_COLORS } from '@/utils/chart/chart';
@@ -8,6 +8,7 @@ import { getProperByteDesc } from '@/utils/dashboard';
 import { ServiceName } from '@/utils/interface';
 
 export interface IProps {
+  baseLine?: number;
   renderChart: (chartInstance: Chart) => void;
   options?: Partial<ChartCfg>;
 }
@@ -136,7 +137,14 @@ function LineChart(props: IProps, ref) {
     chartInstanceRef.current
       .axis('time', {
         label: {
-          formatter: time => dayjs(Number(time) * 1000).format('HH:mm'),
+          formatter: time => {
+            // @ts-ignore
+            const options = chartInstanceRef.current?.options as any;
+            if (options&&options.scales.time.tickInterval> 60 * 60 * 1000) {
+              return dayjs(time).format('MM-DD HH:mm');
+            }
+            return dayjs(Number(time) * 1000).format('HH:mm')
+          }
         },
         grid: options.isCard
           ? null
@@ -300,12 +308,14 @@ function LineChart(props: IProps, ref) {
     },
   ) => {
     if (!chartInstanceRef.current) return;
+    // for x axis
     chartInstanceRef.current.scale({
       time: {
         tickInterval: options.tickInterval,
       },
     });
     const { maxNum, minNum } = options
+    // for y axis
     const { min, max, tickInterval } = calcScaleOption(maxNum, minNum);
     chartInstanceRef.current.scale({
       value: {

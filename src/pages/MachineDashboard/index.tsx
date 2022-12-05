@@ -16,6 +16,7 @@ import {
   getBaseLineByUnit,
   calcTimeRange,
   getMachineRouterPath,
+  getProperStep,
 } from '@/utils/dashboard';
 import BaseLineEditModal from '@/components/BaseLineEditModal';
 import MetricsFilterPanel from '@/components/MetricsFilterPanel';
@@ -107,7 +108,11 @@ function MachineDashboard(props: IProps) {
   };
 
   const getMachineStatus = () => {
-    const [start, end] = calcTimeRange(metricsFilterValues.timeRange);
+    let [start, end] = calcTimeRange(metricsFilterValues.timeRange);
+    const step = getProperStep(start, end) * 1000;
+    start = start - start % step;
+    end = end + (step - end % step);
+
     asyncGetCPUStatByRange({
       start,
       end,

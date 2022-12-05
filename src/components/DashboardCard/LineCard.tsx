@@ -4,7 +4,7 @@ import { Spin } from 'antd';
 import LineChart from '@/components/Charts/LineChart';
 import { ILineChartMetric, IStatSingleItem, ServiceName } from '@/utils/interface';
 import { VALUE_TYPE } from '@/utils/promQL';
-import { getMaxNum, getMaxNumAndLength, getMinNum } from '@/utils/dashboard';
+import { getMaxNum, getMaxNumAndLength, getMinNum, getProperStep, getTickIntervalByGap } from '@/utils/dashboard';
 
 interface IProps {
   data: ILineChartMetric[];
@@ -18,7 +18,6 @@ function LineCard(props: IProps) {
   const chartRef = useRef<any>();
 
   const { loading, data = [], valueType, sizes, baseLine } = props;
-
   useEffect(() => {
     if (!loading && chartRef.current) {
       updateChart();
@@ -41,9 +40,13 @@ function LineCard(props: IProps) {
   };
 
   const updateChart = () => {
+    const realRange = data.length > 0 ? (data[data.length - 1].time - data[0].time) : 0;
+    const gap = Math.floor(realRange / 10); // 10 ticks max
+    const tickInterval = getTickIntervalByGap(gap);
     chartRef.current.updateDetailChart({
       maxNum: getMaxNum(data),
       minNum: getMinNum(data),
+      tickInterval,
       valueType,
     }).changeData(data);
   };
