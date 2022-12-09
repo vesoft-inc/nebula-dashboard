@@ -1,0 +1,57 @@
+name: "Dashboard community docker image build"
+description: "Build and push dashboard community version docker image"
+inputs: 
+  github-oauth-token:
+    required: true
+    description: 'github oauth token'
+  project-path:
+    required: true
+    description: 'project path'
+  docker-context:
+    required: true
+    description: 'docker context'
+  docker-repo:
+    required: true
+    description: 'docker repo'
+  docker-registry:
+    required: true
+    description: 'docker registry'
+  docker-username:
+    required: true
+    description: 'docker username'
+  docker-password:
+    required: true
+    description: 'docker password'
+runs:
+  using: composite
+  steps:
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v2
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+    - name: Login docker
+      uses: docker/login-action@v2
+      with:
+        registry: ${{ inputs.docker-registry }}
+        username: ${{ inputs.docker-username }}
+        password: ${{ inputs.docker-password }}
+    - name: Docker meta
+      id: meta
+      uses: docker/metadata-action@v4
+      with:
+        images: |
+          ${{ inputs.docker-registry }}/${{ inputs.docker-repo }}
+        tags: |
+          type=raw,value=latest
+          type=sha,format=long
+    - name: Push docker image
+      uses: docker/build-push-action@v3
+      with:
+        build-args: |
+          GITHUB_OAUTH_TOKEN=${{ inputs.github-oauth-token }}
+        context: ${{ inputs.docker-context }}
+        file: ./docker/Dockerfile
+        platforms: linux/${{cpu-arch}}
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        push: true
