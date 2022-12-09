@@ -1,9 +1,7 @@
 FROM centos:7
 WORKDIR /root
-ADD ./nebula-dashboard.*.tar.gz .
-ADD ./entrypoint.sh .
-
-RUN tar -xzvf nebula-dashboard.*.tar.gz
+ADD ./nebula-dashboard-nightly.tar.gz .
+# ADD ./entrypoint.sh .
 
 # CMD ["bash", "./entrypoint.sh"]
 

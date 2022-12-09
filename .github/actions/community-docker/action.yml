@@ -4,9 +4,6 @@ inputs:
   github-oauth-token:
     required: true
     description: 'github oauth token'
-  project-path:
-    required: true
-    description: 'project path'
   docker-context:
     required: true
     description: 'docker context'
@@ -22,6 +19,9 @@ inputs:
   docker-password:
     required: true
     description: 'docker password'
+  cpu-arch:
+    required: true
+    description: 'linux platform'
 runs:
   using: composite
   steps:
@@ -51,7 +51,7 @@ runs:
           GITHUB_OAUTH_TOKEN=${{ inputs.github-oauth-token }}
         context: ${{ inputs.docker-context }}
         file: ./docker/Dockerfile
-        platforms: linux/${{cpu-arch}}
+        platforms: linux/${{inputs.cpu-arch}}
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
         push: true

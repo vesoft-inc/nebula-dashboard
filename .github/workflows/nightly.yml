@@ -1,7 +1,7 @@
 name: Dashboard Mannually Package
 on: workflow_dispatch
 jobs:
-  package:
+  dashboard-package:
     name: build package
     runs-on: [self-hosted, nebula-fast]
     strategy:
@@ -33,18 +33,36 @@ jobs:
           echo "::set-output name=pkgVersion::$VERSION"
       - name: Package
         run: bash ./source/nebula-dashboard/scripts/package.sh source/nebula-dashboard source/nebula-http-gateway true ${{ matrix.cpu_arch[0] }} ${{ secrets.GA_ID }}
-      - name: Upload to OSS
-        run: bash ./source/nebula-dashboard/scripts/upload.sh ${{ secrets.OSS_ENDPOINT }} ${{ secrets.OSS_ID }} ${{ secrets.OSS_SECRET }} ${{ secrets.OSS_TEST_URL }}
+      # - name: Upload to OSS
+      #   run: bash ./source/nebula-dashboard/scripts/upload.sh ${{ secrets.OSS_ENDPOINT }} ${{ secrets.OSS_ID }} ${{ secrets.OSS_SECRET }} ${{ secrets.OSS_TEST_URL }}      
+      # - uses: actions/upload-artifact@v3.1.0
+      #   with:
+      #     name: dashboard-community-artifact
+      #     path: |
+      #       ./source/nebula-dashboard/docker
+      #       ./nebula-dashboard-nightly.tar.gz
+      #     retention-days: 1
+  docker-build:
+    needs: dashboard-package
+    runs-on: [self-hosted, nebula-fast]
+    steps: 
+      # - uses: actions/download-artifact@v3.0.0
+      #   with:
+      #     name: dashboard-community-artifact
+      #     path: dashboard-community
+      # - run: |
+      #     ls -al .
+      #     ls -al ./dashboard-community
+      #     ls -al  ./source
       - name: build image
-        uses: ./.github/actions/community-docker
+        uses: ./source/nebula-dashboard/.github/actions/community-docker
         with:
           github-oauth-token: ${{ secrets.CLOUD_GH_PAT }}
-          project-path: "dashboard-community-artifact"
-          docker-context: "source/nebula-dashboard"
+          docker-context: "."
           docker-repo: "dashboard/community"
           docker-registry: ${{ secrets.HARBOR_REGISTRY }}
           docker-username: ${{ secrets.HARBOR_USERNAME }}
           docker-password: ${{ secrets.HARBOR_PASSWORD }}
-          cpu-arch: ${{matric.cpu_arch[0]}}
-          pkg-version: ${{steps.pkgVersion.outputs.pkgVersion}}
+          cpu-arch: amd64
+          # pkg-version: ${{steps.pkgVersion.outputs.pkgVersion}}
       
