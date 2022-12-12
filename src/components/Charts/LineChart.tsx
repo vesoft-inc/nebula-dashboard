@@ -105,10 +105,17 @@ function LineChart(props: IProps, ref) {
     chartInstanceRef.current.render(true);
   }
 
-  const calcScaleOption = (max: number = 100, min: number = 0) => {
+  const calcScaleOption = (max: number = 100, min: number = 0, valueType: VALUE_TYPE) => {
+    if (valueType === VALUE_TYPE.percentage) {
+      return {
+        min: 0,
+        max: 100,
+        tickInterval: 10,
+      }
+    }
     if ((max - min) < 5) {
       max = max + 5;
-      min = min - 5;
+      min = min < 0 ? min - 5 : 0;
     }
     yMin.current = min;
     yMax.current = max;
@@ -316,7 +323,7 @@ function LineChart(props: IProps, ref) {
     });
     const { maxNum, minNum } = options
     // for y axis
-    const { min, max, tickInterval } = calcScaleOption(maxNum, minNum);
+    const { min, max, tickInterval } = calcScaleOption(maxNum, minNum, options.valueType);
     chartInstanceRef.current.scale({
       value: {
         min,
