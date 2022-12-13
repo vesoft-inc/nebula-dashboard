@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import intl from 'react-intl-universal';
-import { Chart } from '@antv/g2';
 import { Popover, Spin } from 'antd';
 import { connect } from 'react-redux';
 import LineChart from '@/components/Charts/LineChart';
@@ -10,7 +9,6 @@ import {
   getDataByType,
   getDiskData,
   getMachineRouterPath,
-  getProperStep,
   getProperTickInterval,
   getTickIntervalByGap,
 } from '@/utils/dashboard';
@@ -53,19 +51,19 @@ interface IProps
   dataTypeObj: any;
 }
 
-let pollingTimer: any;
-
 function Detail(props: IProps) {
 
-  const { metricOptions, loading, aliasConfig, asyncGetDataSourceByRange, asyncUpdateBaseLine, cluster, instances, metricsFilterValues, updateMetricsFiltervalues, type, dataTypeObj } = props;
+  const { metricOptions, loading, aliasConfig, asyncGetDataSourceByRange, cluster, instances, metricsFilterValues, updateMetricsFiltervalues, type, dataTypeObj } = props;
 
   const [dataSources, setDataSources] = useState<any[]>([]);
 
-  const [curMetricOptions, setMetricOptions] = useState<IMachineMetricOption[]>(metricOptions);
+  const [curMetricOptions, setMetricOptions] = useState<IMachineMetricOption[]>([]);
 
   const [showLoading, setShowLoading] = useState<boolean>(false);
 
   const history = useHistory();
+
+  const pollingTimerRef = useRef<any>(null);
 
   const metricCharts: any = useMemo(() => (metricOptions || []).map(
     (metric, i) => ({
@@ -84,9 +82,11 @@ function Detail(props: IProps) {
   }, [loading, metricsFilterValues.frequency])
 
   useEffect(() => {
-    if (pollingTimer) {
-      clearTimeout(pollingTimer);
-    }
+    setMetricOptions(metricOptions)
+  }, [metricOptions])
+
+  useEffect(() => {
+    clearPolling();
     if (shouldCheckCluster()) {
       if (cluster?.id) {
         pollingData();
@@ -101,10 +101,21 @@ function Detail(props: IProps) {
   }, [metricsFilterValues.instanceList, dataSources, curMetricOptions])
 
   useEffect(() => () => {
-    if (pollingTimer) {
-      clearTimeout(pollingTimer);
-    }
+    clearPolling();
   }, [])
+
+  useEffect(() => {
+    if (pollingTimerRef.current) {
+      clearPolling();
+      pollingData();
+    }
+  }, [curMetricOptions])
+
+  const clearPolling = () => {
+    if (pollingTimerRef.current) {
+      clearInterval(pollingTimerRef.current);
+    }
+  };
 
   const getData = async () => {
     const [startTimestamps, endTimestamps] = calcTimeRange(metricsFilterValues.timeRange);
@@ -122,7 +133,13 @@ function Detail(props: IProps) {
         });
       })
     }
-    Promise.all(metricCharts.map(chart => getPromise(chart))).then((dataSources) => {
+    Promise.all(metricCharts.map((chart, i) => {
+      if (curMetricOptions.find(m => m.metric === chart.metric.metric)) {
+        return getPromise(chart);
+      } else {
+        return Promise.resolve(dataSources[i]);
+      }
+    })).then((dataSources) => {
       setDataSources(dataSources)
     })
   };
@@ -130,7 +147,7 @@ function Detail(props: IProps) {
   const pollingData = () => {
     getData();
     if (metricsFilterValues.frequency > 0) {
-      pollingTimer = setTimeout(pollingData, metricsFilterValues.frequency);
+      pollingTimerRef.current = setInterval(getData, metricsFilterValues.frequency);
     }
   };
 
@@ -157,7 +174,6 @@ function Detail(props: IProps) {
   };
 
   const updateChart = () => {
-    const [startTimestamps, endTimestamps] = calcTimeRange(metricsFilterValues.timeRange);
     metricCharts.forEach((chart, i) => {
       const data = type === 'disk' ?
         getDiskData({

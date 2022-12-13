@@ -1,5 +1,5 @@
 import { Empty, Popover, Spin } from 'antd';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useRef } from 'react';
 import intl from 'react-intl-universal';
 import { RouteComponentProps, useHistory, useLocation, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -54,8 +54,6 @@ interface IProps
   ReturnType<typeof mapState>,
   RouteComponentProps { }
 
-let pollingTimer: any;
-
 function ServiceDetail(props: IProps) {
   const { asyncFetchMetricsData, serviceMetric, loading, cluster, updateMetricsFiltervalues, metricsFilterValues, instanceList, asyncGetSpaces } = props;
 
@@ -65,6 +63,8 @@ function ServiceDetail(props: IProps) {
   const [dataSources, setDataSources] = useState<any[]>([]);
   const [showLoading, setShowLoading] = useState<boolean>(false);
   const [isDependencyService, setIsDependencyService] = useState<boolean>(false);
+
+  const pollingTimerRef = useRef<any>(null);
 
   const history = useHistory();
 
@@ -127,7 +127,7 @@ function ServiceDetail(props: IProps) {
     (metricOptions || []).map((metric) => metric.metric)
   ), [metricOptions]);
 
-  const [curMetricOptions, setMetricOptions] = useState<IServiceMetricItem[]>(metricOptions);
+  const [curMetricOptions, setMetricOptions] = useState<IServiceMetricItem[]>([]);
 
   useEffect(() => {
     const match = /(\w+)-metrics/g.exec(location.pathname);
@@ -160,9 +160,7 @@ function ServiceDetail(props: IProps) {
   }, [metricTypeMap, metricsFilterValues.metricType])
 
   useEffect(() => {
-    if (pollingTimer) {
-      clearPolling();
-    }
+    clearPolling();
     if (shouldCheckCluster()) {
       if (cluster?.id) {
         pollingData();
@@ -178,8 +176,8 @@ function ServiceDetail(props: IProps) {
   }, [])
 
   const clearPolling = () => {
-    if (pollingTimer) {
-      clearTimeout(pollingTimer);
+    if (pollingTimerRef.current) {
+      clearInterval(pollingTimerRef.current);
     }
   };
 
@@ -191,6 +189,13 @@ function ServiceDetail(props: IProps) {
     if (dataSources.length === 0) return;
     updateChart();
   }, [metricsFilterValues.instanceList, dataSources, curMetricOptions])
+
+  useEffect(() => {
+    if (pollingTimerRef.current) {
+      clearPolling();
+      pollingData();
+    }
+  }, [curMetricOptions])
 
   const asyncGetMetricsData = async () => {
     const { timeRange, period, space, metricType } = metricsFilterValues;
@@ -211,15 +216,23 @@ function ServiceDetail(props: IProps) {
         });
       })
     }
-    Promise.all(metricCharts.map(chart => getPromise(chart))).then((dataSources) => {
+    if (metricCharts.length === 0) return;
+    Promise.all(metricCharts.map((chart, i) => {
+      if (curMetricOptions.length === 0 || curMetricOptions.find(m => m.metric === chart.metric.metric)) {
+        return getPromise(chart);
+      } else {
+        return Promise.resolve(dataSources[i]);
+      }
+    })).then((dataSources) => {
       setDataSources(dataSources)
     })
   };
 
+
   const pollingData = async () => {
     asyncGetMetricsData();
     if (metricsFilterValues.frequency > 0) {
-      pollingTimer = setTimeout(pollingData, metricsFilterValues.frequency);
+      pollingTimerRef.current = setInterval(asyncGetMetricsData, metricsFilterValues.frequency);
     }
   };
 
