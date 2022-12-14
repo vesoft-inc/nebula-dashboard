@@ -126,8 +126,8 @@ function MachineDashboard(props: IProps) {
       clusterID: cluster?.id
     });
     asyncGetDiskStatByRange({
-      start: end - 1000,
-      end,
+      start: Date.now() - 1000,
+      end: end,
       metric: SUPPORT_METRICS.disk[1].metric,
       clusterID: cluster?.id
     });
