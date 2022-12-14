@@ -39,12 +39,6 @@ function ServiceCardEdit(props: IProps) {
 
   const handlePanelConfigUpdate = (values: any) => {
     const { period, space, metric, aggregation, baseLine } = values;
-    // const metricTypeList = curServiceMetricItems.find(
-    //   item => item.metric === metric,
-    // )?.aggregations;
-    // const metricType = metricTypeList?.find(
-    //   type => type === aggregation,
-    // );
     const _config = cloneDeep(panelConfig);
     _config[editType][editIndex] = {
       period,
@@ -54,7 +48,7 @@ function ServiceCardEdit(props: IProps) {
       space,
     };
     onPanelConfigUpdate(_config);
-    localStorage.setItem('panelConfig', JSON.stringify(_config));
+    // localStorage.setItem('panelConfig', JSON.stringify(_config));
     onClose();
   };
 

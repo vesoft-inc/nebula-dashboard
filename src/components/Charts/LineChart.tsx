@@ -286,7 +286,7 @@ function LineChart(props: IProps, ref) {
             items.map(item => {
               let value = item.value;
               if (options.valueType === VALUE_TYPE.numberSecond) {
-                value = `${value}/s`;
+                value = `${Math.round(+value * 100) / 100}/s`;
               }
               return {
                 ...item,
