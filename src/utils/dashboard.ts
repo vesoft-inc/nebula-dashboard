@@ -10,8 +10,6 @@ import { VALUE_TYPE } from '@/utils/promQL';
 export const DEFAULT_VERSION = process.env.NEBULA_VERSION!;
 
 export const DETAIL_DEFAULT_RANGE = 60 * 60 * 24 * 1000;
-export const CARD_RANGE = 60 * 60 * 24 * 1000;
-export const CARD_POLLING_INTERVAL = 10000 * 1000;
 export const MAX_STEP_ALLOW = 11000;
 export const TIME_INTERVAL_OPTIONS = [5, 60, 600, 3600];
 export enum AggregationType {

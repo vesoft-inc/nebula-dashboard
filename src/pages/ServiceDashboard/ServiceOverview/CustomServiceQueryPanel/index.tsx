@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Popover } from 'antd';
 import Icon from '@/components/Icon';
 import { IServiceMetricItem, IServicePanelConfig, MetricScene, ServiceName } from '@/utils/interface';
-import { calcTimeRange, getDataByType, getMetricsUniqName } from '@/utils/dashboard';
+import { calcTimeRange, getDataByType, getMetricsUniqName, TIME_OPTION_TYPE } from '@/utils/dashboard';
 import Card from '@/components/Service/ServiceCard/Card';
 import { IDispatch, IRootState } from '@/store';
 import { shouldCheckCluster } from '@/utils';
@@ -61,7 +61,7 @@ function CustomServiceQueryPanel(props: IProps) {
 
   const getMetricsData = async () => {
     const { period: metricPeriod, space, metric, aggregation } = config;
-    const [start, end] = calcTimeRange(metricsFilterValues.timeRange);
+    const [start, end] = calcTimeRange(TIME_OPTION_TYPE.HOUR12);
     const item = (serviceMetric[serviceType] as IServiceMetricItem[]).find((metricItem: IServiceMetricItem) => metricItem.metric === metric);
     if (item) {
       const data = await asyncGetMetricsData({
