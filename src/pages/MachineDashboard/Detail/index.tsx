@@ -134,7 +134,7 @@ function Detail(props: IProps) {
       })
     }
     Promise.all(metricCharts.map((chart, i) => {
-      if (curMetricOptions.find(m => m.metric === chart.metric.metric)) {
+      if (curMetricOptions.length === 0 || curMetricOptions.find(m => m.metric === chart.metric.metric)) {
         return getPromise(chart);
       } else {
         return Promise.resolve(dataSources[i]);

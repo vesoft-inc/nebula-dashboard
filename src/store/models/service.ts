@@ -1,7 +1,7 @@
 import { createModel } from '@rematch/core';
 import _ from 'lodash';
 import serviceApi from '@/config/service';
-import { IPanelConfig, IServicePanelConfig, ServiceMetricsPanelValue, ServiceName } from '@/utils/interface';
+import { IPanelConfig, ServiceMetricsPanelValue } from '@/utils/interface';
 import { DEFAULT_SERVICE_PANEL_CONFIG } from '@/utils/service';
 import { getProperStep } from '@/utils/dashboard';
 import { unique } from '@/utils';
@@ -17,9 +17,10 @@ interface IState {
 export function SereviceModelWrapper(serviceApi) {
   return createModel({
     state: {
-      panelConfig: localStorage.getItem('panelConfig')
-        ? JSON.parse(localStorage.getItem('panelConfig')!)
-        : DEFAULT_SERVICE_PANEL_CONFIG,
+      // panelConfig: localStorage.getItem('panelConfig')
+      //   ? JSON.parse(localStorage.getItem('panelConfig')!)
+      //   : DEFAULT_SERVICE_PANEL_CONFIG,
+      panelConfig: DEFAULT_SERVICE_PANEL_CONFIG,
       instanceList: [],
       metricsFilterValues: InitMetricsFilterValues
     },

@@ -11,6 +11,7 @@ const mapState = (state: IRootState) => {
   const { aliasConfig } = state.app;
 
   const { instanceList } = metricsFilterValues;
+
   return {
     // According to type, only the detail increases total
     diskUsageDetails: diskStat
