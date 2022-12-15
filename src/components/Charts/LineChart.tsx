@@ -39,26 +39,26 @@ function LineChart(props: IProps, ref) {
       start: [
         {
           trigger: 'plot:mousedown',
-          action: ['brush-x:start', 'rect-mask:start', 'rect-mask:show'],
+          action: ['brush-x:start', 'x-rect-mask:start', 'x-rect-mask:show'],
         },
       ],
       processing: [
         {
           trigger: 'plot:mousemove',
-          action: ['rect-mask:resize'],
+          action: ['x-rect-mask:resize'],
         },
       ],
       end: [
         {
           trigger: 'plot:mouseup',
-          action: ['brush-x:filter', 'brush:end', 'rect-mask:end', 'rect-mask:hide', 'reset-button:show'],
+          action: ['brush-x:filter', 'brush:end', 'x-rect-mask:end', 'x-rect-mask:hide', 'reset-button:show'],
         },
       ],
       rollback: [{ trigger: 'reset-button:click', action: ['brush:reset', 'reset-button:hide'] }],
     });
     chartInstanceRef.current.interaction('brush');
     showScaleByBaseLine();
-    chartInstanceRef.current.interaction('brush');
+    // chartInstanceRef.current.interaction('brush');
     renderChart(chartInstanceRef.current);
     chartInstanceRef.current.render();
   };
