@@ -213,7 +213,7 @@ export const RawServiceMetrics = [
 
 export const ServiceMetricValueTypeMap = {
   [VALUE_TYPE.byte]: ["write_bytes_total", "memory_bytes_gauge", "read_bytes_total"],
-  [VALUE_TYPE.byteSecond]: ["memory_bytes_gauge"],
+  [VALUE_TYPE.byteSecond]: [],
   [VALUE_TYPE.numberSecond]: ["cpu_seconds_total"]
 }
 

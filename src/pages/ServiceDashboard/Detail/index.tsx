@@ -33,10 +33,6 @@ const mapDispatch: any = (dispatch: IDispatch) => ({
   asyncGetStatus: dispatch.service.asyncGetStatus,
   asyncGetSpaces: dispatch.serviceMetric.asyncGetSpaces,
   asyncFetchMetricsData: dispatch.service.asyncGetMetricsData,
-  asyncUpdateBaseLine: (key, value) =>
-    dispatch.machine.update({
-      [key]: value,
-    }),
   updateMetricsFiltervalues: dispatch.service.updateMetricsFiltervalues,
 });
 

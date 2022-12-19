@@ -8,10 +8,8 @@ import { MetricScene } from '@/utils/interface';
 
 const mapState = (state: IRootState) => {
   const { loadStat, metricsFilterValues } = state.machine;
-  const { loadBaseLine } = state.setting;
   const { aliasConfig } = state.app;
   return {
-    baseLine: loadBaseLine,
     data: getDataByType({
       data: loadStat,
       type: metricsFilterValues.instanceList,

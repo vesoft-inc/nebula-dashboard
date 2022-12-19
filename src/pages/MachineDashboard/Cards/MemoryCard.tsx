@@ -7,7 +7,6 @@ import { MetricScene } from '@/utils/interface';
 
 const mapState = (state: IRootState) => {
   const { memoryStat, memorySizeStat, metricsFilterValues } = state.machine;
-  const { memoryBaseLine } = state.setting;
   const { aliasConfig } = state.app;
   return {
     data: getDataByType({
@@ -17,7 +16,6 @@ const mapState = (state: IRootState) => {
       aliasConfig,
     }),
     sizes: memorySizeStat,
-    baseLine: memoryBaseLine,
     valueType: VALUE_TYPE.percentage,
     loading:false,
   };

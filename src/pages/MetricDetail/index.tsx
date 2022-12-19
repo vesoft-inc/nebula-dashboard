@@ -70,10 +70,10 @@ const mapState = (state: IRootState) => ({
 });
 
 const mapDispatch: any = (dispatch: IDispatch) => ({
-  asyncUpdateBaseLine: (key, value) =>
-    dispatch.setting.update({
-      [key]: value,
-    }),
+  // asyncUpdateBaseLine: (key, value) =>
+  //   dispatch.setting.update({
+  //     [key]: value,
+  //   }),
   updateMetricsFiltervalues: dispatch.machine.updateMetricsFiltervalues,
   updateServiceMetricsFiltervalues: dispatch.service.updateMetricsFiltervalues,
   asyncFetchMachineMetricsData: dispatch.machine.asyncGetMetricsData,

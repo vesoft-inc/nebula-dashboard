@@ -23,10 +23,6 @@ import { IMachineMetricOption } from '@/utils/interface';
 import { RouteProps, useHistory } from 'react-router-dom';
 
 const mapDispatch: any = (dispatch: IDispatch) => ({
-  asyncUpdateBaseLine: (key, value) =>
-    dispatch.setting.update({
-      [key]: value,
-    }),
   updateMetricsFiltervalues: dispatch.machine.updateMetricsFiltervalues,
 });
 

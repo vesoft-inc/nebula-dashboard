@@ -29,19 +29,10 @@ const mapDispatch: any = (dispatch: any) => ({
   asyncGetDiskStatByRange: dispatch.machine.asyncGetDiskStatByRange,
   asyncGetLoadByRange: dispatch.machine.asyncGetLoadByRange,
   asyncGetNetworkStatByRange: dispatch.machine.asyncGetNetworkStatByRange,
-  asyncUpdateBaseLine: (key, value) =>
-    dispatch.setting.update({
-      [key]: value,
-    }),
   updateMetricsFiltervalues: dispatch.machine.updateMetricsFiltervalues,
 });
 
 const mapState = (state: any) => ({
-  cpuBaseLine: state.setting.cpuBaseLine,
-  memoryBaseLine: state.setting.memoryBaseLine,
-  networkOutBaseLine: state.setting.networkOutBaseLine,
-  networkInBaseLine: state.setting.networkInBaseLine,
-  loadBaseLine: state.setting.loadBaseLine,
   instanceList: state.machine.instanceList as any,
   metricsFilterValues: state.machine.metricsFilterValues,
   loading: state.loading.effects.machine.asyncGetMetricsData,
@@ -58,12 +49,14 @@ let pollingTimer: any;
 function MachineDashboard(props: IProps) {
 
   const { asyncGetMemorySizeStat, asyncGetDiskSizeStat, cluster, metricsFilterValues,
-    asyncUpdateBaseLine, asyncGetCPUStatByRange, asyncGetMemoryStatByRange, asyncGetDiskStatByRange,
+    asyncGetCPUStatByRange, asyncGetMemoryStatByRange, asyncGetDiskStatByRange,
     asyncGetLoadByRange, asyncGetNetworkStatByRange, updateMetricsFiltervalues, instanceList,
     loading,
   } = props;
 
   const [showLoading, setShowLoading] = useState<boolean>(false);
+
+  const [baseLineMap, setBaseLineMap] = useState<any>({})
 
   useEffect(() => {
     asyncGetMemorySizeStat(cluster?.id);
@@ -97,14 +90,15 @@ function MachineDashboard(props: IProps) {
 
   const handleBaseLineChange = async (value, editPanelType) => {
     const { baseLine, unit } = value;
-    await asyncUpdateBaseLine(
-      `${editPanelType}BaseLine`,
-      getBaseLineByUnit({
-        baseLine,
-        unit,
-        valueType: getValueType(editPanelType),
-      }),
-    );
+    const curBaseLine = getBaseLineByUnit({
+      baseLine,
+      unit,
+      valueType: getValueType(editPanelType),
+    });
+    setBaseLineMap({
+      ...baseLineMap,
+      [`${editPanelType}BaseLine`]: curBaseLine
+    })
   };
 
   const getMachineStatus = () => {
@@ -196,8 +190,8 @@ function MachineDashboard(props: IProps) {
     <Spin spinning={showLoading} wrapperClassName='machine-dashboard-spinning'>
       <div className="machine-dashboard">
         <div className='common-header' >
-          <MetricsFilterPanel 
-            onChange={handleMetricsChange} 
+          <MetricsFilterPanel
+            onChange={handleMetricsChange}
             instanceList={instanceList}
             values={metricsFilterValues}
             onRefresh={handleRefreshData}
@@ -210,7 +204,7 @@ function MachineDashboard(props: IProps) {
               viewPath={getViewPath("/machine/cpu")}
               onConfigPanel={() => handleConfigPanel(MACHINE_TYPE.cpu)}
             >
-              <CPUCard />
+              <CPUCard baseLine={baseLineMap[`${MACHINE_TYPE.cpu}BaseLine`]} />
             </DashboardCard>
           </Col>
           <Col span={12}>
@@ -219,7 +213,7 @@ function MachineDashboard(props: IProps) {
               viewPath={getViewPath("/machine/memory")}
               onConfigPanel={() => handleConfigPanel(MACHINE_TYPE.memory)}
             >
-              <MemoryCard />
+              <MemoryCard baseLine={baseLineMap[`${MACHINE_TYPE.memory}BaseLine`]} />
             </DashboardCard>
           </Col>
         </Row>
@@ -230,7 +224,7 @@ function MachineDashboard(props: IProps) {
               viewPath={getViewPath("/machine/load")}
               onConfigPanel={() => handleConfigPanel(MACHINE_TYPE.load)}
             >
-              <LoadCard />
+              <LoadCard baseLine={baseLineMap[`${MACHINE_TYPE.load}BaseLine`]} />
             </DashboardCard>
           </Col>
           <Col span={12}>
@@ -251,7 +245,7 @@ function MachineDashboard(props: IProps) {
                 handleConfigPanel(MACHINE_TYPE.networkOut)
               }
             >
-              <NetworkOut />
+              <NetworkOut baseLine={baseLineMap[`${MACHINE_TYPE.networkOut}BaseLine`]} />
             </DashboardCard>
           </Col>
           <Col span={12}>
@@ -262,7 +256,7 @@ function MachineDashboard(props: IProps) {
                 handleConfigPanel(MACHINE_TYPE.networkIn)
               }
             >
-              <NetworkIn />
+              <NetworkIn baseLine={baseLineMap[`${MACHINE_TYPE.networkIn}BaseLine`]} />
             </DashboardCard>
           </Col>
         </Row>
