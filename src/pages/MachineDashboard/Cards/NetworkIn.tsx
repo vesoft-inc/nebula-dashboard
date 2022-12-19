@@ -8,10 +8,8 @@ import { MetricScene } from '@/utils/interface';
 
 const mapState = (state: IRootState) => {
   const { networkInStat, metricsFilterValues } = state.machine;
-  const { networkInBaseLine } = state.setting;
   const { aliasConfig } = state.app;
   return {
-    baseLine: networkInBaseLine,
     data: getDataByType({
       data: networkInStat,
       type: metricsFilterValues.instanceList,
