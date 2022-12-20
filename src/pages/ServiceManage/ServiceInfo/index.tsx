@@ -62,6 +62,13 @@ class ServiceInfo extends React.Component<IProps> {
   //   }
   // };
 
+  handleAddHosts = async (record) => {
+    const code = this.props.asyncExecNGQL(`ADD HOSTS ${record.Host}:${record.Port}`)
+    if (code === 0) {
+      message.success(intl.get('common.addhostSuccess', {host: record.Host}));
+    }
+  }
+
   handleHide = async () => {
     this.modalHandler.hide();
     const code = await this.props.asyncExecNGQL('SUBMIT JOB BALANCE IN ZONE');
@@ -146,6 +153,14 @@ class ServiceInfo extends React.Component<IProps> {
           <div className="leader-table">{distribution}</div>
         ),
       },
+      {
+        title: '',
+        render: (_, record) => (
+          <Button type="primary" ghost onClick={() => this.handleAddHosts(record)}>
+            Add Host
+          </Button>
+        )
+      }
     ];
     return (
       <div className="service-info">

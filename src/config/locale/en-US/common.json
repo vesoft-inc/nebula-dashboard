@@ -46,5 +46,6 @@
 	"configServer": {
 		"host": "Graphd IP address",
 		"port": "Port"
-	}
+	},
+	"addhostSuccess": "{host} add host success"
 }
