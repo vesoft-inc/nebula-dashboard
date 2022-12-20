@@ -62,6 +62,7 @@ class ServiceInfo extends React.Component<IProps> {
   //   }
   // };
 
+
   handleHide = async () => {
     this.modalHandler.hide();
     const code = await this.props.asyncExecNGQL('SUBMIT JOB BALANCE IN ZONE');
