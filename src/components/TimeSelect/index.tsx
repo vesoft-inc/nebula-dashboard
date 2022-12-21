@@ -55,6 +55,15 @@ const TimeSelect = (props: IProps) => {
     onChange?.(timeRange)
   }
 
+  let timeRangeByOption;
+  if (curTimeOption) {
+    const now = new Date().getTime();
+    const nowPeriod = (timeOptions || TIMEOPTIONS).find(option => option.name === curTimeOption);
+    if (nowPeriod) {
+      timeRangeByOption = [dayjs(now - nowPeriod.value), dayjs(now)]; 
+    }
+  }
+  
   return (
     <div className={styles.timeSelect}>
       <Radio.Group
@@ -74,7 +83,7 @@ const TimeSelect = (props: IProps) => {
         format="YYYY-MM-DD HH:mm"
         getPopupContainer={trigger => trigger.parentNode}
         showTime={true}
-        value={cusTimeRange ? [dayjs(cusTimeRange[0]), dayjs(cusTimeRange[1])] as any : undefined}
+        value={cusTimeRange ? [dayjs(cusTimeRange[0]), dayjs(cusTimeRange[1])] as any : timeRangeByOption}
         onChange={handleDataPickerChange}
         allowClear={false}
       />
