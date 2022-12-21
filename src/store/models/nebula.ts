@@ -26,7 +26,6 @@ export function NebulaModelWrapper(serviceApi, state, _effects) {
       parts: [],
       services: [],
       currentSpace: SessionStorageUtil.getItem('currentSpace'),
-      // version: SessionStorageUtil.getItem('version') || '',
       ...state,
     },
     reducers: {

@@ -43,6 +43,12 @@ const PartitionInfo: React.FC<IProps> = (props: IProps) => {
     }
   }, [nebulaConnect, currentSpace]);
 
+  useEffect(() => {
+    if (spaces.length > 0 && !currentSpace) {
+      props.asyncUseSpaces(spaces[0].Name);
+    }
+  }, [spaces])
+
   const handleSpaceChange = async space => {
     const { code } = (await props.asyncUseSpaces(space)) as any;
     if (code === 0) {
