@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { DatePicker, Radio } from 'antd';
 import intl from 'react-intl-universal';
 import dayjs from 'dayjs';
@@ -55,6 +55,18 @@ const TimeSelect = (props: IProps) => {
     onChange?.(timeRange)
   }
 
+  const timeRangeByOption = useMemo(() => {
+    if (curTimeOption) {
+      const now = new Date().getTime();
+      const nowPeriod = (timeOptions || TIMEOPTIONS).find(option => option.name === curTimeOption);
+      if (nowPeriod) {
+        return  [dayjs(now - nowPeriod.value), dayjs(now)]; 
+      }
+      return undefined
+    }
+  },[curTimeOption]);
+  
+  
   return (
     <div className={styles.timeSelect}>
       <Radio.Group
@@ -74,7 +86,7 @@ const TimeSelect = (props: IProps) => {
         format="YYYY-MM-DD HH:mm"
         getPopupContainer={trigger => trigger.parentNode}
         showTime={true}
-        value={cusTimeRange ? [dayjs(cusTimeRange[0]), dayjs(cusTimeRange[1])] as any : undefined}
+        value={cusTimeRange ? [dayjs(cusTimeRange[0]), dayjs(cusTimeRange[1])] as any : timeRangeByOption}
         onChange={handleDataPickerChange}
         allowClear={false}
       />
