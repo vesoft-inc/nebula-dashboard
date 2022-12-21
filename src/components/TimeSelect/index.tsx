@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { DatePicker, Radio } from 'antd';
 import intl from 'react-intl-universal';
 import dayjs from 'dayjs';
@@ -55,14 +55,17 @@ const TimeSelect = (props: IProps) => {
     onChange?.(timeRange)
   }
 
-  let timeRangeByOption;
-  if (curTimeOption) {
-    const now = new Date().getTime();
-    const nowPeriod = (timeOptions || TIMEOPTIONS).find(option => option.name === curTimeOption);
-    if (nowPeriod) {
-      timeRangeByOption = [dayjs(now - nowPeriod.value), dayjs(now)]; 
+  const timeRangeByOption = useMemo(() => {
+    if (curTimeOption) {
+      const now = new Date().getTime();
+      const nowPeriod = (timeOptions || TIMEOPTIONS).find(option => option.name === curTimeOption);
+      if (nowPeriod) {
+        return  [dayjs(now - nowPeriod.value), dayjs(now)]; 
+      }
+      return undefined
     }
-  }
+  },[curTimeOption]);
+  
   
   return (
     <div className={styles.timeSelect}>
