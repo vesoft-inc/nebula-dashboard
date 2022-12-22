@@ -200,7 +200,7 @@ function MachineDashboard(props: IProps) {
         <Row>
           <Col span={12}>
             <DashboardCard
-              title={intl.get('device.cpu')}
+              title={<> {intl.get('device.cpu')} <span>{SUPPORT_METRICS.cpu[0].metric}</span></>} 
               viewPath={getViewPath("/machine/cpu")}
               onConfigPanel={() => handleConfigPanel(MACHINE_TYPE.cpu)}
             >
@@ -209,7 +209,7 @@ function MachineDashboard(props: IProps) {
           </Col>
           <Col span={12}>
             <DashboardCard
-              title={intl.get('device.memory')}
+              title={<>{intl.get('device.memory')}<span>{SUPPORT_METRICS.memory[0].metric}</span></>}
               viewPath={getViewPath("/machine/memory")}
               onConfigPanel={() => handleConfigPanel(MACHINE_TYPE.memory)}
             >
@@ -220,7 +220,7 @@ function MachineDashboard(props: IProps) {
         <Row>
           <Col span={12}>
             <DashboardCard
-              title={intl.get('device.load')}
+              title={<>{intl.get('device.load')}<span>{SUPPORT_METRICS.load[0].metric}</span></>}
               viewPath={getViewPath("/machine/load")}
               onConfigPanel={() => handleConfigPanel(MACHINE_TYPE.load)}
             >
@@ -229,7 +229,7 @@ function MachineDashboard(props: IProps) {
           </Col>
           <Col span={12}>
             <DashboardCard
-              title={intl.get('device.disk')}
+              title={<>{intl.get('device.disk')}<span>{SUPPORT_METRICS.disk[0].metric}</span></>}
               viewPath={getViewPath("/machine/disk")}
             >
               <DiskCard />
@@ -239,7 +239,7 @@ function MachineDashboard(props: IProps) {
         <Row>
           <Col span={12}>
             <DashboardCard
-              title={intl.get('device.networkOut')}
+              title={<>{intl.get('device.networkOut')}<span>{SUPPORT_METRICS.network[1].metric}</span></>}
               viewPath={getViewPath("/machine/network")}
               onConfigPanel={() =>
                 handleConfigPanel(MACHINE_TYPE.networkOut)
@@ -250,7 +250,7 @@ function MachineDashboard(props: IProps) {
           </Col>
           <Col span={12}>
             <DashboardCard
-              title={intl.get('device.networkIn')}
+              title={<>{intl.get('device.networkIn')}<span>{SUPPORT_METRICS.network[1].metric}</span></>}
               viewPath={getViewPath("/machine/network")}
               onConfigPanel={() =>
                 handleConfigPanel(MACHINE_TYPE.networkIn)

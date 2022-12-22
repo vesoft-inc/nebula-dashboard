@@ -5,7 +5,7 @@ import { trackPageView } from '@/utils/stat';
 import './index.less';
 
 interface IProps extends RouteComponentProps {
-  title: string;
+  title: React.ElementRef<any>;
   children: any;
   viewPath: string;
   type?: string;
