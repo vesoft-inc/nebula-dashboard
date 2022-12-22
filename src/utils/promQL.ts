@@ -12,122 +12,122 @@ export const enum VALUE_TYPE {
 }
 
 export let SUPPORT_METRICS =
-  {
-    cpu: [
-      {
-        metric: 'cpu_utilization',
-        valueType: VALUE_TYPE.percentage,
-      },
-      {
-        metric: 'cpu_idle',
-        valueType: VALUE_TYPE.percentage,
-      },
-      {
-        metric: 'cpu_wait',
-        valueType: VALUE_TYPE.percentage,
-      },
-      {
-        metric: 'cpu_user',
-        valueType: VALUE_TYPE.percentage,
-      },
-      {
-        metric: 'cpu_system',
-        valueType: VALUE_TYPE.percentage,
-      },
-    ],
-    memory: [
-      {
-        metric: 'memory_utilization',
-        valueType: VALUE_TYPE.percentage,
-      },
-      {
-        metric: 'memory_used',
-        valueType: VALUE_TYPE.byte,
-      },
-      {
-        metric: 'memory_actual_used',
-        valueType: VALUE_TYPE.byte,
-      },
-      {
-        metric: 'memory_free',
-        valueType: VALUE_TYPE.byte,
-      },
-    ],
-    load: [
-      {
-        metric: 'load_1m',
-        valueType: VALUE_TYPE.number,
-      },
-      {
-        metric: 'load_5m',
-        valueType: VALUE_TYPE.number,
-      },
-      {
-        metric: 'load_15m',
-        valueType: VALUE_TYPE.number,
-      },
-    ],
-    disk: [
-      {
-        metric: 'disk_used_percentage',
-        valueType: VALUE_TYPE.percentage,
-      },
-      {
-        metric: 'disk_used',
-        valueType: VALUE_TYPE.byte,
-      },
-      {
-        metric: 'disk_free',
-        valueType: VALUE_TYPE.byte,
-      },
-      {
-        metric: 'disk_readbytes',
-        valueType: VALUE_TYPE.byteSecond,
-      },
-      {
-        metric: 'disk_writebytes',
-        valueType: VALUE_TYPE.byteSecond,
-      },
-      {
-        metric: 'disk_readiops',
-        valueType: VALUE_TYPE.numberSecond,
-      },
-      {
-        metric: 'disk_writeiops',
-        valueType: VALUE_TYPE.numberSecond,
-      },
-      {
-        metric: 'inode_utilization',
-        valueType: VALUE_TYPE.percentage,
-      },
-    ],
-    network: [
-      {
-        metric: 'network_in_rate',
-        valueType: VALUE_TYPE.byteSecond,
-      },
-      {
-        metric: 'network_out_rate',
-        valueType: VALUE_TYPE.byteSecond,
-      },
-      {
-        metric: 'network_in_errs',
-        valueType: VALUE_TYPE.numberSecond,
-      },
-      {
-        metric: 'network_out_errs',
-        valueType: VALUE_TYPE.numberSecond,
-      },
-      {
-        metric: 'network_in_packets',
-        valueType: VALUE_TYPE.numberSecond,
-      },
-      {
-        metric: 'network_out_packets',
-        valueType: VALUE_TYPE.numberSecond,
-      },
-    ],
-  };
+{
+  cpu: [
+    {
+      metric: 'cpu_utilization',
+      valueType: VALUE_TYPE.percentage,
+    },
+    {
+      metric: 'cpu_idle',
+      valueType: VALUE_TYPE.percentage,
+    },
+    {
+      metric: 'cpu_wait',
+      valueType: VALUE_TYPE.percentage,
+    },
+    {
+      metric: 'cpu_user',
+      valueType: VALUE_TYPE.percentage,
+    },
+    {
+      metric: 'cpu_system',
+      valueType: VALUE_TYPE.percentage,
+    },
+  ],
+  memory: [
+    {
+      metric: 'memory_utilization',
+      valueType: VALUE_TYPE.percentage,
+    },
+    {
+      metric: 'memory_used',
+      valueType: VALUE_TYPE.byte,
+    },
+    {
+      metric: 'memory_actual_used',
+      valueType: VALUE_TYPE.byte,
+    },
+    {
+      metric: 'memory_free',
+      valueType: VALUE_TYPE.byte,
+    },
+  ],
+  load: [
+    {
+      metric: 'load_1m',
+      valueType: VALUE_TYPE.number,
+    },
+    {
+      metric: 'load_5m',
+      valueType: VALUE_TYPE.number,
+    },
+    {
+      metric: 'load_15m',
+      valueType: VALUE_TYPE.number,
+    },
+  ],
+  disk: [
+    {
+      metric: 'disk_used_percentage',
+      valueType: VALUE_TYPE.percentage,
+    },
+    {
+      metric: 'disk_used',
+      valueType: VALUE_TYPE.byte,
+    },
+    {
+      metric: 'disk_free',
+      valueType: VALUE_TYPE.byte,
+    },
+    {
+      metric: 'disk_readbytes',
+      valueType: VALUE_TYPE.byteSecond,
+    },
+    {
+      metric: 'disk_writebytes',
+      valueType: VALUE_TYPE.byteSecond,
+    },
+    {
+      metric: 'disk_readiops',
+      valueType: VALUE_TYPE.numberSecond,
+    },
+    {
+      metric: 'disk_writeiops',
+      valueType: VALUE_TYPE.numberSecond,
+    },
+    {
+      metric: 'inode_utilization',
+      valueType: VALUE_TYPE.percentage,
+    },
+  ],
+  network: [
+    {
+      metric: 'network_in_rate',
+      valueType: VALUE_TYPE.byteSecond,
+    },
+    {
+      metric: 'network_out_rate',
+      valueType: VALUE_TYPE.byteSecond,
+    },
+    {
+      metric: 'network_in_errs',
+      valueType: VALUE_TYPE.numberSecond,
+    },
+    {
+      metric: 'network_out_errs',
+      valueType: VALUE_TYPE.numberSecond,
+    },
+    {
+      metric: 'network_in_packets',
+      valueType: VALUE_TYPE.numberSecond,
+    },
+    {
+      metric: 'network_out_packets',
+      valueType: VALUE_TYPE.numberSecond,
+    },
+  ],
+};
 
 export const getClusterPrefix = () => {
   return 'nebula_cluster';
@@ -135,12 +135,12 @@ export const getClusterPrefix = () => {
 
 export const diskPararms = 'fstype=~"ext.*|xfs",mountpoint !~".*pod.*"';
 
-export let LINUX = (cluster?,device?:string) : any => {
+export let LINUX = (cluster?, device?: string): any => {
   const clusterSuffix1 = cluster ? `,${getClusterPrefix()}='${cluster}'` : '';
   const clusterSuffix2 = cluster ? `{${getClusterPrefix()}='${cluster}'}` : '';
-  const devicePararms = device? `,device=~"${device}"`: '';
+  const devicePararms = device ? `,device=~"${device}"` : '';
 
-  
+
   return {
     // cpu relative:
     cpu_utilization: `100 * (1 - sum by (instance)(increase(node_cpu_seconds_total{mode="idle"${clusterSuffix1}}[1m])) / sum by (instance)(increase(node_cpu_seconds_total${clusterSuffix2}[1m])))`,
@@ -150,8 +150,8 @@ export let LINUX = (cluster?,device?:string) : any => {
     cpu_system: `100 * (sum by (instance)(increase(node_cpu_seconds_total{mode="system"${clusterSuffix1}}[1m])) / sum by (instance)(increase(node_cpu_seconds_total${clusterSuffix2}[1m])))`,
 
     // memory relative:
-    memory_utilization: `(1 - (node_memory_MemFree_bytes${clusterSuffix2}+ node_memory_Buffers_bytes${clusterSuffix2}+ node_memory_Cached_bytes${clusterSuffix2}) / node_memory_MemTotal_bytes${clusterSuffix2} )* 100`,
-    memory_used: `node_memory_MemTotal_bytes${clusterSuffix2} - node_memory_MemFree_bytes${clusterSuffix2}- node_memory_Buffers_bytes${clusterSuffix2}`,
+    memory_utilization: `(1 - node_memory_MemFree_bytes${clusterSuffix2} / node_memory_MemTotal_bytes${clusterSuffix2} )* 100`,
+    memory_used: `node_memory_MemTotal_bytes${clusterSuffix2} - node_memory_MemFree_bytes${clusterSuffix2}`,
     memory_actual_used: `node_memory_MemTotal_bytes${clusterSuffix2} - node_memory_MemFree_bytes${clusterSuffix2} - node_memory_Buffers_bytes${clusterSuffix2} - node_memory_Cached_bytes${clusterSuffix2}`,
     memory_free: `node_memory_MemFree_bytes${clusterSuffix2}`,
     memory_size: `node_memory_MemTotal_bytes${clusterSuffix2}`,
@@ -164,10 +164,10 @@ export let LINUX = (cluster?,device?:string) : any => {
     // disk relative:
     disk_used: `node_filesystem_size_bytes{${diskPararms}${devicePararms}${clusterSuffix1}} - node_filesystem_free_bytes{${diskPararms}${devicePararms}${clusterSuffix1}}`,
     disk_free: `node_filesystem_avail_bytes{${diskPararms}${devicePararms}${clusterSuffix1}}`,
-    disk_readbytes: `irate(node_disk_read_bytes_total{${devicePararms? devicePararms: 'device=~"(sd|nvme|hd)[a-z0-9]*"'}${clusterSuffix1}}[1m])`,
-    disk_writebytes: `irate(node_disk_written_bytes_total{${devicePararms? devicePararms: 'device=~"(sd|nvme|hd)[a-z0-9]*"'}${clusterSuffix1}}[1m])`,
-    disk_readiops: `irate(node_disk_reads_completed_total{${devicePararms? devicePararms: 'device=~"(sd|nvme|hd)[a-z0-9]*"'}${clusterSuffix1}}[1m])`,
-    disk_writeiops: `irate(node_disk_writes_completed_total{${devicePararms? devicePararms: 'device=~"(sd|nvme|hd)[a-z0-9]*"'}${clusterSuffix1}}[1m])`,
+    disk_readbytes: `irate(node_disk_read_bytes_total{${devicePararms ? devicePararms : 'device=~"(sd|nvme|hd)[a-z0-9]*"'}${clusterSuffix1}}[1m])`,
+    disk_writebytes: `irate(node_disk_written_bytes_total{${devicePararms ? devicePararms : 'device=~"(sd|nvme|hd)[a-z0-9]*"'}${clusterSuffix1}}[1m])`,
+    disk_readiops: `irate(node_disk_reads_completed_total{${devicePararms ? devicePararms : 'device=~"(sd|nvme|hd)[a-z0-9]*"'}${clusterSuffix1}}[1m])`,
+    disk_writeiops: `irate(node_disk_writes_completed_total{${devicePararms ? devicePararms : 'device=~"(sd|nvme|hd)[a-z0-9]*"'}${clusterSuffix1}}[1m])`,
     inode_utilization: `(1- (node_filesystem_files_free{${diskPararms}${devicePararms}${clusterSuffix1}}) / (node_filesystem_files{mountpoint="/",fstype!="rootfs"${clusterSuffix1}})) * 100`,
     disk_used_percentage: `(node_filesystem_size_bytes{${diskPararms}${devicePararms}${clusterSuffix1}}-node_filesystem_free_bytes{${diskPararms}${devicePararms}${clusterSuffix1}}) *100/(node_filesystem_avail_bytes {${diskPararms}${devicePararms}${clusterSuffix1}}+(node_filesystem_size_bytes{${diskPararms}${devicePararms}${clusterSuffix1}}-node_filesystem_free_bytes{${diskPararms}${devicePararms}${clusterSuffix1}}))`,
     disk_size: `node_filesystem_size_bytes{${diskPararms}${devicePararms}${clusterSuffix1}}`,
