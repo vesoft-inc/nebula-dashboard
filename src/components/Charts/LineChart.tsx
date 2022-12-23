@@ -1,11 +1,12 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import { Chart, registerInteraction } from '@antv/g2';
-import { ChartCfg, Options } from '@antv/g2/lib/interface';
+import { ChartCfg } from '@antv/g2/lib/interface';
 import dayjs from 'dayjs';
 import { VALUE_TYPE } from '@/utils/promQL';
 import { LINE_CHART_COLORS } from '@/utils/chart/chart';
 import { getProperByteDesc } from '@/utils/dashboard';
 import { ServiceName } from '@/utils/interface';
+import { updateChartByValueType } from '@/utils/metric';
 
 export interface IProps {
   baseLine?: number;
@@ -181,126 +182,7 @@ function LineChart(props: IProps, ref) {
       .position('time*value')
       .color('type', LINE_CHART_COLORS);
 
-    const tooltipTitle = time =>
-      dayjs(Number(time) * 1000).format('YYYY-MM-DD HH:mm:ss');
-
-    switch (options.valueType) {
-      case VALUE_TYPE.percentage:
-        chartInstanceRef.current.axis('value', {
-          label: {
-            formatter: percent => `${percent}%`,
-          },
-        });
-        chartInstanceRef.current.tooltip({
-          customItems: items =>
-            items.map(item => {
-              const value = `${Number(item.value).toFixed(2)}%`;
-              return {
-                ...item,
-                value,
-              };
-            }),
-          showCrosshairs: true,
-          shared: true,
-          title: tooltipTitle,
-        });
-        chartInstanceRef.current.scale({
-          value: {
-            min: 0,
-            max: options.maxNum || 100,
-            tickInterval: options.maxNum ? (options.maxNum % 10 + 10) / 5 : 25,
-          },
-        });
-        break;
-      case VALUE_TYPE.byte:
-      case VALUE_TYPE.byteSecond:
-        chartInstanceRef.current.axis('value', {
-          label: {
-            formatter: bytes => {
-              const { value, unit } = getProperByteDesc(Number(bytes));
-              let _unit = unit;
-              if (options.valueType === VALUE_TYPE.byteSecond) {
-                _unit = `${unit}/s`;
-              }
-
-              return `${value} ${_unit}`;
-            },
-          },
-        });
-        chartInstanceRef.current.tooltip({
-          customItems: items =>
-            items.map(item => {
-              const { value, unit } = getProperByteDesc(Number(item.value));
-              let _unit = unit;
-              if (options.valueType === VALUE_TYPE.byteSecond) {
-                _unit = `${unit}/s`;
-              }
-              return {
-                ...item,
-                value: `${value} ${_unit}`,
-              };
-            }),
-          showCrosshairs: true,
-          shared: true,
-          title: tooltipTitle,
-        });
-        break;
-      case VALUE_TYPE.byteSecondNet:
-        chartInstanceRef.current.axis('value', {
-          label: {
-            formatter: bytes => {
-              const { value, unit } = getProperByteDesc(Number(bytes));
-              const _unit = `${unit}/s`;
-              return `${value} ${_unit}`;
-            },
-          },
-        });
-        chartInstanceRef.current.tooltip({
-          customItems: items =>
-            items.map(item => {
-              const { value, unit } = getProperByteDesc(Number(item.value));
-              const _unit = `${unit}/s`;
-              return {
-                ...item,
-                value: `${value} ${_unit}`,
-              };
-            }),
-          showCrosshairs: true,
-          shared: true,
-          title: tooltipTitle,
-        });
-        break;
-      case VALUE_TYPE.number:
-      case VALUE_TYPE.numberSecond:
-        chartInstanceRef.current.axis('value', {
-          label: {
-            formatter: processNum => {
-              if (options.valueType === VALUE_TYPE.numberSecond) {
-                return `${processNum}/s`;
-              }
-              return processNum;
-            },
-          },
-        });
-        chartInstanceRef.current.tooltip({
-          customItems: items =>
-            items.map(item => {
-              let value = item.value;
-              if (options.valueType === VALUE_TYPE.numberSecond) {
-                value = `${Math.round(+value * 100) / 100}/s`;
-              }
-              return {
-                ...item,
-                value,
-              };
-            }),
-          showCrosshairs: true,
-          shared: true,
-          title: tooltipTitle,
-        });
-        break;
-      default:
-    }
+      updateChartByValueType(options, chartInstanceRef.current)
     // autoAdjustPadding(options.valueType!);
     return chartInstanceRef.current;
   };
