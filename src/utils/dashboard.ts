@@ -239,37 +239,52 @@ export enum TIME_OPTION_TYPE {
   DAY3 = '3day',
   DAY7 = '7day',
   DAY14 = '14day',
+  DAY30 = '30day',
 }
 
-export const TIMEOPTIONS = [
-  {
+export const TIME_OPTION_MAP = {
+  HOUR1: {
     name: TIME_OPTION_TYPE.HOUR1,
     value: 60 * 60 * 1000,
   },
-  {
+  HOUR6: {
     name: TIME_OPTION_TYPE.HOUR6,
     value: 60 * 60 * 6 * 1000,
   },
-  {
+  HOUR12: {
     name: TIME_OPTION_TYPE.HOUR12,
     value: 60 * 60 * 12 * 1000,
   },
-  {
+  DAY1: {
     name: TIME_OPTION_TYPE.DAY1,
     value: 60 * 60 * 24 * 1000,
   },
-  {
+  DAY3: {
     name: TIME_OPTION_TYPE.DAY3,
     value: 60 * 60 * 24 * 3 * 1000,
   },
-  {
+  DAY7: {
     name: TIME_OPTION_TYPE.DAY7,
     value: 60 * 60 * 24 * 7 * 1000,
   },
-  {
+  DAY14: {
     name: TIME_OPTION_TYPE.DAY14,
     value: 60 * 60 * 24 * 14 * 1000,
   },
+  DAY30: {
+    name: TIME_OPTION_TYPE.DAY30,
+    value: 60 * 60 * 24 * 30 * 1000,
+  },
+}
+
+export const TIMEOPTIONS = [
+  TIME_OPTION_MAP.HOUR1,
+  TIME_OPTION_MAP.HOUR6,
+  TIME_OPTION_MAP.HOUR12,
+  TIME_OPTION_MAP.DAY1,
+  TIME_OPTION_MAP.DAY3,
+  TIME_OPTION_MAP.DAY7,
+  TIME_OPTION_MAP.DAY14,
 ];
 
 export let NEED_ADD_SUM_QUERYS = [
