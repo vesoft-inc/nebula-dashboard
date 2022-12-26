@@ -73,7 +73,7 @@ const MetricsFilterPanel = (props: IProps, ref) => {
     }
   }, [values])
 
-  const handleTimeSelectChange = (value: TIME_OPTION_TYPE | number[]) => {
+  const handleTimeSelectChange = (value: TIME_OPTION_TYPE | [number, number]) => {
     form.setFieldsValue({
       timeRange: value,
     });
