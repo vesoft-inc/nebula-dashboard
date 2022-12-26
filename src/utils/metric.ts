@@ -2,8 +2,9 @@ import _ from 'loadsh';
 
 import { VALUE_TYPE } from '@/utils/promQL';
 import { INTERVAL_FREQUENCY_LIST, SERVICE_QUERY_PERIOD } from './service';
-import { AggregationType, AGGREGATION_OPTIONS, TIME_OPTION_TYPE } from './dashboard';
+import { AggregationType, AGGREGATION_OPTIONS, getProperByteDesc, TIME_OPTION_TYPE } from './dashboard';
 import { IServiceMetricItem, ServiceName } from './interface';
+import dayjs from 'dayjs';
 
 export const METRICS_DESCRIPTION: any = {
   num_queries: 'num_queries description',
@@ -112,7 +113,7 @@ export const calcMetricInfo = (rawMetric: string) => {
 const calcServiceMetricValueType = (metricName: string): VALUE_TYPE => {
   let valueType = VALUE_TYPE.number;
   const valueTypes = Object.keys(ServiceMetricValueTypeMap) as VALUE_TYPE[];
-  for(let i = 0; i < valueTypes.length; i++) {
+  for (let i = 0; i < valueTypes.length; i++) {
     const curValueType = valueTypes[i];
     if (ServiceMetricValueTypeMap[curValueType].includes(metricName)) {
       valueType = curValueType as VALUE_TYPE;
@@ -198,7 +199,7 @@ export const getRawQueryByAggregation = (aggregation: AggregationType, metric: s
     case AggregationType.P99:
       return `quantile(0.99, sum(rate(${metric}[1m])) by (instance))`
     case AggregationType.P999:
-      return`quantile(0.999, sum(rate(${metric}[1m])) by (instance))`
+      return `quantile(0.999, sum(rate(${metric}[1m])) by (instance))`
   }
 }
 
@@ -247,5 +248,128 @@ export const getQueryByMetricType = (metricItem: IServiceMetricItem, metricType:
     } else {
       return `${metricItem.prefixMetric}_${metricItem.metric}_${metricType}_${period}`
     }
+  }
+}
+
+export const tooltipTitle = time =>
+  dayjs(Number(time) * 1000).format('YYYY-MM-DD HH:mm:ss');
+
+export const updateChartByValueType = (options, chartInstance) => {
+  switch (options.valueType) {
+    case VALUE_TYPE.percentage:
+      chartInstance.axis('value', {
+        label: {
+          formatter: percent => `${percent}%`,
+        },
+      });
+      chartInstance.tooltip({
+        customItems: items =>
+          items.map(item => {
+            const value = `${Number(item.value).toFixed(2)}%`;
+            return {
+              ...item,
+              value,
+            };
+          }),
+        showCrosshairs: true,
+        shared: true,
+        title: tooltipTitle,
+      });
+      chartInstance.scale({
+        value: {
+          min: 0,
+          max: options.maxNum || 100,
+          tickInterval: options.maxNum ? (options.maxNum % 10 + 10) / 5 : 25,
+        },
+      });
+      break;
+    case VALUE_TYPE.byte:
+    case VALUE_TYPE.byteSecond:
+      chartInstance.axis('value', {
+        label: {
+          formatter: bytes => {
+            const { value, unit } = getProperByteDesc(Number(bytes));
+            let _unit = unit;
+            if (options.valueType === VALUE_TYPE.byteSecond) {
+              _unit = `${unit}/s`;
+            }
+
+            return `${value} ${_unit}`;
+          },
+        },
+      });
+      chartInstance.tooltip({
+        customItems: items =>
+          items.map(item => {
+            const { value, unit } = getProperByteDesc(Number(item.value));
+            let _unit = unit;
+            if (options.valueType === VALUE_TYPE.byteSecond) {
+              _unit = `${unit}/s`;
+            }
+            return {
+              ...item,
+              value: `${value} ${_unit}`,
+            };
+          }),
+        showCrosshairs: true,
+        shared: true,
+        title: tooltipTitle,
+      });
+      break;
+    case VALUE_TYPE.byteSecondNet:
+      chartInstance.axis('value', {
+        label: {
+          formatter: bytes => {
+            const { value, unit } = getProperByteDesc(Number(bytes));
+            const _unit = `${unit}/s`;
+            return `${value} ${_unit}`;
+          },
+        },
+      });
+      chartInstance.tooltip({
+        customItems: items =>
+          items.map(item => {
+            const { value, unit } = getProperByteDesc(Number(item.value));
+            const _unit = `${unit}/s`;
+            return {
+              ...item,
+              value: `${value} ${_unit}`,
+            };
+          }),
+        showCrosshairs: true,
+        shared: true,
+        title: tooltipTitle,
+      });
+      break;
+    case VALUE_TYPE.number:
+    case VALUE_TYPE.numberSecond:
+      chartInstance.axis('value', {
+        label: {
+          formatter: processNum => {
+            if (options.valueType === VALUE_TYPE.numberSecond) {
+              return `${processNum}/s`;
+            }
+            return processNum;
+          },
+        },
+      });
+      chartInstance.tooltip({
+        customItems: items =>
+          items.map(item => {
+            let value = item.value;
+            if (options.valueType === VALUE_TYPE.numberSecond) {
+              value = `${Math.round(+value * 100) / 100}/s`;
+            }
+            return {
+              ...item,
+              value,
+            };
+          }),
+        showCrosshairs: true,
+        shared: true,
+        title: tooltipTitle,
+      });
+      break;
+    default:
   }
 }

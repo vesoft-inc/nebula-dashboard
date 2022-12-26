@@ -9,15 +9,14 @@ import { getMaxNum, getMaxNumAndLength, getMinNum, getProperStep, getTickInterva
 interface IProps {
   data: ILineChartMetric[];
   valueType: VALUE_TYPE;
-  sizes?: IStatSingleItem[];
-  loading: boolean;
+  loading?: boolean;
   baseLine?: number;
 }
 
 function LineCard(props: IProps) {
   const chartRef = useRef<any>();
 
-  const { loading, data = [], valueType, sizes, baseLine } = props;
+  const { loading, data = [], valueType, baseLine } = props;
   useEffect(() => {
     if (!loading && chartRef.current) {
       updateChart();
@@ -33,7 +32,6 @@ function LineCard(props: IProps) {
   const renderLineChart = () => {
     chartRef.current.configDetailChart({
       valueType,
-      sizes,
       isCard: true,
     });
     updateChart();
