@@ -2,7 +2,7 @@ import { AggregationType } from './dashboard';
 import { ServiceName } from './interface';
 
 export const SERVICE_POLLING_INTERVAL = 10 * 1000;
-export const SERVICE_QUERY_PERIOD = 10 * 60;
+export const SERVICE_QUERY_PERIOD = 5;
 export const SERVICE_DEFAULT_RANGE = 6 * 60 * 60 * 1000;
 
 export enum INTERVAL_FREQUENCY_TYPE {

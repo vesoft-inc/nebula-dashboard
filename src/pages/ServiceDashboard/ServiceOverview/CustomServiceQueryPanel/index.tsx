@@ -93,19 +93,7 @@ function CustomServiceQueryPanel(props: IProps) {
         >
           {config.metric}
         </Popover>
-        <div>
-          {
-            !isHidePeriod && (
-              <>
-                <span>
-                  {intl.get('service.period')}: <span>{config.period}</span>
-                </span>
-                <span>
-                  {intl.get('service.metricParams')}: <span>{config.metricType}</span>
-                </span>
-              </>
-            )
-          }
+        <div> 
           <div
             className={classnames('blue btn-icon-with-desc', {
               'hide-period': isHidePeriod,
