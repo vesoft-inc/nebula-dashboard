@@ -62,11 +62,12 @@ const LeaderDistribution: React.FC<IProps> = (props: IProps) => {
 
   const getStorageInfo = async () => {
     const res = await props.asyncGetHostsInfo();
+    console.log(res)
     const data = res.map((item: any) => ({
-      name: item.Host,
+      name: item.Host+':'+item.Port,
       count: item['Leader count'],
       distribution: item['Leader distribution'],
-    }));
+    })).sort((a, b) => a.name > b.name ? 1 : -1);
     setData(data);
   };
 
@@ -94,7 +95,7 @@ const LeaderDistribution: React.FC<IProps> = (props: IProps) => {
     if (compare(formatVersion(cluster?.version || DEFAULT_VERSION), 'v3.0.0', '<')) {
       code = await props.asyncExecNGQL('BALANCE LEADER');
       if (code === 0) {
-        message.success(intl.get('common.succeed'));
+        message.success(intl.get('common.successDelay'));
         getStorageInfo();
       }
     } else {
@@ -106,7 +107,7 @@ const LeaderDistribution: React.FC<IProps> = (props: IProps) => {
     modalHandler.current?.hide();
     const code = await props.asyncExecNGQL('SUBMIT JOB BALANCE LEADER');
     if (code === 0) {
-      message.success(intl.get('common.succeed'));
+      message.success(intl.get('common.successDelay'));
       getStorageInfo();
     }
   };
@@ -124,7 +125,9 @@ const LeaderDistribution: React.FC<IProps> = (props: IProps) => {
       title: intl.get('service.leaderDistribute'),
       dataIndex: 'distribution',
       render: distribution => (
-        <div className="distribution-table">{distribution}</div>
+        <div className="distribution-table">
+          {distribution.split(',').map(each => <pre>{each.trim(' ')}</pre>)}
+        </div>
       ),
     },
   ];

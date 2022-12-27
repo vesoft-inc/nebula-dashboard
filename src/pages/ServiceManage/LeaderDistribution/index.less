@@ -3,14 +3,21 @@
 
 	.leader-content {
 		padding: 50px 90px;
+    .nebula-chart{
+      display: flex;
+      align-items: center;
+    }
 		.leader-table {
 			margin-top: 55px;
 			width: 100%;
 			.distribution-table{
 				max-height: 300px;
-				display: block;
-    			word-break: break-word;
+				display: flex;
+        flex-wrap: wrap;
 				overflow: auto;
+        >pre{
+          margin:0 5px;
+        }
 			}
 		}
 
