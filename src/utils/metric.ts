@@ -191,15 +191,15 @@ export const getRawQueryByAggregation = (aggregation: AggregationType, metric: s
     case AggregationType.Sum:
       return `sum(${metric})`;
     case AggregationType.Rate:
-      return `rate(${metric}[1m])`;
+      return `rate(${metric}[5s])`;
     case AggregationType.P75:
-      return `quantile(0.75, sum(rate(${metric}[1m])) by (instance))`
+      return `quantile(0.75, sum(rate(${metric}[5s])) by (instance))`
     case AggregationType.P95:
-      return `quantile(0.95, sum(rate(${metric}[1m])) by (instance))`
+      return `quantile(0.95, sum(rate(${metric}[5s])) by (instance))`
     case AggregationType.P99:
-      return `quantile(0.99, sum(rate(${metric}[1m])) by (instance))`
+      return `quantile(0.99, sum(rate(${metric}[5s])) by (instance))`
     case AggregationType.P999:
-      return `quantile(0.999, sum(rate(${metric}[1m])) by (instance))`
+      return `quantile(0.999, sum(rate(${metric}[5s])) by (instance))`
   }
 }
 
