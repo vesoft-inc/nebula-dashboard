@@ -62,7 +62,6 @@ const LeaderDistribution: React.FC<IProps> = (props: IProps) => {
 
   const getStorageInfo = async () => {
     const res = await props.asyncGetHostsInfo();
-    console.log(res)
     const data = res.map((item: any) => ({
       name: item.Host+':'+item.Port,
       count: item['Leader count'],
