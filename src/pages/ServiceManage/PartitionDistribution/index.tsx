@@ -101,7 +101,7 @@ class PartitionDistribution extends React.Component<IProps, IState> {
     const data = Object.keys(groupRes).map(item => ({
       name: item,
       count: groupRes[item],
-    }));
+    })).sort((a, b) => b.name < a.name ? 1 : -1);
     this.setState({ data }, this.updateChart);
   };
 

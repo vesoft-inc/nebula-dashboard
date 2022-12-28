@@ -205,6 +205,7 @@ function ServiceDetail(props: IProps) {
           end: endTime,
           space: serviceType === ServiceName.GRAPHD ? space : undefined,
           clusterID: cluster?.id,
+          isRawMetric:item.isRawMetric
         }).then(res => {
           resolve(res);
         }).catch(e => {

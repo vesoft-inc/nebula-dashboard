@@ -87,7 +87,7 @@ const Overview: React.FC<IProps> = (props: IProps) => {
   const balanceData = async () => {
     const code = await props.asyncExecNGQL('submit job balance data');
     if (code === 0) {
-      message.success(intl.get('common.succeed'));
+      message.success(intl.get('common.successDelay'));
       props.asyncGetServices();
     }
   };
@@ -102,14 +102,22 @@ const Overview: React.FC<IProps> = (props: IProps) => {
   };
 
   const handleHostChange = async host => {
-    const code = await props.asyncExecNGQL(
-      `submit job balance data remove ${host}`,
-    );
-    if (code === 0) {
-      message.success(intl.get('common.succeed'));
-      props.asyncGetServices();
-    }
-    handleModalClose();
+    AntModal.confirm({
+      content: intl.get('common.confirmAction'),
+      okText: intl.get('common.confirm'),
+      cancelText: intl.get('common.cancel'),
+      onOk: async () => {
+         const code = await props.asyncExecNGQL(
+          `submit job balance data remove ${host}`,
+        );
+        if (code === 0) {
+          message.success(intl.get('common.successDelay'));
+          props.asyncGetServices();
+        }
+        handleModalClose();
+      }
+    });
+   
   };
 
   const handleModalShow = async () => {

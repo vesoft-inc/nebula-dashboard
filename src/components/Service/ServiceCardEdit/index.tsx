@@ -63,15 +63,6 @@ function ServiceCardEdit(props: IProps) {
         initialValues={editItem}
         onFinish={handlePanelConfigUpdate}
       >
-        <Form.Item label={intl.get('service.period')} name="period">
-          <DashboardSelect>
-            {TIME_INTERVAL_OPTIONS.map(value => (
-              <Option key={value} value={value}>
-                {value}
-              </Option>
-            ))}
-          </DashboardSelect>
-        </Form.Item>
         <MetricPopover list={curServiceMetricItems} />
         <Form.Item label={intl.get('service.metric')} name="metric">
           <DashboardSelect onChange={handleUpdateMetricType}>
@@ -108,34 +99,7 @@ function ServiceCardEdit(props: IProps) {
               </Form.Item>
             ) : null;
           }}
-        </Form.Item>
-        <Form.Item
-          noStyle={true}
-          shouldUpdate={(prevValues, currentValues) =>
-            prevValues.metric !== currentValues.metric
-          }
-        >
-          {({ getFieldValue }) => {
-            const metric = getFieldValue('metric');
-            const typeList = curServiceMetricItems.find(
-              item => item.metric === metric,
-            )?.aggregations;
-            return getFieldValue('metric') ? (
-              <Form.Item
-                label={intl.get('service.metricParams')}
-                name="aggregation"
-              >
-                <DashboardSelect>
-                  {typeList?.map((params, index) => (
-                    <Option key={index} value={params}>
-                      {params}
-                    </Option>
-                  ))}
-                </DashboardSelect>
-              </Form.Item>
-            ) : null;
-          }}
-        </Form.Item>
+        </Form.Item> 
         <Form.Item label={intl.get('common.baseLine')} name="baseLine">
           <InputNumber />
         </Form.Item>

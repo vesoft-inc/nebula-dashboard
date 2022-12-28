@@ -54,8 +54,10 @@ export function SereviceModelWrapper(serviceApi) {
       }) {
         const { start, end, space, query: _query, clusterID } = payload;
         const step = getProperStep(start, end);
-        const _start = start / 1000;
-        const _end = end / 1000;
+        let _start = start / 1000;
+        let _end = end / 1000;
+        _start = _start - _start % step;
+        _end = _end + (step - _end % step);
         let query = `sum(${_query}{${getClusterPrefix()}="${clusterID}"})`;
         query = `${_query}{${getClusterPrefix()}="${clusterID}", space="${space || ''}"}`;
         const { code, data } = (await serviceApi.execPromQLByRange({
@@ -86,6 +88,7 @@ export function SereviceModelWrapper(serviceApi) {
         end: number;
         clusterID?: string;
         noSuffix?: boolean;
+        isRawMetric?: boolean;
       }) {
         const {
           start,
@@ -96,12 +99,18 @@ export function SereviceModelWrapper(serviceApi) {
           noSuffix = false,
         } = payload;
         const step = getProperStep(start, end);
-        const _start = start / 1000;
-        const _end = end / 1000;
+        let _start = start / 1000;
+        let _end = end / 1000;
+        _start = _start - _start % step;
+        _end = _end + (step - _end % step);
         let query = _query;
         if (!noSuffix) {
           if (clusterID) {
-            query = `${_query}{${getClusterPrefix()}="${clusterID}", space="${space || ''}"}`;
+            if (!payload.isRawMetric) {
+              query = `sum_over_time(${_query}{${getClusterPrefix()}="${clusterID}", space="${space || ''}"}[${step}s])`;
+            } else {
+              query = `${_query}{${getClusterPrefix()}="${clusterID}", space="${space || ''}"}`;
+            }
           } else {
             query = `${_query}{space="${space || ''}"}`;
           }

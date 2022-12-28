@@ -108,33 +108,7 @@ function ServiceMetricsFilterPanel(props: IProps) {
               </DashboardSelect>
             </Form.Item>
           )
-        }
-        <Form.Item
-          className="metric-period"
-          label={intl.get('service.period')}
-          name="period"
-        >
-          <DashboardSelect onChange={handlePeriodChange}>
-            {TIME_INTERVAL_OPTIONS.map(value => (
-              <Option key={value} value={value}>
-                {value}
-              </Option>
-            ))}
-          </DashboardSelect>
-        </Form.Item>
-        <Form.Item
-          className="metric-type"
-          label={intl.get('service.metricParams')}
-          name="metricType"
-        >
-          <DashboardSelect onChange={handleMetricTypeChange}>
-            {AGGREGATION_OPTIONS.map(type => (
-              <Option key={type} value={type}>
-                {type}
-              </Option>
-            ))}
-          </DashboardSelect>
-        </Form.Item>
+        } 
       </MetricsFilterPanel>
     </div>
   )
