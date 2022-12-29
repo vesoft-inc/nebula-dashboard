@@ -165,14 +165,15 @@ function ServiceDetail(props: IProps) {
     const getPromise = (chart) => {
       return new Promise((resolve, reject) => {
         const item: IServiceMetricItem = chart.metric;
-        const metricType = item.aggregations[0] as AggregationType;
+        const aggregation = item.aggregations[0] as AggregationType;
         asyncFetchMetricsData({
-          query: getQueryByMetricType(item, metricType, period),
+          query: getQueryByMetricType(item, aggregation, period),
           start: startTime,
           end: endTime,
           space: serviceType === ServiceName.GRAPHD ? space : undefined,
           clusterID: cluster?.id,
-          isRawMetric:item.isRawMetric
+          isRawMetric: item.isRawMetric,
+          aggregation
         }).then(res => {
           resolve(res);
         }).catch(e => {

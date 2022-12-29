@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Popover } from 'antd';
 import Icon from '@/components/Icon';
 import { IServiceMetricItem, IServicePanelConfig, MetricScene, ServiceName } from '@/utils/interface';
-import { calcTimeRange, getDataByType, getMetricsUniqName, TIME_OPTION_TYPE } from '@/utils/dashboard';
+import { AggregationType, calcTimeRange, getDataByType, getMetricsUniqName, TIME_OPTION_TYPE } from '@/utils/dashboard';
 import Card from '@/components/Service/ServiceCard/Card';
 import { IDispatch, IRootState } from '@/store';
 import { shouldCheckCluster } from '@/utils';
@@ -60,16 +60,19 @@ function CustomServiceQueryPanel(props: IProps) {
   }, [metricsFilterValues, metricsFilterValues, cluster, config, serviceMetric])
 
   const getMetricsData = async () => {
-    const { period: metricPeriod, space, metric, aggregation } = config;
+    let { period: metricPeriod = 5, space, metric } = config;
     const [start, end] = calcTimeRange(TIME_OPTION_TYPE.HOUR12);
     const item = (serviceMetric[serviceType] as IServiceMetricItem[]).find((metricItem: IServiceMetricItem) => metricItem.metric === metric);
+    const aggregation = item?.aggregations[0] as AggregationType;
     if (item) {
       const data = await asyncGetMetricsData({
         query: getQueryByMetricType(item, aggregation, metricPeriod?.toString()), // EXPLAIN: query like nebula_graphd_num_queries_rate_600
         start,
         end,
         space,
-        clusterID: cluster?.id
+        clusterID: cluster?.id,
+        isRawMetric: item.isRawMetric,
+        aggregation
       });
       setData(data)
     }
