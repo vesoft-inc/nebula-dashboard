@@ -65,7 +65,7 @@ function CustomServiceQueryPanel(props: IProps) {
     const item = (serviceMetric[serviceType] as IServiceMetricItem[]).find((metricItem: IServiceMetricItem) => metricItem.metric === metric);
     if (item) {
       const data = await asyncGetMetricsData({
-        query: getQueryByMetricType(item, aggregation, metricPeriod.toString()), // EXPLAIN: query like nebula_graphd_num_queries_rate_600
+        query: getQueryByMetricType(item, aggregation, metricPeriod?.toString()), // EXPLAIN: query like nebula_graphd_num_queries_rate_600
         start,
         end,
         space,

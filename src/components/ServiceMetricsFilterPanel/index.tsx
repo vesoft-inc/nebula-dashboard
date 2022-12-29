@@ -42,22 +42,6 @@ function ServiceMetricsFilterPanel(props: IProps) {
     onChange?.(form.getFieldsValue());
   }
 
-  const handlePeriodChange = (value) => {
-    if (!form) return;
-    form.setFieldsValue({
-      period: value,
-    });
-    onChange?.(form.getFieldsValue());
-  }
-
-  const handleMetricTypeChange = (value) => {
-    if (!form) return;
-    form.setFieldsValue({
-      metricType: value,
-    });
-    onChange?.(form.getFieldsValue());
-  }
-
   const handleFilterPanelChange = () => {
     onChange?.(form.getFieldsValue());
   }

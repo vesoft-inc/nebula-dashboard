@@ -23,6 +23,7 @@ const mapDispatch: any = (dispatch: IDispatch) => ({
   asyncGetHostsInfo: dispatch.nebula.asyncGetHostsInfo,
   asyncGetServices: dispatch.nebula.asyncGetServices,
   asyncExecNGQL: dispatch.nebula.asyncExecNGQL,
+  clear: dispatch.nebula.clear,
 });
 
 const mapState = (state: IRootState) => ({
@@ -60,6 +61,9 @@ const Overview: React.FC<IProps> = (props: IProps) => {
   const modalHandler = useRef<any>();
   const [hosts, setHosts] = useState([]);
 
+  useEffect(() => {
+    props.clear();
+  },[cluster])
   useEffect(() => {
     if (nebulaConnect) {
       asyncGetHostsInfo();

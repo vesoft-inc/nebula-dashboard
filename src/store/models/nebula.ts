@@ -151,6 +151,17 @@ export function NebulaModelWrapper(serviceApi, state, _effects) {
         }));
         return versionInfos;
       },
+
+      clear() {
+        this.update({
+          configs: [],
+          jobs: [],
+          spaces: [],
+          parts: [],
+          services: [],
+          currentSpace: null,
+        });
+      },
       ..._effects(dispatch),
     }),
   })
