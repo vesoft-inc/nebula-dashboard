@@ -3,7 +3,7 @@ import _ from 'lodash';
 import serviceApi from '@/config/service';
 import { IPanelConfig, ServiceMetricsPanelValue } from '@/utils/interface';
 import { DEFAULT_SERVICE_PANEL_CONFIG } from '@/utils/service';
-import { getProperStep } from '@/utils/dashboard';
+import { AggregationType, getProperStep } from '@/utils/dashboard';
 import { unique } from '@/utils';
 import { getClusterPrefix } from '@/utils/promQL';
 import { InitMetricsFilterValues } from '@/utils/metric';
@@ -89,6 +89,7 @@ export function SereviceModelWrapper(serviceApi) {
         clusterID?: string;
         noSuffix?: boolean;
         isRawMetric?: boolean;
+        aggregation: AggregationType;
       }) {
         const {
           start,
@@ -106,7 +107,7 @@ export function SereviceModelWrapper(serviceApi) {
         let query = _query;
         if (!noSuffix) {
           if (clusterID) {
-            if (!payload.isRawMetric) {
+            if (!payload.isRawMetric && payload.aggregation === AggregationType.Sum) {
               query = `sum_over_time(${_query}{${getClusterPrefix()}="${clusterID}", space="${space || ''}"}[${step}s])`;
             } else {
               query = `${_query}{${getClusterPrefix()}="${clusterID}", space="${space || ''}"}`;

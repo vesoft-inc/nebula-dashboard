@@ -82,14 +82,14 @@ export const LINE_COLORS = [
 export const DEFAULT_SERVICE_PANEL_CONFIG = {
   [ServiceName.GRAPHD]: [
     {
-      period: 60,
+      period: 5,
       metric: 'num_queries',
-      aggregation: AggregationType.Rate,
+      aggregation: AggregationType.Sum,
     },
     {
-      period: 60,
+      period: 5,
       metric: 'num_slow_queries',
-      aggregation: AggregationType.Rate,
+      aggregation: AggregationType.Sum,
     },
   ],
   [ServiceName.STORAGED]: [
@@ -111,9 +111,9 @@ export const DEFAULT_SERVICE_PANEL_CONFIG = {
       aggregation: AggregationType.Avg,
     },
     {
-      period: 60,
+      period: 5,
       metric: 'num_heartbeats',
-      aggregation: AggregationType.Rate,
+      aggregation: AggregationType.Sum,
     }
   ],
   [ServiceName.MetadListener]: [],

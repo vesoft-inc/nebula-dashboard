@@ -151,6 +151,10 @@ export const filterServiceMetrics = (payload: {
             _item => _item === key,
           );
           if (!metricTypeItem) {
+            if (key === 'sum') {// make sum the first
+              metricItem.aggregations.unshift(key);
+              return;
+            }
             metricItem.aggregations.push(key);
           }
         }
@@ -161,7 +165,7 @@ export const filterServiceMetrics = (payload: {
           isSpaceMetric: !!isSpaceMetric,
           isRawMetric: !key, // if metrics don't have sum / avg / p99 
           prefixMetric: `${metricFieldType}_${componentType.replace('-', '_')}`,
-          aggregations: key ? [key] : METRIC_FUNCTIONS,
+          aggregations: key ? [key] : [],
         });
       }
     }
