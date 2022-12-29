@@ -105,25 +105,11 @@ function ServiceDetail(props: IProps) {
     return options;
   }, [serviceType, serviceMetric.graphd, serviceMetric.metad, serviceMetric.storaged, serviceMetric.drainerd, serviceMetric['metad-listener'], serviceMetric['storaged-listener']]);
 
-  const metricTypeMap: Map<AggregationType, IServiceMetricItem[]> = useMemo(() => {
-    const map: Map<AggregationType, IServiceMetricItem[]> = {} as any;
-    metricOptions.forEach(option => {
-      option.aggregations.forEach(type => {
-        if (!map[type]) {
-          map[type] = [option];
-        } else {
-          map[type].push(option)
-        }
-      })
-    })
-    return map;
-  }, [metricOptions]);
-
   const metricNameList: string[] = useMemo(() => (
     (metricOptions || []).map((metric) => metric.metric)
   ), [metricOptions]);
 
-  const [curMetricOptions, setMetricOptions] = useState<IServiceMetricItem[]>([]);
+  const [metricCharts, setMetricCharts] = useState<{ metric:IServiceMetricItem,index:number,baseLine:any,chartRef?:any,visible:boolean }[]>([]);
 
   useEffect(() => {
     const match = /(\w+)-metrics/g.exec(location.pathname);
@@ -134,26 +120,6 @@ function ServiceDetail(props: IProps) {
     }
     setServiceType(serviceType);
   }, [location]);
-
-  const metricCharts: any = useMemo(() => {
-    if (Object.keys(metricTypeMap).length === 0) return [];
-    const { metricType } = metricsFilterValues;
-    let charts: any = [];
-    if (metricType === 'all') {
-      charts = metricOptions.map((metric, i) => ({
-        metric,
-        index: i,
-        baseLine: undefined,
-      }))
-    } else {
-      charts = (metricTypeMap[metricType] || []).map((metric, i) => ({
-        metric,
-        index: i,
-        baseLine: undefined,
-      }));
-    }
-    return charts;
-  }, [metricTypeMap, metricsFilterValues.metricType])
 
   useEffect(() => {
     clearPolling();
@@ -178,27 +144,28 @@ function ServiceDetail(props: IProps) {
   };
 
   useEffect(() => {
-    setMetricOptions(metricOptions)
+    setMetricCharts(metricOptions.map((metric, index) => ({ metric, index, baseLine: null,visible:true })));
   }, [metricOptions])
 
   useEffect(() => {
     if (dataSources.length === 0) return;
     updateChart();
-  }, [metricsFilterValues.instanceList, dataSources, curMetricOptions])
+  }, [metricsFilterValues.instanceList, dataSources, metricCharts])
 
   useEffect(() => {
     if (pollingTimerRef.current) {
       clearPolling();
       pollingData();
     }
-  }, [curMetricOptions])
+  }, [metricCharts])
 
   const asyncGetMetricsData = async () => {
-    const { timeRange, period, space, metricType } = metricsFilterValues;
+    const { timeRange, period="5", space,  } = metricsFilterValues;
     const [startTime, endTime] = calcTimeRange(timeRange);
     const getPromise = (chart) => {
       return new Promise((resolve, reject) => {
-        const item: IServiceMetricItem = metricTypeMap[metricType].find(metricItem => metricItem.metric === chart.metric.metric);
+        const item: IServiceMetricItem = chart.metric;
+        const metricType = item.aggregations[0] as AggregationType;
         asyncFetchMetricsData({
           query: getQueryByMetricType(item, metricType, period),
           start: startTime,
@@ -215,7 +182,7 @@ function ServiceDetail(props: IProps) {
     }
     if (metricCharts.length === 0) return;
     Promise.all(metricCharts.map((chart, i) => {
-      if (curMetricOptions.length === 0 || curMetricOptions.find(m => m.metric === chart.metric.metric)) {
+      if (chart.visible) {
         return getPromise(chart);
       } else {
         return Promise.resolve(dataSources[i]);
@@ -255,11 +222,15 @@ function ServiceDetail(props: IProps) {
   };
 
   const renderChart = (i: number) => () => {
+    const chart = metricCharts[i];
     const [startTimestamps, endTimestamps] = calcTimeRange(metricsFilterValues.timeRange);
-    metricCharts[i].chartRef.configDetailChart({
+    chart.chartRef.configDetailChart({
       tickInterval: getProperTickInterval(endTimestamps - startTimestamps),
-      valueType: metricCharts[i].metric.valueType,
+      valueType: chart.metric.valueType,
     });
+    if (chart.visible&&chart.baseLine) {
+      chart.chartRef.updateBaseline(chart.baseLine);
+    }
   };
 
   const handleBaseLineEdit = (metricChart) => () => {
@@ -292,17 +263,18 @@ function ServiceDetail(props: IProps) {
     asyncGetMetricsData();
   }
 
-  const handleMetricsChange = (values) => {
+  const handleMetricsChange = (values) => { 
     if (values.length === 0) {
-      setMetricOptions(metricOptions);
+      metricCharts.forEach(chart => {
+        chart.visible = true;
+      })
     } else {
-      setMetricOptions(metricOptions.filter(metric => values.includes(metric.metric)));
+      metricCharts.forEach(chart => {
+        chart.visible = values.includes(chart.metric.metric);
+      })
     }
-  }
-
-  const shouldShow = (metricItem) => {
-    return curMetricOptions.find(item => item.metric === metricItem.metric)
-  }
+    setMetricCharts([...metricCharts]);
+  } 
 
   const getViewPath = (path: string): string => {
     if (cluster?.id) {
@@ -350,7 +322,7 @@ function ServiceDetail(props: IProps) {
           {
             metricCharts.length ? (
               metricCharts.map((metricChart, i) => (
-                <div key={i} className='chart-item' style={{ display: shouldShow(metricChart.metric) ? 'flex' : 'none' }}>
+                <div key={i} className='chart-item' style={{ display: metricChart.visible ? 'flex' : 'none' }}>
                   <div className='chart-title'>
                     {metricChart.metric.metric}
                     <Popover

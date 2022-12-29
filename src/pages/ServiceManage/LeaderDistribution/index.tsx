@@ -78,12 +78,11 @@ const LeaderDistribution: React.FC<IProps> = (props: IProps) => {
   const updateChart = () => {
     if (data.length > 0) {
       const lastItem = last(data);
-      const total = lastItem!.count;
       const hostList =
         lastItem!.name === 'Total' ? data.slice(0, data.length - 1) : data;
       const chartData = hostList.map(item => ({
         type: item.name,
-        value: total ? round(item.count / total, 2) : 1,
+        value: item.count
       }));
       chartInstance?.data(chartData).render();
     }

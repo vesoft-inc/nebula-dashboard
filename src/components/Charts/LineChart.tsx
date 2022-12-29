@@ -214,7 +214,6 @@ function LineChart(props: IProps, ref) {
         tickInterval,
       },
     });
-    autoAdjustPadding(options.valueType);
     return chartInstanceRef.current;
   };
 

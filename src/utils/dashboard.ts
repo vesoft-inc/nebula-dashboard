@@ -353,10 +353,10 @@ export const getMaxNumAndLength = (payload: {
 }) => {
   const { data = [], valueType, baseLine } = payload;
   const maxNum = getMaxNum(data);
-  let maxNumLen =
-    maxNum === 0 && baseLine
-      ? baseLine.toString().length
-      : maxNum.toString().length;
+  let maxString =  maxNum === 0 && baseLine
+      ? baseLine.toString()
+      : maxNum.toString();
+  let maxNumLen = maxString.length;
   switch (valueType) {
     case VALUE_TYPE.percentage:
       maxNumLen = 5;
@@ -375,8 +375,9 @@ export const getMaxNumAndLength = (payload: {
       maxNumLen = unit.length + value.toString().length + 2;
       break;
     }
+    case VALUE_TYPE.number:
     case VALUE_TYPE.numberSecond:
-      maxNumLen += 2;
+      maxNumLen = maxString.split('.')[0].length ;
       break;
     default:
       break;
