@@ -35,6 +35,12 @@ export function NebulaModelWrapper(serviceApi, state, _effects) {
       }),
     },
     effects: (dispatch: any) => ({
+      async getJobs() {
+          const { code, data } = (await serviceApi.execNGQL({
+          gql: 'show jobs',
+        })) as any; 
+        return { code,data };
+      },
       async asyncGetServiceConfigs(module) {
         const data = module === 'graph' ? await serviceApi.getGraphConfig() : await serviceApi.getStorageConfig() as any;
 

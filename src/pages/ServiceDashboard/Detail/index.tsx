@@ -14,6 +14,7 @@ import {
   getMachineRouterPath,
   AggregationType,
   getMinNum,
+  getTickIntervalByGap,
 } from '@/utils/dashboard';
 import { IDispatch, IRootState } from '@/store';
 // import { VALUE_TYPE } from '@/utils/promQL';
@@ -204,7 +205,6 @@ function ServiceDetail(props: IProps) {
   const updateChart = () => {
     const { aliasConfig } = props;
     const { instanceList } = metricsFilterValues;
-    const [startTimestamps, endTimestamps] = calcTimeRange(metricsFilterValues.timeRange);
     metricCharts.forEach((chart, i) => {
       const data = getDataByType({
         data: dataSources[i] || [],
@@ -212,10 +212,12 @@ function ServiceDetail(props: IProps) {
         nameObj: getMetricsUniqName(MetricScene.SERVICE),
         aliasConfig,
       });
+      const realRange = data.length>0?(data[data.length-1].time - data[0].time):0;
+      const tickInterval = getTickIntervalByGap(Math.floor(realRange / 10)); // 10 ticks max
       chart.chartRef.updateDetailChart({
         type: serviceType,
         valueType: chart.metric.valueType,
-        tickInterval: getProperTickInterval(endTimestamps - startTimestamps),
+        tickInterval,
         maxNum: getMaxNum(data),
         minNum: getMinNum(data),
       }).changeData(data);

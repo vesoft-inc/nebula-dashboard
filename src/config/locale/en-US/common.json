@@ -48,5 +48,6 @@
     "port": "Port"
   },
   "addhostSuccess": "{host} add host success",
-  "successDelay": "Success, Please refresh the page later to view"
+  "successDelay": "Success, Please refresh the page later to view",
+  "running": "Running"
 }
