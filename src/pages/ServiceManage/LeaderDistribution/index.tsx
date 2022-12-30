@@ -29,7 +29,7 @@ const mapState = (state: IRootState) => ({
 
 interface IProps
   extends ReturnType<typeof mapState>,
-    ReturnType<typeof mapDispatch> {
+  ReturnType<typeof mapDispatch> {
   isOverview?: boolean;
   baseRouter?: string;
   cluster?: ICluster;
@@ -63,7 +63,7 @@ const LeaderDistribution: React.FC<IProps> = (props: IProps) => {
   const getStorageInfo = async () => {
     const res = await props.asyncGetHostsInfo();
     const data = res.map((item: any) => ({
-      name: item.Host+':'+item.Port,
+      name: item.Host + ':' + item.Port,
       count: item['Leader count'],
       distribution: item['Leader distribution'],
     })).sort((a, b) => a.name > b.name ? 1 : -1);
@@ -110,29 +110,31 @@ const LeaderDistribution: React.FC<IProps> = (props: IProps) => {
     }
   };
 
-  const columns = [
-    {
-      title: intl.get('common.service'),
-      dataIndex: 'name',
-    },
-    {
-      title: intl.get('service.leaderNumber'),
-      dataIndex: 'count',
-    },
-    {
-      title: intl.get('service.leaderDistribute'),
-      dataIndex: 'distribution',
-      render: distribution => (
-        <div className="distribution-table">
-          {distribution.split(',').map(each => <pre>{each.trim(' ')}</pre>)}
-        </div>
-      ),
-    },
-  ];
+  const columns = useMemo(() => (
+    [
+      {
+        title: intl.get('common.service'),
+        dataIndex: 'name',
+      },
+      {
+        title: intl.get('service.leaderNumber'),
+        dataIndex: 'count',
+      },
+      {
+        title: intl.get('service.leaderDistribute'),
+        dataIndex: 'distribution',
+        render: distribution => (
+          <div className="distribution-table">
+            {distribution.split(',').map(each => <div className="leader-item">{each.trim()}</div>)}
+          </div>
+        ),
+      },
+    ]
+  ), []);
 
   const options = useMemo(
     () =>
-      isOverview ? { width: 350, height: 226 } : { width: 500, height: 286 },
+      isOverview ? { width: 320, height: 226 } : { width: 500, height: 286 },
     [isOverview],
   );
 
@@ -165,10 +167,10 @@ const LeaderDistribution: React.FC<IProps> = (props: IProps) => {
           })}
         >
           {data.length > 0 ? (
-            <PieChart options={options} renderChart={renderChart} />
-          ) : (
-            <Empty description={intl.get('common.noData')} />
-          )}
+              <PieChart options={options} renderChart={renderChart} />
+            ) : (
+              <Empty description={intl.get('common.noData')} />
+            )}
           <Table
             className={classnames('leader-table', {
               'table-overview': isOverview,
