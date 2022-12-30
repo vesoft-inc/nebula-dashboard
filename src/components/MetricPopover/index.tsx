@@ -18,6 +18,7 @@ export const MetricPopover = (props: { list }) => {
     <Popover
       className={styles.dashboardPopover}
       // trigger="click"
+      placement="topLeft"
       content={
         <div className={styles.popoverMetric}>
           <div className={styles.metricContent}>

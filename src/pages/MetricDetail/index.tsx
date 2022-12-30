@@ -185,7 +185,6 @@ function MetricDetail(props: Props) {
   }, [curMetricsFilterValues.instanceList, dataSource])
 
   const updateChart = () => {
-    const [startTimestamps, endTimestamps] = calcTimeRange(curMetricsFilterValues.timeRange);
     const metricScene = getMetricSecene(metricType);
     const data = metricType === MetricTypeName.Disk ?
       getDiskData({

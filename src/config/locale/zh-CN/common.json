@@ -48,5 +48,6 @@
     "port": "端口号"
   },
   "addhostSuccess": "{host} add host 成功",
-  "successDelay": "操作成功，请稍后刷新页面查看"
+  "successDelay": "操作成功，请稍后刷新页面查看",
+  "running": "运行中"
 }
