@@ -15,12 +15,27 @@
 				display: flex;
         flex-wrap: wrap;
 				overflow: auto;
-        >pre{
-          margin:0 5px;
+        div {
+          margin:5px 0;
+          white-space: break-spaces;
+          word-break: break-all;
         }
 			}
 		}
+	}
+  .content-overview{
+		display: flex;
+		padding: 20px 30px 20px 0;
+    justify-content: space-between;
 
+		.table-overview{
+			flex: 1;
+			margin-top: 20px;
+		}
+
+		.ant-empty-normal{
+			margin: 0;
+		}
 	}
 	.overview-header{
 		display: block;
@@ -53,16 +68,5 @@
 	}
 	.ant-empty-normal{
 		margin: 0;
-	}
-	.content-overview{
-		display: flex;
-		padding: 20px 30px 20px 0;
-		.table-overview{
-			flex: 1;
-			margin-top: 20px;
-		}
-		.ant-empty-normal{
-			margin: 0;
-		}
 	}
 }
