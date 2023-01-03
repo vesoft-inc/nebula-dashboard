@@ -10,7 +10,7 @@
   "gitInfo":  "版本Commit ID",
   "leaderCount":  "Leader总数",
   "partitionDistribution":  "分片分布",
-  "leaderDistribution":  "Leader分布",
+  "leaderDistribution":  "Leader 分布",
   "partitionId":  "分片序号",
   "leader":  "分片的Leader的IP地址和端口",
   "peers":  "分片所有副本的IP地址和端口",
