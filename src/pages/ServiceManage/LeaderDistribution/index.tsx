@@ -80,10 +80,18 @@ const LeaderDistribution: React.FC<IProps> = (props: IProps) => {
       const lastItem = last(data);
       const hostList =
         lastItem!.name === 'Total' ? data.slice(0, data.length - 1) : data;
+      const total = hostList.reduce((acc, cur) => acc + cur.count, 0);
       const chartData = hostList.map(item => ({
         type: item.name,
-        value: item.count
+        value: Number((item.count/total * 100).toFixed(1))
       }));
+      chartInstance?.tooltip({
+        customItems: (items) => {
+          return items.map((item) => {
+            return {...item,value: `${item.value}%`};
+          })
+        }
+      })
       chartInstance?.data(chartData).render();
     }
   };
