@@ -57,11 +57,12 @@ function CustomServiceQueryPanel(props: IProps) {
         clearTimeout(pollingTimer);
       }
     }
-  }, [metricsFilterValues, metricsFilterValues, cluster, config, serviceMetric])
+  }, [metricsFilterValues,  cluster, config, serviceMetric])
 
   const getMetricsData = async () => {
     let { period: metricPeriod = 5, space, metric } = config;
-    const [start, end] = calcTimeRange(TIME_OPTION_TYPE.HOUR12);
+    const {timeRange} = metricsFilterValues
+    const [start, end] = calcTimeRange(timeRange);
     const item = (serviceMetric[serviceType] as IServiceMetricItem[]).find((metricItem: IServiceMetricItem) => metricItem.metric === metric);
     const aggregation = item?.aggregations[0] as AggregationType;
     if (item) {

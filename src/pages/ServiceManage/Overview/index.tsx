@@ -127,7 +127,7 @@ const Overview: React.FC<IProps> = (props: IProps) => {
   };
 
   const getBalanceStatus = async () => {
-    if (!currentSpace) return false;
+    if (!currentSpace||!nebulaConnect) return false;
     const { code,data } = await props.getJobs();
     if (code === 0) {
       const hasRunningBalance = data.tables.find(item => item.Command.indexOf("BALANCE") && item.status === 'RUNNING');
