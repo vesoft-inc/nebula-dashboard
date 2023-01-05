@@ -79,7 +79,7 @@ function ServiceMetricsFilterPanel(props: IProps) {
         }
         {
           spaces && (
-            <Form.Item label={intl.get('service.spaces')} name="space">
+            <Form.Item label={intl.get('service.spaces')} name="space" tooltip={intl.get("metric_description.enable_space_level_metrics_tip")}>
               <DashboardSelect onChange={handleSpaceChange}>
                 <Option key="all" value="">
                   {intl.get('common.all')}

@@ -1,5 +1,6 @@
 import React from 'react';
 import { IRootState, IDispatch } from '@/store';
+import intl from 'react-intl-universal'
 import { connect } from 'react-redux';
 import { IVersionItem, ServiceName } from '@/utils/interface';
 import VersionItem from './VersionItem';
@@ -74,21 +75,21 @@ class VersionStatistic extends React.Component<IProps, IState> {
       <div className="version-statistics">
         <VersionItem
           isOverview={!!isOverview}
-          title="Graph Service"
+          title={`Graph ${intl.get("common.service")}`}
           icon="#iconservice-graph"
           data={graph}
           serviceType={ServiceName.GRAPHD}
         />
         <VersionItem
           isOverview={!!isOverview}
-          title="Storage Service"
+          title={`Storage ${intl.get("common.service")}`}
           icon="#iconservice-storage"
           data={storage}
           serviceType={ServiceName.STORAGED}
         />
         <VersionItem
           isOverview={!!isOverview}
-          title="Meta Service"
+          title={`Meta ${intl.get("common.service")}`}
           icon="#iconservice-meta"
           data={meta}
           serviceType={ServiceName.METAD}

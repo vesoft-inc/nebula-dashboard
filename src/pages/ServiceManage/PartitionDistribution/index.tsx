@@ -116,8 +116,15 @@ class PartitionDistribution extends React.Component<IProps, IState> {
       const total = sum(data.map(i => i.count));
       const chartData = data.map(item => ({
         type: item.name,
-        value: round(item.count / total, 2),
+        value: round(item.count*100 / total, 2),
       }));
+      this.chartInstance?.tooltip({
+        customItems: (items) => {
+          return items.map((item) => {
+            return {...item,value: `${item.value}%`};
+          })
+        }
+      })
       this.chartInstance.data(chartData).render();
     }
   };
