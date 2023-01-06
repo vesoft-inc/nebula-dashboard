@@ -76,6 +76,7 @@ function LineChart(props: IProps, ref) {
     updateBaseline: (baseLine) => {
       updateChart(baseLine);
     },
+    chartInstanceRef,
     updateDetailChart,
     configDetailChart,
     autoAdjustPadding,
