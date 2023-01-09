@@ -29,8 +29,7 @@ class ServiceOverview extends React.Component<IProps> {
     const { serviceType, configs, getStatus } = this.props;
     return (
       <div className="service-table-item">
-        <ServiceHeader serviceType={serviceType} title={`${serviceType} Service`}>
-          <StatusPanel type={serviceType} getStatus={getStatus} />
+        <ServiceHeader serviceType={serviceType} title={`${serviceType} ${intl.get('common.service')}`}>
           <div className="btn-icon-with-desc blue" onClick={this.handleView}>
             <Icon icon="#iconwatch" />
             <span>{intl.get('common.view')}</span>

@@ -2,9 +2,9 @@ import React, { useEffect, useMemo, useRef } from 'react';
 import _ from 'lodash';
 import { Spin } from 'antd';
 import LineChart from '@/components/Charts/LineChart';
-import { ILineChartMetric, IStatSingleItem, ServiceName } from '@/utils/interface';
+import { ILineChartMetric } from '@/utils/interface';
 import { VALUE_TYPE } from '@/utils/promQL';
-import { getMaxNum, getMaxNumAndLength, getMinNum, getProperStep, getTickIntervalByGap } from '@/utils/dashboard';
+import { getMaxNum, getMaxNumAndLength, getMinNum, getTickIntervalByGap } from '@/utils/dashboard';
 
 interface IProps {
   data: ILineChartMetric[];
