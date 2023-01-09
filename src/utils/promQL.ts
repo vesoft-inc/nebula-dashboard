@@ -36,13 +36,21 @@ export let SUPPORT_METRICS =
     },
   ],
   memory: [
-    {
-      metric: 'memory_utilization',
-      valueType: VALUE_TYPE.percentage,
-    },
+    // {
+    //   metric: 'memory_utilization',
+    //   valueType: VALUE_TYPE.percentage,
+    // },
     {
       metric: 'memory_used',
       valueType: VALUE_TYPE.byte,
+    },
+    {
+      metric: 'memory_used_percentage',
+      valueType: VALUE_TYPE.percentage,
+    },
+    {
+      metric: 'memory_actual_used_percentage',
+      valueType: VALUE_TYPE.percentage,
     },
     {
       metric: 'memory_actual_used',
@@ -51,6 +59,18 @@ export let SUPPORT_METRICS =
     {
       metric: 'memory_free',
       valueType: VALUE_TYPE.byte,
+    },
+    {
+      metric: 'memory_swap_total',
+      valueType: VALUE_TYPE.byte,
+    },
+    {
+      metric: 'memory_cached_buffer_used',
+      valueType: VALUE_TYPE.byte,
+    },
+    {
+      metric: 'memory_cached_buffer_used_percentage',
+      valueType: VALUE_TYPE.percentage,
     },
   ],
   load: [
@@ -100,6 +120,10 @@ export let SUPPORT_METRICS =
       metric: 'inode_utilization',
       valueType: VALUE_TYPE.percentage,
     },
+    {
+      metric: 'root_fs_used_percentage',
+      valueType: VALUE_TYPE.percentage,
+    }
   ],
   network: [
     {
@@ -150,17 +174,22 @@ export let LINUX = (cluster?, device?: string): any => {
     cpu_system: `100 * (sum by (instance)(increase(node_cpu_seconds_total{mode="system"${clusterSuffix1}}[1m])) / sum by (instance)(increase(node_cpu_seconds_total${clusterSuffix2}[1m])))`,
 
     // memory relative:
-    memory_utilization: `(1 - node_memory_MemFree_bytes${clusterSuffix2} / node_memory_MemTotal_bytes${clusterSuffix2} )* 100`,
+    // memory_utilization: `(1 - node_memory_MemFree_bytes${clusterSuffix2} / node_memory_MemTotal_bytes${clusterSuffix2} )* 100`,
     memory_used: `node_memory_MemTotal_bytes${clusterSuffix2} - node_memory_MemFree_bytes${clusterSuffix2}`,
+    memory_used_percentage: `((node_memory_MemTotal_bytes${clusterSuffix2} - node_memory_MemFree_bytes${clusterSuffix2}) / node_memory_MemTotal_bytes${clusterSuffix2} )* 100`,
     memory_actual_used: `node_memory_MemTotal_bytes${clusterSuffix2} - node_memory_MemFree_bytes${clusterSuffix2} - node_memory_Buffers_bytes${clusterSuffix2} - node_memory_Cached_bytes${clusterSuffix2}`,
+    memory_actual_used_percentage: `((node_memory_MemTotal_bytes${clusterSuffix2} - node_memory_MemFree_bytes${clusterSuffix2} - node_memory_Buffers_bytes${clusterSuffix2} - node_memory_Cached_bytes${clusterSuffix2}) / node_memory_MemTotal_bytes${clusterSuffix2} )* 100`,
     memory_free: `node_memory_MemFree_bytes${clusterSuffix2}`,
+    memory_cached_buffer_used: `node_memory_Buffers_bytes${clusterSuffix2} + node_memory_Cached_bytes${clusterSuffix2}`,
+    memory_cached_buffer_used_percentage: `((node_memory_Buffers_bytes${clusterSuffix2} + node_memory_Cached_bytes${clusterSuffix2}) / node_memory_MemTotal_bytes${clusterSuffix2} )* 100`,
     memory_size: `node_memory_MemTotal_bytes${clusterSuffix2}`,
-
+    memory_swap_total: `node_memory_SwapTotal_bytes${clusterSuffix2}`,
+    
     // node load relative:
     load_15s: `node_load1${clusterSuffix2}`,
     load_5m: `node_load5${clusterSuffix2}`,
     load_15m: `node_load15${clusterSuffix2}`,
-
+    
     // disk relative:
     disk_used: `node_filesystem_size_bytes{${diskPararms}${devicePararms}${clusterSuffix1}} - node_filesystem_free_bytes{${diskPararms}${devicePararms}${clusterSuffix1}}`,
     disk_free: `node_filesystem_avail_bytes{${diskPararms}${devicePararms}${clusterSuffix1}}`,
@@ -171,6 +200,7 @@ export let LINUX = (cluster?, device?: string): any => {
     inode_utilization: `(1- (node_filesystem_files_free{${diskPararms}${devicePararms}${clusterSuffix1}}) / (node_filesystem_files{mountpoint="/",fstype!="rootfs"${clusterSuffix1}})) * 100`,
     disk_used_percentage: `(node_filesystem_size_bytes{${diskPararms}${devicePararms}${clusterSuffix1}}-node_filesystem_free_bytes{${diskPararms}${devicePararms}${clusterSuffix1}}) *100/(node_filesystem_avail_bytes {${diskPararms}${devicePararms}${clusterSuffix1}}+(node_filesystem_size_bytes{${diskPararms}${devicePararms}${clusterSuffix1}}-node_filesystem_free_bytes{${diskPararms}${devicePararms}${clusterSuffix1}}))`,
     disk_size: `node_filesystem_size_bytes{${diskPararms}${devicePararms}${clusterSuffix1}}`,
+    root_fs_used_percentage: `100 - ((node_filesystem_avail_bytes{fstype!="rootfs"${clusterSuffix1}} * 100) / node_filesystem_size_bytes{mountpoint="/",fstype!="rootfs"${clusterSuffix1}})`,
 
     network_in_rate: `ceil(sum by(instance)(irate(node_network_receive_bytes_total{device=~"(eth|en)[a-z0-9]*"${clusterSuffix1}}[1m])))`,
     network_out_rate: `ceil(sum by(instance)(irate(node_network_transmit_bytes_total{device=~"(eth|en)[a-z0-9]*"${clusterSuffix1}}[1m])))`,
