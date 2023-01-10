@@ -1,5 +1,5 @@
 {
   "usernameRequired": "请输入用户名",
   "passwordRequired": "请输入密码",
-  "versionRequired":"请输入nebula版本"
+  "versionRequired":"请输入 NebulaGraph 版本"
 }

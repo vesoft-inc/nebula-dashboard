@@ -118,7 +118,10 @@ function LineChart(props: IProps, ref) {
     if ((max - min) < 5) {
       max = max + 5;
       min = min < 0 ? min - 5 : 0;
+    } else {
+      min = 0;
     }
+    
     yMin.current = min;
     yMax.current = max;
     const tickInterval = Math.round((max - min) / 5);
