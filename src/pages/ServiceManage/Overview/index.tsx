@@ -61,6 +61,15 @@ const Overview: React.FC<IProps> = (props: IProps) => {
   const [balancing, setBalancing] = useState(false);
   const modalHandler = useRef<any>();
   const [hosts, setHosts] = useState([]);
+  const nebulaRef = useRef<{
+    currentSpace: any;
+    nebulaConnect: any;
+  }>({
+    currentSpace,
+    nebulaConnect,  
+  });
+  nebulaRef.current.currentSpace = currentSpace;
+  nebulaRef.current.nebulaConnect = nebulaConnect;
   useEffect(() => {
     props.clear();
   },[cluster])
@@ -127,7 +136,7 @@ const Overview: React.FC<IProps> = (props: IProps) => {
   };
 
   const getBalanceStatus = async () => {
-    if (!currentSpace||!nebulaConnect) return false;
+    if (!nebulaRef.current.currentSpace||!nebulaRef.current.nebulaConnect) return false;
     const { code,data } = await props.getJobs();
     if (code === 0) {
       const hasRunningBalance = data.tables.find(item => item.Command.indexOf("BALANCE") && item.status === 'RUNNING');

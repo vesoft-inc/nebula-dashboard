@@ -105,8 +105,8 @@ export function NebulaModelWrapper(serviceApi, state, _effects) {
           this.update({
             parts: data.tables,
           });
+          return data.tables;
         }
-        return data.tables;
       },
 
       async asyncGetServices() {
