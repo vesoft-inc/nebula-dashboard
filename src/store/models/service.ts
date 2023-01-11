@@ -4,7 +4,7 @@ import serviceApi from '@/config/service';
 import { IPanelConfig, ServiceMetricsPanelValue } from '@/utils/interface';
 import { DEFAULT_SERVICE_PANEL_CONFIG } from '@/utils/service';
 import { AggregationType, getProperStep } from '@/utils/dashboard';
-import { unique } from '@/utils';
+import { isCommunityVersion, unique } from '@/utils';
 import { getClusterPrefix } from '@/utils/promQL';
 import { InitMetricsFilterValues } from '@/utils/metric';
 
@@ -127,11 +127,13 @@ export function SereviceModelWrapper(serviceApi) {
         if (code === 0 && data.result.length !== 0) {
           stat = data.result;
         }
-        const list = stat.map(item => {
-          const instanceName = item.metric.instanceName || item.metric.instance;
-          return instanceName.slice(0, instanceName.indexOf('-'))
-        });
-        this.updateInstanceList(list)
+        if (isCommunityVersion()) {
+          const list = stat.map(item => {
+            const instanceName = item.metric.instanceName || item.metric.instance;
+            return instanceName.slice(0, instanceName.indexOf('-'))
+          });
+          this.updateInstanceList(list)
+        }
         return stat;
       },
 

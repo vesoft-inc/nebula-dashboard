@@ -122,6 +122,7 @@ const MetricsFilterPanel = (props: IProps, ref) => {
             <TreeSelect
               style={{ width: '220px', maxWidth: '500px' }}
               treeData={treeData} treeCheckable
+              treeDefaultExpandAll
               showCheckedStrategy={TreeSelect.SHOW_PARENT}
               getPopupContainer={triggerNode => triggerNode.parentElement}
               onChange={handleInstanceChange}

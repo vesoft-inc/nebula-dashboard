@@ -51,7 +51,7 @@ function MachineDashboard(props: IProps) {
   const { asyncGetMemorySizeStat, asyncGetDiskSizeStat, cluster, metricsFilterValues,
     asyncGetCPUStatByRange, asyncGetMemoryStatByRange, asyncGetDiskStatByRange,
     asyncGetLoadByRange, asyncGetNetworkStatByRange, updateMetricsFiltervalues, instanceList,
-    loading,
+    loading
   } = props;
 
   const [showLoading, setShowLoading] = useState<boolean>(false);
@@ -200,7 +200,7 @@ function MachineDashboard(props: IProps) {
         <Row>
           <Col span={12}>
             <DashboardCard
-              title={<> {intl.get('device.cpu')} <span>{SUPPORT_METRICS.cpu[0].metric}</span></>} 
+              title={<> {intl.get('device.cpu')} <span>{SUPPORT_METRICS.cpu[0].metric}</span></>}
               viewPath={getViewPath("/machine/cpu")}
               onConfigPanel={() => handleConfigPanel(MACHINE_TYPE.cpu)}
             >
