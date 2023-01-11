@@ -43,7 +43,9 @@ interface IProps
 
 function ServiceDashboard(props: IProps) {
 
-  const { panelConfig, serviceMetric, updatePanelConfig, asyncGetStatus, onView, instanceList, updateMetricsFiltervalues, metricsFilterValues, asyncGetSpaces, cluster } = props;
+  const { panelConfig, serviceMetric, updatePanelConfig, asyncGetStatus,
+    onView, instanceList, updateMetricsFiltervalues, metricsFilterValues,
+    asyncGetSpaces, cluster } = props;
 
   const [editPanelType, setEditPanelType] = useState<ServiceName>();
   const [editPanelIndex, setEditPanelIndex] = useState(0)
@@ -97,7 +99,8 @@ function ServiceDashboard(props: IProps) {
   return (
     <>
       <div className="service-table">
-        <div className='common-header' >
+        <div
+         className='common-header' >
           <MetricsFilterPanel
             onChange={handleMetricsChange}
             instanceList={instanceList}

@@ -35,7 +35,7 @@ const mapState = (state: IRootState) => {
         if (instanceList.includes('all')) {
           return true;
         }
-        return instanceList.includes(item.name)
+        return instanceList.some(instance => item.name.includes(instance))
       }),
   };
 };

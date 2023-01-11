@@ -4,7 +4,7 @@ import serviceApi from '@/config/service';
 import { NEED_ADD_SUM_QUERYS, getProperStep, getMetricsUniqName } from '@/utils/dashboard';
 import { LINUX } from '@/utils/promQL';
 import { IStatRangeItem, IStatSingleItem, MetricScene, MetricsPanelValue } from '@/utils/interface';
-import { unique } from '@/utils';
+import { isCommunityVersion, unique } from '@/utils';
 import { InitMachineMetricsFilterValues } from '@/utils/metric';
 
 const PROMQL = LINUX;
@@ -18,7 +18,7 @@ export interface IState {
   networkStat: IStatRangeItem[];
   memorySizeStat: IStatSingleItem[];
   diskSizeStat: IStatSingleItem[];
-  instanceList: any[];
+  instanceList: string[];
   metricsFilterValues: MetricsPanelValue;
 }
 
@@ -34,7 +34,7 @@ export function MachineModelWrapper(service,) {
       loadStat: [] as IStatRangeItem[],
       memorySizeStat: [] as IStatSingleItem[],
       diskSizeStat: [] as IStatSingleItem[],
-      instanceList: [],
+      instanceList: [] as string[],
       metricsFilterValues: InitMachineMetricsFilterValues,
     },
     reducers: {
@@ -92,8 +92,10 @@ export function MachineModelWrapper(service,) {
             result = data.result;
           }
         }
-        const instanceList = result.map(item => item.metric.instance).filter(instance => instance !== 'total');
-        this.updateInstanceList(instanceList);
+        if (isCommunityVersion()) {
+          const instanceList = result.map(item => item.metric.instance).filter(instance => instance !== 'total' );
+          this.updateInstanceList(instanceList);
+        }
         return result;
       },
 
