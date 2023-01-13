@@ -14,6 +14,7 @@
   "root_fs_used_percentage": "The percentage of used disk space of the root file system",
   "load_1m": "The average load of the system in the last 1 minute",
   "load_5m": "The average load of the system in the last 5 minutes",
+  "load_15s": "The average load of the system in the last 15 seconds",
   "load_15m": "The average load of the system in the last 15 minutes",
   "disk_used": "The disk space used",
   "disk_free": "The disk space available",
