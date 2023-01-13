@@ -211,6 +211,7 @@ function ServiceDetail(props: IProps) {
         type: instanceList,
         nameObj: getMetricsUniqName(MetricScene.SERVICE),
         aliasConfig,
+        instanceList: props.instanceList,
       });
       const realRange = data.length>0?(data[data.length-1].time - data[0].time):0;
       const tickInterval = getTickIntervalByGap(Math.floor(realRange / 10)); // 10 ticks max

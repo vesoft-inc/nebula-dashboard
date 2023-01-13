@@ -70,10 +70,6 @@ const mapState = (state: IRootState) => ({
 });
 
 const mapDispatch: any = (dispatch: IDispatch) => ({
-  // asyncUpdateBaseLine: (key, value) =>
-  //   dispatch.setting.update({
-  //     [key]: value,
-  //   }),
   updateMetricsFiltervalues: dispatch.machine.updateMetricsFiltervalues,
   updateServiceMetricsFiltervalues: dispatch.service.updateMetricsFiltervalues,
   asyncFetchMachineMetricsData: dispatch.machine.asyncGetMetricsData,
@@ -186,18 +182,21 @@ function MetricDetail(props: Props) {
 
   const updateChart = () => {
     const metricScene = getMetricSecene(metricType);
+    const instanceList = isServiceMetric(metricType) ? serviceInstanceList : instances;
     const data = metricType === MetricTypeName.Disk ?
       getDiskData({
         data: dataSource || [],
         type: curMetricsFilterValues.instanceList,
         nameObj: getMetricsUniqName(metricScene),
         aliasConfig,
+        instanceList
       }) :
       getDataByType({
         data: dataSource || [],
         type: curMetricsFilterValues.instanceList,
         nameObj: getMetricsUniqName(metricScene),
         aliasConfig,
+        instanceList,
       });
     const values = data.map(d => d.value) as number[];
     const maxNum = values.length > 0 ? Math.floor(Math.max(...values) * 100) / 100 : undefined;
@@ -212,32 +211,19 @@ function MetricDetail(props: Props) {
     }).changeData(data);
   };
 
-  const metricTypeMap = useMemo(() => {
-    const map = {};
-    if (metricOption && isServiceMetric(metricType)) {
-      metricOption.aggregations.forEach(type => {
-        if (!map[type]) {
-          map[type] = [metricOption];
-        } else {
-          map[type].push(metricOption)
-        }
-      })
-    }
-    return map;
-  }, [metricType, metricOption])
-
   const getData = async () => {
     const [startTimestamps, endTimestamps] = calcTimeRange(curMetricsFilterValues.timeRange);
     if (isServiceMetric(metricType)) {
-      const { period, space, metricType: aggregration } = curMetricsFilterValues;
-      const item = metricTypeMap[aggregration]?.find(metricItem => metricItem.metric === metricChart.metric.metric);
-      if (item) {
+      const { space } = curMetricsFilterValues;
+      if (metricChart.metric.metric.length) {
+        const aggregation = metricChart.metric.aggregations[0];
         asyncFetchServiceMetricsData({
-          query: getQueryByMetricType(item, aggregration, period),
+          query: getQueryByMetricType(metricChart.metric, aggregation, '5'),
           start: startTimestamps,
           end: endTimestamps,
           space: metricType === MetricTypeName.Graphd ? space : undefined,
           clusterID: cluster?.id,
+          aggregation,
         }).then(res => {
           setDataSource(res);
         });

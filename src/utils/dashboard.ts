@@ -159,8 +159,10 @@ export const getDataByType = (payload: {
     showName: (name: string) => string;
   };
   aliasConfig?: any;
+  instanceList?: string[];
 }) => {
-  const { nameObj, type, data, aliasConfig } = payload;
+  const { nameObj, data, aliasConfig, instanceList } = payload;
+  let { type } = payload;
   const { name, showName } = nameObj;
   const res = [] as ILineChartMetric[];
   data.forEach(instance => {
@@ -170,7 +172,11 @@ export const getDataByType = (payload: {
       if (typeof type === 'string') {
         shouldPush = (type === 'all' && _name !== 'total') || _name === type;
       } else if (Array.isArray(type)) {
-        shouldPush = (type.includes('all') && _name !== 'total') || !!type.find(t => _name.includes(t))
+        if (type.includes('all')) {
+          shouldPush= instanceList ? instanceList.some(instance => _name.includes(instance)) : true;
+        } else {
+          shouldPush = !!type.find(t => _name.includes(t))
+        }
       }
       if (shouldPush) {
         res.push({
@@ -192,8 +198,9 @@ export let getDiskData = (payload: {
     name: string;
     showName: (name: string) => string;
   };
+  instanceList?: string[];
 }) => {
-  const { type, data, nameObj } = payload;
+  const { type, data, nameObj, instanceList } = payload;
   const { name, showName } = nameObj;
   const res = [] as ILineChartMetric[];
   data.forEach(instance => {
@@ -204,7 +211,11 @@ export let getDiskData = (payload: {
       if (typeof type === 'string') {
         shouldPush = (type === 'all' && _name !== 'total') || _name === type;
       } else if (Array.isArray(type)) {
-        shouldPush = (type.includes('all') && _name !== 'total') || !!type.find(t => _name.includes(t))
+        if (type.includes('all')) {
+          shouldPush= instanceList ? instanceList.some(instance => _name.includes(instance)) : true;
+        } else {
+          shouldPush = !!type.find(t => _name.includes(t))
+        }
       }
       if (shouldPush) {
         res.push({

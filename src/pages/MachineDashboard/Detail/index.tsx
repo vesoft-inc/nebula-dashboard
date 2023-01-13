@@ -177,12 +177,14 @@ function Detail(props: IProps) {
           type: metricsFilterValues.instanceList,
           nameObj: dataTypeObj,
           aliasConfig,
+          instanceList: instances,
         }) :
         getDataByType({
           data: dataSources[i] || [],
           type: metricsFilterValues.instanceList,
           nameObj: dataTypeObj,
           aliasConfig,
+          instanceList: instances, 
         });
       const values = data.map(d => d.value) as number[];
       const maxNum = values.length > 0 ? Math.floor(Math.max(...values) * 100) / 100 : undefined;

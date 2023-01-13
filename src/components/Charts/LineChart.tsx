@@ -119,14 +119,14 @@ function LineChart(props: IProps, ref) {
       max = max + 5;
       min = min < 0 ? min - 5 : 0;
     } else {
-      min = 0;
+      min = Math.min(min, 0);
     }
     
     yMin.current = min;
     yMax.current = max;
     const tickInterval = Math.round((max - min) / 5);
     return {
-      min: yMin.current,
+      min: yMin.current < 0 ? yMin.current - tickInterval : yMin.current,
       max: yMax.current + tickInterval,
       tickInterval,
     }
