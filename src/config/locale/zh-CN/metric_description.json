@@ -15,6 +15,7 @@
   "memory_cached_buffer_used_percentage": "已使用的Buffer缓存和Cached缓存百分比",
   "load_1m": "最近1分钟系统平均负载",
   "load_5m": "最近5分钟系统平均负载",
+  "load_15s": "最近15秒系统平均负载",
   "load_15m": "最近15分钟系统平均负载",
   "disk_used": "磁盘已使用存储空间",
   "disk_free": "磁盘剩余存储空间",
