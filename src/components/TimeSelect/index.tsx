@@ -35,10 +35,7 @@ const TimeSelect = (props: IProps) => {
   }, [value])
 
   const disabledDate = (current) => {
-    return (
-      current < dayjs().subtract(14, 'days').endOf('day') ||
-      current > dayjs().endOf('day')
-    );
+    return current > dayjs().endOf('day');
   }
 
   const handleTimeButtonClick = (e) => {
