@@ -6,7 +6,7 @@ import { VALUE_TYPE } from '@/utils/promQL';
 import { MetricScene } from '@/utils/interface';
 
 const mapState = (state: IRootState) => {
-  const { memoryStat, memorySizeStat, metricsFilterValues } = state.machine;
+  const { memoryStat, memorySizeStat, metricsFilterValues, instanceList } = state.machine;
   const { aliasConfig } = state.app;
   return {
     data: getDataByType({
@@ -14,6 +14,7 @@ const mapState = (state: IRootState) => {
       type: metricsFilterValues.instanceList,
       nameObj: getMetricsUniqName(MetricScene.MEMORY),
       aliasConfig,
+      instanceList,
     }),
     sizes: memorySizeStat,
     valueType: VALUE_TYPE.percentage,

@@ -7,7 +7,7 @@ import { getDataByType, getMetricsUniqName } from '@/utils/dashboard';
 import { MetricScene } from '@/utils/interface';
 
 const mapState = (state: IRootState) => {
-  const { networkOutStat, metricsFilterValues } = state.machine;
+  const { networkOutStat, metricsFilterValues, instanceList } = state.machine;
   const { aliasConfig } = state.app;
   return {
     data: getDataByType({
@@ -15,6 +15,7 @@ const mapState = (state: IRootState) => {
       type: metricsFilterValues.instanceList,
       nameObj: getMetricsUniqName(MetricScene.NETWORK),
       aliasConfig,
+      instanceList,
     }),
     valueType: VALUE_TYPE.byteSecondNet,
     loading: false,

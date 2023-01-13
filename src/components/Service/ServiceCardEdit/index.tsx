@@ -27,12 +27,8 @@ function ServiceCardEdit(props: IProps) {
 
   const curServiceMetricItems = useMemo<IServiceMetricItem[]>(() => serviceMetric[editType], [serviceMetric, editType]);
 
-  const handleUpdateMetricType = (value: string) => {
-    const metric = curServiceMetricItems.find(
-      item => item.metric === value,
-    );
+  const handleUpdateMetricType = (_value: string) => {
     formRef.current.setFieldsValue({
-      aggregation: metric?.aggregations[0],
       space: '',
     });
   };

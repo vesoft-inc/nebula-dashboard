@@ -7,7 +7,7 @@ import { VALUE_TYPE } from '@/utils/promQL';
 import { MetricScene } from '@/utils/interface';
 
 const mapState = (state: IRootState) => {
-  const { networkInStat, metricsFilterValues } = state.machine;
+  const { networkInStat, metricsFilterValues, instanceList } = state.machine;
   const { aliasConfig } = state.app;
   return {
     data: getDataByType({
@@ -15,6 +15,7 @@ const mapState = (state: IRootState) => {
       type: metricsFilterValues.instanceList,
       nameObj: getMetricsUniqName(MetricScene.NETWORK),
       aliasConfig,
+      instanceList,
     }),
     valueType: VALUE_TYPE.byteSecondNet,
     loading: false,

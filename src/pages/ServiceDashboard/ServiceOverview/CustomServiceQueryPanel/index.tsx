@@ -22,6 +22,7 @@ const mapState = (state: IRootState) => ({
   cluster: (state as any).cluster?.cluster,
   metricsFilterValues: state.service.metricsFilterValues,
   serviceMetric: state.serviceMetric,
+  instances: state.service.instanceList,
 });
 
 interface IProps
@@ -35,7 +36,7 @@ interface IProps
 
 function CustomServiceQueryPanel(props: IProps) {
 
-  const { config, cluster, asyncGetMetricsData, onConfigPanel, aliasConfig, metricsFilterValues, isHidePeriod, serviceMetric, serviceType } = props;
+  const { config, cluster, asyncGetMetricsData, onConfigPanel, aliasConfig, metricsFilterValues, isHidePeriod, serviceMetric, serviceType, instances } = props;
 
   const [data, setData] = useState<any[]>([])
 
@@ -117,6 +118,7 @@ function CustomServiceQueryPanel(props: IProps) {
               type: metricsFilterValues.instanceList,
               nameObj: getMetricsUniqName(MetricScene.SERVICE),
               aliasConfig,
+              instanceList: instances
             })}
             serviceType={serviceType}
             loading={false}
