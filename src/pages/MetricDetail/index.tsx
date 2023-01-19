@@ -206,6 +206,7 @@ function MetricDetail(props: Props) {
     metricChart.chartRef.updateDetailChart({
       type,
       tickInterval,
+      valueType: metricChart.metric.valueType,
       maxNum,
       minNum,
     }).changeData(data);
