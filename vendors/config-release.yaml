@@ -9,7 +9,7 @@ stats-exporter:
   port: 9200
   https: false
 node-exporter:
-  - ip: hostIP
+  - ip: nebulaHostIP
     port: 9100
     https: false
 prometheus: 
