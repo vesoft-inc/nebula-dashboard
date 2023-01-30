@@ -5,9 +5,9 @@ set -ex
 DIR=`pwd`
 DASHBOARD=$DIR/$1
 GATEWAY=$DIR/$2
-NIGHTLY=$3
-CPU_ARCH=$4
-GH_ID=$5
+CPU_ARCH=$3
+GH_ID=$4
+SPEC_VERSION=$5
 
 
 # build target dir
@@ -57,7 +57,12 @@ mv $DASHBOARD/docker-compose/docker-compose.yaml $TARGET/
 
 ### NebulaGraph Dashboard relative ###
 cd $DASHBOARD
-VERSION=`cat package.json | grep '"version":' | awk 'NR==1{print $2}' | awk -F'"' '{print $2}'`
+VERSION=
+if [ ! $SPEC_VERSION ];then
+  VERSION=`cat package.json | grep '"version":' | awk 'NR==1{print $2}' | awk -F'"' '{print $2}'`
+else 
+  VERSION=$SPEC_VERSION
+fi
 bash $DASHBOARD/scripts/setEventTracking.sh $GH_ID
 
 npm install --unsafe-perm
@@ -72,8 +77,4 @@ cp -r $DASHBOARD/vendors/config-release.yaml $TARGET/config.yaml
 
 ### tar
 cd $DIR
-if [[ $NIGHTLY == "true" ]];then
-  tar -czf nebula-dashboard-nightly.tar.gz nebula-dashboard
-else
-  tar -czf nebula-dashboard-$VERSION.x86_64.tar.gz nebula-dashboard
-fi
+tar -czf nebula-dashboard-$VERSION.x86_64.tar.gz nebula-dashboard

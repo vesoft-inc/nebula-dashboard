@@ -1,5 +1,12 @@
 name: Dashboard Mannually Package
-on: workflow_dispatch
+on: 
+  workflow_dispatch:
+    version:
+        required: false
+        type: string
+        description: "The version of the package(default use package.json version)"
+env:
+  VERSION: ${{ github.event.inputs.version }}
 jobs:
   package:
     name: build package
@@ -27,17 +34,17 @@ jobs:
           repository: vesoft-inc/nebula-http-gateway
           path: source/nebula-http-gateway
           ref: v3.1.4
-      - uses: actions/setup-go@v2
-        with:
-          go-version: '^1.13.1'
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '14'
+      # - uses: actions/setup-go@v2
+      #   with:
+      #     go-version: '^1.13.1'
+      # - uses: actions/setup-node@v2
+      #   with:
+      #     node-version: '14'
       - name: ls
         run: ls -a
       - name: Package
-        run: bash ./source/nebula-dashboard/scripts/package.sh source/nebula-dashboard source/nebula-http-gateway true ${{ matrix.cpu_arch[0] }} ${{ secrets.GA_ID }}
+        run: bash ./source/nebula-dashboard/scripts/package.sh source/nebula-dashboard source/nebula-http-gateway ${{ matrix.cpu_arch[0] }} ${{ secrets.GA_ID }} ${VERSION} 
       - name: Upload to OSS
-        run: bash ./source/nebula-dashboard/scripts/upload.sh ${{ secrets.OSS_ENDPOINT }} ${{ secrets.OSS_ID }} ${{ secrets.OSS_SECRET }} ${{ secrets.OSS_TEST_URL }}
+        run: bash ./source/nebula-dashboard/scripts/upload.sh ${{ secrets.OSS_ENDPOINT }} ${{ secrets.OSS_ID }} ${{ secrets.OSS_SECRET }} ${{ secrets.OSS_TEST_URL }}community/ ${VERSION}
 
     
