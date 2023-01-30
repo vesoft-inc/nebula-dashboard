@@ -1,10 +1,11 @@
 name: Dashboard Mannually Package
 on: 
   workflow_dispatch:
-    version:
-        required: false
-        type: string
-        description: "The version of the package(default use package.json version)"
+    inputs:
+      version:
+          required: false
+          type: string
+          description: "The version of the package(default use package.json version)"
 env:
   VERSION: ${{ github.event.inputs.version }}
 jobs:
