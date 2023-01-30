@@ -6,7 +6,7 @@ gateway:
   runmode: dev
 stats-exporter:
   ip: hostIP
-  port: 9200
+  nebulaPort: 9200
   https: false
 node-exporter:
   - ip: nebulaHostIP
@@ -14,7 +14,7 @@ node-exporter:
     https: false
 prometheus: 
   ip: hostIP
-  port: 9090
+  prometheusPort: 9090
   https: false
   scrape_interval: 5s
   evaluation_interval: 5s
@@ -36,4 +36,3 @@ nebula-cluster:
       endpointIP: nebulaStoragedIP
       port: 9779
       endpointPort: 19779
-    

@@ -1,0 +1,32 @@
+version: '3.7'
+services:
+  nebula-dashboard:
+    restart: always
+    build: .
+    ports:
+      - 7003:7003
+      - 8090:8090
+      - 9200:9200
+      - 9090:9090
+    working_dir: /dashboard
+    volumes:
+      - ./config.yaml:/dashboard/config.yaml
+      - ./vendors/prometheus/data:/dashboard/vendors/prometheus/data
+      - ./vendors/prometheus/prometheus.yml:/dashboard/vendors/prometheus/prometheus.yml
+      - ./vendors/nebula-stats-exporter/config.yaml:/dashboard/vendors/nebula-stats-exporter/config.yaml
+      - ./logs:/dashoard/logs
+    command:
+      - sh
+      - -c
+      - |
+        ./dashboard.service start all;
+        tail -f ./logs/webserver.log
+    environment:
+      USER: root
+    networks:
+      - nebula-net
+
+networks:
+  nebula-net:
+    external: true
+

@@ -4,7 +4,6 @@ const path = require('path');
 const fs = require('fs');
 const yaml = require('js-yaml');
 const execSync = require("child_process").execSync;
-const spawn = require("child_process").spawn;
 const chalk = require('chalk');
 
 const pkg = require('./package.json');
@@ -48,6 +47,14 @@ program
   .description(`status service, all|${COMPONETS.GATEWAY}|${COMPONETS.STATS_EXPORTER}|${COMPONETS.PROMETHEUS}|${COMPONETS.WEBSERVER}`)
   .action((service) => {
     statusServices(service)
+  })
+
+program
+  .command('restart')
+  .argument('<service>', 'service type')
+  .description(`restart service, all|${COMPONETS.GATEWAY}|${COMPONETS.STATS_EXPORTER}|${COMPONETS.PROMETHEUS}|${COMPONETS.WEBSERVER}`)
+  .action((service) => {
+    restartServices(service)
   })
 
 program.parse();
@@ -123,7 +130,7 @@ function updateStatsExporterConfig() {
 
 function updatePrometheusConfig() {
   const prometheusConfig = config.prometheus;
-  const prometheusPath = path.resolve(process.cwd(), 'vendors/prometheus/prometheus.yaml');
+  const prometheusPath = path.resolve(process.cwd(), 'vendors/prometheus/prometheus.yml');
   const content = {
     global: {
       scrape_interval: prometheusConfig.scrape_interval,
@@ -142,7 +149,7 @@ function updatePrometheusConfig() {
         job_name: 'nebula-stats-exporter',
         static_configs: [
           {
-            targets: [`${config['stats-exporter'].ip}:${config['stats-exporter'].port}`]
+            targets: [`${config['stats-exporter'].ip}:${config['stats-exporter'].nebulaPort}`]
           }
         ]
       }
@@ -154,141 +161,39 @@ function updatePrometheusConfig() {
   });
 }
 
-
-function spawnCmd(cmd, args, options) {
-  return new Promise((resolve, reject) => {
-    const child = spawn(cmd, args, options);
-    child.stdout.on('data', (data) => {
-      console.log(`${data}`);
-    });
-    child.stderr.on('data', (data) => {
-      reject(data);
-    });
-    child.on('close', (code) => {
-      resolve(code);
-    });
-  })
-}
-
-function startService(type) {
-  const LOG_DIR = makeDirIfAbsent('logs');
-  // const PID_DIR = makeDirIfAbsent('pids');
-  let command = '';
-  INFO("Starting", type)
-  let cwd = '';
-  let mainCmd = '';
-  switch (type) {
-    case COMPONETS.GATEWAY:
-      cwd = path.resolve(process.cwd(), 'vendors/nebula-http-gateway');
-      mainCmd = `${cwd}/nebula-httpd`;
-      command = `nohup ${mainCmd} > ${LOG_DIR}/nebula-http.log 2>&1 &`;
-      break;
-    case COMPONETS.STATS_EXPORTER:
-      cwd = path.resolve(process.cwd(), 'vendors/nebula-stats-exporter');
-      mainCmd = `${cwd}/nebula-stats-exporter`;
-      command = `nohup ${mainCmd} --listen-address=":${config['stats-exporter'].port}" --bare-metal --bare-metal-config=${cwd}/config.yaml > ${LOG_DIR}/stats-exporter.log 2>&1 &`
-      break;
-    case COMPONETS.PROMETHEUS:
-      cwd = path.resolve(process.cwd(), 'vendors/prometheus');
-      mainCmd = `${cwd}/prometheus`;
-      command = `nohup ${mainCmd} --config.file ${cwd}/prometheus.yaml --web.listen-address=:${config.prometheus.port} > ${LOG_DIR}/prometheus.log 2>&1 &`
-      break;
-    case COMPONETS.WEBSERVER:
-      cwd = path.resolve(process.cwd(), 'bin');
-      mainCmd = `${cwd}/webserver`;
-      command = `nohup ${mainCmd} > ${LOG_DIR}/webserver.log 2>&1 &`
-      break;
-  }
+function startServices(type) {
   try {
-    spawnCmd(`(${command})`, [], { shell: true, detached: true }).then((code) => {
-      if (code === 0) {
-        INFO(type, 'started')
-      }
-    }).catch(err => {
-      ERROR(type, 'started failed, caused by', err)
-    })
+    const dashoardShFile = path.resolve(process.cwd(), 'scripts/dashboard.sh');
+    execSync(`bash ${dashoardShFile} start ${type}`, {stdio: 'inherit'})
   } catch (error) {
     ERROR(error)
   }
 }
 
-function getTargetPort(type) {
-  let tartgetPort;
-  switch (type) {
-    case COMPONETS.GATEWAY:
-      tartgetPort = config.gateway.port;
-      break;
-    case COMPONETS.STATS_EXPORTER:
-      tartgetPort = config['stats-exporter'].port;
-      break;
-    case COMPONETS.PROMETHEUS:
-      tartgetPort = config.prometheus.port;
-      break;
-    case COMPONETS.WEBSERVER:
-      tartgetPort = config.port;
-      break;
-  }
-  return tartgetPort;
-}
-
-function stopService(type) {
-  makeDirIfAbsent('logs')
+function restartServices(type) {
   try {
-    const tartgetPort = getTargetPort(type);
-    tartgetPort ?? execSync(`sudo netstat -anp | grep ${tartgetPort} | awk '{print $7}' | awk -F '/' '{print $1}' | xargs kill -9`)
+    const dashoardShFile = path.resolve(process.cwd(), 'scripts/dashboard.sh');
+    execSync(`bash ${dashoardShFile} restart ${type}`, {stdio: 'inherit'})
   } catch (error) {
-    // ERROR(`${type} service is exited already`)
-  }
-}
-
-function makeDirIfAbsent(dir) {
-  const dirPath = path.resolve(process.cwd(), dir)
-  if (!fs.existsSync(dirPath)) {
-    fs.mkdirSync(dirPath)
-  }
-  return dirPath;
-}
-
-function startServices(type) {
-  if (type === 'all') {
-    startService(COMPONETS.GATEWAY);
-    startService(COMPONETS.STATS_EXPORTER);
-    startService(COMPONETS.PROMETHEUS);
-    startService(COMPONETS.WEBSERVER);
-  } else {
-    startService(type);
+    ERROR(error)
   }
 }
 
 function stopServices(type) {
-  if (type === 'all') {
-    stopService(COMPONETS.GATEWAY);
-    stopService(COMPONETS.STATS_EXPORTER);
-    stopService(COMPONETS.PROMETHEUS);
-    stopService(COMPONETS.WEBSERVER);
-  } else {
-    stopService(type);
-  }
-}
-
-function statusService(type) {
-  const tartgetPort = getTargetPort(type);
   try {
-    const result = tartgetPort ?? execSync(`sudo netstat -nlp | grep ${tartgetPort} | awk '{print $7}' | awk -F '/' '{print $1}'`, { encoding: 'utf-8' });
-    INFO(type, 'service is running in', result)
+    const dashoardShFile = path.resolve(process.cwd(), 'scripts/dashboard.sh');
+    execSync(`bash ${dashoardShFile} stop ${type}`, {stdio: 'inherit'})
   } catch (error) {
-    ERROR(type, 'is exited')
+    ERROR(error)
   }
 }
 
 function statusServices(type) {
-  if (type === 'all') {
-    statusService(COMPONETS.GATEWAY);
-    statusService(COMPONETS.STATS_EXPORTER);
-    statusService(COMPONETS.PROMETHEUS);
-    statusService(COMPONETS.WEBSERVER);
-  } else {
-    statusService(type);
+  try {
+    const dashoardShFile = path.resolve(process.cwd(), 'scripts/dashboard.sh');
+    execSync(`bash ${dashoardShFile} status ${type}`, {stdio: 'inherit'})
+  } catch (error) {
+    ERROR(error)
   }
 }
 
@@ -307,5 +212,3 @@ function checkAndUpdateConfig() {
   updatePrometheusConfig();
 
 }
-
-// main();
