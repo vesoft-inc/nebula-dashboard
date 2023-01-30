@@ -17,6 +17,7 @@ const config = loadYamlConfig();
 
 const app = express();
 
-app.use(express.static('public'));
 app.use(historyApiCallback());
+app.use(express.static('public'));
+
 startWebserver(app, config, pkg.version);
