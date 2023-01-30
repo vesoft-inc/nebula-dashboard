@@ -68,6 +68,7 @@ const NebulaConfig: React.FC<IProps> = (props: IProps) => {
           className="service-radio"
           onChange={handleModuleChange}
         >
+          <Radio.Button value="meta">Meta</Radio.Button>
           <Radio.Button value="storage">Storage</Radio.Button>
           <Radio.Button value="graph">Graph</Radio.Button>
           {/* TODO: Nebula 2.0.1 does not support meta modifications, support can be released in later versions

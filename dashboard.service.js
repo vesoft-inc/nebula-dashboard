@@ -88,7 +88,7 @@ async function updateGatewayConfig() {
     if (err) {
       return INFO(err);
     }
-    let result = data.replace(/httpport = \S*/g, `httpport = ${gatewayConfig.ip}`);
+    let result = data.replace(/httpport = \S*/g, `httpport = ${gatewayConfig.port}`);
     result = result.replace(/runmode = \S*/g, `runmode = ${gatewayConfig.runmode}`);
     fs.writeFileSync(gatewayPath, result, 'utf8');
   });
@@ -186,7 +186,7 @@ function startService(type) {
     case COMPONETS.STATS_EXPORTER:
       cwd = path.resolve(process.cwd(), 'vendors/nebula-stats-exporter');
       mainCmd = `${cwd}/nebula-stats-exporter`;
-      command = `nohup ${mainCmd} --listen-address=":${config['stats-exporter'].port}" --bare-metal --bare-metal-config=${cwd}/config.yaml > ${LOG_DIR}/start-exporter.log 2>&1 &`
+      command = `nohup ${mainCmd} --listen-address=":${config['stats-exporter'].port}" --bare-metal --bare-metal-config=${cwd}/config.yaml > ${LOG_DIR}/stats-exporter.log 2>&1 &`
       break;
     case COMPONETS.PROMETHEUS:
       cwd = path.resolve(process.cwd(), 'vendors/prometheus');

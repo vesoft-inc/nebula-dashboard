@@ -18,8 +18,7 @@ const getAppInfo = get('/api/app');
 const getCustomConfig = get('/api/config/custom');
 const getAnnotationLineConfig = get('/api/config/annotation_line');
 
-const getGraphConfig = get(`/api-graph/flags`);
-const getStorageConfig = get(`/api-storage/flags`);
+const getConfigInfo = (component) => get(`/api-${component}/flags`);
 
 export default {
   execNGQL,
@@ -31,7 +30,6 @@ export default {
   execPromQL,
   execPromQLByRange,
   getCustomConfig,
-  getGraphConfig,
-  getStorageConfig,
+  getConfigInfo,
   getAnnotationLineConfig,
 };
