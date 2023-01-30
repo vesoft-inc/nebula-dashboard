@@ -9,7 +9,7 @@ export class HttpSeriveManager {
   static get _axiosInstance(): AxiosInstance {
     if (!HttpSeriveManager.axiosInstance) {
       HttpSeriveManager.axiosInstance = axios.create({
-        timeout: 10000
+        timeout: 100000
       });
     }
     return HttpSeriveManager.axiosInstance

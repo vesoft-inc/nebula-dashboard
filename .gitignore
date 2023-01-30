@@ -37,3 +37,4 @@ appveyor.yml
 server/config.json
 !dashboard.service.js
 !webserver.js
+!startWebserver.js

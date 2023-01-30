@@ -42,7 +42,8 @@ export function NebulaModelWrapper(serviceApi, state, _effects) {
         return { code,data };
       },
       async asyncGetServiceConfigs(module) {
-        const data = module === 'graph' ? await serviceApi.getGraphConfig() : await serviceApi.getStorageConfig() as any;
+
+        const data = await serviceApi.getConfigInfo(module)() ;
 
         if (data) {
           this.update({
