@@ -212,23 +212,30 @@ function startService(type) {
   }
 }
 
+function getTargetPort(type) {
+  let tartgetPort;
+  switch (type) {
+    case COMPONETS.GATEWAY:
+      tartgetPort = config.gateway.port;
+      break;
+    case COMPONETS.STATS_EXPORTER:
+      tartgetPort = config['stats-exporter'].port;
+      break;
+    case COMPONETS.PROMETHEUS:
+      tartgetPort = config.prometheus.port;
+      break;
+    case COMPONETS.WEBSERVER:
+      tartgetPort = config.port;
+      break;
+  }
+  return tartgetPort;
+}
+
 function stopService(type) {
   makeDirIfAbsent('logs')
   try {
-    switch (type) {
-      case COMPONETS.GATEWAY:
-        execSync(`kill -9 $(lsof -i:${config.gateway.port} -t)`)
-        break;
-      case COMPONETS.STATS_EXPORTER:
-        execSync(`kill -9 $(lsof -i:${config['stats-exporter'].port} -t)`)
-        break;
-      case COMPONETS.PROMETHEUS:
-        execSync(`kill -9 $(lsof -i:${config.prometheus.port} -t)`)
-        break;
-      case COMPONETS.WEBSERVER:
-        execSync(`kill -9 $(lsof -i:${config.port} -t)`)
-        break;
-    }
+    const tartgetPort = getTargetPort(type);
+    tartgetPort ?? execSync(`sudo netstat -anp | grep ${tartgetPort} | awk '{print $7}' | awk -F '/' '{print $1}' | xargs kill -9`)
   } catch (error) {
     // ERROR(`${type} service is exited already`)
   }
@@ -265,23 +272,9 @@ function stopServices(type) {
 }
 
 function statusService(type) {
-  let command = ''
-  switch (type) {
-    case COMPONETS.GATEWAY:
-      command = `lsof -i:${config.gateway.port} -t`
-      break;
-    case COMPONETS.STATS_EXPORTER:
-      command = `lsof -i:${config['stats-exporter'].port} -t`
-      break;
-    case COMPONETS.PROMETHEUS:
-      command = `lsof -i:${config.prometheus.port} -t`
-      break;
-    case COMPONETS.WEBSERVER:
-      command = `lsof -i:${config.port} -t`
-      break;
-  }
+  const tartgetPort = getTargetPort(type);
   try {
-    const result = execSync(command, { encoding: 'utf-8' });
+    const result = tartgetPort ?? execSync(`sudo netstat -nlp | grep ${tartgetPort} | awk '{print $7}' | awk -F '/' '{print $1}'`, { encoding: 'utf-8' });
     INFO(type, 'service is running in', result)
   } catch (error) {
     ERROR(type, 'is exited')
