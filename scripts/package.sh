@@ -53,7 +53,16 @@ mv prometheus-2.31.0.linux-$CPU_ARCH/prometheus $DOWNLOAD_PATH/prometheus/promet
 chmod +x $DOWNLOAD_PATH/prometheus/prometheus
 rm -f prometheus-2.31.0.linux-$CPU_ARCH.tar.gz
 rm -rf prometheus-2.31.0.linux-$CPU_ARCH
-mv $DASHBOARD/docker-compose/docker-compose.yaml $TARGET/
+mv $DASHBOARD/vendors/docker-compose.yaml $TARGET/
+mv $DASHBOARD/vendors/Dockerfile $TARGET/
+
+# scripts
+SCRIPTS_PATH=$TARGET/scripts
+mkdir $SCRIPTS_PATH
+mv $DASHBOARD/scripts/dashboard.sh $SCRIPTS_PATH
+mv $DASHBOARD/scripts/utils.sh $SCRIPTS_PATH
+chmod +x $SCRIPTS_PATH/dashboard.sh
+chmod +x $SCRIPTS_PATH/utils.sh
 
 ### NebulaGraph Dashboard relative ###
 cd $DASHBOARD

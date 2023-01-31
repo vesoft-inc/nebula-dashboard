@@ -10,6 +10,11 @@ function getFullUrl({ https, ip, port }) {
   return `${protocol}://${ip}:${port}`;
 }
 
+function getPrometheusUrl({https, ip, prometheusPort}) {
+  const protocol = https ? 'https' : 'http';
+  return `${protocol}://${ip}:${prometheusPort}`;
+}
+
 function getServiceTarget(type, config) {
   const service = config['nebula-cluster'];
   if (!service) {
@@ -25,7 +30,7 @@ function getServiceTarget(type, config) {
 function startWebserver(app, config, version) {
 
   app.use('/api-metrics/*', createProxyMiddleware({
-    target: getFullUrl(config.prometheus),
+    target: getPrometheusUrl(config.prometheus),
     pathRewrite: {
       '/api-metrics': '/api/v1',
     },
