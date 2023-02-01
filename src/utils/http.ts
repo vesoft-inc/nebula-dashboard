@@ -29,7 +29,10 @@ export const interceptorFn = (store) => {
 
       let _code;
       //HACK: get graph,storage server data
-      if(response.config?.url.includes('api-graph')||response.config?.url.includes('api-storage')){
+      if(response.config?.url.includes('api-graphd')
+        || response.config?.url.includes('api-storaged') 
+        ||response.config?.url.includes('api-metad') 
+        ){
         return response.data;
       }
       if ('code' in response.data) {

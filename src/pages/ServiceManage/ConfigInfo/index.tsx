@@ -1,16 +1,17 @@
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
-import { Radio,Input, Table } from 'antd';
+import { Radio, Input, Table, Spin } from 'antd';
 import intl from 'react-intl-universal';
 import { connect } from 'react-redux';
 import { IDispatch, IRootState } from '@/store';
 import { TitleInstruction } from '@/components/Instruction';
 import { trackEvent } from '@/utils/stat';
 import './index.less';
+import { ServiceName } from '@/utils/interface';
+import { getConfigData } from '@/utils/dashboard';
 
 const mapState = (state: IRootState) => ({
-  loading: state.loading.effects.nebula.asyncGetServiceConfigs,
-  configs: state.nebula.configs,
+  loading: !!state.loading.effects.nebula.asyncGetServiceConfigs as boolean,
 });
 
 const mapDispatch = (dispatch: IDispatch) => ({
@@ -18,27 +19,35 @@ const mapDispatch = (dispatch: IDispatch) => ({
 }) as any;
 interface IProps
   extends ReturnType<typeof mapState>,
-  ReturnType<typeof mapDispatch> {}
+  ReturnType<typeof mapDispatch> { }
 const NebulaConfig: React.FC<IProps> = (props: IProps) => {
   const [name, setName] = useState('');
-  
-  useEffect(()=>{
-    props.asyncGetServiceConfigs('graph');
-  },[])
+
+  const [configData, setConfigData] = useState<any[]>([]);
+
+  useEffect(() => {
+    asyncFetchConfigInfo(ServiceName.GRAPHD);
+  }, [])
 
   const handleModuleChange = e => {
     trackEvent('service-info', 'click_module');
-    props.asyncGetServiceConfigs(e.target.value);
+    setConfigData([]);
+    asyncFetchConfigInfo(e.target.value as ServiceName);
   };
+
+  const asyncFetchConfigInfo = async (component: ServiceName) => {
+    const data = await props.asyncGetServiceConfigs(component);
+    setConfigData(getConfigData(data));
+  }
 
   const getData = () => {
     if (!name) {
-      return configs;
+      return configData;
     }
-    return configs.filter((config: any) => config.name.includes(name));
+    return configData.filter((config: any) => config.name.includes(name));
   };
 
-  const { configs, loading } = props;
+  const { loading } = props;
   const columns = [
     {
       title: (
@@ -61,31 +70,29 @@ const NebulaConfig: React.FC<IProps> = (props: IProps) => {
   ];
   return (
     <div className="service-info service-configs">
-      <div className="common-header">
-        <Radio.Group
-          buttonStyle="solid"
-          defaultValue="graph"
-          className="service-radio"
-          onChange={handleModuleChange}
-        >
-          <Radio.Button value="meta">Meta</Radio.Button>
-          <Radio.Button value="storage">Storage</Radio.Button>
-          <Radio.Button value="graph">Graph</Radio.Button>
-          {/* TODO: Nebula 2.0.1 does not support meta modifications, support can be released in later versions
-          <Radio.Button value="meta">Meta</Radio.Button>
-          */}
-        </Radio.Group>
-        <Input
-          placeholder={intl.get('common.configTip')}
-          onChange={e => setName(e.target.value)}
+      <Spin spinning={loading}>
+        <div className="common-header">
+          <Radio.Group
+            buttonStyle="solid"
+            defaultValue={ServiceName.GRAPHD}
+            className="service-radio"
+            onChange={handleModuleChange}
+          >
+            <Radio.Button value={ServiceName.METAD}>Meta</Radio.Button>
+            <Radio.Button value={ServiceName.STORAGED}>Storage</Radio.Button>
+            <Radio.Button value={ServiceName.GRAPHD}>Graph</Radio.Button>
+          </Radio.Group>
+          <Input
+            placeholder={intl.get('common.configTip')}
+            onChange={e => setName(e.target.value)}
+          />
+        </div>
+        <Table
+          rowKey={(record: any) => record.value + record.name}
+          dataSource={getData()}
+          columns={columns}
         />
-      </div>
-      <Table
-        loading={!!loading}
-        rowKey={(record: any) => record.value + record.name}
-        dataSource={getData()}
-        columns={columns}
-      />
+      </Spin>
     </div>
   );
 }
