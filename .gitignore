@@ -24,6 +24,7 @@ public/
 !.eslintrc.js
 !.prettierrc.js
 !.commitlint.js
+server/config.yaml
 !app/assets/**/*.js
 nebula-go-api/nebula-go-api
 nebula-go-api/tmp
