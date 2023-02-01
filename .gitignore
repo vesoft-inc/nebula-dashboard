@@ -38,3 +38,4 @@ appveyor.yml
 !dashboard.service.js
 !webserver.js
 !startWebserver.js
+!iconfont.js
