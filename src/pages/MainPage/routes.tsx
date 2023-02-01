@@ -131,25 +131,6 @@ export const MenuList = [
   },
 ];
 
-const SERVICE_VIEWS = [
-  {
-    label: intl.get('common.overview'),
-    value: '/service/overview',
-  },
-  // {
-  //   label: intl.get('common.version'),
-  //   value: '/service/version-statistics',
-  // },
-  // {
-  //   label: 'Leader',
-  //   value: '/service/leader-distribution',
-  // },
-  // {
-  //   label: 'Partition',
-  //   value: '/service/partition-distribution',
-  // },
-];
-
 export const RoutesList: any = [
   {
     path: '/machine/overview',
@@ -314,7 +295,6 @@ export const RoutesList: any = [
         },
       ],
       title: intl.get('common.service'),
-      extra: SERVICE_VIEWS,
     },
   },
   // {
@@ -352,7 +332,6 @@ export const RoutesList: any = [
         },
       ],
       title: 'Graph',
-      extra: SERVICE_VIEWS,
     },
   },
   {
@@ -375,7 +354,6 @@ export const RoutesList: any = [
         },
       ],
       title: 'Meta',
-      extra: SERVICE_VIEWS,
     },
   },
   {
@@ -398,7 +376,6 @@ export const RoutesList: any = [
         },
       ],
       title: 'Storage',
-      extra: SERVICE_VIEWS,
     },
   },
   {
@@ -440,7 +417,6 @@ export const RoutesList: any = [
       ],
       title: intl.get('service.serviceMetricsDetails'),
       showBackBtn: true,
-      extra: SERVICE_VIEWS,
     },
   },
   {
@@ -464,7 +440,6 @@ export const RoutesList: any = [
       ],
       title: intl.get('service.serviceMetricsDetails'),
       showBackBtn: true,
-      extra: SERVICE_VIEWS,
     },
   },
   {
@@ -488,7 +463,6 @@ export const RoutesList: any = [
       ],
       title: intl.get('service.serviceMetricsDetails'),
       showBackBtn: true,
-      extra: SERVICE_VIEWS,
     },
   },
   {

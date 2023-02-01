@@ -1,7 +1,7 @@
 import { createModel } from '@rematch/core';
 import _ from 'lodash';
 import service from '@/config/service';
-import { getConfigData, getVersion } from "@/utils/dashboard";
+import { getVersion } from "@/utils/dashboard";
 import { NebulaVersionType, ServiceName } from '@/utils/interface';
 import { SessionStorageUtil } from '@/utils';
 
@@ -20,7 +20,6 @@ type IServiceType = 'GRAPH' | 'STORAGE' | 'META';
 export function NebulaModelWrapper(serviceApi, state, _effects) {
   return createModel({
     state: {
-      configs: [],
       jobs: [],
       spaces: [] as any,
       parts: [],
@@ -41,15 +40,9 @@ export function NebulaModelWrapper(serviceApi, state, _effects) {
         })) as any; 
         return { code,data };
       },
-      async asyncGetServiceConfigs(module) {
-
+      async asyncGetServiceConfigs(module: ServiceName) {
         const data = await serviceApi.getConfigInfo(module)() ;
-
-        if (data) {
-          this.update({
-            configs: getConfigData(data),
-          });
-        }
+        return data;
       },
       async asyncGetJobs() {
         const { code, data } = (await serviceApi.execNGQL({

@@ -4,3 +4,32 @@
 @red: #E67171;
 @skyblue: #0EBAD2;
 @pink: #EB2F96;
+
+html {
+  --scroll-bar: 0;
+}
+
+#app ::-webkit-scrollbar {
+  background: #fff;
+  width: 10px;
+  height: 10px;
+}
+
+#app ::-webkit-scrollbar-track {
+  border-radius: 5px;
+}
+
+#app ::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  background-color: #a6a6a6;
+  width: 8px;
+  height: 8px;
+  border: 1px solid transparent;
+  background-clip: content-box;
+}
+
+.ant-menu-root::-webkit-scrollbar {
+  display: none !important;
+  width: 0;
+  height: 0;
+}

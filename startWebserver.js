@@ -51,29 +51,15 @@ function startWebserver(app, config, version) {
     })
   });
 
-  app.use('/api-graph/*', createProxyMiddleware({
-    target: getServiceTarget('graphd', config),
-    pathRewrite: {
-      '/api-graph': '/',
-    },
-    changeOrigin: true,
-  }));
-
-  app.use('/api-storage/*', createProxyMiddleware({
-    target: getServiceTarget('storaged', config),
-    pathRewrite: {
-      '/api-storage': '/',
-    },
-    changeOrigin: true,
-  }));
-
-  app.use('/api-meta/*', createProxyMiddleware({
-    target: getServiceTarget('metad', config),
-    pathRewrite: {
-      '/api-meta': '/',
-    },
-    changeOrigin: true,
-  }));
+  ['graphd', 'storaged', 'metad'].forEach((type) => {
+    app.use(`/api-${type}/*`, createProxyMiddleware({
+      target: getServiceTarget(type, config),
+      pathRewrite: {
+        [`/api-${type}`]: '/',
+      },
+      changeOrigin: true,
+    }));
+  })
 
   app.get('/api/config/custom', async (_req, res) => {
     res.send({

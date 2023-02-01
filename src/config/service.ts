@@ -1,3 +1,4 @@
+import { ServiceName } from '@/utils/interface';
 import { _delete, get, post } from '../utils/http';
 
 const execNGQL = post('/api-nebula/db/exec');
@@ -18,7 +19,7 @@ const getAppInfo = get('/api/app');
 const getCustomConfig = get('/api/config/custom');
 const getAnnotationLineConfig = get('/api/config/annotation_line');
 
-const getConfigInfo = (component) => get(`/api-${component}/flags`);
+const getConfigInfo = (component: ServiceName) => get(`/api-${component}/flags`);
 
 export default {
   execNGQL,
