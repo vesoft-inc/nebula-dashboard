@@ -1,4 +1,4 @@
-import { Empty, Popover, Spin } from 'antd';
+import { Empty, Popover, Spin, Tooltip } from 'antd';
 import React, { useEffect, useMemo, useState, useRef } from 'react';
 import intl from 'react-intl-universal';
 import { RouteComponentProps, useHistory, useLocation, withRouter } from 'react-router-dom';
@@ -328,7 +328,9 @@ function ServiceDetail(props: IProps) {
               metricCharts.map((metricChart, i) => (
                 <div key={i} className='chart-item' style={{ display: metricChart.visible ? 'flex' : 'none' }}>
                   <div className='chart-title'>
-                    {metricChart.metric.metric}
+                    {metricChart.metric.metric.length > 40 ? (
+                      <Tooltip title={metricChart.metric.metric}>{metricChart.metric.metric.slice(0, 37) + '...'}</Tooltip>
+                    ) : metricChart.metric.metric}
                     <Popover
                       className={"chart-title-popover"}
                       content={

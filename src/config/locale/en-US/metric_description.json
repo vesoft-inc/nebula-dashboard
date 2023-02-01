@@ -11,6 +11,8 @@
   "memory_actual_used_percentage": "The percentage of used memory (not including cache and buffer)",
   "memory_free": "The memory space available",
   "memory_swap_total": "The total memory space of the swap",
+  "memory_cached_buffer_used": "The memory space used by cache and buffer",
+  "memory_cached_buffer_used_percentage": "The percentage of used memory by cache and buffer",
   "root_fs_used_percentage": "The percentage of used disk space of the root file system",
   "load_1m": "The average load of the system in the last 1 minute",
   "load_5m": "The average load of the system in the last 5 minutes",
