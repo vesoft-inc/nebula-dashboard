@@ -211,7 +211,6 @@ function ServiceDetail(props: IProps) {
         type: instanceList,
         nameObj: getMetricsUniqName(MetricScene.SERVICE),
         aliasConfig,
-        instanceList: props.instanceList,
       });
       const realRange = data.length>0?(data[data.length-1].time - data[0].time):0;
       const tickInterval = getTickIntervalByGap(Math.floor(realRange / 10)); // 10 ticks max
@@ -328,7 +327,7 @@ function ServiceDetail(props: IProps) {
               metricCharts.map((metricChart, i) => (
                 <div key={i} className='chart-item' style={{ display: metricChart.visible ? 'flex' : 'none' }}>
                   <div className='chart-title'>
-                    {metricChart.metric.metric}
+                    <span title={metricChart.metric.metric}>{metricChart.metric.metric}</span>
                     <Popover
                       className={"chart-title-popover"}
                       content={
