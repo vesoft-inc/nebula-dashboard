@@ -1,4 +1,4 @@
-import { Empty, Popover, Spin, Tooltip } from 'antd';
+import { Empty, Popover, Spin } from 'antd';
 import React, { useEffect, useMemo, useState, useRef } from 'react';
 import intl from 'react-intl-universal';
 import { RouteComponentProps, useHistory, useLocation, withRouter } from 'react-router-dom';
@@ -211,7 +211,6 @@ function ServiceDetail(props: IProps) {
         type: instanceList,
         nameObj: getMetricsUniqName(MetricScene.SERVICE),
         aliasConfig,
-        instanceList: props.instanceList,
       });
       const realRange = data.length>0?(data[data.length-1].time - data[0].time):0;
       const tickInterval = getTickIntervalByGap(Math.floor(realRange / 10)); // 10 ticks max
@@ -328,9 +327,7 @@ function ServiceDetail(props: IProps) {
               metricCharts.map((metricChart, i) => (
                 <div key={i} className='chart-item' style={{ display: metricChart.visible ? 'flex' : 'none' }}>
                   <div className='chart-title'>
-                    {metricChart.metric.metric.length > 40 ? (
-                      <Tooltip title={metricChart.metric.metric}>{metricChart.metric.metric.slice(0, 37) + '...'}</Tooltip>
-                    ) : metricChart.metric.metric}
+                    <span title={metricChart.metric.metric}>{metricChart.metric.metric}</span>
                     <Popover
                       className={"chart-title-popover"}
                       content={
