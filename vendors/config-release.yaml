@@ -1,38 +1,53 @@
-port: 7003 ## webserver port, which you can access in web
-gateway: 
-  ip: hostIP
+port: 7003   # Web service port.
+gateway:
+  ip: hostIP   # The IP of the machine where the Dashboard is deployed.
   port: 8090
-  https: false
-  runmode: dev
+  https: false  # Whether to enable HTTPS.
+  runmode: dev  # Program running mode, including dev, test, and prod. It is used to distinguish between different running environments generally.
 stats-exporter:
-  ip: hostIP
-  nebulaPort: 9200
-  https: false
+  ip: hostIP   # The IP of the machine where the Dashboard is deployed.
+  nebulaPort: 9200 
+  https: false  # Whether to enable HTTPS.
 node-exporter:
-  - ip: nebulaHostIP
+  - ip: nebulaHostIP # The IP of the machine where the NebulaGraph is deployed.
     port: 9100
-    https: false
-prometheus: 
-  ip: hostIP
+    https: false # Whether to enable HTTPS.
+# - ip: nebulaHostIP_2
+#   port: 9100
+#   https: false
+prometheus:
+  ip: hostIP    # The IP of the machine where the Dashboard is deployed.
   prometheusPort: 9090
-  https: false
-  scrape_interval: 5s
-  evaluation_interval: 5s
-# the cluster node info
+  https: false  # Whether to enable HTTPS.
+  scrape_interval: 5s  # The interval for collecting the monitoring data, which is 1 minute by default.
+  evaluation_interval: 5s  # The interval for running alert rules, which is 1 minute by default.
+# Cluster node info
 nebula-cluster:
-  name: 'default' # cluster name
-  metad: 
+  name: 'default' # Cluster name
+  metad:
     - name: metad0
-      endpointIP: nebulaMetadIP
+      endpointIP: nebulaMetadIP  # The IP of the machine where the Meta service is deployed.
       port: 9559
       endpointPort: 19559
+  # - name: metad1
+  #   endpointIP: nebulaMetadIP
+  #   port: 9559
+  #   endpointPort: 19559  
   graphd:
     - name: graphd0
-      endpointIP: nebulaGraphdIP
+      endpointIP: nebulaGraphdIP  # The IP of the machine where the Graph service is deployed.
       port: 9669
       endpointPort: 19669
+  # - name: graphd1
+  #   endpointIP: nebulaGraphdIP
+  #   port: 9669
+  #   endpointPort: 19669  
   storaged:
     - name: storaged0
-      endpointIP: nebulaStoragedIP
+      endpointIP: nebulaStoragedIP  # The IP of the machine where the Storage service is deployed.
       port: 9779
       endpointPort: 19779
+  # - name: storaged1
+  #   endpointIP: nebulaStoragedIP
+  #   port: 9779
+  #   endpointPort: 19779  
