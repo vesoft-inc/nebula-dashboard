@@ -1,105 +1,131 @@
-# NebulaGraph Dashboard Production Guide（Linux)
+## Prerequisites
 
-## Environment
-- Node.js (>= 10.12.0)
-- Linux
+Before you deploy Dashboard, you must confirm that:
 
-## Download
-` wget https://oss-cdn.nebula-graph.com.cn/nebula-graph-dashboard/nebula-graph-dashboard-${version}.x86_64.tar.gz`
+- The NebulaGraph services are deployed and started. For more information, see [NebulaGraph Database Manual](https://docs.nebula-graph.io/master/4.deployment-and-installation/1.resource-preparations/).
 
-## Unpress
-`tar -xvf nebula-graph-dashboard-${version}.x86_64.tar.gz`
+- Before the installation starts, the following ports are not occupied.
+  
+  - 9200
+
+  - 9100
+
+  - 9090
+
+  - 8090
+
+  - 7003
 
 
-## Directory descrption
-Five packages in nebula-graph-dashboard 
-- nebula-graph-dashboard ------------------------- FE service
-- nebula-stats-exporter --------------------- NebulaGraph Metric Service
-- node-exporter ----------------------------- Machine Metric Service
-- prometheus -------------------------------- Data saving Service
-- nebula-http-gateway ----------------------- Network Service
+- The node-exporter is installed on the machines to be monitored. For details on installation, see [Prometheus document](https://prometheus.io/docs/guides/node-exporter/).
 
-Attention: the file under these packages is compiled under Linux environment, can only be used in Linux. If you want to use dashboard in other enviroments, please download package according to [README.md](README.md)
+## Steps
+1. Download the tar package[nebula-dashboard-{{ dashboard.release }}.x86_64.tar.gz](https://oss-cdn.nebula-graph.com.cn/nebula-graph-dashboard/{{ dashboard.release }}/nebula-dashboard-{{ dashboard.release }}.x86_64.tar.gz)  as needed.
 
-## Quick Start
+2. Run `tar -xvf nebula-dashboard-{{ dashboard.release }}.x86_64.tar.gz` to decompress the installation package.
 
-1. Node-exporter：for machine metrics
-- packages： `node-exporter`
-- location：if you want in cluster,each machine needs install node exporter
-- Start：
-  ```bash
-  ## node-exporter should run in 
-  $ cd /nebula-dashboard/vendors/node-exporter
-  $ nohup ./node-exporter --web.listen-address=":9100" &
+3. Modify the `config.yaml` file in `nebula-dashboard`.
+
+  The configuration file contains the configurations of four dependent services and configurations of clusters. The descriptions of the dependent services are as follows.
+
+  |Service|Default port| Description|
+  |:---|:---|:---|
+  |nebula-http-gateway |8090| Provides HTTP ports for cluster services to execute nGQL statements to interact with the NebulaGraph database. |
+  |nebula-stats-exporter |9200| Collects the performance metrics in the cluster, including the IP addresses, versions, and monitoring metrics (such as the number of queries, the latency of queries, the latency of heartbeats, and so on). |
+  |node-exporter |9100| Collects the source information of nodes in the cluster, including the CPU, memory, load, disk, and network. |
+  |prometheus |9090| The time series database that stores monitoring data. |
+
+  The descriptions of the configuration file are as follows.
+
+  ```yaml
+  port: 7003   # Web service port.
+  gateway:
+    ip: hostIP   # The IP of the machine where the Dashboard is deployed.
+    port: 8090
+    https: false  # Whether to enable HTTPS.
+    runmode: dev  # Program running mode, including dev, test, and prod. It is used to distinguish between different running environments generally.
+  stats-exporter:
+    ip: hostIP   # The IP of the machine where the Dashboard is deployed.
+    nebulaPort: 9200
+    https: false  # Whether to enable HTTPS.
+  node-exporter:
+    - ip: nebulaHostIP_1 # The IP of the machine where the NebulaGraph is deployed.
+      port: 9100
+      https: false # Whether to enable HTTPS.
+  # - ip: nebulaHostIP_2
+  #   port: 9100
+  #   https: false
+  prometheus:
+    ip: hostIP    # The IP of the machine where the Dashboard is deployed.
+    prometheusPort: 9090
+    https: false  # Whether to enable HTTPS.
+    scrape_interval: 5s  # The interval for collecting the monitoring data, which is 1 minute by default.
+    evaluation_interval: 5s  # The interval for running alert rules, which is 1 minute by default.
+  # Cluster node info
+  nebula-cluster:
+    name: 'default' # Cluster name
+    metad:
+      - name: metad0
+        endpointIP: nebulaMetadIP  # The IP of the machine where the Meta service is deployed.
+        port: 9559
+        endpointPort: 19559
+    # - name: metad1
+    #   endpointIP: nebulaMetadIP
+    #   port: 9559
+    #   endpointPort: 19559  
+    graphd:
+      - name: graphd0
+        endpointIP: nebulaGraphdIP  # The IP of the machine where the Graph service is deployed.
+        port: 9669
+        endpointPort: 19669
+    # - name: graphd1
+    #   endpointIP: nebulaGraphdIP
+    #   port: 9669
+    #   endpointPort: 19669  
+    storaged:
+      - name: storaged0
+        endpointIP: nebulaStoragedIP  # The IP of the machine where the Storage service is deployed.
+        port: 9779
+        endpointPort: 19779
+    # - name: storaged1
+    #   endpointIP: nebulaStoragedIP
+    #   port: 9779
+    #   endpointPort: 19779  
   ```
-  Service address: http://127.0.0.1:9100
 
-2. Nebula-stats-exporter：for NebulaGraph metrics
-- packages: `nebula-stats-exporter`
-- location：in the same machine with nebula-graph-dashboard
-- dependency: modify ：`config.yml` according to NebulaGraph service address
-  Start：
-  ```bash
-  $ cd /nebula-dashboard/vendors/nebula-stats-exporter
-  $ nohup  ./nebula-stats-exporter --listen-address=":9200" --bare-metal --bare-metal-config=./config.yaml &
-  ```
-  Service address: http://127.0.0.1:9200
+4. Run `./dashboard.service start all` to start the services.
+5. Execute `sudo ./dashboard.service status all` to view the service startup status, after displaying all services RUNNING, visit `http://ip:7003` with the browser to view the Dashboard page.
 
-3. Prometheus
-- packages `prometheus`
-- location：in the same machine with nebula-graph-dashboard
-- dependency：modify ：`./vendors/prometheus/prometheus.yaml` according to node-exporter and nebula-stats-exporter service address
-- Start：
-  ```bash
-  $ cd /nebula-dashboard/vendors/prometheus
-  $ nohup ./prometheus --config.file=./prometheus.yaml &
-  ```
-  Service address: http://127.0.0.1:9090
+### Deploy Dashboard with Docker Compose
+If you are deploying Dashboard using docker, you should also modify the configuration file `config.yaml`, and then run `docker-compose up -d` to start the container.
 
-4. Nebula-http-gateway
-- packages: `nebula-http-gateway`
-- location：in the same machine with nebula-graph-dashboard
-- Start：
-  ```bash
-  $ cd /nebula-dashboard/vendors/nebula-http-gateway
-  $ nohup ./nebula-httpd &
-  ```
-- Service address: http://127.0.0.1:8090
+> If you change the port number in `config.yaml`, the port number in `docker-compose.yaml` needs to be consistent as well.
 
-5. nebula-graph-dashboard
-- packages: `nebula-graph-dashboard`
+Run `docker-compose stop` to stop the container.
 
-- Modify proxy and connection setting: `./config.json`
-  ```
-  port: 7003
-  proxy:
-    gateway:
-      target: "127.0.0.1:8090"  // change gateway service proxy
-    prometheus:
-      target: "127.0.0.1:9091"  // change prometheus service proxy
-    nebulaServer:
-      "ip": "192.168.8.143"  // change to NebulaGraph service ip
-      "port": 9669 // change to NebulaGraph service port
-  ```
-- Start:
-  ```bash
-  $ ./dashboard &
-  ```
-- service address: http://127.0.0.1:7003
+## Manage services in Dashboard
 
-1. Open NebulaGraph Dashboard in browser
-url: http://{{ip}}:7003
-
-
-## Stop Service
-Using `kill pid` ：
+You can use the `dashboard.service` script to start, restart, stop, and check the Dashboard services.
 
 ```bash
-$ kill $(lsof -t -i :9200) # stop nebula-stats-exporter  service
-$ kill $(lsof -t -i :9100) # stop node-exporter service
-$ kill $(lsof -t -i :9090) # stop prometheus service
-$ kill $(lsof -t -i :8090) # stop nebula-http-gateway
-$ kill $(lsof -t -i :7003) # stop nebula-graph-dashboard
+$ sudo <dashboard_path>/dashboard.service
+[-v] [-h]
+<start|stop|status>  <prometheus|webserver|exporter|gateway|all>
 ```
 
+| Parameter                  | Description       |
+| :------------------------- | :------------------- |
+| `dashboard_path` | Dashboard installation path.  |
+| `-v`                       | Display detailed debugging information.   |
+| `-h`                       | Display help information.        |
+| `start`                    | Start the target services.       |
+| `restart`                  | Restart the target services.       |
+| `stop`                     | Stop the target services.           |
+| `status`                   | Check the status of the target services.       |
+| `prometheus`               | Set the prometheus service as the target service. |
+| `webserver`                | Set the webserver Service as the target service.  |
+| `exporter`                 | Set the exporter Service as the target service.   |
+| `gateway`                  | Set the gateway Service as the target service.    |
+| `all`                      | Set all the Dashboard services as the target services.       |
 
+> To view the Dashboard version, run the command `./dashboard.service -version`.

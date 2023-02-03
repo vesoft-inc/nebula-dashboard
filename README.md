@@ -1,120 +1,49 @@
-# NebulaGraph Dashboard
-NebulaGraph Dashboard is a tool that assists NebulaGraph in daily service monitoring and management
+<p align="center">
+  <img src="https://www-cdn.nebula-graph.com.cn/nebula-website-5.0/images/dashboard-repo-logo.png"/>
+  <br>英文 | <a href="./README-CN.md">中文</a>
+  <br>A visualization tool that monitors the status of machines and services in NebulaGraph clusters.<br>
+</p>
 
-![](introduction.png)
+# What is NebulaGraph Dashboard
+**NebulaGraph Dashboard** Community Edition (Dashboard for short) is a visualization tool that monitors the status of machines and services in NebulaGraph clusters. 
 
-## Architecture
-![](./architecture.png)
+## Features
+- The status of all the machines in clusters, including CPU, memory, load, disk, and network.
+- The information of all the services in clusters, including the IP addresses, versions, and monitoring metrics (such as the number of queries, the latency of queries, the latency of heartbeats, and so on).
+- The information of clusters, including the information of services, partitions, configurations, and long-term tasks.
+- Set how often the metrics page refreshes.
+- Check NebulaGraph config info.
 
-## Deploy in Production
-If you plan to set up dashboard in production, refer to：[production guide](DEPLOY.md)
+## Scenarios
+You can use Dashboard in one of the following scenarios:
+- You want to monitor key metrics conveniently and quickly, and present multiple key information of the business to ensure the business operates normally.
+- You want to monitor clusters from multiple dimensions (such as the time, aggregate rules, and metrics).
+- After a failure occurs, you need to review it and confirm its occurrence time and unexpected phenomena.
 
-## Development 
-#### Prerequisites
-- Node.js (>= 10.12.0)
-- Go 1.13+ and beego
-- NebulaGraph (>=2.0)
+## Get Started
+- <a href="https://github.com/vesoft-inc/nebula-dashboard/releases" _blank>Get Dashboard Installation package</a>
+- <a href="DEPLOY.md" _blank>Deploy Dashboard</a>
 
-#### Quick Start
-1. Set up `node-exporter` service where you want to collect machine metrics such as local dev.
-    - Download [node_exporter](https://prometheus.io/download/#node_exporter) according to your environment
-    - Run 
-      ```
-        $ tar -xvf node_exporter-{version}.tar.gz
-        $ cd node_exporter-{version}
-        $ ./node_exporter --web.listen-address=":9100"
-      ```
+## Documentation
+The NebulaGraph Dashboard docuementaion is available at <a href= "https://docs.nebula-graph.com.cn/master/nebula-dashboard/2.deploy-dashboard/#docker_compose_dashboard">Documentation</a> 
 
-2. Set up `nebula-stats-exporter` to collect your NebulaGraph service metrics.
-    - Download nebula-stats-exporter and build
-    - Run
-      ```
-      $ git clone https://github.com/vesoft-inc/nebula-stats-exporter.git
-      $ cd nebula-stats-exporter
-      $ make build
-      ```
+## Contributing
+If you're interested in contributing to the NebulaGraph Dashboard project:
+- Learn hot wo set up you local environment, in <a href="CONTRIBUTE.md" _blank>developer guide</a>
 
-    - Modify `/vendors/nebula-stats-exporter/config.yaml` under nebula-graph-dashboard directory
-      ```
-      # Example:
-      version: v0.0.4
-      clusters:
-        - name: nebula
-          - instance: 
-            -name metad0 // instance name as a symble
-              endpointIP: 10.17.101.126 // metrics service IP
-              endpointPort: 32839 // metrics service Ports
-              componentType: metad // metrics service type, should be one of metad,graphd or storaged
-            ```
-      [More about the NebulaGraph metrics](https://docs.nebula-graph.com.cn/2.5.0/6.monitor-and-metrics/1.query-performance-metrics/)
-    - Run
-      ```
-      ./nebula-stats-exporter --listen-address=":9200" --bare-metal --bare-metal-config={pwd}/nebula-graph-dashboard/vendors/nebula-stats-exporter/config.yaml &
-      ```
-  
-3. Set up `prometheus`
-    - Download [prometheus](https://prometheus.io/download/#prometheus) according to your environment
+## Version compatibility
+The version correspondence between NebulaGraph and Dashboard Community Edition is as follows.
 
-    - Modify `/vendors/prometheus/prometheus.yaml` according to node-exporter and nebula-stats-exporter ip and port config
+|NebulaGraph Version|Dashboard Version|
+|:---|:---|
+|3.3.0        |3.2.0|
+|2.5.0 ~ 3.2.0|3.1.0|
+|2.5.x ~ 3.1.0|1.1.1|
+|2.0.1 ~ 2.5.1|1.0.2|
+|2.0.1 ~ 2.5.1|1.0.1|
 
-    - Run
-      ```
-      $ tar -xvf prometheus-${version}.tar.gz
-      $ cd prometheus-{version}
-      $ ./prometheus --config.file={pwd}/nebula-graph-dashboard/vendors/prometheus/prometheus.yaml &
-      ```
+## Preview
 
-4. Set up `nebula-http-gateway`
-
-    - Download nebula-http-gateway
-      ```
-      $ git clone https://github.com/vesoft-inc/nebula-http-gateway.git
-      ```
-  
-    - Modify http port in the `nebula-http-gateway/conf/app.conf` under the installation directory
-      ```
-      httpport = 8090
-      ```
-    - Build
-      ```
-      $ cd /path/to/nebula-http-gateway
-      $ make
-      ```
-    - Run 
-      ```
-      $ ./nebula-httpd
-      ```
-
-5. Start `nebula-graph-dashboard`
-    - Modify proxy and connection setting: `./vendors/config-release.json`
-      ```
-      port: 7003
-      proxy:
-        gateway:
-          target: "127.0.0.1:8090"  // change gateway service proxy
-        prometheus:
-          target: "127.0.0.1:9091"  // change prometheus service proxy
-        nebulaServer:
-          "ip": "192.168.8.143"  // change to NebulaGraph service ip
-          "port": 9669 // change to NebulaGraph service port
-      ```
-
-    - Start
-      If you want to deploy in development mode, do this way:
-      ```
-      $ npm install
-      $ npm run dev
-      ```
-      If you want to deploy in production mode, do this way:
-      ```
-      $ npm install
-      $ npm run build
-      $ npm run pkg
-      $ cp -r vendors/config-release.json ./config.json
-      $ ./dashboard &
-      ```
-
-## Documentation 
-
-+ [中文](https://docs.nebula-graph.com.cn/3.2.0/nebula-dashboard/1.what-is-dashboard/)
-+ [ENGLISH](https://docs.nebula-graph.io/3.2.0/nebula-dashboard/1.what-is-dashboard/)
+<img src="https://www-cdn.nebula-graph.com.cn/nebula-website-5.0/images/nebula-dashboard-login.png"/>
+<br />
+<img src="https://docs-cdn.nebula-graph.com.cn/figures/overview1-221103-cn.png"/>
