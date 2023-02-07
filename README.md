@@ -36,7 +36,8 @@ The version correspondence between NebulaGraph and Dashboard Community Edition i
 
 |NebulaGraph Version|Dashboard Version|
 |:---|:---|
-|3.3.0        |3.2.0|
+|<=3.4.0        |3.4.0|
+|<=3.3.0        |3.2.0|
 |2.5.0 ~ 3.2.0|3.1.0|
 |2.5.x ~ 3.1.0|1.1.1|
 |2.0.1 ~ 2.5.1|1.0.2|
