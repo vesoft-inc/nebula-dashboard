@@ -9,6 +9,7 @@ export const enum VALUE_TYPE {
   byteSecondNet = 'BYTE_SECOND_NET',
   number = 'NUMBER',
   numberSecond = 'numberSecond',
+  status = 'status'
 }
 
 export let SUPPORT_METRICS =
@@ -184,12 +185,12 @@ export let LINUX = (cluster?, device?: string): any => {
     memory_cached_buffer_used_percentage: `((node_memory_Buffers_bytes${clusterSuffix2} + node_memory_Cached_bytes${clusterSuffix2}) / node_memory_MemTotal_bytes${clusterSuffix2} )* 100`,
     memory_size: `node_memory_MemTotal_bytes${clusterSuffix2}`,
     memory_swap_total: `node_memory_SwapTotal_bytes${clusterSuffix2}`,
-    
+
     // node load relative:
     load_15s: `node_load1${clusterSuffix2}`,
     load_5m: `node_load5${clusterSuffix2}`,
     load_15m: `node_load15${clusterSuffix2}`,
-    
+
     // disk relative:
     disk_used: `node_filesystem_size_bytes{${diskPararms}${devicePararms}${clusterSuffix1}} - node_filesystem_free_bytes{${diskPararms}${devicePararms}${clusterSuffix1}}`,
     disk_free: `node_filesystem_avail_bytes{${diskPararms}${devicePararms}${clusterSuffix1}}`,

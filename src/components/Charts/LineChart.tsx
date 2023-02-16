@@ -115,6 +115,13 @@ function LineChart(props: IProps, ref) {
         tickInterval: 10,
       }
     }
+    if (valueType === VALUE_TYPE.status) {
+      return {
+        min: 0,
+        max: 1,
+        tickInterval: 1,
+      }
+    }
     if ((max - min) < 5) {
       max = max + 5;
       min = min < 0 ? min - 5 : 0;
