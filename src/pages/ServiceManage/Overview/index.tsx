@@ -30,7 +30,6 @@ const mapDispatch: any = (dispatch: IDispatch) => ({
 const mapState = (state: IRootState) => ({
   spaces: state.nebula.spaces,
   currentSpace: state.nebula.currentSpace,
-  nebulaConnect: state.nebula.nebulaConnect,
 });
 
 interface IHaderProps {
@@ -54,7 +53,7 @@ const OverviewCardHeader = (props: IHaderProps) => {
     </div>
   );
 };
-
+let interval;
 const Overview: React.FC<IProps> = (props: IProps) => {
 
   const { cluster, currentSpace, spaces, baseRouter = '/management', nebulaConnect } = props;
@@ -63,13 +62,10 @@ const Overview: React.FC<IProps> = (props: IProps) => {
   const [hosts, setHosts] = useState([]);
   const nebulaRef = useRef<{
     currentSpace: any;
-    nebulaConnect: any;
   }>({
     currentSpace,
-    nebulaConnect,  
   });
   nebulaRef.current.currentSpace = currentSpace;
-  nebulaRef.current.nebulaConnect = nebulaConnect;
   useEffect(() => {
     props.clear();
   },[cluster])
@@ -136,16 +132,18 @@ const Overview: React.FC<IProps> = (props: IProps) => {
   };
 
   const getBalanceStatus = async () => {
-    if (!nebulaRef.current.currentSpace||!nebulaRef.current.nebulaConnect) return false;
+    if (!nebulaRef.current.currentSpace) return false;
     const { code,data } = await props.getJobs();
     if (code === 0) {
       const hasRunningBalance = data.tables.find(item => item.Command.indexOf("BALANCE") && item.status === 'RUNNING');
       setBalancing(hasRunningBalance);
+    } else {
+      clearInterval(interval);
     }
   }
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    interval = setInterval(() => {
         getBalanceStatus();
     }, 2000);
     return ()=>{
