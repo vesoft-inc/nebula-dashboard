@@ -260,6 +260,33 @@ export const tooltipTitle = time =>
 
 export const updateChartByValueType = (options, chartInstance) => {
   switch (options.valueType) {
+    case VALUE_TYPE.status:
+      chartInstance.axis('value', {
+        label: {
+          formatter: value => Number(value)?'online':'offline',
+        },
+      });
+      chartInstance.tooltip({
+        customItems: items =>
+          items.map(item => {
+            const value = `${Number(item.value)?'online':'offline'}`;
+            return {
+              ...item,
+              value,
+            };
+          }),
+        showCrosshairs: true,
+        shared: true,
+        title: tooltipTitle,
+      });
+      chartInstance.scale({
+        value: {
+          min: 0,
+          max: options.maxNum || 100,
+          tickInterval: options.maxNum ? (options.maxNum % 10 + 10) / 5 : 25,
+        },
+      });
+      break;
     case VALUE_TYPE.percentage:
       chartInstance.axis('value', {
         label: {
