@@ -133,7 +133,7 @@ const LeaderDistribution: React.FC<IProps> = (props: IProps) => {
         dataIndex: 'distribution',
         render: distribution => (
           <div className="distribution-table">
-            {distribution.split(',').map(each => <div className="leader-item">{each.trim()}</div>)}
+            {distribution.split(',').map(each => <div  key={each} className="leader-item">{each.trim()}</div>)}
           </div>
         ),
       },

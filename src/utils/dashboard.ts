@@ -47,7 +47,7 @@ export const getProperStep = (start: number, end: number) => {
   }
   if (hours <= 72) {
     // <3 day
-    return 1800; //30min
+    return 600; //10min
   }
   return 3600;
 };
