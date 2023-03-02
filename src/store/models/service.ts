@@ -103,7 +103,7 @@ export function SereviceModelWrapper(serviceApi) {
         let _start = start / 1000;
         let _end = end / 1000;
         _start = _start - _start % step;
-        _end = _end + (step - _end % step);
+        _end -= _end % step; // end time should be less than the current time
         let query = _query;
         if (!noSuffix) {
           if (clusterID) {
