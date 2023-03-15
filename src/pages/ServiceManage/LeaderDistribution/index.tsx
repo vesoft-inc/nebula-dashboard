@@ -97,9 +97,8 @@ const LeaderDistribution: React.FC<IProps> = (props: IProps) => {
   };
 
   const handleBalance = async () => {
-    let code = -1;
     if (compare(formatVersion(cluster?.version || DEFAULT_VERSION), 'v3.0.0', '<')) {
-      code = await props.asyncExecNGQL('BALANCE LEADER');
+      const { code } = await props.asyncExecNGQL('BALANCE LEADER');
       if (code === 0) {
         message.success(intl.get('common.successDelay'));
         getStorageInfo();
@@ -111,7 +110,7 @@ const LeaderDistribution: React.FC<IProps> = (props: IProps) => {
 
   const handleHide = async () => {
     modalHandler.current?.hide();
-    const code = await props.asyncExecNGQL('SUBMIT JOB BALANCE LEADER');
+    const { code } = await props.asyncExecNGQL('SUBMIT JOB BALANCE LEADER');
     if (code === 0) {
       message.success(intl.get('common.successDelay'));
       getStorageInfo();
