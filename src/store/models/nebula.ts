@@ -136,7 +136,7 @@ export function NebulaModelWrapper(serviceApi, state, _effects) {
 
       async asyncExecNGQL(gql) {
         const res = (await serviceApi.execNGQL({ gql })) as any;
-        return res.code;
+        return res;
       },
 
       async asyncGetServiceVersion(type?: IServiceType) {
