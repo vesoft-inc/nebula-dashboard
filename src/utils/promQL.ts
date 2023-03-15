@@ -9,9 +9,9 @@ export const enum VALUE_TYPE {
   byteSecondNet = 'BYTE_SECOND_NET',
   number = 'NUMBER',
   numberSecond = 'numberSecond',
-  status = 'status'
+  status = 'status',
+  latency = 'latency'
 }
-
 export let SUPPORT_METRICS =
 {
   cpu: [

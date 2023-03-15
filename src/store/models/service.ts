@@ -8,7 +8,7 @@ import { isCommunityVersion, unique } from '@/utils';
 import { getClusterPrefix } from '@/utils/promQL';
 import { InitMetricsFilterValues } from '@/utils/metric';
 
-interface IState {
+interface IServiceState {
   panelConfig: IPanelConfig;
   instanceList: string[];
   metricsFilterValues: ServiceMetricsPanelValue;
@@ -25,15 +25,15 @@ export function SereviceModelWrapper(serviceApi) {
       metricsFilterValues: InitMetricsFilterValues
     },
     reducers: {
-      update: (state: IState, payload: any) => ({
+      update: (state: IServiceState, payload: any) => ({
         ...state,
         ...payload,
       }),
-      updateInstanceList: (state: IState, payload: any) => {
+      updateInstanceList: (state: IServiceState, payload: any) => {
         const instanceList = unique(state.instanceList.concat(payload));
         return { ...state, instanceList };
       },
-      updateMetricsFilterValues: (state: IState, payload: any) => {
+      updateMetricsFilterValues: (state: IServiceState, payload: any) => {
         const metricsFilterValues = {
           ...state.metricsFilterValues,
           ...payload.metricsFilterValues

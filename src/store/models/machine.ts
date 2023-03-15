@@ -53,7 +53,7 @@ export function MachineModelWrapper(service,) {
         }
         return {
           ...state,
-        metricsFilterValues
+          metricsFilterValues
         }
       }
     },
@@ -77,23 +77,12 @@ export function MachineModelWrapper(service,) {
           end,
           step,
         })) as any;
-        let result:any = [];
+        let result: any = [];
         if (code === 0) {
-          if (NEED_ADD_SUM_QUERYS.includes(metric)) {
-            result = (await this.asyncGetSumDataByRange({
-              clusterID,
-              query: PROMQL(clusterID)[metric],
-              start: start,
-              end: end,
-              step,
-              data: data.result,
-            })) as any;
-          } else {
-            result = data.result;
-          }
+          result = data.result;
         }
         if (isCommunityVersion()) {
-          const instanceList = result.map(item => item.metric.instance).filter(instance => instance !== 'total' );
+          const instanceList = result.map(item => item.metric.instance).filter(instance => instance !== 'total');
           this.updateInstanceList(instanceList);
         }
         return result;
@@ -114,7 +103,7 @@ export function MachineModelWrapper(service,) {
         });
         return cpuStat;
       },
-  
+
       async asyncGetMemoryStatByRange(payload: {
         start: number;
         end: number;
@@ -130,7 +119,7 @@ export function MachineModelWrapper(service,) {
         });
         return memoryStat;
       },
-  
+
       async asyncGetMemorySizeStat(clusterID?: string) {
         const { code, data } = (await service.execPromQL({
           clusterID,
@@ -145,7 +134,7 @@ export function MachineModelWrapper(service,) {
         });
         return memorySizeStat;
       },
-  
+
       async asyncGetDiskStatByRange(payload: {
         start: number;
         end: number;
@@ -161,7 +150,7 @@ export function MachineModelWrapper(service,) {
         });
         return diskStat;
       },
-  
+
       async asyncGetDiskSizeStat(clusterID?: string) {
         const { code, data } = await service.execPromQL({
           clusterID,
@@ -176,7 +165,7 @@ export function MachineModelWrapper(service,) {
         });
         return diskSizeStat;
       },
-  
+
       async asyncGetLoadByRange(payload: {
         start: number;
         end: number;
@@ -192,7 +181,7 @@ export function MachineModelWrapper(service,) {
         });
         return loadStat;
       },
-  
+
       async asyncGetNetworkStatByRange(payload: {
         start: number;
         end: number;
@@ -219,35 +208,6 @@ export function MachineModelWrapper(service,) {
             });
         }
         return networkStat;
-      },
-  
-      async asyncGetSumDataByRange(payload: {
-        clusterID?: string;
-        query: string;
-        start: number;
-        end: number;
-        step: number;
-        data: any[];
-      }) {
-        const { query, start, end, step, data, clusterID } = payload;
-        const { code, data: dataStat } = (await service.execPromQLByRange({
-          clusterID,
-          query: `sum(${query})`,
-          start,
-          end,
-          step,
-        })) as any;
-        if (code === 0 && dataStat.result.length !== 0) {
-          const sumData = {
-            metric: {
-              instance: 'total',
-              job: 'total',
-            },
-          } as any;
-          sumData.values = dataStat.result[0].values;
-          return data.concat(sumData);
-        }
-        return data;
       },
 
       updateMetricsFiltervalues(values: MetricsPanelValue) {
