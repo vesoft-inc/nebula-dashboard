@@ -2,34 +2,12 @@ import React, { forwardRef, useEffect, useImperativeHandle, useMemo } from 'reac
 import { Form, FormInstance, Select, TreeSelect } from 'antd';
 import intl from 'react-intl-universal';
 
-import { INTERVAL_FREQUENCY_LIST } from '@/utils/service';
-import TimeSelect from '../TimeSelect';
+import TimeSelect from '@/components/TimeSelect';
+import { TIME_OPTION_TYPE } from '@/utils/dashboard';
+import { isCloudVersion } from '@/utils';
+import FrequencySelect from './FrequencySelect';
 
 import styles from './index.module.less';
-import { TIME_OPTION_TYPE } from '@/utils/dashboard';
-import Icon from '../Icon';
-import { isCloudVersion } from '@/utils';
-
-
-export function FrequencySelect(props: { value?, onChange?, handleRefresh?}) {
-  const { value, onChange, handleRefresh } = props;
-  return (
-    <div className={styles.frequency}>
-      <div onClick={handleRefresh} className={styles.freshIcon}><Icon className={styles.freshIconItem} icon="#iconrefresh" /></div>
-      <Select
-        className={styles.frequencySelect}
-        onChange={onChange}
-        value={value}
-      >
-        {
-          INTERVAL_FREQUENCY_LIST.map(item => (
-            <Select.Option key={item.value} value={item.value}>{item.type}</Select.Option>
-          ))
-        }
-      </Select>
-    </div>
-  )
-}
 
 interface IProps {
   instanceList: string[];

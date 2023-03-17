@@ -7,6 +7,7 @@ export const SERVICE_DEFAULT_RANGE = 6 * 60 * 60 * 1000;
 
 export enum INTERVAL_FREQUENCY_TYPE {
   OFF = 'Off',
+  S2 = '2s',
   S5 = '5s',
   S10 = '10s',
   S15 = '15s',
@@ -17,7 +18,12 @@ export enum INTERVAL_FREQUENCY_TYPE {
   M30 = '30m',
 }
 
-export const INTERVAL_FREQUENCY_LIST = [
+export interface IntervalFrequencyItem {
+  type: INTERVAL_FREQUENCY_TYPE;
+  value: number;
+}
+
+export const INTERVAL_FREQUENCY_LIST: IntervalFrequencyItem[] = [
   {
     type: INTERVAL_FREQUENCY_TYPE.OFF,
     value: 0,
