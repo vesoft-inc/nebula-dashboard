@@ -7,14 +7,6 @@ import { getClusterPrefix, diskPararms } from '@/utils/promQL';
 import { formatVersion } from '@/utils/dashboard';
 import { ServiceName } from '@/utils/interface';
 
-interface IState {
-  graphd: any[];
-  metad: any;
-  storaged: any[];
-  spaces: string[];
-  devices: string[]
-}
-
 export function MetricModelWrapper(serviceApi) {
   return createModel({
     state: {
@@ -25,10 +17,11 @@ export function MetricModelWrapper(serviceApi) {
       [ServiceName.StoragedListener]: [],
       [ServiceName.Drainer]: [],
       spaces: [],
-      devices: []
+      devices: [],
+      ready: false
     },
     reducers: {
-      update: (state: IState, payload: any) => ({
+      update: (state: any, payload: any) => ({
         ...state,
         ...payload,
       }),
@@ -57,6 +50,15 @@ export function MetricModelWrapper(serviceApi) {
           }
           case compare(curVersion, '3.0.0', '>='):
             {
+              const { code, data: metricData } =
+                (await serviceApi.getMetrics({
+                  clusterID,
+                  'match[]': `{componentType="${componentType}"${componentType === ServiceName.GRAPHD ? `,space=""` : ''},__name__!~"ALERTS.*",__name__!~".*count"${clusterSuffix1}}`,
+                })) as any;
+              if (code === 0) {
+                metricList = metricData;
+              }
+
               if (componentType === ServiceName.GRAPHD) {
                 const { code, data } = (await serviceApi.getMetrics({
                   clusterID,
@@ -65,14 +67,6 @@ export function MetricModelWrapper(serviceApi) {
                 if (code === 0) {
                   spaceMetricList = data;
                 }
-              }
-              const { code, data: metricData } =
-                (await serviceApi.getMetrics({
-                  clusterID,
-                  'match[]': `{componentType="${componentType}"${componentType === ServiceName.GRAPHD ? `,space=""` : ''},__name__!~"ALERTS.*",__name__!~".*count"${clusterSuffix1}}`,
-                })) as any;
-              if (code === 0) {
-                metricList = metricData;
               }
             }
             break;
@@ -89,6 +83,7 @@ export function MetricModelWrapper(serviceApi) {
           [componentType]: metrics,
         });
       },
+
       async asyncGetSpaces({ clusterID, start, end }) {
         start = start / 1000;
         end = end / 1000;

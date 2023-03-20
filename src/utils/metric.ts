@@ -2,7 +2,7 @@ import _ from 'loadsh';
 
 import { VALUE_TYPE } from '@/utils/promQL';
 import { INTERVAL_FREQUENCY_LIST, SERVICE_QUERY_PERIOD } from './service';
-import { AggregationType, AGGREGATION_OPTIONS, getProperByteDesc, TIME_OPTION_TYPE } from './dashboard';
+import { AggregationType, AGGREGATION_OPTIONS, getAutoLatency, getProperByteDesc, TIME_OPTION_TYPE } from './dashboard';
 import { IServiceMetricItem, ServiceName } from './interface';
 import dayjs from 'dayjs';
 
@@ -391,6 +391,28 @@ export const updateChartByValueType = (options, chartInstance) => {
             if (options.valueType === VALUE_TYPE.numberSecond) {
               value = `${Math.round(+value * 100) / 100}/s`;
             }
+            return {
+              ...item,
+              value,
+            };
+          }),
+        showCrosshairs: true,
+        shared: true,
+        title: tooltipTitle,
+      });
+      break;
+    case VALUE_TYPE.latency:
+      chartInstance.axis('value', {
+        label: {
+          formatter: processNum => { 
+            return getAutoLatency(processNum);
+          },
+        },
+      });
+      chartInstance.tooltip({
+        customItems: items =>
+          items.map(item => {
+            let value = getAutoLatency(item.value);
             return {
               ...item,
               value,

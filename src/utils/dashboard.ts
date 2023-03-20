@@ -150,7 +150,21 @@ export const getProperByteDesc = (bytes: number) => {
     desc: value + unit,
   }
 }
-
+export const getAutoLatency = (latency: number) => {
+  if (latency > 60 * 1000 * 1000) {
+    // min
+    return `${(latency / 60 / 1000 / 1000).toFixed(2)}min`;
+  }
+  if (latency > 1000 * 1000) {
+    // s
+    return `${(latency / 1000 / 1000).toFixed(2)}s`;
+  }
+  if (latency > 1000) {
+    // ms
+    return `${(latency / 1000).toFixed(2)}ms`;
+  }
+  return `${latency}μs`;
+};
 export const getDataByType = (payload: {
   data: IStatRangeItem[];
   type?: string | string[];
