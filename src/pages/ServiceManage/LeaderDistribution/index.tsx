@@ -5,7 +5,7 @@ import { IDispatch, IRootState } from '@/store';
 import { Chart } from '@antv/g2';
 import { renderPieChartTpl } from '@/utils/chart/chart';
 import { connect } from 'react-redux';
-import { last, round } from 'lodash';
+import { last } from 'lodash';
 import { compare } from 'compare-versions';
 import Modal from '@/components/Modal';
 import PieChart from '@/components/Charts/PieChart';
@@ -14,8 +14,7 @@ import classnames from 'classnames';
 import SelectSpace from '../SelectSpace';
 import './index.less';
 import { isCommunityVersion } from '@/utils';
-import { DEFAULT_VERSION, formatVersion } from '@/utils/dashboard';
-import { ICluster } from '@base/utils/interface';
+import { formatVersion } from '@/utils/dashboard';
 
 const mapDispatch: any = (dispatch: IDispatch) => ({
   asyncGetHostsInfo: dispatch.nebula.asyncGetHostsInfo,
@@ -32,7 +31,7 @@ interface IProps
   ReturnType<typeof mapDispatch> {
   isOverview?: boolean;
   baseRouter?: string;
-  cluster?: ICluster;
+  cluster?: any;
 }
 
 interface IChaerData {
@@ -97,7 +96,7 @@ const LeaderDistribution: React.FC<IProps> = (props: IProps) => {
   };
 
   const handleBalance = async () => {
-    if (compare(formatVersion(cluster?.version || DEFAULT_VERSION), 'v3.0.0', '<')) {
+    if (compare(formatVersion(cluster?.version), 'v3.0.0', '<')) {
       const { code } = await props.asyncExecNGQL('BALANCE LEADER');
       if (code === 0) {
         message.success(intl.get('common.successDelay'));

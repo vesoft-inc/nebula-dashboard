@@ -8,10 +8,9 @@ import { IDispatch, IRootState } from '@/store';
 import intl from 'react-intl-universal';
 import { TitleInstruction } from '@/components/Instruction';
 import { DashboardSelect, Option } from '@/components/DashboardSelect';
-import { compareVersion, DEFAULT_VERSION, getVersion } from '@/utils/dashboard';
+import { compareVersion, getDefaultNebulaVersion, getVersion } from '@/utils/dashboard';
 
 import './index.less';
-import { ICluster } from 'src/utils/interface';
 
 const mapState = (state: IRootState) => ({
   loading: state.loading.effects.nebula.asyncGetJobs,
@@ -28,7 +27,7 @@ const mapDispatch: any = (dispatch: IDispatch) => ({
 interface IProps
   extends ReturnType<typeof mapState>,
     ReturnType<typeof mapDispatch> {
-      cluster: ICluster;
+      cluster: any;
     }
 
 const LongTermTask: React.FC<IProps> = props => {
@@ -43,7 +42,7 @@ const LongTermTask: React.FC<IProps> = props => {
 
   const init = async () => {
     // HAKC: Compatible processing version 2.6.0
-    if (compareVersion(getVersion(cluster?.version || DEFAULT_VERSION), '2.6.0') >= 0) {
+    if (compareVersion(getVersion(cluster?.version || getDefaultNebulaVersion()), '2.6.0') >= 0) {
       await props.asyncGetSpaces();
       if (currentSpace) {
         props.asyncGetJobs();
