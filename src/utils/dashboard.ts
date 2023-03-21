@@ -6,9 +6,6 @@ import cookies from 'js-cookie';
 import { ILineChartMetric, IStatRangeItem, MetricScene } from '@/utils/interface';
 import { VALUE_TYPE } from '@/utils/promQL';
 
-// used in nightly version;
-export const DEFAULT_VERSION = process.env.NEBULA_VERSION!;
-
 export const DETAIL_DEFAULT_RANGE = 60 * 60 * 24 * 1000;
 export const MAX_STEP_ALLOW = 11000;
 export const TIME_INTERVAL_OPTIONS = [5, 60, 600, 3600];
@@ -473,14 +470,18 @@ export const getConfigData = (data) => {
   return list;
 }
 
+export const getDefaultNebulaVersion = () => {
+  return (window as any).NIGHTLY_NEBULA_VERSION || process.env.NEBULA_VERSION!;
+}
+
 export function formatVersion(version?: string): string {
   if (!version) {
     version = cookies.get('version');
   }
   if (semver.valid(version)) {
-    return semver.clean(version!) ?? DEFAULT_VERSION;
+    return semver.clean(version!)!;
   }
-  return DEFAULT_VERSION;
+  return getDefaultNebulaVersion();
 }
 
 export let getMachineRouterPath = (path: string, id?): string => `/clusters/${id}${path}`;

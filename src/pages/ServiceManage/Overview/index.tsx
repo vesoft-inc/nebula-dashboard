@@ -12,7 +12,7 @@ import { DashboardSelect, Option } from '@/components/DashboardSelect';
 import { getVersionFeatures } from '@/utils/versionFeature';
 import Modal from '@/components/Modal';
 import { IDispatch, IRootState } from '@/store';
-import { DEFAULT_VERSION, formatVersion } from '@/utils/dashboard';
+import { formatVersion } from '@/utils/dashboard';
 
 import styles from './index.module.less';
 import { isCommunityVersion } from '@/utils';
@@ -158,7 +158,7 @@ const Overview: React.FC<IProps> = (props: IProps) => {
   };
 
   const versionFeature = useMemo(() => {
-    const version = formatVersion(cluster?.version || DEFAULT_VERSION);
+    const version = formatVersion(cluster?.version);
     return getVersionFeatures(version, cluster?.nebulaType);
   }, [cluster]);
 
