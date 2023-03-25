@@ -1,6 +1,8 @@
-import { DashboardType, NebulaConnectInfo, NebulaVersionType } from './interface';
+import { CellHealtyLevel, DashboardType, NebulaConnectInfo, NebulaVersionType, Percent_Range } from './interface';
 import intl from 'react-intl-universal';
 import cookies from 'js-cookie';
+
+import { getProperStep } from './dashboard';
 
 /**
  * this folder for utils
@@ -108,4 +110,31 @@ export const getMenuPathByKey = (menuList: any[], activeKey: string): string[] =
     }
   }
   return path;
+}
+
+export const calcNodeHealty = (percent: number) => {
+  const levels = Object.keys(Percent_Range);
+  let level: CellHealtyLevel = CellHealtyLevel.normal ;
+  for (let index = 0; index < levels.length; index++) {
+    const key = levels[index];
+    const [start, end] = Percent_Range[key];
+    if (percent >= start && percent < end) {
+      level = key as CellHealtyLevel;
+      break;
+    }
+  }
+  return level;
+}
+
+export const getQueryRangeInfo = (start: number, end: number) => {
+  const step = getProperStep(start, end);
+  start = start / 1000;
+  end = end / 1000;
+  start = start - start % step;
+  end -= end % step
+  return {
+    start,
+    end,
+    step,
+  }
 }

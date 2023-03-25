@@ -21,6 +21,7 @@ const getAnnotationLineConfig = get('/api/config/annotation_line');
 
 const getConfigInfo = (component: ServiceName) => get(`/api-${component}/flags`);
 
+
 export default {
   execNGQL,
   connectDB,
@@ -32,5 +33,5 @@ export default {
   execPromQLByRange,
   getCustomConfig,
   getConfigInfo,
-  getAnnotationLineConfig,
+  getAnnotationLineConfig
 };

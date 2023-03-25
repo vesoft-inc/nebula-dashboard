@@ -7,7 +7,7 @@ import './index.less';
 interface IProps extends RouteComponentProps {
   title: React.ElementRef<any>;
   children: any;
-  viewPath: string;
+  viewPath?: string;
   type?: string;
   onConfigPanel?: () => void;
 }
@@ -15,6 +15,7 @@ interface IProps extends RouteComponentProps {
 class DashboardCard extends React.PureComponent<IProps> {
   handleViewDetail = () => {
     const { viewPath, type } = this.props;
+    if (!viewPath) return;
     if (type) {
       localStorage.setItem('detailType', type);
     }
@@ -23,17 +24,21 @@ class DashboardCard extends React.PureComponent<IProps> {
   };
 
   render() {
-    const { title, children, onConfigPanel } = this.props;
+    const { title, children, onConfigPanel, viewPath } = this.props;
     return (
       <div className="dashboard-card">
         <div className="inner">
           <div className="header">
             <h3>{title}</h3>
-            <Icon
-              className="icon-watch blue"
-              icon="#iconwatch"
-              onClick={this.handleViewDetail}
-            />
+            {
+              viewPath && (
+                <Icon
+                  className="icon-watch blue"
+                  icon="#iconwatch"
+                  onClick={this.handleViewDetail}
+                />
+              )
+            }
             {onConfigPanel && (
               <Icon
                 className="icon-setup blue"

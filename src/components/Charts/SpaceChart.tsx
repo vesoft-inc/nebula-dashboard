@@ -26,18 +26,18 @@ function SpaceChart(props: IProps) {
 
   useEffect(() => {
     setCurInstances(seletedInstance === 'all' ? instances : instances.filter(i => i === seletedInstance));
-    // setSeletedInstance('all');
   }, [instances, seletedInstance])
 
   const diskThs = useMemo(() => ({
     name: diskInfos.some(i => !!i.name),
     device: diskInfos.some(i => !!i.device),
-    used: diskInfos.some(i => !!(i.size && i.used))
+    used: diskInfos.some(i => !!(i.size && i.used)),
+    mountpoint: diskInfos.some(i => !!i.mountpoint)
   }), [diskInfos])
 
   const getDisplayInfos = (infos: DiskMetricInfo[]) => {
     return infos.map((info) => {
-      const { used, size: bytes, device, name } = info;
+      const { used, size: bytes, device, name, mountpoint } = info;
       const percent = Math.round((used / bytes) * 100);
       const { desc: sizeDesc } = getProperByteDesc(bytes);
       const { desc: usedDesc } = getProperByteDesc(used);
@@ -45,6 +45,7 @@ function SpaceChart(props: IProps) {
         percent: percent < 1 ? Number(percent.toFixed(2)) : percent,
         device,
         sizeDesc,
+        mountpoint,
         usedDesc,
         name,
         color: getWhichColor(percent)
@@ -52,14 +53,14 @@ function SpaceChart(props: IProps) {
     })
   }
 
-  const handleInstanceShow = (instance: string | 'all') => {
-    if (instance === 'all') {
-      setCurInstances(instances);
-    } else {
-      setCurInstances([instance]);
-    }
-    setSeletedInstance(instance);
-  }
+  // const handleInstanceShow = (instance: string | 'all') => {
+  //   if (instance === 'all') {
+  //     setCurInstances(instances);
+  //   } else {
+  //     setCurInstances([instance]);
+  //   }
+  //   setSeletedInstance(instance);
+  // }
 
   const renderDiskInfo = () => {
     return curInstances.map(instance => {
@@ -89,6 +90,23 @@ function SpaceChart(props: IProps) {
                       placement='topLeft'
                     >
                       <div className='disk-tr-item-info text-overflow'>{device}</div>
+                    </Popover>
+                  ))
+                }
+              </div>
+            )
+          }
+          {
+            diskThs.mountpoint && (
+              <div className='disk-tr-item'>
+                {
+                  displayInfos.map(i => i.mountpoint).map((mountpoint, i) => (
+                    <Popover
+                      key={i}
+                      content={mountpoint}
+                      placement='topLeft'
+                    >
+                      <div className='disk-tr-item-info text-overflow'>{mountpoint}</div>
                     </Popover>
                   ))
                 }
@@ -141,6 +159,9 @@ function SpaceChart(props: IProps) {
         {
           diskThs.device && <div>{intl.get('base.spaceChartDiskname')}</div>
         }
+        {
+          diskThs.mountpoint && <div>{intl.get('base.mountpoint')}</div>
+        }
         <div>{intl.get('base.spaceChartDiskused')}</div>
       </div>
     )
@@ -154,7 +175,7 @@ function SpaceChart(props: IProps) {
         </div>
         {renderDiskInfo()}
       </div>
-      <Select
+      {/* <Select
         className="instance-select"
         bordered={false}
         value={seletedInstance}
@@ -168,7 +189,7 @@ function SpaceChart(props: IProps) {
             <Select.Option key={instance} value={instance}>{instance}</Select.Option>
           ))
         }
-      </Select>
+      </Select> */}
     </div>
   );
 }

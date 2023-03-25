@@ -2,7 +2,7 @@ import _ from 'loadsh';
 
 import { VALUE_TYPE } from '@/utils/promQL';
 import { INTERVAL_FREQUENCY_LIST, SERVICE_QUERY_PERIOD } from './service';
-import { AggregationType, AGGREGATION_OPTIONS, getAutoLatency, getProperByteDesc, TIME_OPTION_TYPE } from './dashboard';
+import { AggregationType, AGGREGATION_OPTIONS, getAutoLatency, getProperByteDesc, getProperStep, TIME_OPTION_TYPE } from './dashboard';
 import { IServiceMetricItem, ServiceName } from './interface';
 import dayjs from 'dayjs';
 
@@ -176,7 +176,7 @@ export const filterServiceMetrics = (payload: {
 export const InitMetricsFilterValues: any = {
   frequency: INTERVAL_FREQUENCY_LIST[0].value,
   instanceList: ['all'],
-  timeRange: TIME_OPTION_TYPE.DAY1,
+  timeRange: TIME_OPTION_TYPE.HOUR1,
   space: "",
   period: SERVICE_QUERY_PERIOD,
   metricType: AGGREGATION_OPTIONS[0],
@@ -185,7 +185,7 @@ export const InitMetricsFilterValues: any = {
 export const InitMachineMetricsFilterValues: any = {
   frequency: INTERVAL_FREQUENCY_LIST[0].value,
   instanceList: ['all'],
-  timeRange: TIME_OPTION_TYPE.DAY1,
+  timeRange: TIME_OPTION_TYPE.HOUR1,
 }
 
 export const getRawQueryByAggregation = (aggregation: AggregationType, metric: string): string => {
@@ -263,13 +263,13 @@ export const updateChartByValueType = (options, chartInstance) => {
     case VALUE_TYPE.status:
       chartInstance.axis('value', {
         label: {
-          formatter: value => Number(value)?'online':'offline',
+          formatter: value => Number(value) ? 'online' : 'offline',
         },
       });
       chartInstance.tooltip({
         customItems: items =>
           items.map(item => {
-            const value = `${Number(item.value)?'online':'offline'}`;
+            const value = `${Number(item.value) ? 'online' : 'offline'}`;
             return {
               ...item,
               value,
@@ -372,6 +372,26 @@ export const updateChartByValueType = (options, chartInstance) => {
         title: tooltipTitle,
       });
       break;
+    case VALUE_TYPE.diskIONet:
+      chartInstance.axis('value', {
+        label: {
+          formatter: processNum => `${processNum} io/s`,
+        },
+      });
+      chartInstance.tooltip({
+        customItems: items =>
+          items.map(item => {
+            const value = `${Number(item.value).toFixed(2)} io/s`;
+            return {
+              ...item,
+              value,
+            };
+          }),
+        showCrosshairs: true,
+        shared: true,
+        title: tooltipTitle,
+      });
+      break;
     case VALUE_TYPE.number:
     case VALUE_TYPE.numberSecond:
       chartInstance.axis('value', {
@@ -404,7 +424,7 @@ export const updateChartByValueType = (options, chartInstance) => {
     case VALUE_TYPE.latency:
       chartInstance.axis('value', {
         label: {
-          formatter: processNum => { 
+          formatter: processNum => {
             return getAutoLatency(processNum);
           },
         },

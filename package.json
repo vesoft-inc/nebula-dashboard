@@ -25,6 +25,7 @@
     ]
   },
   "dependencies": {
+    "@ant-design/plots": "^1.2.5",
     "@antv/g2": "^4.1.29",
     "@rematch/core": "^1.4.0",
     "@rematch/loading": "^1.2.1",

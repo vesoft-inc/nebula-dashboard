@@ -7,5 +7,6 @@
   "spaceChartDiskused": "Disk Used",
   "metricDetail": "Metric Detail",
   "metricMonitor": "Metric Monitor",
-  "searchMetric": "Please Search Metric"
+  "searchMetric": "Please Search Metric",
+  "mountpoint": "Mountpoint"
 }

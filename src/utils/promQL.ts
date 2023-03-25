@@ -1,12 +1,16 @@
 /**
  * EXPLAIN: beacuse the metrics in each system are different, so dashboard need to load the detailed promql used by system
  */
+import intl from 'react-intl-universal';
+import { getQueryRangeInfo } from '.';
+import { calcTimeRange, TIME_OPTION_TYPE } from './dashboard';
 
 export const enum VALUE_TYPE {
   percentage = 'PERCENTAGE',
   byte = 'BYTE',
   byteSecond = 'BYTE_SECOND',
   byteSecondNet = 'BYTE_SECOND_NET',
+  diskIONet = 'DISK_IO_NET',
   number = 'NUMBER',
   numberSecond = 'numberSecond',
   status = 'status',
@@ -212,18 +216,274 @@ export let LINUX = (cluster?, device?: string): any => {
   }
 };
 
+export let getNodeInfoQueries = (clusterId?) => {
+  const clusterSuffix1 = clusterId ? `,${getClusterPrefix()}='${clusterId}'` : '';
+  const clusterSuffix2 = clusterId ? `{${getClusterPrefix()}='${clusterId}'}` : '';
+  return ([
+    {
+      refId: "nodeName",
+      query: `node_uname_info${clusterSuffix2}-0`
+    },
+    {
+      refId: "cpuUtilization",
+      query: `(1 - avg(rate(node_cpu_seconds_total{mode="idle"${clusterSuffix1}}[30s])) by (instance)) * 100`,
+    },
+    {
+      refId: "memoryUtilization",
+      query: `(1 - (node_memory_MemAvailable_bytes${clusterSuffix2} /(node_memory_MemTotal_bytes${clusterSuffix2})))* 100`,
+    },
+    {
+      refId: "runtime",
+      query: `sum(time() - node_boot_time_seconds${clusterSuffix2})by(instance) / 3600 / 24`
+    },
+    {
+      refId: "cpuCore",
+      query: `count(node_cpu_seconds_total{mode='system'${clusterSuffix1}}) by (instance)`
+    },
+    {
+      refId: "memory",
+      query: `node_memory_MemTotal_bytes${clusterSuffix2} - 0`
+    },
+    {
+      refId: "diskUtilization",
+      query: `max((node_filesystem_size_bytes{fstype=~\"ext.?|xfs\"${clusterSuffix1}}-node_filesystem_free_bytes{fstype=~\"ext.?|xfs\"${clusterSuffix1}}) *100/(node_filesystem_avail_bytes {fstype=~\"ext.?|xfs\"${clusterSuffix1}}+(node_filesystem_size_bytes{fstype=~\"ext.?|xfs\"${clusterSuffix1}}-node_filesystem_free_bytes{fstype=~\"ext.?|xfs\"${clusterSuffix1}})))by(instance)`
+    },
+    {
+      refId: "disk",
+      query: `sum(node_filesystem_size_bytes{fstype=~\"ext.?|xfs\"${clusterSuffix1}})by(instance)`
+    },
+    {
+      refId: "diskUsed",
+      query: `sum(node_filesystem_size_bytes{fstype=~\"ext.?|xfs\"${clusterSuffix1}}-node_filesystem_free_bytes{fstype=~\"ext.?|xfs\"${clusterSuffix1}})by(instance)`
+    },
+    {
+      refId: "load5s",
+      query: `node_load5${clusterSuffix2} - 0`
+    },
+    {
+      refId: "diskMaxRead",
+      query: `max(rate(node_disk_read_bytes_total${clusterSuffix2}[30s])) by (instance)`
+    },
+    {
+      refId: "diskMaxWrite",
+      query: `max(rate(node_disk_written_bytes_total${clusterSuffix2}[30s])) by (instance)`
+    },
+    {
+      refId: "networkIn",
+      query: `max(rate(node_network_receive_bytes_total${clusterSuffix2}[30s])*8) by (instance)`
+    },
+    {
+      refId: "networkOut",
+      query: `max(rate(node_network_transmit_bytes_total${clusterSuffix2}[30s])*8) by (instance)`
+    },
+    {
+      refId: "memoryUsed",
+      query: `node_memory_MemTotal_bytes${clusterSuffix2} - node_memory_MemAvailable_bytes${clusterSuffix2} `,
+    }
+  ])
+}
+
 export const updatePromql = (service: {
   SUPPORT_METRICS: typeof SUPPORT_METRICS,
-  LINUX: typeof LINUX
+  LINUX: typeof LINUX,
 }) => {
   SUPPORT_METRICS = service.SUPPORT_METRICS
   LINUX = service.LINUX
 }
 
-// export const serviceProcessPromql = (cluster?) => {
-//   const clusterSuffix = cluster ? `${getClusterPrefix()}='${cluster}'` : '';
-//   return {
-//     // cpu_utilization
-//     "cpu_used": `100 * sum by (nebula_cluster)(increase(nebula_graphd_cpu_seconds_total{${clusterSuffix}}[1m])) / sum by (nebula_cluster)(increase(node_cpu_seconds_total{${clusterSuffix}}[1m]))`,
-//   }
-// }
+export const getMachineMetricData = (instance, cluster, timeRange: TIME_OPTION_TYPE | [number, number]) => {
+  const curTimeRange = calcTimeRange(timeRange);
+  const clusterSuffix1 = cluster ? `,${getClusterPrefix()}="${cluster.id}"` : '';
+  const instanceSuffix = `instance=~"^${instance.replaceAll(".", "\.")}.*"`;
+  const { start, end, step } = getQueryRangeInfo(curTimeRange[0], curTimeRange[1]);
+  return {
+    cpu: {
+      title: intl.get('device.cpu'),
+      valueType: VALUE_TYPE.percentage,
+      viewPath: "/machine/cpu",
+      queries: [
+        {
+          refId: 'cpu_total_used',
+          query: `(1 - avg(rate(node_cpu_seconds_total{mode="idle"${clusterSuffix1},${instanceSuffix}}[30s])) by (instance))*100`,
+          start,
+          end,
+          step,
+        },
+        {
+          refId: 'cpu_system_used',
+          query: `avg(rate(node_cpu_seconds_total{mode="system"${clusterSuffix1},${instanceSuffix}}[30s])) by (instance) *100`,
+          start,
+          end,
+          step,
+        },
+        {
+          refId: 'cpu_user_used',
+          query: `avg(rate(node_cpu_seconds_total{mode="user"${clusterSuffix1},${instanceSuffix}}[30s])) by (instance) *100`,
+          start,
+          end,
+          step,
+        },
+        {
+          refId: 'cpu_io_wait_used',
+          query: `avg(rate(node_cpu_seconds_total{mode="iowait"${clusterSuffix1},${instanceSuffix}}[30s])) by (instance) *100`,
+          start,
+          end,
+          step,
+        }
+      ]
+    },
+    memory: {
+      title: intl.get('device.memory'),
+      valueType: VALUE_TYPE.byte,
+      viewPath: "/machine/memory",
+      queries: [
+        {
+          refId: 'memory_total',
+          query: `node_memory_MemTotal_bytes{${instanceSuffix}${clusterSuffix1}}`,
+          start,
+          end,
+          step,
+        },
+        {
+          refId: 'memory_currnet_used',
+          query: `node_memory_MemTotal_bytes{${instanceSuffix}${clusterSuffix1}} - node_memory_MemAvailable_bytes{${instanceSuffix}${clusterSuffix1}}`,
+          start,
+          end,
+          step,
+        },
+        {
+          refId: 'memory_avaliable',
+          query: `node_memory_MemAvailable_bytes{${instanceSuffix}${clusterSuffix1}}`,
+          start,
+          end,
+          step,
+        },
+        {
+          refId: 'memory_cached',
+          query: `node_memory_Buffers_bytes{${instanceSuffix}${clusterSuffix1}} + node_memory_Cached_bytes{${instanceSuffix}${clusterSuffix1}}`,
+          start,
+          end,
+          step,
+        },
+        {
+          refId: 'memory_swap_used',
+          query: `node_memory_SwapTotal_bytes{${instanceSuffix}${clusterSuffix1}} - node_memory_SwapFree_bytes{${instanceSuffix}${clusterSuffix1}}`,
+          start,
+          end,
+          step,
+        },
+      ]
+    },
+    load: {
+      title: intl.get('device.load'),
+      valuetype: VALUE_TYPE.number,
+      viewPath: "/machine/load",
+      queries: [
+        {
+          refId: 'cpu_load_1',
+          query: `node_load1{${instanceSuffix}${clusterSuffix1}}`,
+          start,
+          end,
+          step,
+        },
+        {
+          refId: 'cpu_load_5',
+          query: `node_load5{${instanceSuffix}${clusterSuffix1}}`,
+          start,
+          end,
+          step,
+        },
+        {
+          refId: 'cpu_load_15',
+          query: `node_load15{${instanceSuffix}${clusterSuffix1}}`,
+          start,
+          end,
+          step,
+        },
+      ]
+    },
+    diskIO: {
+      title: intl.get('device.diskIO'),
+      valueType: VALUE_TYPE.diskIONet,
+      viewPath: "/machine/disk",
+      queries: [
+        {
+          refId: 'disk_read_rate',
+          query: `rate(node_disk_reads_completed_total{${instanceSuffix}${clusterSuffix1}}[30s])`,
+          start,
+          end,
+          step,
+        },
+        {
+          refId: 'disk_write_rate',
+          query: `rate(node_disk_writes_completed_total{${instanceSuffix}${clusterSuffix1}}[30s])`,
+          start,
+          end,
+          step,
+        },
+      ]
+    },
+    diskIONum: {
+      title: intl.get('device.diskIONum'),
+      valueType: VALUE_TYPE.byteSecondNet,
+      viewPath: "/machine/disk",
+      queries: [
+        {
+          refId: 'disk_read_rate',
+          query: `rate(node_disk_read_bytes_total{${instanceSuffix}${clusterSuffix1}}[30s])`,
+          start,
+          end,
+          step,
+        },
+        {
+          refId: 'disk_write_rate',
+          query: `rate(node_disk_written_bytes_total{${instanceSuffix}${clusterSuffix1}}[30s])`,
+          start,
+          end,
+          step,
+        },
+      ]
+    },
+    network: {
+      title: intl.get('device.network'),
+      valueType: VALUE_TYPE.byteSecondNet,
+      viewPath: "/machine/network",
+      queries: [
+        {
+          refId: 'network_in',
+          query: `ceil(sum by(instance)(irate(node_network_receive_bytes_total{device=~"(eth|en)[a-z0-9]*",${instanceSuffix}${clusterSuffix1}}[30s])))`,
+          start,
+          end,
+          step,
+        },
+        {
+          refId: 'network_out',
+          query: `ceil(sum by(instance)(irate(node_network_transmit_bytes_total{device=~"(eth|en)[a-z0-9]*",${instanceSuffix}${clusterSuffix1}}[30s])))`,
+          start,
+          end,
+          step,
+        },
+      ]
+    },
+    openFileDesc: {
+      title: intl.get('device.openfiledesc'),
+      valueType: VALUE_TYPE.number,
+      queries: [
+        {
+          refId: 'open_file_desc',
+          query: `node_filefd_allocated{${instanceSuffix}${clusterSuffix1}}`,
+          start,
+          end,
+          step,
+        },
+        {
+          refId: 'context_switch_rate',
+          query: `rate(node_context_switches_total{${instanceSuffix}${clusterSuffix1}}[30s])`,
+          start,
+          end,
+          step,
+        }
+      ]
+    }
+  }
+}

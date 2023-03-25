@@ -1,178 +1,198 @@
-import DashboardCard from '@/components/DashboardCard';
-import { Col, Row, Spin } from 'antd';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { connect } from 'react-redux';
-import React, { useEffect, useRef, useState } from 'react';
 import intl from 'react-intl-universal';
-import CPUCard from './Cards/CPUCard';
-import './index.less';
-import MemoryCard from './Cards/MemoryCard';
+import { Button, Col, Row, Spin } from 'antd';
+
+import { NodeResourceInfo } from '@/utils/interface';
+import NodeResourceOverview from './NodeResourceOverview';
+import { getMachineMetricData, getNodeInfoQueries } from '@/utils/promQL';
+import { calcTimeRange, getMachineRouterPath, getProperByteDesc, TIME_OPTION_TYPE } from '@/utils/dashboard';
+import { IntervalFrequencyItem, INTERVAL_FREQUENCY_TYPE } from '@/utils/service';
+import EventBus from '@/utils/EventBus';
+import { DashboardSelect, Option } from '@/components/DashboardSelect';
+import Icon from '@/components/Icon';
+import DashboardCard from '@/components/DashboardCard';
+import TimeSelect from '@/components/TimeSelect';
+import MetricCard from '@/components/MetricCard';
 import DiskCard from './Cards/DiskCard';
-import LoadCard from './Cards/LoadCard';
-import NetworkOut from './Cards/NetworkOut';
-import NetworkIn from './Cards/NetworkIn';
-import { SUPPORT_METRICS, VALUE_TYPE } from '@/utils/promQL';
-import {
-  MACHINE_TYPE,
-  getBaseLineByUnit,
-  calcTimeRange,
-  getMachineRouterPath,
-  getProperStep,
-} from '@/utils/dashboard';
-import BaseLineEditModal from '@/components/BaseLineEditModal';
-import MetricsFilterPanel from '@/components/MetricsFilterPanel';
+import WaterLevelCard from './Cards/WaterLevelCard';
+
+import styles from './index.module.less';
 
 const mapDispatch: any = (dispatch: any) => ({
-  asyncGetCPUStatByRange: dispatch.machine.asyncGetCPUStatByRange,
-  asyncGetMemoryStatByRange: dispatch.machine.asyncGetMemoryStatByRange,
-  asyncGetMemorySizeStat: dispatch.machine.asyncGetMemorySizeStat,
-  asyncGetDiskSizeStat: dispatch.machine.asyncGetDiskSizeStat,
-  asyncGetDiskStatByRange: dispatch.machine.asyncGetDiskStatByRange,
-  asyncGetLoadByRange: dispatch.machine.asyncGetLoadByRange,
-  asyncGetNetworkStatByRange: dispatch.machine.asyncGetNetworkStatByRange,
-  updateMetricsFiltervalues: dispatch.machine.updateMetricsFiltervalues,
+  asyncBatchQueries: dispatch.nebula.asyncBatchQueries,
 });
 
 const mapState = (state: any) => ({
   instanceList: state.machine.instanceList as any,
-  metricsFilterValues: state.machine.metricsFilterValues,
-  loading: state.loading.effects.machine.asyncGetMetricsData,
+  loading: state.loading.effects.nebula.asyncBatchQueries
 });
-
 interface IProps
   extends ReturnType<typeof mapDispatch>,
   ReturnType<typeof mapState> {
   cluster?: any;
 }
 
-let pollingTimer: any;
+const IntervalOptions: IntervalFrequencyItem[] = [
+  {
+    type: INTERVAL_FREQUENCY_TYPE.OFF,
+    value: 0,
+  },
+  {
+    type: INTERVAL_FREQUENCY_TYPE.S5,
+    value: 2 * 1000,
+  },
+  {
+    type: INTERVAL_FREQUENCY_TYPE.S15,
+    value: 5 * 1000,
+  },
+  {
+    type: INTERVAL_FREQUENCY_TYPE.M1,
+    value: 5 * 1000,
+  },
+  {
+    type: INTERVAL_FREQUENCY_TYPE.M5,
+    value: 5 * 1000,
+  },
+];
+
+const formatValueByRefId = (refId: string, metricItem: any) => {
+  const { metric, value } = metricItem;
+  const [timestamp, curValue] = value;
+  switch (refId) {
+    case "cpuUtilization": case "memoryUtilization": case "diskUtilization":
+      return `${parseFloat(curValue).toFixed(2)}%`;
+    case "runtime":
+      return `${Math.round(parseFloat(curValue))} ${intl.get('device.nodeResource.day')}`;
+    case "cpuCore":
+      return `${parseInt(curValue)}`;
+    case "load5s":
+      return `${parseFloat(curValue).toFixed(2)}`;
+    case "memory": case "disk": case "memoryUsed": case "diskUsed":
+      return getProperByteDesc(parseFloat(curValue)).desc
+    case "networkIn": case "networkOut": case "diskMaxRead": case "diskMaxWrite":
+      const { value: v, unit } = getProperByteDesc(parseFloat(curValue));
+      return `${v} ${unit || 'KB'}/s`
+    case "nodeName":
+      return metric.nodename
+    default:
+      return curValue;
+  }
+}
 
 function MachineDashboard(props: IProps) {
 
-  const { asyncGetMemorySizeStat, asyncGetDiskSizeStat, cluster, metricsFilterValues,
-    asyncGetCPUStatByRange, asyncGetMemoryStatByRange, asyncGetDiskStatByRange,
-    asyncGetLoadByRange, asyncGetNetworkStatByRange, updateMetricsFiltervalues, instanceList,
-    loading
-  } = props;
+  const { cluster, asyncBatchQueries, instanceList, loading } = props;
 
-  const [showLoading, setShowLoading] = useState<boolean>(false);
+  const [resourceInfos, setResourceInfos] = useState<NodeResourceInfo[]>([]);
 
-  const [baseLineMap, setBaseLineMap] = useState<any>({})
+  const [frequencyValue, setFrequencyValue] = useState<number>(0);
+
+  const [curInstance, setCurInstance] = useState<string>(instanceList[0] || '');
+
+  const [singleNodeLoading, setSingleNodeLoading] = useState<boolean>(false);
+  const [overviewLoading, setOverviewLoading] = useState<boolean>(false);
+
+  const [timeRange, setTimeRange] = useState<TIME_OPTION_TYPE | [number, number]>(TIME_OPTION_TYPE.HOUR1);
+
+  const diskCardRef = useRef<any>();
+  const metricRefs = useMemo(() => ({}), []);
+  const pollingTimerRef = useRef<any>(null);
 
   useEffect(() => {
-    asyncGetMemorySizeStat(cluster?.id);
-    asyncGetDiskSizeStat(cluster?.id);
-    getMachineStatus();
+    if (cluster?.id && instanceList?.length) {
+      setCurInstance(instanceList[0])
+      asyncGetResourceInfos();
+    }
+  }, [cluster, instanceList])
+
+  useEffect(() => {
+    if (pollingTimerRef.current) {
+      clearPolling();
+    }
+    if (frequencyValue > 0) {
+      pollingData();
+    }
+  }, [frequencyValue])
+
+  useEffect(() => {
+    const changeListener = (data) => {
+      const { value } = data.detail;
+      setFrequencyValue(value);
+    }
+    const freshListener = () => { handleRefresh(); }
+    EventBus.getInstance().on('machineOverview_change', changeListener);
+
+    EventBus.getInstance().on('machineOverview_fresh', freshListener);
+
     return () => {
-      if (pollingTimer) {
-        clearTimeout(pollingTimer);
-      }
+      EventBus.getInstance().off('machineOverview_change', changeListener);
+      EventBus.getInstance().off('machineOverview_fresh', freshListener);
     }
-  }, [cluster])
+  }, [cluster, instanceList]);
 
-  useEffect(() => {
-    setShowLoading(loading && metricsFilterValues.frequency === 0)
-  }, [loading, metricsFilterValues.frequency])
-
-  useEffect(() => {
-    if (pollingTimer) {
-      clearTimeout(pollingTimer);
-    }
-    pollingMachineStatus();
-  }, [metricsFilterValues.timeRange, metricsFilterValues.frequency])
-
-  const handleConfigPanel = (editPanelType: string) => {
-    BaseLineEditModal.show({
-      baseLine: props[`${editPanelType}BaseLine`],
-      valueType: getValueType(editPanelType),
-      onOk: (values) => handleBaseLineChange(values, editPanelType),
-    });
-  };
-
-  const handleBaseLineChange = async (value, editPanelType) => {
-    const { baseLine, unit } = value;
-    const curBaseLine = getBaseLineByUnit({
-      baseLine,
-      unit,
-      valueType: getValueType(editPanelType),
-    });
-    setBaseLineMap({
-      ...baseLineMap,
-      [`${editPanelType}BaseLine`]: curBaseLine
+  const asyncGetResourceInfos = async (shouldLoading?: boolean) => {
+    shouldLoading && setOverviewLoading(true);
+    const queries = getNodeInfoQueries(cluster.id);
+    const data = await asyncBatchQueries(queries);
+    const { results } = data;
+    const resourceInfoData = instanceList.map(instance => {
+      const nodeResourceInfo: NodeResourceInfo = {} as any;
+      nodeResourceInfo.host = instance;
+      Object.keys(results).forEach(refId => {
+        const metricItem = results[refId].result.find(r => r.metric.instance.includes(instance));
+        if (metricItem) {
+          nodeResourceInfo[refId] = formatValueByRefId(refId, metricItem);
+        }
+      })
+      return nodeResourceInfo;
     })
-  };
+    setResourceInfos(resourceInfoData);
+    shouldLoading && setOverviewLoading(false);
+  }
 
-  const getMachineStatus = () => {
-    let [start, end] = calcTimeRange(metricsFilterValues.timeRange);
-    const step = getProperStep(start, end) * 1000;
-    start = start - start % step;
-    end = end + (step - end % step);
+  useEffect(() => {
+    if (cluster?.id && curInstance) {
+      fetchSingleMonitorData(true);
+    }
+  }, [curInstance, cluster, timeRange])
 
-    asyncGetCPUStatByRange({
-      start,
-      end,
-      metric: SUPPORT_METRICS.cpu[0].metric,
-      clusterID: cluster?.id
-    });
-    asyncGetMemoryStatByRange({
-      start,
-      end,
-      metric: SUPPORT_METRICS.memory[0].metric,
-      clusterID: cluster?.id
-    });
-    asyncGetDiskStatByRange({
-      start: Date.now() - 1000,
-      end: end,
-      metric: SUPPORT_METRICS.disk[1].metric,
-      clusterID: cluster?.id
-    });
-    asyncGetLoadByRange({
-      start,
-      end,
-      metric: SUPPORT_METRICS.load[0].metric,
-      clusterID: cluster?.id
-    });
-    asyncGetNetworkStatByRange({
-      start,
-      end,
-      metric: SUPPORT_METRICS.network[0].metric,
-      inOrOut: 'in',
-      clusterID: cluster?.id
-    });
-    asyncGetNetworkStatByRange({
-      start,
-      end,
-      metric: SUPPORT_METRICS.network[1].metric,
-      inOrOut: 'out',
-      clusterID: cluster?.id
-    });
-  };
+  const handleRefresh = () => {
+    asyncGetResourceInfos(true);
+    fetchSingleMonitorData(true);
+  }
 
-  const pollingMachineStatus = () => {
-    getMachineStatus();
-    if (metricsFilterValues.frequency > 0) {
-      pollingTimer = setTimeout(() => {
-        pollingMachineStatus();
-      }, metricsFilterValues.frequency);
+  const fetchSingleMonitorData = (shouldLoading?: boolean) => {
+    const cardObj = getMachineMetricData(curInstance, cluster, timeRange)
+    shouldLoading && setSingleNodeLoading(true);
+    diskCardRef.current?.handleRefresh?.();
+    Promise.all(
+      Object.keys(cardObj)
+        .map(key => metricRefs[key]?.handleRefresh?.()))
+      .then(() => {
+        shouldLoading && setSingleNodeLoading(false);
+      })
+  }
+
+  const clearPolling = () => {
+    if (pollingTimerRef.current) {
+      clearInterval(pollingTimerRef.current);
     }
   };
 
-  const getValueType = type => {
-    switch (type) {
-      case MACHINE_TYPE.cpu:
-      case MACHINE_TYPE.memory:
-        return VALUE_TYPE.percentage;
-      case MACHINE_TYPE.load:
-        return VALUE_TYPE.number;
-      case MACHINE_TYPE.networkOut:
-      case MACHINE_TYPE.networkIn:
-        return VALUE_TYPE.byteSecond;
-      default:
-        return VALUE_TYPE.number;
+  const pollingData = () => {
+    asyncGetResourceInfos();
+    fetchSingleMonitorData();
+    if (frequencyValue > 0) {
+      pollingTimerRef.current = setInterval(() => {
+        asyncGetResourceInfos();
+        fetchSingleMonitorData();
+      }, frequencyValue);
     }
-  };
+  }
 
-  const handleMetricsChange = (values) => {
-    updateMetricsFiltervalues(values);
+  const handleInstanceChange = (value: string) => {
+    setCurInstance(value);
   }
 
   const getViewPath = (path: string): string => {
@@ -182,87 +202,86 @@ function MachineDashboard(props: IProps) {
     return path;
   }
 
-  const handleRefreshData = () => {
-    getMachineStatus();
+  const handleTimeSelectChange = (value: TIME_OPTION_TYPE | [number, number]) => {
+    setTimeRange(value);
+  }
+
+  const renderCardContent = () => {
+    const cardObj = getMachineMetricData(curInstance, cluster, timeRange)
+    return Object.keys(cardObj).map(key => (
+      <DashboardCard
+        key={key}
+        title={cardObj[key].title}
+        viewPath={cardObj[key].viewPath ? getViewPath(cardObj[key].viewPath) : undefined }
+      >
+        <MetricCard
+          ref={ref => metricRefs[key] = ref}
+          asyncBatchQueries={asyncBatchQueries}
+          queries={cardObj[key].queries}
+          valueType={cardObj[key].valueType}
+        />
+      </DashboardCard >
+    ))
   }
 
   return (
-    <Spin spinning={showLoading} wrapperClassName='machine-dashboard-spinning'>
-      <div className="machine-dashboard">
-        <div className='common-header' >
-          <MetricsFilterPanel
-            onChange={handleMetricsChange}
-            instanceList={instanceList}
-            values={metricsFilterValues}
-            onRefresh={handleRefreshData}
+    <div className={styles.machineDashboarContent}>
+      <div className={styles.card}>
+        <div className={styles.cardTitle}>{intl.get('device.nodeResource.title')}</div>
+        <div className={styles.content}>
+          <NodeResourceOverview
+            resourceInfos={resourceInfos}
+            loading={overviewLoading}
           />
         </div>
+      </div>
+      <div className={styles.singelNodeMonitor}>
+        <div className={styles.monitorTitle}>{intl.get('device.nodeResource.singleNodeTitle')}</div>
+        <div className={styles.action}>
+          <TimeSelect value={timeRange} onChange={handleTimeSelectChange} />
+          <DashboardSelect className={styles.instanceSelect} value={curInstance} onChange={handleInstanceChange}>
+            {
+              instanceList.map((instance: string) => (
+                <Option key={instance} value={instance}>{instance}</Option>
+              ))
+            }
+          </DashboardSelect>
+          <Button
+            type="primary"
+            onClick={() => { }}
+            className={`${styles.primaryBtn} ${styles.addPanelBtn}`}
+          >
+            <Icon icon="#iconPlus" />
+            {intl.get('common.addPanel')}
+          </Button>
+        </div>
+      </div>
+      <Spin spinning={singleNodeLoading}>
         <Row>
           <Col span={12}>
             <DashboardCard
-              title={<> {intl.get('device.cpu')} <span>{SUPPORT_METRICS.cpu[0].metric}</span></>}
-              viewPath={getViewPath("/machine/cpu")}
-              onConfigPanel={() => handleConfigPanel(MACHINE_TYPE.cpu)}
+              title={intl.get('device.nodeResource.waterLevel')}
             >
-              <CPUCard baseLine={baseLineMap[`${MACHINE_TYPE.cpu}BaseLine`]} />
-            </DashboardCard>
+              <WaterLevelCard nodeResource={resourceInfos.find(info => info.host === curInstance)} />
+            </DashboardCard >
           </Col>
           <Col span={12}>
             <DashboardCard
-              title={<>{intl.get('device.memory')}<span>{SUPPORT_METRICS.memory[0].metric}</span></>}
-              viewPath={getViewPath("/machine/memory")}
-              onConfigPanel={() => handleConfigPanel(MACHINE_TYPE.memory)}
-            >
-              <MemoryCard baseLine={baseLineMap[`${MACHINE_TYPE.memory}BaseLine`]} />
-            </DashboardCard>
-          </Col>
-        </Row>
-        <Row>
-          <Col span={12}>
-            <DashboardCard
-              title={<>{intl.get('device.load')}<span>{SUPPORT_METRICS.load[0].metric}</span></>}
-              viewPath={getViewPath("/machine/load")}
-              onConfigPanel={() => handleConfigPanel(MACHINE_TYPE.load)}
-            >
-              <LoadCard baseLine={baseLineMap[`${MACHINE_TYPE.load}BaseLine`]} />
-            </DashboardCard>
-          </Col>
-          <Col span={12}>
-            <DashboardCard
-              title={<>{intl.get('device.disk')}<span>{SUPPORT_METRICS.disk[0].metric}</span></>}
+              title={intl.get('device.disk')}
               viewPath={getViewPath("/machine/disk")}
             >
-              <DiskCard />
-            </DashboardCard>
+              <DiskCard ref={diskCardRef} cluster={cluster} instance={curInstance} asyncBatchQueries={asyncBatchQueries} />
+            </DashboardCard >
           </Col>
         </Row>
-        <Row>
-          <Col span={12}>
-            <DashboardCard
-              title={<>{intl.get('device.networkOut')}<span>{SUPPORT_METRICS.network[1].metric}</span></>}
-              viewPath={getViewPath("/machine/network")}
-              onConfigPanel={() =>
-                handleConfigPanel(MACHINE_TYPE.networkOut)
-              }
-            >
-              <NetworkOut baseLine={baseLineMap[`${MACHINE_TYPE.networkOut}BaseLine`]} />
-            </DashboardCard>
-          </Col>
-          <Col span={12}>
-            <DashboardCard
-              title={<>{intl.get('device.networkIn')}<span>{SUPPORT_METRICS.network[1].metric}</span></>}
-              viewPath={getViewPath("/machine/network")}
-              onConfigPanel={() =>
-                handleConfigPanel(MACHINE_TYPE.networkIn)
-              }
-            >
-              <NetworkIn baseLine={baseLineMap[`${MACHINE_TYPE.networkIn}BaseLine`]} />
-            </DashboardCard>
-          </Col>
-        </Row>
-      </div>
-    </Spin>
-  )
+        <div className={styles.chartContent}>
+          {
+            renderCardContent()
+          }
+        </div>
+      </Spin>
+    </div>
+  );
 }
 
 export default connect(mapState, mapDispatch)(MachineDashboard);
