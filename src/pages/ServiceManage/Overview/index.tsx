@@ -56,7 +56,7 @@ const OverviewCardHeader = (props: IHaderProps) => {
 let interval;
 const Overview: React.FC<IProps> = (props: IProps) => {
 
-  const { cluster, currentSpace, spaces, baseRouter = '/management', nebulaConnect } = props;
+  const { cluster, currentSpace, spaces, baseRouter = '/management'  } = props;
   const [balancing, setBalancing] = useState(false);
   const modalHandler = useRef<any>();
   const [hosts, setHosts] = useState([]);
@@ -70,10 +70,8 @@ const Overview: React.FC<IProps> = (props: IProps) => {
     props.clear();
   },[cluster])
   useEffect(() => {
-    if (nebulaConnect) {
       asyncGetHostsInfo();
-    }
-  }, [nebulaConnect]);
+  }, []);
 
   const handleSpaceChange = async space => {
     const { code } = await props.asyncUseSpaces(space);
