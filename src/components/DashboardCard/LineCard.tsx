@@ -21,10 +21,10 @@ function LineCard(props: IProps) {
     if (!loading && chartRef.current) {
       updateChart();
     }
-  }, [loading, chartRef.current]);
+  }, [loading, chartRef.current]); 
 
   useEffect(() => {
-    if (baseLine != undefined && chartRef.current) {
+    if (chartRef.current) {
       chartRef.current.updateBaseline(baseLine);
     }
   }, [baseLine, chartRef.current]);
@@ -36,6 +36,14 @@ function LineCard(props: IProps) {
     });
     updateChart();
   };
+
+  useEffect(() => {
+    chartRef.current?.configDetailChart({
+      valueType,
+      isCard: true,
+    });
+    updateChart();
+  }, [valueType]);
 
   const updateChart = () => {
     const realRange = data.length > 0 ? (data[data.length - 1].time - data[0].time) : 0;
@@ -62,7 +70,7 @@ function LineCard(props: IProps) {
     loading ? <Spin /> : (
     <LineChart
       renderChart={renderLineChart}
-      ref={ref => chartRef.current = ref}
+      ref={chartRef}
       options={{ padding: [20, 20, 60, 6 * maxNumLen + 30] }}
     />)
   );

@@ -111,16 +111,19 @@ export const calcMetricInfo = (rawMetric: string) => {
 }
 
 const calcServiceMetricValueType = (metricName: string): VALUE_TYPE => {
-  let valueType = VALUE_TYPE.number;
-  const valueTypes = Object.keys(ServiceMetricValueTypeMap) as VALUE_TYPE[];
-  for (let i = 0; i < valueTypes.length; i++) {
-    const curValueType = valueTypes[i];
-    if (ServiceMetricValueTypeMap[curValueType].includes(metricName)) {
-      valueType = curValueType as VALUE_TYPE;
-      break;
-    }
+  if (metricName.includes('num')) {
+    return VALUE_TYPE.number;
   }
-  return valueType;
+  if (metricName.includes('latency')) {
+    return VALUE_TYPE.latency;
+  }
+  if (metricName.includes('bytes')) {
+    return VALUE_TYPE.byte;
+  }
+  if (metricName.includes('seconds')) {
+    return VALUE_TYPE.byteSecond;
+  }
+  return VALUE_TYPE.number;
 }
 
 export const filterServiceMetrics = (payload: {
@@ -216,11 +219,11 @@ export const RawServiceMetrics = [
   "write_bytes_total",
 ]
 
-export const ServiceMetricValueTypeMap = {
-  [VALUE_TYPE.byte]: ["write_bytes_total", "memory_bytes_gauge", "read_bytes_total"],
-  [VALUE_TYPE.byteSecond]: [],
-  [VALUE_TYPE.numberSecond]: ["cpu_seconds_total"]
-}
+// export const ServiceMetricValueTypeMap = {
+//   [VALUE_TYPE.byte]: ["write_bytes_total", "memory_bytes_gauge", "read_bytes_total"],
+//   [VALUE_TYPE.byteSecond]: [],
+//   [VALUE_TYPE.numberSecond]: ["cpu_seconds_total"],
+// }
 
 export const getQueryMap = (metricItem: IServiceMetricItem) => {
   const res = {};
