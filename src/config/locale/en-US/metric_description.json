@@ -141,5 +141,21 @@
   "num_appendLogs": "The number of times that logs are appended.",
   "appendLogs_latency_us": "The latency of appending logs.",
   "more": "More",
-  "enable_space_level_metrics_tip": "To enable space-level metrics, please set the value of enable_space_level_metrics to true in the Graph service configuration"
+  "enable_space_level_metrics_tip": "To enable space-level metrics, please set the value of enable_space_level_metrics to true in the Graph service configuration",
+  "cpu_total_used": "total used",
+  "cpu_system_used": "system used",
+  "cpu_user_used": "user used",
+  "cpu_io_wait_used": "io wait used",
+  "memory_total": "total",
+  "memory_currnet_used": "used",
+  "memory_avaliable": "avaliable",
+  "memory_cached": "cache + buffer",
+  "memory_swap_used": "SWAP used",
+  "cpu_load_1": "load 1min",
+  "cpu_load_5": "load 5min",
+  "cpu_load_15": "load 15min",
+  "disk_read_rate": "read",
+  "disk_write_rate": "write",
+  "open_file_desc": "open file desc",
+  "context_switch_rate": "conetxt switch"
 }

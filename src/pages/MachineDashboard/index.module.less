@@ -1,0 +1,106 @@
+.machineDashboarContent {
+  position: relative;
+
+  :global {
+    .dashboard-card {
+      // height: calc((100vh - 285px)/ 3);
+			.inner{
+				border: 1px solid #D9D9D9;
+			}
+			.nebula-chart-line {
+				height: 100%;
+			}
+		}
+  }
+}
+
+.cardRow {
+  display: flex;
+  flex-direction: row;
+
+  & > div {
+    flex: 1;
+    max-width: 50%;
+  }
+}
+
+.instanceSelect {
+  margin-left: 10px;
+  height: 34px;
+
+  :global {
+    .ant-select-arrow {
+      top: 43%;
+    }
+  }
+}
+
+.card {
+  width: 100%;
+  padding: 16px;
+  background-color: #fff;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.08);
+
+  .cardTitle {
+    font-family: 'PingFang SC';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 22px;
+    color: #000000;
+    margin-bottom: 10px;
+  }
+}
+
+.singelNodeMonitor {
+  margin: 24px 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.monitorTitle {
+  font-family: 'PingFang SC';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 22px;
+  color: #000000;
+}
+
+.action {
+  display: flex;
+  align-items: center;
+}
+
+.addPanelBtn {
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+}
+
+.chart-content {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  :global {
+    @media screen and (max-width: 1960px) and (min-width: 1200px) {
+      .dashboard-card {
+        width: calc(50%);
+      }
+    }
+  
+    @media screen and (min-width: 1960px) and (max-width: 2480px) {
+      .dashboard-card {
+        width: calc(33.3%);
+      }
+    }
+  
+    @media screen and (min-width: 2480px) {
+      .dashboard-card {
+        width: calc(25%);
+      }
+    }
+  }
+}

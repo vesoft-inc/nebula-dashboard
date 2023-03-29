@@ -6,6 +6,7 @@ import { LINUX } from '@/utils/promQL';
 import { IStatRangeItem, IStatSingleItem, MetricScene, MetricsPanelValue } from '@/utils/interface';
 import { isCommunityVersion, unique } from '@/utils';
 import { InitMachineMetricsFilterValues } from '@/utils/metric';
+import { getQueryRangeInfo } from '@/utils';
 
 const PROMQL = LINUX;
 export interface IState {
@@ -64,12 +65,8 @@ export function MachineModelWrapper(service,) {
         metric: string;
         clusterID?: string;
       }) {
-        let { start, end, clusterID, metric } = payload;
-        const step = getProperStep(start, end);
-        start = start / 1000;
-        end = end / 1000;
-        start = start - start % step;
-        end = end + (step - end % step);
+        let { clusterID, metric } = payload;
+        const { start, end, step } = getQueryRangeInfo(payload.start, payload.end);
         const { code, data } = (await service.execPromQLByRange({
           clusterID,
           query: PROMQL(clusterID)[metric],

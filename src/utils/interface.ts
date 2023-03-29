@@ -139,3 +139,35 @@ export interface IPanelConfig {
   [ServiceName.StoragedListener]: IServicePanelConfig[];
   [ServiceName.Drainer]: IServicePanelConfig[];
 }
+
+export interface NodeResourceInfo {
+  type: string;
+  host: string;
+  nodeName: string;
+  runtime: string;
+  cpuCore: string;
+  memory: string;
+  disk: string;
+  diskUsed: string;
+  load5s: number;
+  diskMaxRead: string;
+  diskMaxWrite: string;
+  cpuUtilization: string;
+  memoryUtilization: string;
+  diskUtilization: string;
+  networkIn: string;
+  networkOut: string;
+  memoryUsed: string;
+}
+
+export enum CellHealtyLevel {
+  normal = 'normal',
+  warning = 'warning',
+  danger = 'danger',
+}
+
+export const Percent_Range = {
+  [CellHealtyLevel.normal]: [0, 50],
+  [CellHealtyLevel.warning]: [50, 90],
+  [CellHealtyLevel.danger]: [90, 100],
+}

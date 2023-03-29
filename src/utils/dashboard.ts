@@ -392,7 +392,9 @@ export const getMaxNumAndLength = (payload: {
       maxNumLen = unit.length + value.toString().length;
       break;
     }
-    case VALUE_TYPE.byteSecondNet: {
+    case VALUE_TYPE.byteSecondNet:
+    case VALUE_TYPE.diskIONet:
+    {
       const { value, unit } = getProperByteDesc(maxNum);
       maxNumLen = unit.length + value.toString().length + 2;
       break;

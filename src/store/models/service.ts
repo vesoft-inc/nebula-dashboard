@@ -7,6 +7,7 @@ import { AggregationType, getProperStep } from '@/utils/dashboard';
 import { isCommunityVersion, unique } from '@/utils';
 import { getClusterPrefix } from '@/utils/promQL';
 import { InitMetricsFilterValues } from '@/utils/metric';
+import { getQueryRangeInfo } from '@/utils';
 
 interface IServiceState {
   panelConfig: IPanelConfig;
@@ -53,11 +54,7 @@ export function SereviceModelWrapper(serviceApi) {
         clusterID?: string;
       }) {
         const { start, end, space, query: _query, clusterID } = payload;
-        const step = getProperStep(start, end);
-        let _start = start / 1000;
-        let _end = end / 1000;
-        _start = _start - _start % step;
-        _end = _end + (step - _end % step);
+        const { start: _start, end: _end, step } = getQueryRangeInfo(start, end);
         let query = `sum(${_query}{${getClusterPrefix()}="${clusterID}"})`;
         query = `${_query}{${getClusterPrefix()}="${clusterID}", space="${space || ''}"}`;
         const { code, data } = (await serviceApi.execPromQLByRange({
@@ -99,11 +96,7 @@ export function SereviceModelWrapper(serviceApi) {
           clusterID,
           noSuffix = false,
         } = payload;
-        const step = getProperStep(start, end);
-        let _start = start / 1000;
-        let _end = end / 1000;
-        _start = _start - _start % step;
-        _end -= _end % step; // end time should be less than the current time
+        const { start: _start, end: _end, step } = getQueryRangeInfo(start, end);
         let query = _query;
         if (!noSuffix) {
           if (clusterID) {
@@ -144,10 +137,8 @@ export function SereviceModelWrapper(serviceApi) {
         clusterID?: string;
       }) {
         const { interval, end, query, clusterID } = payload;
-        const start = end - interval;
-        const step = getProperStep(start, end);
-        const _start = start / 1000;
-        const _end = end / 1000;
+        const start = payload.end - interval;
+        const { start: _start, end: _end, step } = getQueryRangeInfo(start, end);
         const { code, data } = (await serviceApi.execPromQLByRange({
           clusterID,
           query: clusterID ? `${query}{${getClusterPrefix()}="${clusterID}"}` : query,

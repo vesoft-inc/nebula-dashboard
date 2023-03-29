@@ -1,56 +1,73 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import _ from 'lodash';
-import { IRootState } from '@/store';
+
 import SpaceChart from '@/components/Charts/SpaceChart';
-import { DiskMetricInfo, MetricScene } from '@/utils/interface';
-import { getMetricsUniqName } from '@/utils/dashboard';
+import { DiskMetricInfo } from '@/utils/interface';
+import { getClusterPrefix } from '@/utils/promQL';
 
-const mapState = (state: IRootState) => {
-  const { diskSizeStat, diskStat, metricsFilterValues } = state.machine;
-  const { aliasConfig } = state.app;
-
-  const { instanceList } = metricsFilterValues;
-
-  return {
-    // According to type, only the detail increases total
-    diskUsageDetails: diskStat
-      .filter(item => item.metric.instance !== 'total')
-      .map((instance, idx) => {
-        const latestValues = _.last(instance.values);
-        let size = 0;
-        if (diskSizeStat[idx]) {
-          size = Number(diskSizeStat[idx].value[1]);
-        }
-        const { name, showName } = getMetricsUniqName(MetricScene.DISK);
-        const { device, mountpoint } = instance.metric;
-        return {
-          size,
-          name: showName(aliasConfig?.[name] || instance.metric[name]),
-          used: latestValues ? Number(latestValues[1]) : 0,
-          device, 
-          mountpoint
-        } as DiskMetricInfo;
-      }).filter(item => {
-        if (instanceList.includes('all')) {
-          return true;
-        }
-        return instanceList.some(instance => item.name.includes(instance))
-      }),
-  };
-};
-
-interface IProps extends ReturnType<typeof mapState> {}
-
-class DiskCard extends React.Component<IProps> {
-  render() {
-    const { diskUsageDetails } = this.props;
-    return (
-      <div className="disk-detail detail-card">
-        <SpaceChart diskInfos={diskUsageDetails} />
-      </div>
-    );
-  }
+interface IProps {
+  // diskUsageDetails: DiskMetricInfo[];
+  cluster?: any;
+  instance: string;
+  asyncBatchQueries: (queries: []) => Promise<any>;
 }
 
-export default connect(mapState)(DiskCard);
+const DiskCard = forwardRef((props: IProps, ref) => {
+  const { cluster, instance, asyncBatchQueries } = props;
+
+  const [diskUsageDetails, setDiskUsageDetails] = useState<DiskMetricInfo[]>([]);
+
+  useEffect(() => {
+    if (cluster?.id && instance) {
+      asyncGetDiskUsageDetails();
+    }
+  }, [instance, cluster]);
+
+  useImperativeHandle(ref, () => (
+    {
+      handleRefresh: () => {
+        asyncGetDiskUsageDetails();
+      }
+    }
+  ));
+  
+  const asyncGetDiskUsageDetails = async () => {
+    const clusterSuffix1 = cluster ? `,${getClusterPrefix()}="${cluster.id}"` : '';
+    const instanceSuffix = `, instance=~"^${instance.replaceAll(".", "\.")}.*"`;
+    const queries: any = [
+      {
+        refId: 'diskSize',
+        query: `node_filesystem_size_bytes{fstype=~"ext.*|xfs",mountpoint !~".*pod.*"${clusterSuffix1}${instanceSuffix}}`
+      },
+      {
+        refId: 'diskUsed',
+        query: `node_filesystem_size_bytes{fstype=~"ext.*|xfs",mountpoint !~".*pod.*"${clusterSuffix1}${instanceSuffix}} - node_filesystem_free_bytes{fstype=~"ext.*|xfs",mountpoint !~".*pod.*"${clusterSuffix1}${instanceSuffix}}`
+      }
+    ];
+    const data = await asyncBatchQueries(queries);
+    const { results } = data;
+    const details = results.diskSize.result.map(item => {
+      const metricItem = results.diskUsed.result.find(usedItem => usedItem.metric.device === item.metric.device);
+      let used = 0;
+      if (metricItem) {
+        used = parseInt(metricItem.value[1]);
+      }
+      return {
+        size: parseInt(item.value[1]),
+        device: item.metric.device,
+        mountpoint: item.metric.mountpoint,
+        used,
+        name: instance,
+      }
+    });
+    setDiskUsageDetails(details);
+  }
+
+  return (
+    <div className="disk-detail detail-card">
+      <SpaceChart diskInfos={diskUsageDetails} />
+    </div>
+  );
+}) 
+
+export default DiskCard;
