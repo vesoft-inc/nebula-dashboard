@@ -7,7 +7,7 @@ import FrequencySelect from '../MetricsFilterPanel/FrequencySelect';
 import styles from './index.module.less';
 
 interface Props {
-  type: 'machineOverview' | 'serviceOveriew'
+  type: string;
 }
 
 function GlobalFrequencySelect(props: Props) {
