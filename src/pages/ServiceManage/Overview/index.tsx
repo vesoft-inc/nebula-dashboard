@@ -13,10 +13,9 @@ import { getVersionFeatures } from '@/utils/versionFeature';
 import Modal from '@/components/Modal';
 import { IDispatch, IRootState } from '@/store';
 import { formatVersion } from '@/utils/dashboard';
+import { isCommunityVersion } from '@/utils';
 
 import styles from './index.module.less';
-import { isCommunityVersion } from '@/utils';
-import { ICluster } from '@base/utils/interface';
 
 const mapDispatch: any = (dispatch: IDispatch) => ({
   asyncUseSpaces: dispatch.nebula.asyncUseSpaces,
@@ -41,7 +40,7 @@ interface IProps
   ReturnType<typeof mapDispatch>,
   RouteComponentProps {
   baseRouter?: string;
-  cluster?: ICluster;
+  cluster?: any;
 }
 
 const OverviewCardHeader = (props: IHaderProps) => {
