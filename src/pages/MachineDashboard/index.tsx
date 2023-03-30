@@ -212,7 +212,7 @@ function MachineDashboard(props: IProps) {
       <DashboardCard
         key={key}
         title={cardObj[key].title}
-        viewPath={cardObj[key].viewPath ? getViewPath(cardObj[key].viewPath) : undefined }
+        viewPath={cardObj[key].viewPath ? getViewPath(cardObj[key].viewPath) : undefined}
       >
         <MetricCard
           ref={ref => metricRefs[key] = ref}
@@ -236,50 +236,44 @@ function MachineDashboard(props: IProps) {
         </div>
       </div>
       <div className={styles.singelNodeMonitor}>
-        <div className={styles.monitorTitle}>{intl.get('device.nodeResource.singleNodeTitle')}</div>
-        <div className={styles.action}>
-          <TimeSelect value={timeRange} onChange={handleTimeSelectChange} />
-          <DashboardSelect className={styles.instanceSelect} value={curInstance} onChange={handleInstanceChange}>
+        <div className={styles.singelNodeMonitorHeader}>
+          <div className={styles.monitorTitle}>{intl.get('device.nodeResource.singleNodeTitle')}</div>
+          <div className={styles.action}>
+            <TimeSelect value={timeRange} onChange={handleTimeSelectChange} />
+            <DashboardSelect className={styles.instanceSelect} value={curInstance} onChange={handleInstanceChange}>
+              {
+                instanceList.map((instance: string) => (
+                  <Option key={instance} value={instance}>{instance}</Option>
+                ))
+              }
+            </DashboardSelect>
+          </div>
+        </div>
+        <Spin spinning={singleNodeLoading}>
+          <Row>
+            <Col span={12}>
+              <DashboardCard
+                title={intl.get('device.nodeResource.waterLevel')}
+              >
+                <WaterLevelCard nodeResource={resourceInfos.find(info => info.host === curInstance)} />
+              </DashboardCard >
+            </Col>
+            <Col span={12}>
+              <DashboardCard
+                title={intl.get('device.disk')}
+                viewPath={getViewPath("/machine/disk")}
+              >
+                <DiskCard ref={diskCardRef} cluster={cluster} instance={curInstance} asyncBatchQueries={asyncBatchQueries} />
+              </DashboardCard >
+            </Col>
+          </Row>
+          <div className={styles.chartContent}>
             {
-              instanceList.map((instance: string) => (
-                <Option key={instance} value={instance}>{instance}</Option>
-              ))
+              renderCardContent()
             }
-          </DashboardSelect>
-          <Button
-            type="primary"
-            onClick={() => { }}
-            className={`${styles.primaryBtn} ${styles.addPanelBtn}`}
-          >
-            <Icon icon="#iconPlus" />
-            {intl.get('common.addPanel')}
-          </Button>
-        </div>
+          </div>
+        </Spin>
       </div>
-      <Spin spinning={singleNodeLoading}>
-        <Row>
-          <Col span={12}>
-            <DashboardCard
-              title={intl.get('device.nodeResource.waterLevel')}
-            >
-              <WaterLevelCard nodeResource={resourceInfos.find(info => info.host === curInstance)} />
-            </DashboardCard >
-          </Col>
-          <Col span={12}>
-            <DashboardCard
-              title={intl.get('device.disk')}
-              viewPath={getViewPath("/machine/disk")}
-            >
-              <DiskCard ref={diskCardRef} cluster={cluster} instance={curInstance} asyncBatchQueries={asyncBatchQueries} />
-            </DashboardCard >
-          </Col>
-        </Row>
-        <div className={styles.chartContent}>
-          {
-            renderCardContent()
-          }
-        </div>
-      </Spin>
     </div>
   );
 }

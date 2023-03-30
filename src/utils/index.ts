@@ -88,11 +88,6 @@ export class LocalStorageStorageUtil {
   }
 }
 
-export const clearNebulaConnection = () => {
-  SessionStorageUtil.removeItem('nebulaConnect');
-  cookies.remove('nsid');
-}
-
 export const getMenuPathByKey = (menuList: any[], activeKey: string): string[] => {
   let path: string[] = [];
   for(let i = 0; i < menuList.length; i++) {
