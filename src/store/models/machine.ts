@@ -10,15 +10,6 @@ import { getQueryRangeInfo } from '@/utils';
 
 const PROMQL = LINUX;
 export interface IState {
-  cpuStat: IStatRangeItem[];
-  diskStat: IStatRangeItem[];
-  memoryStat: IStatRangeItem[];
-  loadStat: IStatRangeItem[];
-  networkOutStat: IStatRangeItem[];
-  networkInStat: IStatRangeItem[];
-  networkStat: IStatRangeItem[];
-  memorySizeStat: IStatSingleItem[];
-  diskSizeStat: IStatSingleItem[];
   instanceList: string[];
   metricsFilterValues: MetricsPanelValue;
 }
@@ -26,15 +17,6 @@ export interface IState {
 export function MachineModelWrapper(service,) {
   return createModel({
     state: {
-      cpuStat: [] as IStatRangeItem[],
-      diskStat: [] as IStatRangeItem[],
-      memoryStat: [] as IStatRangeItem[],
-      networkOutStat: [] as IStatRangeItem[],
-      networkInStat: [] as IStatRangeItem[],
-      networkStat: [] as IStatRangeItem[],
-      loadStat: [] as IStatRangeItem[],
-      memorySizeStat: [] as IStatSingleItem[],
-      diskSizeStat: [] as IStatSingleItem[],
       instanceList: [] as string[],
       metricsFilterValues: InitMachineMetricsFilterValues,
     },
@@ -95,9 +77,6 @@ export function MachineModelWrapper(service,) {
           ...payload,
           nameObj: getMetricsUniqName(MetricScene.CPU)
         });
-        this.update({
-          cpuStat,
-        });
         return cpuStat;
       },
 
@@ -111,9 +90,6 @@ export function MachineModelWrapper(service,) {
           ...payload,
           nameObj: getMetricsUniqName(MetricScene.MEMORY)
         });
-        this.update({
-          memoryStat,
-        });
         return memoryStat;
       },
 
@@ -126,9 +102,6 @@ export function MachineModelWrapper(service,) {
         if (code === 0) {
           memorySizeStat = data.result;
         }
-        this.update({
-          memorySizeStat,
-        });
         return memorySizeStat;
       },
 
@@ -142,9 +115,6 @@ export function MachineModelWrapper(service,) {
           ...payload,
           nameObj: getMetricsUniqName(MetricScene.DISK)
         });
-        this.update({
-          diskStat,
-        });
         return diskStat;
       },
 
@@ -157,9 +127,6 @@ export function MachineModelWrapper(service,) {
         if (code === 0) {
           diskSizeStat = data.result;
         }
-        this.update({
-          diskSizeStat,
-        });
         return diskSizeStat;
       },
 
@@ -173,9 +140,6 @@ export function MachineModelWrapper(service,) {
           ...payload,
           nameObj: getMetricsUniqName(MetricScene.LOAD)
         });
-        this.update({
-          loadStat,
-        });
         return loadStat;
       },
 
@@ -188,22 +152,6 @@ export function MachineModelWrapper(service,) {
       }) {
         const { start, end, metric, clusterID, inOrOut } = payload;
         let networkStat = await this.asyncGetMetricsData({ start, end, metric, clusterID, nameObj: getMetricsUniqName(MetricScene.NETWORK) });
-        switch (inOrOut) {
-          case 'in':
-            this.update({
-              networkInStat: networkStat,
-            });
-            break;
-          case 'out':
-            this.update({
-              networkOutStat: networkStat,
-            });
-            break;
-          default:
-            this.update({
-              networkStat,
-            });
-        }
         return networkStat;
       },
 
