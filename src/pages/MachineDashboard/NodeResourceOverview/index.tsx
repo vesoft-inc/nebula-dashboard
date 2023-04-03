@@ -19,7 +19,7 @@ function NodeResourceOverview(props: IProps) {
   const renderCell = (text: string) => {
     let num: number;
     let level: CellHealtyLevel = CellHealtyLevel.normal ;
-    if (text.includes('%')) {
+    if (text?.includes('%')) {
       num = parseFloat(text.slice(0, text.length - 1));
       level = calcNodeHealty(num);
     }

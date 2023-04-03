@@ -30,6 +30,11 @@ const mapDispatch: any = (dispatch: IDispatch) => ({
   asyncGetAppInfo: dispatch.app.asyncGetAppInfo,
   asyncGetCustomConfig: dispatch.app.asyncGetCustomConfig,
   asyncGetServiceMetric: dispatch.serviceMetric.asyncGetServiceMetric,
+  changeServiceMetricStatus: () => {
+    dispatch.serviceMetric.update({
+      ready: true,
+    });
+  },
   asyncGetSpaces: dispatch.nebula.asyncGetSpaces,
   asyncUseSpaces: dispatch.nebula.asyncUseSpaces,
   asyncGetNebulaVersion: dispatch.nebula.asyncGetNebulaVersion,
@@ -95,6 +100,8 @@ class MainPage extends React.Component<IProps, IState> {
         this.props.asyncGetServiceMetric({
           componentType: item,
           version: this.props.nebluaVersion,
+        }).then(() => {
+          this.props.changeServiceMetricStatus();
         }),
       );
     }

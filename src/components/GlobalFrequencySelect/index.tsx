@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 
-import { TIME_INTERVAL_OPTIONS } from '@/utils/dashboard';
 import EventBus from '@/utils/EventBus';
 import FrequencySelect from '../MetricsFilterPanel/FrequencySelect';
 
-import styles from './index.module.less';
 
 interface Props {
   type: string;

@@ -8,7 +8,7 @@ import './index.less';
 
 interface IProps {
   serviceType: ServiceName;
-  title: string;
+  title: string | React.ReactNode;
   icon?: string;
 }
 class ServiceHeader extends React.PureComponent<IProps> {
