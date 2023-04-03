@@ -157,5 +157,19 @@
   "disk_read_rate": "read",
   "disk_write_rate": "write",
   "open_file_desc": "open file desc",
-  "context_switch_rate": "conetxt switch"
+  "context_switch_rate": "conetxt switch",
+  "graphd_latency": "Graphd Latency",
+  "graphd_queries": "Graphd Query",
+  "graphd_sessions": "Graphd Session",
+  "process_memory": "Process Memory Usage",
+  "process_resource": "Process Disk Read/Write Bytes",
+  "process_cpu": "Process Cpu Usage",
+  "process_context_switch": "Process Context Switch & open file desc",
+  "metad_latency": "Metad Latency",
+  "metad_nums": "Metad Num Related",
+  "storage_latency": "Storage Latency",
+  "storaged_edge_nums": "Edge Num Related",
+  "storaged_vertices_nums": "Vertices Num Related",
+  "storaged_tag_and_dst_nums": "Tag and Src&Dst Num Related",
+  "storaged_other_nums": "Other Num Related"
 }

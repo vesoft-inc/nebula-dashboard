@@ -85,13 +85,13 @@ export const METRIC_PROCESS_TYPES = [
   ServiceName.GRAPHD,
   ServiceName.STORAGED,
   ServiceName.METAD,
-];
+] as const;
 
 export const DEPENDENCY_PROCESS_TYPES = [
   ServiceName.MetadListener,
   ServiceName.StoragedListener,
   ServiceName.Drainer,
-];
+] as const;
 
 export const ClusterServiceNameMap = {
   [ServiceName.MetadListener]: 'metadListener',

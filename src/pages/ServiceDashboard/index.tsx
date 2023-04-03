@@ -1,143 +1,110 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import intl from 'react-intl-universal';
-import { RouteComponentProps, useHistory, withRouter } from 'react-router-dom';
+import { Button, Spin } from 'antd';
 
+import TimeSelect from '@/components/TimeSelect';
+import { TIME_OPTION_TYPE } from '@/utils/dashboard';
+import Icon from '@/components/Icon';
+
+import { ServiceName } from '@/utils/interface';
+import { ClusterServiceNameMap } from '@/utils/metric';
+import { defaultServicePanelConfigData } from './defaultPanelConfig';
 import ServiceOverview from './ServiceOverview';
-import { IDispatch, IRootState } from '@/store';
-import Modal from '@/components/Modal';
-import ServiceCardEdit from '@/components/Service/ServiceCardEdit';
-import { METRIC_PROCESS_TYPES } from '@/utils/metric';
-import MetricsFilterPanel from '@/components/MetricsFilterPanel';
-import { ServiceMetricsPanelValue, ServiceName } from '@/utils/interface';
-import { calcTimeRange } from '@/utils/dashboard';
-import { shouldCheckCluster } from '@/utils';
 
-import './index.less';
+import styles from './index.module.less';
 
-
-const mapDispatch: any = (dispatch: IDispatch) => ({
-  asyncGetStatus: dispatch.service.asyncGetStatus,
-  asyncGetSpaces: dispatch.serviceMetric.asyncGetSpaces,
-  updateMetricsFiltervalues: dispatch.service.updateMetricsFiltervalues,
-  updatePanelConfig: values =>
-    dispatch.service.update({
-      panelConfig: values,
-    }),
+const mapDispatch: any = (_dispatch: any) => ({
 });
 
-const mapState: any = (state: IRootState) => ({
-  panelConfig: state.service.panelConfig,
-  aliasConfig: state.app.aliasConfig,
-  instanceList: state.service.instanceList as any,
-  cluster: (state as any)?.cluster?.cluster,
-  serviceMetric: state.serviceMetric,
-  metricsFilterValues: (state as any).service.metricsFilterValues as ServiceMetricsPanelValue,
+const mapState = (state: any) => ({
+  loading: state.loading.effects.nebula.asyncBatchQueries,
 });
 
 interface IProps
-  extends RouteComponentProps, ReturnType<typeof mapDispatch>,
+  extends ReturnType<typeof mapDispatch>,
   ReturnType<typeof mapState> {
-  onView: (serviceType: ServiceName) => void;
+  cluster?: any;
 }
 
+const ServicePanels = [
+  ServiceName.GRAPHD,
+  ServiceName.STORAGED,
+  ServiceName.METAD,
+  ClusterServiceNameMap[ServiceName.MetadListener],
+  ClusterServiceNameMap[ServiceName.StoragedListener],
+  ClusterServiceNameMap[ServiceName.Drainer],
+]
+
 function ServiceDashboard(props: IProps) {
+  const { cluster } = props;
 
-  const { panelConfig, serviceMetric, updatePanelConfig, asyncGetStatus,
-    onView, instanceList, updateMetricsFiltervalues, metricsFilterValues,
-    asyncGetSpaces, cluster } = props;
+  const [timeRange, setTimeRange] = useState<TIME_OPTION_TYPE | [number, number]>(TIME_OPTION_TYPE.HOUR1);
 
-  const [editPanelType, setEditPanelType] = useState<ServiceName>();
-  const [editPanelIndex, setEditPanelIndex] = useState(0)
+  const handleTimeSelectChange = (value: TIME_OPTION_TYPE | [number, number]) => {
+    setTimeRange(value);
+  }
 
-  const history = useHistory();
-
-  const modalHandlerRef = useRef<any>();
+  const [serviceNames, setServiceNames] = useState<string[]>([]);
 
   useEffect(() => {
-    const [start, end] = calcTimeRange(metricsFilterValues.timeRange);
-    if (shouldCheckCluster()) {
-      if (cluster?.id) {
-        asyncGetSpaces({
-          clusterID: cluster.id,
-          start,
-          end
-        })
-      }
-    } else {
-      asyncGetSpaces({
-        start,
-        end
-      })
+    if (cluster.id) {
+      getServiceNames();
     }
-  }, [metricsFilterValues.timeRange, cluster])
+  }, [cluster])
 
-  const handleConfigPanel = (serviceType: ServiceName, index: number) => {
-    setEditPanelIndex(index);
-    setEditPanelType(serviceType);
-    modalHandlerRef.current.show();
+  const getServiceNames = () => {
+    let services: string[] = [];
+    ServicePanels.forEach((panel: string) => {
+      services = services.concat(cluster[panel].map(i => i.name))
+    });
+    setServiceNames(services);
   }
 
-  const handleModalClose = () => {
-    if (modalHandlerRef.current) {
-      modalHandlerRef.current.hide();
-    }
-  }
 
-  const handleView = (serviceType: ServiceName) => {
-    history.push(`/service/${serviceType}-metrics`);
-  };
-
-  const handleMetricsChange = (values) => {
-    updateMetricsFiltervalues(values);
-  }
-
-  const handleRefreshData = (values) => {
-    updateMetricsFiltervalues(values);
-  }
 
   return (
-    <>
-      <div className="service-table">
-        <div
-         className='common-header' >
-          <MetricsFilterPanel
-            onChange={handleMetricsChange}
-            instanceList={instanceList}
-            values={metricsFilterValues}
-            onRefresh={handleRefreshData}
-          />
+    <div className={styles.serviceDashboarContent}>
+      <div className={styles.singelNodeMonitor}>
+        <div className={styles.singelNodeMonitorHeader}>
+          <div className={styles.monitorTitle}>{intl.get('device.nodeResource.singleNodeTitle')}</div>
+          <div className={styles.action}>
+            <TimeSelect value={timeRange} onChange={handleTimeSelectChange} />
+            <Button
+              type="primary"
+              onClick={() => { }}
+              className={`${styles.primaryBtn} ${styles.addPanelBtn}`}
+            >
+              <Icon icon="#iconPlus" />
+              {intl.get('common.addPanel')}
+            </Button>
+          </div>
         </div>
-        {METRIC_PROCESS_TYPES.map(type => (
-          <ServiceOverview
-            key={type}
-            serviceType={type}
-            // icon={`#iconnav-${type}`}
-            configs={panelConfig[type]}
-            getStatus={asyncGetStatus}
-            onConfigPanel={handleConfigPanel}
-            onView={onView ?? handleView}
-          />
-        ))}
-        <Modal
-          className="modal-show-selected"
-          width="750px"
-          handlerRef={handler => (modalHandlerRef.current = handler)}
-          title={intl.get('service.queryCondition')}
-          footer={null}
-        >
-          <ServiceCardEdit
-            serviceMetric={serviceMetric}
-            editType={editPanelType!}
-            editIndex={editPanelIndex}
-            panelConfig={panelConfig}
-            onClose={handleModalClose}
-            onPanelConfigUpdate={updatePanelConfig}
-          />
-        </Modal>
       </div>
-    </>
+      <ServiceOverview
+        cluster={cluster}
+        serviceNames={serviceNames.filter(s => s.includes(ServiceName.GRAPHD))}
+        timeRange={timeRange}
+        serviceType={ServiceName.GRAPHD}
+        panelVisible
+        panelConfigData={defaultServicePanelConfigData.find(item => item.type === ServiceName.GRAPHD)?.panels || []}
+      />
+      <ServiceOverview
+        cluster={cluster}
+        serviceNames={serviceNames.filter(s => s.includes(ServiceName.METAD))}
+        timeRange={timeRange}
+        serviceType={ServiceName.METAD}
+        panelConfigData={defaultServicePanelConfigData.find(item => item.type === ServiceName.METAD)?.panels || []}
+      />
+      <ServiceOverview
+        cluster={cluster}
+        serviceNames={serviceNames.filter(s => s.includes(ServiceName.STORAGED))}
+        timeRange={timeRange}
+        serviceType={ServiceName.STORAGED}
+        panelConfigData={defaultServicePanelConfigData.find(item => item.type === ServiceName.STORAGED)?.panels || []}
+      />
+    </div>
   );
 }
 
-export default connect(mapState, mapDispatch)(withRouter(ServiceDashboard));
+export default connect(mapState, mapDispatch)(ServiceDashboard);

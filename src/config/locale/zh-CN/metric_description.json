@@ -158,5 +158,19 @@
   "network_in": "上行流量速率",
   "network_out": "下行流量速率",
   "open_file_desc": "打开文件描述符",
-  "context_switch_rate": "每秒上下文切换次数"
+  "context_switch_rate": "每秒上下文切换次数",
+  "graphd_latency": "Graphd 延迟",
+  "graphd_queries": "Graphd 查询",
+  "graphd_sessions": "Graphd Session",
+  "process_memory": "进程内存使用",
+  "process_disk": "进程磁盘读写",
+  "process_cpu": "进程CPU消耗",
+  "process_context_open_file_desc": "进程上下文切换 & 文件句柄",
+  "metad_latency": "Metad 延迟",
+  "metad_nums": "Metad 数值相关",
+  "storage_latency": "Storage 延迟",
+  "storaged_edge_nums": "边数据相关",
+  "storaged_vertices_nums": "点数据相关",
+  "storaged_tag_and_dst_nums": "tag与路径相关",
+  "storaged_other_nums": "其他数值指标"
 }

@@ -1,0 +1,52 @@
+.serviceTableItem {
+  // box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.08);
+  // border: 1px solid #D9D9D9;
+  background-color: #fff;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.08);
+  margin-top: 24px;
+}
+
+.headerTitle {
+  display: flex;
+  align-items: center;
+}
+
+.serviceTableItemContent {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  :global {
+    @media screen and (max-width: 1960px) and (min-width: 1200px) {
+      .dashboard-card {
+        width: calc(50%);
+      }
+    }
+
+    @media screen and (min-width: 1960px) and (max-width: 2480px) {
+      .dashboard-card {
+        width: calc(33.3%);
+      }
+    }
+
+    @media screen and (min-width: 2480px) {
+      .dashboard-card {
+        width: calc(25%);
+      }
+    }
+  }
+}
+
+.titleContent {
+  display: flex;
+  align-items: center;
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.panelVisible {
+  svg {
+    transform: rotate(-90deg);
+  }
+}

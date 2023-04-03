@@ -1,6 +1,5 @@
 import { CellHealtyLevel, DashboardType, NebulaConnectInfo, NebulaVersionType, Percent_Range } from './interface';
 import intl from 'react-intl-universal';
-import cookies from 'js-cookie';
 
 import { getProperStep } from './dashboard';
 

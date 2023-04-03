@@ -1,31 +1,28 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import intl from 'react-intl-universal';
-import { Button, Col, Row, Spin } from 'antd';
+import { Col, Row, Spin } from 'antd';
 
 import { NodeResourceInfo } from '@/utils/interface';
 import NodeResourceOverview from './NodeResourceOverview';
 import { getMachineMetricData, getNodeInfoQueries } from '@/utils/promQL';
-import { calcTimeRange, getMachineRouterPath, getProperByteDesc, TIME_OPTION_TYPE } from '@/utils/dashboard';
-import { IntervalFrequencyItem, INTERVAL_FREQUENCY_TYPE } from '@/utils/service';
+import { getMachineRouterPath, getProperByteDesc, TIME_OPTION_TYPE } from '@/utils/dashboard';
 import EventBus from '@/utils/EventBus';
 import { DashboardSelect, Option } from '@/components/DashboardSelect';
-import Icon from '@/components/Icon';
 import DashboardCard from '@/components/DashboardCard';
 import TimeSelect from '@/components/TimeSelect';
 import MetricCard from '@/components/MetricCard';
 import DiskCard from './Cards/DiskCard';
 import WaterLevelCard from './Cards/WaterLevelCard';
+import { asyncBatchQueries } from '@/requests';
 
 import styles from './index.module.less';
 
-const mapDispatch: any = (dispatch: any) => ({
-  asyncBatchQueries: dispatch.nebula.asyncBatchQueries,
+const mapDispatch: any = (_dispatch: any) => ({
 });
 
 const mapState = (state: any) => ({
   instanceList: state.machine.instanceList as any,
-  loading: state.loading.effects.nebula.asyncBatchQueries
 });
 interface IProps
   extends ReturnType<typeof mapDispatch>,
@@ -33,32 +30,9 @@ interface IProps
   cluster?: any;
 }
 
-const IntervalOptions: IntervalFrequencyItem[] = [
-  {
-    type: INTERVAL_FREQUENCY_TYPE.OFF,
-    value: 0,
-  },
-  {
-    type: INTERVAL_FREQUENCY_TYPE.S5,
-    value: 2 * 1000,
-  },
-  {
-    type: INTERVAL_FREQUENCY_TYPE.S15,
-    value: 5 * 1000,
-  },
-  {
-    type: INTERVAL_FREQUENCY_TYPE.M1,
-    value: 5 * 1000,
-  },
-  {
-    type: INTERVAL_FREQUENCY_TYPE.M5,
-    value: 5 * 1000,
-  },
-];
-
 const formatValueByRefId = (refId: string, metricItem: any) => {
   const { metric, value } = metricItem;
-  const [timestamp, curValue] = value;
+  const [_timestamp, curValue] = value;
   switch (refId) {
     case "cpuUtilization": case "memoryUtilization": case "diskUtilization":
       return `${parseFloat(curValue).toFixed(2)}%`;
@@ -82,7 +56,7 @@ const formatValueByRefId = (refId: string, metricItem: any) => {
 
 function MachineDashboard(props: IProps) {
 
-  const { cluster, asyncBatchQueries, instanceList, loading } = props;
+  const { cluster, instanceList } = props;
 
   const [resourceInfos, setResourceInfos] = useState<NodeResourceInfo[]>([]);
 
@@ -98,6 +72,7 @@ function MachineDashboard(props: IProps) {
   const diskCardRef = useRef<any>();
   const metricRefs = useMemo(() => ({}), []);
   const pollingTimerRef = useRef<any>(null);
+  const cardObj = useMemo(() => getMachineMetricData(curInstance, cluster), [curInstance, cluster]);
 
   useEffect(() => {
     if (cluster?.id && instanceList?.length) {
@@ -134,7 +109,7 @@ function MachineDashboard(props: IProps) {
   const asyncGetResourceInfos = async (shouldLoading?: boolean) => {
     shouldLoading && setOverviewLoading(true);
     const queries = getNodeInfoQueries(cluster.id);
-    const data = await asyncBatchQueries(queries);
+    const data: any = await asyncBatchQueries(queries);
     const { results } = data;
     const resourceInfoData = instanceList.map(instance => {
       const nodeResourceInfo: NodeResourceInfo = {} as any;
@@ -163,7 +138,6 @@ function MachineDashboard(props: IProps) {
   }
 
   const fetchSingleMonitorData = (shouldLoading?: boolean) => {
-    const cardObj = getMachineMetricData(curInstance, cluster, timeRange)
     shouldLoading && setSingleNodeLoading(true);
     diskCardRef.current?.handleRefresh?.();
     Promise.all(
@@ -207,7 +181,6 @@ function MachineDashboard(props: IProps) {
   }
 
   const renderCardContent = () => {
-    const cardObj = getMachineMetricData(curInstance, cluster, timeRange)
     return Object.keys(cardObj).map(key => (
       <DashboardCard
         key={key}
@@ -216,9 +189,9 @@ function MachineDashboard(props: IProps) {
       >
         <MetricCard
           ref={ref => metricRefs[key] = ref}
-          asyncBatchQueries={asyncBatchQueries}
           queries={cardObj[key].queries}
           valueType={cardObj[key].valueType}
+          timeRange={timeRange}
         />
       </DashboardCard >
     ))
