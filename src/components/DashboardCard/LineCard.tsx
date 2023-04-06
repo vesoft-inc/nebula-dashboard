@@ -1,16 +1,19 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, {useEffect, useMemo, useRef } from 'react';
 import _ from 'lodash';
 import { Spin } from 'antd';
 import LineChart from '@/components/Charts/LineChart';
 import { ILineChartMetric } from '@/utils/interface';
 import { VALUE_TYPE } from '@/utils/promQL';
 import { getMaxNum, getMaxNumAndLength, getMinNum, getTickIntervalByGap } from '@/utils/dashboard';
+import { FilterCondition } from '@antv/g2/lib/interface';
 
 interface IProps {
   data: ILineChartMetric[];
   valueType: VALUE_TYPE;
   loading?: boolean;
   baseLine?: number;
+  onChangeBrush?: (range: FilterCondition | null) => void;
+  onRef?: (ref: any) => void;
 }
 
 function LineCard(props: IProps) {
@@ -22,7 +25,7 @@ function LineCard(props: IProps) {
       updateChart();
     }
   }, [loading, chartRef.current]); 
-
+ 
   useEffect(() => {
     if (chartRef.current) {
       chartRef.current.updateBaseline(baseLine);
@@ -69,11 +72,15 @@ function LineCard(props: IProps) {
   return (
     loading ? <Spin /> : (
     <LineChart
+      onChangeBrush={props.onChangeBrush}
       renderChart={renderLineChart}
-      ref={chartRef}
+      ref={(ref) => {
+        chartRef.current = ref;
+        props.onRef && props.onRef(ref);
+      }}
       options={{ padding: [20, 20, 60, 6 * maxNumLen + 30] }}
     />)
   );
 }
 
-export default LineCard;
+export default  LineCard;
