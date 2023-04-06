@@ -1,28 +1,51 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
-import { Chart, registerInteraction } from '@antv/g2';
-import { ChartCfg } from '@antv/g2/lib/interface';
+import { Chart,  registerInteraction } from '@antv/g2';
+import { ChartCfg, FilterCondition } from '@antv/g2/lib/interface';
 import dayjs from 'dayjs';
 import { VALUE_TYPE } from '@/utils/promQL';
 import { LINE_CHART_COLORS } from '@/utils/chart/chart';
 import { getProperByteDesc } from '@/utils/dashboard';
 import { ServiceName } from '@/utils/interface';
 import { updateChartByValueType } from '@/utils/metric';
-
 export interface IProps {
   baseLine?: number;
   renderChart: (chartInstance: Chart) => void;
   options?: Partial<ChartCfg>;
+  onChangeBrush?: (action:FilterCondition|null) => void;
 }
 
 function LineChart(props: IProps, ref) {
-  const { options = {}, renderChart } = props;
-
+  const { options = {}, renderChart,onChangeBrush} = props;
   const chartRef = useRef<any>();
 
   const yMin = useRef<number>(0);
   const yMax = useRef<number>(100);
 
   const chartInstanceRef = useRef<Chart>();
+
+  const onChangeBrushEvent = () => {
+    if (!chartInstanceRef.current) return;
+    const chart = chartInstanceRef.current;
+    const filterTime = chart.getOptions().filters?.time as FilterCondition;
+    onChangeBrush&&onChangeBrush(filterTime)
+  }
+
+  const onClearBrush = () => {
+    if (!chartInstanceRef.current) return;
+    onChangeBrush&&onChangeBrush(null)
+  }
+
+  const changeBrushByRangeFilter = (action:FilterCondition|null) => {
+    if (!chartInstanceRef.current) return;
+    const chart = chartInstanceRef.current;
+     // @ts-ignore
+    const buttonAction = chart.interactions.brush.steps.end[0].actionObject[4].action as any 
+    // @ts-ignore
+    const brushAction = chart.interactions.brush.steps.end[0].actionObject[0].action as any
+    chart.filter('time', action);
+    chart.render(true,{ source: 'brush-filter-processing' });
+    action?buttonAction.show():buttonAction.hide();
+  }
 
   const renderChartContent = () => {
     if (!chartRef.current) return;
@@ -57,6 +80,8 @@ function LineChart(props: IProps, ref) {
       ],
       rollback: [{ trigger: 'reset-button:click', action: ['brush:reset', 'reset-button:hide'] }],
     });
+    chartInstanceRef.current.on("brush-filter:afterfilter", onChangeBrushEvent)
+    chartInstanceRef.current.on("brush-filter:afterreset",onClearBrush)
     chartInstanceRef.current.interaction('brush');
     showScaleByBaseLine();
     // chartInstanceRef.current.interaction('brush');
@@ -77,6 +102,7 @@ function LineChart(props: IProps, ref) {
       updateChart(baseLine);
     },
     chartInstanceRef,
+    changeBrushByRangeFilter,
     updateDetailChart,
     configDetailChart,
     autoAdjustPadding,
