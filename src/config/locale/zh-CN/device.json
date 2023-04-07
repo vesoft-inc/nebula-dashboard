@@ -49,7 +49,7 @@
     "singleServiceTitle": "单服务监控",
     "serviceName": "服务名",
     "context_switches_total": "上下文切换",
-    "cpu_seconds_total": "CPU使用时间",
+    "cpu_seconds_total": "CPU使用率",
     "memory_bytes_gauge": "内存使用量",
     "read_bytes_total": "磁盘读取",
     "write_bytes_total": "磁盘写入",

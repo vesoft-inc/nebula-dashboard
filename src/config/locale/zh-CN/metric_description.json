@@ -164,7 +164,7 @@
   "graphd_sessions": "Graphd Session",
   "process_memory": "进程内存使用",
   "process_disk": "进程磁盘读写",
-  "process_cpu": "进程CPU消耗",
+  "process_cpu": "进程CPU使用率",
   "process_context_open_file_desc": "进程上下文切换 & 文件句柄",
   "metad_latency": "Metad 延迟",
   "metad_nums": "Metad 数值相关",

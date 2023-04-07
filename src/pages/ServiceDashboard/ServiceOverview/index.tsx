@@ -111,7 +111,7 @@ function ServiceOverview(props: IProps) {
           query = `sum_over_time(${query}{instanceName="${curServiceName}"${clusterSuffix1}}[${15}s])`;
         } else {
           if (query.includes('cpu_seconds_total')) {
-            query = `avg by (instanceName) (irate(${query}{instanceName="${curServiceName}"${clusterSuffix1}}[30s])) * 100`
+            query = `avg by (instanceName) (rate(${query}{instanceName="${curServiceName}"${clusterSuffix1}}[5m])) * 100`
           } else {
             query = `${query}{instanceName="${curServiceName}"${clusterSuffix1}}`;
           }
