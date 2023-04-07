@@ -103,7 +103,11 @@ export function SereviceModelWrapper(serviceApi) {
             if (!payload.isRawMetric && payload.aggregation === AggregationType.Sum) {
               query = `sum_over_time(${_query}{${getClusterPrefix()}="${clusterID}", space="${space || ''}"}[${step}s])`;
             } else {
-              query = `${_query}{${getClusterPrefix()}="${clusterID}", space="${space || ''}"}`;
+              if (query.includes('cpu_seconds_total')) {
+                query = `avg by (instanceName) (rate(${query}{${getClusterPrefix()}="${clusterID}"}[5m])) * 100`
+              } else {
+                query = `${_query}{${getClusterPrefix()}="${clusterID}", space="${space || ''}"}`;
+              }
             }
           } else {
             query = `${_query}{space="${space || ''}"}`;
