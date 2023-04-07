@@ -49,7 +49,7 @@
     "singleServiceTitle": "Single Service Monitor",
     "serviceName": "Service Name",
     "context_switches_total": "Context Switch",
-    "cpu_seconds_total": "CPU Seconds",
+    "cpu_seconds_total": "CPU Usage",
     "memory_bytes_gauge": "Memory Used",
     "read_bytes_total": "Read Bytes",
     "write_bytes_total": "Write Bytes",

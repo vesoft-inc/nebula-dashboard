@@ -107,7 +107,7 @@ function OverviewTable(props: IProps) {
         showText = text;
         break;
       case VALUE_TYPE.percentage:
-        showText = `${text}%`;
+        showText = `${parseFloat(text).toFixed(2)}%`;
         break;
       case VALUE_TYPE.byte:
         showText = getProperByteDesc(parseInt(text)).desc;
@@ -196,7 +196,7 @@ function OverviewTable(props: IProps) {
       metrics.forEach((metric) => {
         let query = `nebula_${service}_${metric}${clusterSuffix1} - 0`;
         if (metric === 'cpu_seconds_total') {
-          query = `avg by (instanceName) (irate(nebula_${service}_${metric}${clusterSuffix1}[30s])) * 100`
+          query = `avg by (instanceName) (rate(nebula_${service}_${metric}${clusterSuffix1}[5m])) * 100`
         }
         queries.push({
           refId: `${service}$${metric}`,
