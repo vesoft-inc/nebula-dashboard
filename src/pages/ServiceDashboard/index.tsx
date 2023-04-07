@@ -13,6 +13,7 @@ import { defaultServicePanelConfigData } from './defaultPanelConfig';
 import ServiceOverview from './ServiceOverview';
 
 import styles from './index.module.less';
+import OverviewTable from './OverviewTable';
 
 const mapDispatch: any = (_dispatch: any) => ({
 });
@@ -36,6 +37,10 @@ const ServicePanels = [
   ClusterServiceNameMap[ServiceName.Drainer],
 ]
 
+export type ServicePanelType = {
+  [key in typeof ServicePanels[number]]: string[];
+};
+
 function ServiceDashboard(props: IProps) {
   const { cluster } = props;
 
@@ -45,7 +50,7 @@ function ServiceDashboard(props: IProps) {
     setTimeRange(value);
   }
 
-  const [serviceNames, setServiceNames] = useState<string[]>([]);
+  const [curServiceMap, setCurServiceMap] = useState<ServicePanelType>({});
 
   useEffect(() => {
     if (cluster.id) {
@@ -54,20 +59,21 @@ function ServiceDashboard(props: IProps) {
   }, [cluster])
 
   const getServiceNames = () => {
-    let services: string[] = [];
+    const serviceTypeMap: ServicePanelType = {};
     ServicePanels.forEach((panel: string) => {
-      services = services.concat(cluster[panel].map(i => i.name))
+      serviceTypeMap[panel] = (cluster[panel] || []).map(i => i.name);
+      // serviceTypeMap = services.concat(cluster[panel].map(i => i.name))
     });
-    setServiceNames(services);
+    setCurServiceMap(serviceTypeMap);
   }
-
-
 
   return (
     <div className={styles.serviceDashboarContent}>
+      {/* @ts-ignore */}
+      <OverviewTable serviceMap={curServiceMap} />
       <div className={styles.singelNodeMonitor}>
         <div className={styles.singelNodeMonitorHeader}>
-          <div className={styles.monitorTitle}>{intl.get('device.nodeResource.singleNodeTitle')}</div>
+          <div className={styles.monitorTitle}>{intl.get('device.serviceResource.singleServiceTitle')}</div>
           <div className={styles.action}>
             <TimeSelect value={timeRange} onChange={handleTimeSelectChange} />
             <Button
@@ -81,28 +87,34 @@ function ServiceDashboard(props: IProps) {
           </div>
         </div>
       </div>
-      <ServiceOverview
-        cluster={cluster}
-        serviceNames={serviceNames.filter(s => s.includes(ServiceName.GRAPHD))}
-        timeRange={timeRange}
-        serviceType={ServiceName.GRAPHD}
-        panelVisible
-        panelConfigData={defaultServicePanelConfigData.find(item => item.type === ServiceName.GRAPHD)?.panels || []}
-      />
-      <ServiceOverview
-        cluster={cluster}
-        serviceNames={serviceNames.filter(s => s.includes(ServiceName.METAD))}
-        timeRange={timeRange}
-        serviceType={ServiceName.METAD}
-        panelConfigData={defaultServicePanelConfigData.find(item => item.type === ServiceName.METAD)?.panels || []}
-      />
-      <ServiceOverview
-        cluster={cluster}
-        serviceNames={serviceNames.filter(s => s.includes(ServiceName.STORAGED))}
-        timeRange={timeRange}
-        serviceType={ServiceName.STORAGED}
-        panelConfigData={defaultServicePanelConfigData.find(item => item.type === ServiceName.STORAGED)?.panels || []}
-      />
+      <div className={styles.servicePanel}>
+        <ServiceOverview
+          /* @ts-ignore */
+          serviceNames={curServiceMap[ServiceName.GRAPHD] || []}
+          timeRange={timeRange}
+          serviceType={ServiceName.GRAPHD}
+          panelVisible
+          panelConfigData={defaultServicePanelConfigData.find(item => item.type === ServiceName.GRAPHD)?.panels || []}
+        />
+      </div>
+      <div className={styles.servicePanel}>
+        <ServiceOverview
+          /* @ts-ignore */
+          serviceNames={curServiceMap[ServiceName.METAD] || []}
+          timeRange={timeRange}
+          serviceType={ServiceName.METAD}
+          panelConfigData={defaultServicePanelConfigData.find(item => item.type === ServiceName.METAD)?.panels || []}
+        />
+      </div>
+      <div className={styles.servicePanel}>
+        <ServiceOverview
+          /* @ts-ignore */
+          serviceNames={curServiceMap[ServiceName.STORAGED] || []}
+          timeRange={timeRange}
+          serviceType={ServiceName.STORAGED}
+          panelConfigData={defaultServicePanelConfigData.find(item => item.type === ServiceName.STORAGED)?.panels || []}
+        />
+      </div>
     </div>
   );
 }

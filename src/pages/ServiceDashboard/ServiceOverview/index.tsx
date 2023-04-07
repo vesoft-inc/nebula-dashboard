@@ -23,12 +23,12 @@ const mapDispatch: any = (_dispatch: any) => ({
 const mapState = (state: any) => ({
   serviceMetric: state.serviceMetric,
   ready: state.serviceMetric.ready,
+  cluster: state.cluster.cluster
 });
 
 interface IProps extends ReturnType<typeof mapDispatch>,
   ReturnType<typeof mapState> {
   serviceType: ServiceName;
-  cluster: any;
   serviceNames: string[];
   panelConfigData: ServicePanelConfig[];
   timeRange: TIME_OPTION_TYPE | [number, number];
@@ -110,7 +110,11 @@ function ServiceOverview(props: IProps) {
         if (aggregation === AggregationType.Sum && !metricItem.isRawMetric) {
           query = `sum_over_time(${query}{instanceName="${curServiceName}"${clusterSuffix1}}[${15}s])`;
         } else {
-          query = `${query}{instanceName="${curServiceName}"${clusterSuffix1}}`;
+          if (query.includes('cpu_seconds_total')) {
+            query = `avg by (instanceName) (irate(${query}{instanceName="${curServiceName}"${clusterSuffix1}}[30s])) * 100`
+          } else {
+            query = `${query}{instanceName="${curServiceName}"${clusterSuffix1}}`;
+          }
         }
         return {
           refId: queryItem.query,
@@ -214,4 +218,4 @@ function ServiceOverview(props: IProps) {
   )
 }
 
-export default connect(mapState, mapDispatch)(ServiceOverview);;
+export default connect(mapState, mapDispatch)(ServiceOverview);

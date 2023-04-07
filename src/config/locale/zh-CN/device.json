@@ -44,5 +44,18 @@
 		"singleNodeTitle": "单节点监控",
 		"waterLevel": "资源水位",
     "core": "核"
-	}
+	},
+  "serviceResource": {
+    "singleServiceTitle": "单服务监控",
+    "serviceName": "服务名",
+    "context_switches_total": "上下文切换",
+    "cpu_seconds_total": "CPU使用时间",
+    "memory_bytes_gauge": "内存使用量",
+    "read_bytes_total": "磁盘读取",
+    "write_bytes_total": "磁盘写入",
+    "open_filedesc_gauge": "文件句柄数",
+    "process_count": "服务状态",
+    "running": "运行中",
+    "exit": "已停止"
+  }
 }

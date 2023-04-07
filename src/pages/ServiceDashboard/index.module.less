@@ -26,9 +26,10 @@
 }
 
 .singelNodeMonitor {
-  background-color: #fff;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.08);
-  padding: 16px;
+  // background-color: #fff;
+  // box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.08);
+  // padding: 16px;
+  margin-top: 16px;
 }
 
 .singelNodeMonitorHeader {
@@ -50,8 +51,56 @@
   align-items: center;
 }
 
+.servicePanel {
+  &:not(:first-child) {
+    margin-top: 16px;
+  }
+}
+
 .addPanelBtn {
   display: flex;
   align-items: center;
   margin-left: 10px;
+}
+
+.overviewTable {
+  :global {
+    .ant-table-tbody {
+      font-size: 80%;
+    }
+
+    .ant-table-cell{
+      padding: 0;
+      padding-right: 2px;
+      padding-bottom: 1px;
+    }
+
+    .ant-table-thead .ant-table-cell {
+      padding: 16px !important;
+    }
+  }
+
+  .tableCell {
+    width: 100%;
+    height: 100%;
+    padding: 16px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .normal {
+    background-color:rgba(50, 172, 45, 0.97);
+    color: #fff;
+  }
+
+  .warning {
+    background-color:rgba(237, 129, 40, 0.89);
+    color: #fff;
+  }
+
+  .danger {
+    background-color:rgba(245, 54, 54, 0.9);
+    color: #fff;
+  }
 }
