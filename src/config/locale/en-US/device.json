@@ -44,5 +44,18 @@
 		"singleNodeTitle": "Single Node Monitor",
 		"waterLevel": "Resrouce water level",
     "core": "Core"
-	}
+	},
+  "serviceResource": {
+    "singleServiceTitle": "Single Service Monitor",
+    "serviceName": "Service Name",
+    "context_switches_total": "Context Switch",
+    "cpu_seconds_total": "CPU Seconds",
+    "memory_bytes_gauge": "Memory Used",
+    "read_bytes_total": "Read Bytes",
+    "write_bytes_total": "Write Bytes",
+    "open_filedesc_gauge": "Open Files",
+    "process_count": "Status",
+    "running": "Running",
+    "exit": "Exited"
+  }
 }

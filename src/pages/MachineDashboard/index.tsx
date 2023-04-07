@@ -210,9 +210,8 @@ function MachineDashboard(props: IProps) {
       </div>
       <div className={styles.singelNodeMonitor}>
         <div className={styles.singelNodeMonitorHeader}>
-          <div className={styles.monitorTitle}>{intl.get('device.nodeResource.singleNodeTitle')}</div>
-          <div className={styles.action}>
-            <TimeSelect value={timeRange} onChange={handleTimeSelectChange} />
+          <div className={styles.monitorTitle}>
+            {intl.get('device.nodeResource.singleNodeTitle')}
             <DashboardSelect className={styles.instanceSelect} value={curInstance} onChange={handleInstanceChange}>
               {
                 instanceList.map((instance: string) => (
@@ -220,6 +219,9 @@ function MachineDashboard(props: IProps) {
                 ))
               }
             </DashboardSelect>
+          </div>
+          <div className={styles.action}>
+            <TimeSelect value={timeRange} onChange={handleTimeSelectChange} />
           </div>
         </div>
         <Spin spinning={singleNodeLoading}>

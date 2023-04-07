@@ -107,7 +107,7 @@ export const defaultServicePanelConfigData: ServicePanelConfigItem[] = [
       },
       {
         title: intl.get('metric_description.process_cpu'),
-        valueType: VALUE_TYPE.byte,
+        valueType: VALUE_TYPE.percentage,
         queries: [
           {
             refId: 'cpu_seconds_total',
@@ -216,7 +216,7 @@ export const defaultServicePanelConfigData: ServicePanelConfigItem[] = [
       },
       {
         title: intl.get('metric_description.process_cpu'),
-        valueType: VALUE_TYPE.byte,
+        valueType: VALUE_TYPE.percentage,
         queries: [
           {
             refId: 'cpu_seconds_total',
@@ -403,7 +403,7 @@ export const defaultServicePanelConfigData: ServicePanelConfigItem[] = [
       },
       {
         title: intl.get('metric_description.process_cpu'),
-        valueType: VALUE_TYPE.byte,
+        valueType: VALUE_TYPE.percentage,
         queries: [
           {
             refId: 'cpu_seconds_total',
