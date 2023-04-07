@@ -170,11 +170,11 @@ export let LINUX = (cluster?, device?: string): any => {
 
   return {
     // cpu relative:
-    cpu_utilization: `100 * (1 - sum by (instance)(increase(node_cpu_seconds_total{mode="idle"${clusterSuffix1}}[1m])) / sum by (instance)(increase(node_cpu_seconds_total${clusterSuffix2}[1m])))`,
-    cpu_idle: `100 * (sum by (instance)(increase(node_cpu_seconds_total{mode="idle"${clusterSuffix1}}[1m])) / sum by (instance)(increase(node_cpu_seconds_total${clusterSuffix2}[1m])))`,
-    cpu_wait: `100 * (sum by (instance)(increase(node_cpu_seconds_total{mode="iowait"${clusterSuffix1}}[1m])) / sum by (instance)(increase(node_cpu_seconds_total${clusterSuffix2}[1m])))`,
-    cpu_user: `100 * (sum by (instance)(increase(node_cpu_seconds_total{mode="user"${clusterSuffix1}}[1m])) / sum by (instance)(increase(node_cpu_seconds_total${clusterSuffix2}[1m])))`,
-    cpu_system: `100 * (sum by (instance)(increase(node_cpu_seconds_total{mode="system"${clusterSuffix1}}[1m])) / sum by (instance)(increase(node_cpu_seconds_total${clusterSuffix2}[1m])))`,
+    cpu_utilization: `100 - (avg by (instance) (irate(node_cpu_seconds_total{mode="idle"${clusterSuffix1}}[1m])) * 100)`,
+    cpu_idle: `avg by (instance) (irate(node_cpu_seconds_total{mode="idle"${clusterSuffix1}}[1m])) * 100`,
+    cpu_wait: `avg by (instance) (irate(node_cpu_seconds_total{mode="iowait"${clusterSuffix1}}[1m])) * 100`,
+    cpu_user: `avg by (instance) (irate(node_cpu_seconds_total{mode="user"${clusterSuffix1}}[1m])) * 100`,
+    cpu_system: `avg by (instance) (irate(node_cpu_seconds_total{mode="system"${clusterSuffix1}}[1m])) * 100`,
 
     // memory relative:
     // memory_utilization: `(1 - node_memory_MemFree_bytes${clusterSuffix2} / node_memory_MemTotal_bytes${clusterSuffix2} )* 100`,
@@ -224,7 +224,7 @@ export let getNodeInfoQueries = (clusterId?) => {
     },
     {
       refId: "cpuUtilization",
-      query: `(1 - avg(rate(node_cpu_seconds_total{mode="idle"${clusterSuffix1}}[5m])) by (instance)) * 100`,
+      query: `100 - (avg by (instance) (irate(node_cpu_seconds_total{mode="idle"${clusterSuffix1}}[1m])) * 100)`,
     },
     {
       refId: "memoryUtilization",
@@ -300,19 +300,19 @@ export const getMachineMetricData = (instance, cluster) => {
       queries: [
         {
           refId: 'cpu_total_used',
-          query: `(1 - avg(rate(node_cpu_seconds_total{mode="idle"${clusterSuffix1},${instanceSuffix}}[5m])) by (instance))*100`,
+          query: `100 - (avg by (instance) (irate(node_cpu_seconds_total{mode="idle"${clusterSuffix1},${instanceSuffix}}[1m])) * 100)`,
         },
         {
           refId: 'cpu_system_used',
-          query: `avg(rate(node_cpu_seconds_total{mode="system"${clusterSuffix1},${instanceSuffix}}[5m])) by (instance) *100`,
+          query: `avg by (instance) (irate(node_cpu_seconds_total{mode="system"${clusterSuffix1},${instanceSuffix}}[1m])) * 100`,
         },
         {
           refId: 'cpu_user_used',
-          query: `avg(rate(node_cpu_seconds_total{mode="user"${clusterSuffix1},${instanceSuffix}}[5m])) by (instance) *100`,
+          query: `avg by (instance) (irate(node_cpu_seconds_total{mode="user"${clusterSuffix1},${instanceSuffix}}[1m])) * 100`,
         },
         {
           refId: 'cpu_io_wait_used',
-          query: `avg(rate(node_cpu_seconds_total{mode="iowait"${clusterSuffix1},${instanceSuffix}}[5m])) by (instance) *100`,
+          query: `avg by (instance) (irate(node_cpu_seconds_total{mode="iowait"${clusterSuffix1},${instanceSuffix}}[1m])) * 100`,
         }
       ]
     },
