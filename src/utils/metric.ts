@@ -120,6 +120,9 @@ const calcServiceMetricValueType = (metricName: string): VALUE_TYPE => {
   if (metricName.includes('bytes')) {
     return VALUE_TYPE.byte;
   }
+  if (metricName.includes('cpu_seconds')) {
+    return VALUE_TYPE.percentage;
+  }
   if (metricName.includes('seconds')) {
     return VALUE_TYPE.byteSecond;
   }
@@ -218,12 +221,6 @@ export const RawServiceMetrics = [
   "read_bytes_total",
   "write_bytes_total",
 ]
-
-// export const ServiceMetricValueTypeMap = {
-//   [VALUE_TYPE.byte]: ["write_bytes_total", "memory_bytes_gauge", "read_bytes_total"],
-//   [VALUE_TYPE.byteSecond]: [],
-//   [VALUE_TYPE.numberSecond]: ["cpu_seconds_total"],
-// }
 
 export const getQueryMap = (metricItem: IServiceMetricItem) => {
   const res = {};

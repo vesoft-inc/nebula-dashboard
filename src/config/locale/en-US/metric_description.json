@@ -132,7 +132,7 @@
   "num_sync_data_errors": "The number of errors the storage synchronizes data from drainer.",
   "sync_data_latency_us": "The latency of the Storage service synchronizing data from the Drainer.",
   "context_switches_total": "The total num of context switches.",
-  "cpu_seconds_total": "The total num of cpu seconds.",
+  "cpu_seconds_total": "CPU usage",
   "memory_bytes_gauge": "The memory bytes.",
   "open_filedesc_gauge": "The open file descriptor.",
   "read_bytes_total": "The total num of read bytes.",
