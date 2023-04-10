@@ -179,7 +179,13 @@ function MachineDashboard(props: IProps) {
   const handleTimeSelectChange = (value: TIME_OPTION_TYPE | [number, number]) => {
     setTimeRange(value);
   }
-
+  const onChangeBrush = (metric: string, brush) => {
+    Object.keys(metricRefs).forEach(key => {
+      if (key !== metric || !brush) {
+        metricRefs[key].chartRef.changeBrushByRangeFilter(brush);
+      }
+    });
+  }
   const renderCardContent = () => {
     return Object.keys(cardObj).map(key => (
       <DashboardCard
@@ -189,6 +195,9 @@ function MachineDashboard(props: IProps) {
       >
         <MetricCard
           ref={ref => metricRefs[key] = ref}
+          onChangeBrush={(brush) => {
+            onChangeBrush(key,brush);
+          }}
           queries={cardObj[key].queries}
           valueType={cardObj[key].valueType}
           timeRange={timeRange}
