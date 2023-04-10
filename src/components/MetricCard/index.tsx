@@ -21,20 +21,22 @@ interface IProps {
   valueType: VALUE_TYPE;
   queries: any;
   timeRange: TIME_OPTION_TYPE | [number, number]
+  onChangeBrush?: (brush: any) => void;
   metricTypeFn?: (resultNum: number, refId: string, reusltMetric: PromResultMetric) => string;
 }
 
 const MetricCard = forwardRef((props: IProps, ref) => {
 
   const { valueType, queries, metricTypeFn, timeRange } = props;
-
+  const chartRef = React.useRef();
   const [metricData, setMetricData] = React.useState<ILineChartMetric[]>([]);
 
   useImperativeHandle(ref, () => (
     {
+      chartRef: chartRef.current,
       handleRefresh: () => asyncGetMetricData(queries)
     }
-  ), [queries]);
+  ), [queries, chartRef.current]);
 
   const defaultMetricTypeFn = (resultNum: number, refId: string, resultMetric: PromResultMetric) => {
     return resultNum > 1 ? resultMetric.device + intl.get(`metric_description.${refId}`) : intl.get(`metric_description.${refId}`);
@@ -72,6 +74,8 @@ const MetricCard = forwardRef((props: IProps, ref) => {
   return (
     <LineCard
       data={metricData}
+      onChangeBrush={props.onChangeBrush}
+      onRef={(ref)=>{chartRef.current = ref;}}
       valueType={valueType}
       loading={false}
     />

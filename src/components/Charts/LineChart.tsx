@@ -43,8 +43,10 @@ function LineChart(props: IProps, ref) {
     // @ts-ignore
     const brushAction = chart.interactions.brush.steps.end[0].actionObject[0].action as any
     chart.filter('time', action);
-    chart.render(true,{ source: 'brush-filter-processing' });
-    action?buttonAction.show():buttonAction.hide();
+    chart.render(true);
+    if (!action) {
+      buttonAction.hide();
+    }
   }
 
   const renderChartContent = () => {

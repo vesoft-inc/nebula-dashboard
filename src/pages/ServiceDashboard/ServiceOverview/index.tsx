@@ -156,6 +156,14 @@ function ServiceOverview(props: IProps) {
     setCurPanelVisible(!curPanelVisile);
   };
 
+  const onChangeBrush = (metricIndex: number, brush) => {
+    Object.keys(metricRefs).forEach(key => {
+      if (key !== `${metricIndex}` || !brush) {
+        metricRefs[key].chartRef.changeBrushByRangeFilter(brush);
+      }
+    });
+  }
+
   return (
     <div className={styles.serviceTableItem}>
       <ServiceHeader serviceType={serviceType} title={
@@ -203,6 +211,9 @@ function ServiceOverview(props: IProps) {
                     <MetricCard
                       ref={ref => metricRefs[index + 1] = ref}
                       valueType={configItem.valueType}
+                      onChangeBrush={(brush) => {
+                        onChangeBrush(index+1,brush);
+                      }}
                       queries={getQueries(configItem)}
                       timeRange={timeRange}
                       metricTypeFn={handleMetricType}
