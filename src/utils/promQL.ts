@@ -3,7 +3,7 @@
  */
 import intl from 'react-intl-universal';
 
-export const enum VALUE_TYPE {
+export enum VALUE_TYPE {
   percentage = 'PERCENTAGE',
   byte = 'BYTE',
   byteSecond = 'BYTE_SECOND',

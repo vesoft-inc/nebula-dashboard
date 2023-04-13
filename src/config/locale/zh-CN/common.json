@@ -49,5 +49,17 @@
   },
   "addhostSuccess": "{host} add host 成功",
   "successDelay": "操作成功，请稍后刷新页面查看",
-  "running": "运行中"
+  "running": "运行中",
+  "panelName": "面板名称",
+  "panelNamePlaceholder": "请输入监控面板名称",
+  "panelMetricType": "监控指标类型",
+  "panelMetricModal": {
+    "PERCENTAGE": "百分比",
+    "BYTE": "字节",
+    "BYTE_SECOND": "字节/秒",
+    "DISK_IO_NET": "io/秒",
+    "NUMBER": "数值",
+    "numberSecond": "数值/秒",
+    "latency": "秒/微妙/毫秒"
+  }
 }

@@ -5,12 +5,13 @@ import intl from 'react-intl-universal';
 import { ServicePanelType } from './index';
 
 import styles from './index.module.less';
-import { BatchQueryItem, ServiceName } from '@/utils/interface';
+import { BatchQueryItem, CellHealtyLevel, ServiceName } from '@/utils/interface';
 import { connect } from 'react-redux';
 import { getClusterPrefix, VALUE_TYPE } from '@/utils/promQL';
 import { asyncBatchQueries } from '@/requests';
 import { getAutoLatency, getProperByteDesc } from '@/utils/dashboard';
 import EventBus from '@/utils/EventBus';
+import { calcNodeHealty } from '@/utils';
 
 interface OverviewTableData {
   serviceName: string;
@@ -30,7 +31,6 @@ const mapDispatch: any = (_dispatch: any) => ({
 });
 
 const mapState = (state: any) => ({
-  serviceMetric: state.serviceMetric,
   ready: state.serviceMetric.ready,
   cluster: state.cluster.cluster
 });
@@ -45,11 +45,17 @@ interface IProps
 
 const CellWidth = 150;
 
+const Percent_Range = {
+  [CellHealtyLevel.normal]: [0, 40],
+  [CellHealtyLevel.warning]: [40, 80],
+  [CellHealtyLevel.danger]: [80, 100],
+}
+
 const ShowedServices: string[] = [ServiceName.GRAPHD, ServiceName.METAD, ServiceName.STORAGED];
 
 function OverviewTable(props: IProps) {
 
-  const { serviceMap, serviceMetric, cluster } = props;
+  const { serviceMap, cluster } = props;
   const [loading, setLoading] = useState<boolean>(false);
   const [frequencyValue, setFrequencyValue] = useState<number>(0);
   const [dataSource, setDataSource] = useState<OverviewTableData[]>([]);
@@ -99,7 +105,7 @@ function OverviewTable(props: IProps) {
     }
   }
 
-  const renderCell = (text: string, type: VALUE_TYPE = VALUE_TYPE.byte) => {
+  const renderCell = (text: string, type: VALUE_TYPE = VALUE_TYPE.byte, shouldCalcNodeHealty: boolean = false) => {
     if (!text) return <div className={`${styles.tableCell}`}>-</div>
     let showText: string = '';
     switch (type) {
@@ -118,7 +124,12 @@ function OverviewTable(props: IProps) {
       default:
         break;
     }
-    return <div className={`${styles.tableCell}`}>{showText}</div>
+    let level: CellHealtyLevel = CellHealtyLevel.normal ;
+    if (showText?.includes('%')) {
+      const num = parseFloat(text.slice(0, text.length - 1));
+      level = calcNodeHealty(num);
+    }
+    return <div className={`${styles.tableCell} ${shouldCalcNodeHealty ? styles[level] : undefined}`}>{showText}</div>
   }
 
   useEffect(() => {
@@ -137,19 +148,7 @@ function OverviewTable(props: IProps) {
       title: intl.get('device.serviceResource.context_switches_total'),
       dataIndex: "context_switches_total",
       render: (text, _) => renderCell(text, VALUE_TYPE.number),
-      width: CellWidth
-    },
-    {
-      title: intl.get('device.serviceResource.cpu_seconds_total'),
-      dataIndex: "cpu_seconds_total",
-      render: (text, _) => renderCell(text, VALUE_TYPE.percentage),
-      width: CellWidth
-    },
-    {
-      title: intl.get('device.serviceResource.memory_bytes_gauge'),
-      dataIndex: "memory_bytes_gauge",
-      render: (text, _) => renderCell(text),
-      width: CellWidth
+      width: 110
     },
     {
       title: intl.get('device.serviceResource.read_bytes_total'),
@@ -170,6 +169,25 @@ function OverviewTable(props: IProps) {
       dataIndex: "open_filedesc_gauge",
       ellipsis: true,
       render: (text, _) => renderCell(text, VALUE_TYPE.number),
+      width: 110
+    },
+    {
+      title: intl.get('device.serviceResource.cpu_seconds_total'),
+      dataIndex: "cpu_seconds_total",
+      render: (text, _) => renderCell(text, VALUE_TYPE.percentage, true),
+      width: CellWidth
+    },
+    {
+      title: intl.get('device.serviceResource.memory_bytes_gauge'),
+      dataIndex: "memory_bytes_gauge",
+      render: (text, record) => {
+        const value = getProperByteDesc(parseInt(text)).desc;
+        const percent = (parseInt(text) / parseInt(record['memory_total']) as any).toFixed(3) * 100;
+        const level: CellHealtyLevel = calcNodeHealty(percent, Percent_Range);
+        return (
+          <div className={`${styles.tableCell} ${styles[level]}`}>{value} ({percent}%)</div>
+        );
+      },
       width: CellWidth
     },
     {
@@ -180,7 +198,7 @@ function OverviewTable(props: IProps) {
         const isRunning = text === '1';
         return (
           <div className={`${styles.tableCell} ${isRunning ? styles.normal : styles.danger}`}>
-          {isRunning ? intl.get('device.serviceResource.running') : intl.get('device.serviceResource.exit')}
+            {isRunning ? intl.get('device.serviceResource.running') : intl.get('device.serviceResource.exit')}
           </div>
         )
       },
@@ -207,31 +225,67 @@ function OverviewTable(props: IProps) {
     return queries;
   }
 
+  const getMachineQueries = (servicNames: string[]) => {
+    const hosts: string[] = [...new Set(servicNames
+      .map((service) => service.split('-')[0]))];
+    const clusterSuffix1 = cluster ? `,${getClusterPrefix()}="${cluster.id}"` : '';
+    const queries: BatchQueryItem[] = hosts.map(host => {
+      const instanceSuffix = `instance=~"^${host.replaceAll(".", "\.")}.*"`;
+      return (
+        {
+          refId: `node$${host}$memory_total`,
+          query: `node_memory_MemTotal_bytes{${instanceSuffix}${clusterSuffix1}}`
+        }
+      )
+    })
+    return queries;
+  }
+
   const asyncGetServiceOverviewData = async (shouldLoading?: boolean) => {
     if (!serviceMap[ServiceName.GRAPHD]) return;
     shouldLoading && setLoading(true);
-    const queries = getQueries();
-    const data: any = await asyncBatchQueries(queries);
-    const { results } = data;
     const curDataSources: OverviewTableData[] = serviceMap[ServiceName.GRAPHD]
       .concat(serviceMap[ServiceName.METAD])
       .concat(serviceMap[ServiceName.STORAGED])
       .map(item => ({ serviceName: item }));
+    const machineInfoQueries: BatchQueryItem[] = getMachineQueries(curDataSources.map(item => item.serviceName))
+    const queries = getQueries();
+    const data: any = await asyncBatchQueries(queries.concat(machineInfoQueries));
+    const { results } = data;
     Object.keys(results).forEach(refId => {
-      const [_serviceType, metricName] = refId.split('$');
-      const metricItems = results[refId].result;
-      metricItems.forEach(({ metric, value }) => {
-        const curItem = curDataSources.find(item => item.serviceName === metric.instanceName);
-        if (curItem) {
-          curItem[metricName] = value[1];
-        } else {
-          curDataSources.push({
-            serviceName: metric.instanceName,
-            [metricName]: value[1]
-          })
-        }
-      })
+      if (refId.startsWith('node$')) {
+        const [_, machineHost, metricName] = refId.split('$');
+        const metricItems = results[refId].result;
+        metricItems.forEach(({ metric, value }) => {
+          const curItems = curDataSources.filter(item => item.serviceName.includes(machineHost));
+          if (curItems.length) {
+            curItems.forEach(item => {
+              item[metricName] = value[1];
+            })
+          } else {
+            curDataSources.push({
+              serviceName: metric.instanceName,
+              [metricName]: value[1]
+            })
+          }
+        })
+      } else {
+        const [_serviceType, metricName] = refId.split('$');
+        const metricItems = results[refId].result;
+        metricItems.forEach(({ metric, value }) => {
+          const curItem = curDataSources.find(item => item.serviceName === metric.instanceName);
+          if (curItem) {
+            curItem[metricName] = value[1];
+          } else {
+            curDataSources.push({
+              serviceName: metric.instanceName,
+              [metricName]: value[1]
+            })
+          }
+        })
+      }
     });
+
     setLoading(false);
     setDataSource(curDataSources);
   }

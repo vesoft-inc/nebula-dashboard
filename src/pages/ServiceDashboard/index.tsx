@@ -9,7 +9,7 @@ import Icon from '@/components/Icon';
 
 import { ServiceName } from '@/utils/interface';
 import { ClusterServiceNameMap } from '@/utils/metric';
-import { defaultServicePanelConfigData } from './defaultPanelConfig';
+import { defaultServicePanelConfigData, ServicePanelConfig, ServicePanelConfigItem } from './defaultPanelConfig';
 import ServiceOverview from './ServiceOverview';
 
 import styles from './index.module.less';
@@ -20,21 +20,25 @@ const mapDispatch: any = (_dispatch: any) => ({
 
 const mapState = (state: any) => ({
   loading: state.loading.effects.nebula.asyncBatchQueries,
+  cluster: state.cluster.cluster,
 });
 
 interface IProps
   extends ReturnType<typeof mapDispatch>,
   ReturnType<typeof mapState> {
-  cluster?: any;
+  enableAddPanel?: boolean;
+  onAddPanel?: () => void;
+  onEditPanel?: (panelItem: ServicePanelConfig, serviceName: ServiceName) => void;
+  panelConfigs?: ServicePanelConfigItem[];
 }
 
-const ServicePanels = [
+export const ServicePanels = [
   ServiceName.GRAPHD,
   ServiceName.STORAGED,
   ServiceName.METAD,
-  ClusterServiceNameMap[ServiceName.MetadListener],
-  ClusterServiceNameMap[ServiceName.StoragedListener],
-  ClusterServiceNameMap[ServiceName.Drainer],
+  // ClusterServiceNameMap[ServiceName.MetadListener],
+  // ClusterServiceNameMap[ServiceName.StoragedListener],
+  // ClusterServiceNameMap[ServiceName.Drainer],
 ]
 
 export type ServicePanelType = {
@@ -42,7 +46,7 @@ export type ServicePanelType = {
 };
 
 function ServiceDashboard(props: IProps) {
-  const { cluster } = props;
+  const { cluster, enableAddPanel, onAddPanel, panelConfigs, onEditPanel } = props;
 
   const [timeRange, setTimeRange] = useState<TIME_OPTION_TYPE | [number, number]>(TIME_OPTION_TYPE.HOUR1);
 
@@ -56,7 +60,15 @@ function ServiceDashboard(props: IProps) {
     if (cluster.id) {
       getServiceNames();
     }
-  }, [cluster])
+  }, [cluster]);
+
+  const [curPanelConfigs, setCurPanelConfigs] = useState<ServicePanelConfigItem[]>(panelConfigs || defaultServicePanelConfigData);
+
+  useEffect(() => {
+    if (panelConfigs) {
+      setCurPanelConfigs(panelConfigs);
+    }
+  }, [panelConfigs])
 
   const getServiceNames = () => {
     const serviceTypeMap: ServicePanelType = {};
@@ -65,6 +77,10 @@ function ServiceDashboard(props: IProps) {
       // serviceTypeMap = services.concat(cluster[panel].map(i => i.name))
     });
     setCurServiceMap(serviceTypeMap);
+  }
+
+  const handleEditServicePanel = (serviceName: ServiceName) => (configItem: ServicePanelConfig) => {
+    onEditPanel && onEditPanel(configItem, serviceName);
   }
 
   return (
@@ -76,45 +92,36 @@ function ServiceDashboard(props: IProps) {
           <div className={styles.monitorTitle}>{intl.get('device.serviceResource.singleServiceTitle')}</div>
           <div className={styles.action}>
             <TimeSelect value={timeRange} onChange={handleTimeSelectChange} />
-            <Button
-              type="primary"
-              onClick={() => { }}
-              className={`${styles.primaryBtn} ${styles.addPanelBtn}`}
-            >
-              <Icon icon="#iconPlus" />
-              {intl.get('common.addPanel')}
-            </Button>
+            {
+              enableAddPanel && (
+                <Button
+                  type="primary"
+                  onClick={onAddPanel}
+                  className={`${styles.primaryBtn} ${styles.addPanelBtn}`}
+                >
+                  <Icon icon="#iconPlus" />
+                  {intl.get('common.addPanel')}
+                </Button>
+              )
+            }
           </div>
         </div>
       </div>
-      <div className={styles.servicePanel}>
-        <ServiceOverview
-          /* @ts-ignore */
-          serviceNames={curServiceMap[ServiceName.GRAPHD] || []}
-          timeRange={timeRange}
-          serviceType={ServiceName.GRAPHD}
-          panelVisible
-          panelConfigData={defaultServicePanelConfigData.find(item => item.type === ServiceName.GRAPHD)?.panels || []}
-        />
-      </div>
-      <div className={styles.servicePanel}>
-        <ServiceOverview
-          /* @ts-ignore */
-          serviceNames={curServiceMap[ServiceName.METAD] || []}
-          timeRange={timeRange}
-          serviceType={ServiceName.METAD}
-          panelConfigData={defaultServicePanelConfigData.find(item => item.type === ServiceName.METAD)?.panels || []}
-        />
-      </div>
-      <div className={styles.servicePanel}>
-        <ServiceOverview
-          /* @ts-ignore */
-          serviceNames={curServiceMap[ServiceName.STORAGED] || []}
-          timeRange={timeRange}
-          serviceType={ServiceName.STORAGED}
-          panelConfigData={defaultServicePanelConfigData.find(item => item.type === ServiceName.STORAGED)?.panels || []}
-        />
-      </div>
+      {
+        curPanelConfigs.map((panelConfig, index) => (
+          <div key={index} className={styles.servicePanel}>
+            <ServiceOverview
+              /* @ts-ignore */
+              serviceNames={curServiceMap[panelConfig.type] || []}
+              timeRange={timeRange}
+              serviceType={panelConfig.type}
+              panelVisible={index === 0}
+              onEditPanel={handleEditServicePanel(panelConfig.type)}
+              panelConfigData={panelConfig.panels}
+            />
+          </div>
+        ))
+      }
     </div>
   );
 }

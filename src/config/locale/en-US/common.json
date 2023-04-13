@@ -49,5 +49,17 @@
   },
   "addhostSuccess": "{host} add host success",
   "successDelay": "Success, Please refresh the page later to view",
-  "running": "Running"
+  "running": "Running",
+  "panelName": "Panel Name",
+  "panelNamePlaceholder": "Please enter a panel name",
+  "panelMetricType": "Metric Type",
+  "panelMetricModal": {
+    "PERCENTAGE": "percentage",
+    "BYTE": "byte",
+    "BYTE_SECOND": "byte/s",
+    "DISK_IO_NET": "io/s",
+    "NUMBER": "number",
+    "numberSecond": "number/s",
+    "latency": "us/ms/s"
+  }
 }

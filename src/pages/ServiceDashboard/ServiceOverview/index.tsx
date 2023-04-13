@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import intl from 'react-intl-universal';
+import { connect } from 'react-redux';
 
 import { BatchQueryItem, IServiceMetricItem, ServiceName } from '@/utils/interface';
 import ServiceHeader from '@/components/Service/ServiceHeader';
@@ -12,10 +13,11 @@ import styles from './index.module.less';
 import { getClusterPrefix } from '@/utils/promQL';
 import { getQueryByMetricType } from '@/utils/metric';
 import DashboardCard from '@/components/DashboardCard';
-import { connect } from 'react-redux';
+
 import { Spin } from 'antd';
 import { DashboardSelect, Option } from '@/components/DashboardSelect';
 import EventBus from '@/utils/EventBus';
+
 
 const mapDispatch: any = (_dispatch: any) => ({
 });
@@ -33,10 +35,11 @@ interface IProps extends ReturnType<typeof mapDispatch>,
   panelConfigData: ServicePanelConfig[];
   timeRange: TIME_OPTION_TYPE | [number, number];
   panelVisible?: boolean;
+  onEditPanel: (panelItem: ServicePanelConfig) => void;
 }
 
 function ServiceOverview(props: IProps) {
-  const { serviceType, panelConfigData, serviceNames, timeRange, cluster, ready, serviceMetric, panelVisible } = props;
+  const { serviceType, panelConfigData, serviceNames, timeRange, cluster, ready, serviceMetric, panelVisible, onEditPanel } = props;
   const [loading, setLoading] = useState<boolean>(false);
   const [frequencyValue, setFrequencyValue] = useState<number>(0);
   const [curPanelVisile, setCurPanelVisible] = useState<boolean>(panelVisible || false);
@@ -164,6 +167,10 @@ function ServiceOverview(props: IProps) {
     });
   }
 
+  const getViewPath = (serviceType: string, serviceName: string, panelName: string) => {
+    return `/clusters/${cluster.id}/service-metric/${serviceType}/${serviceName}/${encodeURIComponent(panelName)}`;
+  }
+
   return (
     <div className={styles.serviceTableItem}>
       <ServiceHeader serviceType={serviceType} title={
@@ -207,6 +214,8 @@ function ServiceOverview(props: IProps) {
                   <DashboardCard
                     title={configItem.title}
                     key={index}
+                    viewPath={getViewPath(serviceType, curServiceName, configItem.title)}
+                    onConfigPanel={() => onEditPanel(configItem)}
                   >
                     <MetricCard
                       ref={ref => metricRefs[index + 1] = ref}

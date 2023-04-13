@@ -106,8 +106,8 @@ export const getMenuPathByKey = (menuList: any[], activeKey: string): string[] =
   return path;
 }
 
-export const calcNodeHealty = (percent: number) => {
-  const levels = Object.keys(Percent_Range);
+export const calcNodeHealty = (percent: number, rangeMap = Percent_Range) => {
+  const levels = Object.keys(rangeMap);
   let level: CellHealtyLevel = CellHealtyLevel.normal ;
   for (let index = 0; index < levels.length; index++) {
     const key = levels[index];
