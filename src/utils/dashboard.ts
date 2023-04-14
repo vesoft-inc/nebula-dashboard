@@ -254,6 +254,7 @@ export const getProperTickInterval = period => {
 };
 
 export enum TIME_OPTION_TYPE {
+  MIN5 = '5min',
   HOUR1 = '1hour',
   HOUR6 = '6hour',
   HOUR12 = '12hour',
@@ -265,6 +266,10 @@ export enum TIME_OPTION_TYPE {
 }
 
 export const TIME_OPTION_MAP = {
+  MIN5: {
+    name: TIME_OPTION_TYPE.MIN5,
+    value: 5 * 60 * 1000,
+  },
   HOUR1: {
     name: TIME_OPTION_TYPE.HOUR1,
     value: 60 * 60 * 1000,
@@ -299,7 +304,18 @@ export const TIME_OPTION_MAP = {
   },
 }
 
-export const TIMEOPTIONS = [
+export const Metric_TIMEOPTIONS = [
+  TIME_OPTION_MAP.MIN5,
+  TIME_OPTION_MAP.HOUR1,
+  TIME_OPTION_MAP.HOUR6,
+  TIME_OPTION_MAP.HOUR12,
+  TIME_OPTION_MAP.DAY1,
+  TIME_OPTION_MAP.DAY3,
+  TIME_OPTION_MAP.DAY7,
+  // TIME_OPTION_MAP.DAY14,
+];
+
+export const Other_TIMEOPTIONS = [
   TIME_OPTION_MAP.HOUR1,
   TIME_OPTION_MAP.HOUR6,
   TIME_OPTION_MAP.HOUR12,
@@ -332,7 +348,7 @@ export let NEED_ADD_SUM_QUERYS = [
 export const calcTimeRange = (timeRange: TIME_OPTION_TYPE | [number, number]): [number, number] => {
   const end = Date.now();
   if (typeof timeRange === 'string') {
-    const value = TIMEOPTIONS.find(t => t.name === timeRange)?.value!;
+    const value = Metric_TIMEOPTIONS.concat(Other_TIMEOPTIONS).find(t => t.name === timeRange)?.value!;
     return [end - value, end];
   } else if (typeof timeRange === 'object' && timeRange.length === 2) {
     return timeRange;

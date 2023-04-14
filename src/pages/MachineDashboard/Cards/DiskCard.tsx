@@ -4,16 +4,15 @@ import _ from 'lodash';
 import SpaceChart from '@/components/Charts/SpaceChart';
 import { DiskMetricInfo } from '@/utils/interface';
 import { getClusterPrefix } from '@/utils/promQL';
+import { asyncBatchQueries } from '@/requests';
 
 interface IProps {
-  // diskUsageDetails: DiskMetricInfo[];
   cluster?: any;
   instance: string;
-  asyncBatchQueries: (queries: []) => Promise<any>;
 }
 
 const DiskCard = forwardRef((props: IProps, ref) => {
-  const { cluster, instance, asyncBatchQueries } = props;
+  const { cluster, instance } = props;
 
   const [diskUsageDetails, setDiskUsageDetails] = useState<DiskMetricInfo[]>([]);
 
@@ -25,9 +24,7 @@ const DiskCard = forwardRef((props: IProps, ref) => {
 
   useImperativeHandle(ref, () => (
     {
-      handleRefresh: () => {
-        asyncGetDiskUsageDetails();
-      }
+      handleRefresh: () => asyncGetDiskUsageDetails()
     }
   ));
   
@@ -61,6 +58,7 @@ const DiskCard = forwardRef((props: IProps, ref) => {
       }
     });
     setDiskUsageDetails(details);
+    return details;
   }
 
   return (

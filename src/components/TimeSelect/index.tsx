@@ -4,7 +4,7 @@ import intl from 'react-intl-universal';
 import dayjs from 'dayjs';
 
 import {
-  TIMEOPTIONS, TIME_OPTION_TYPE,
+  Metric_TIMEOPTIONS, TIME_OPTION_TYPE,
 } from '@/utils/dashboard';
 
 import styles from './index.module.less';
@@ -12,14 +12,14 @@ import styles from './index.module.less';
 interface IProps {
   value?: TIME_OPTION_TYPE | number[];
   onChange?: (value: any) => void;
-  timeOptions?: any[]; 
+  timeOptions?: any[];
 }
 
 const TimeSelect = (props: IProps) => {
 
   const { value, timeOptions, onChange } = props;
 
-  const [curTimeOption, setCurTimeOption ] = useState<TIME_OPTION_TYPE>();
+  const [curTimeOption, setCurTimeOption] = useState<TIME_OPTION_TYPE>();
 
   const [cusTimeRange, setCusTimeRange] = useState<number[]>();
 
@@ -55,15 +55,15 @@ const TimeSelect = (props: IProps) => {
   const timeRangeByOption = useMemo(() => {
     if (curTimeOption) {
       const now = new Date().getTime();
-      const nowPeriod = (timeOptions || TIMEOPTIONS).find(option => option.name === curTimeOption);
+      const nowPeriod = (timeOptions || Metric_TIMEOPTIONS).find(option => option.name === curTimeOption);
       if (nowPeriod) {
-        return  [dayjs(now - nowPeriod.value), dayjs(now)]; 
+        return [dayjs(now - nowPeriod.value), dayjs(now)];
       }
       return undefined
     }
-  },[curTimeOption]);
-  
-  
+  }, [curTimeOption]);
+
+
   return (
     <div className={styles.timeSelect}>
       <Radio.Group
@@ -71,7 +71,7 @@ const TimeSelect = (props: IProps) => {
         onChange={handleTimeButtonClick}
         value={curTimeOption}
       >
-        {(timeOptions||TIMEOPTIONS).map(option => (
+        {(timeOptions || Metric_TIMEOPTIONS).map(option => (
           <Radio.Button key={option.value} value={option.name}>
             {intl.get(`component.dashboardDetail.${option.name}`)}
           </Radio.Button>

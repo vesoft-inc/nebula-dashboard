@@ -292,11 +292,12 @@ export const updatePromql = (service: {
 export const getMachineMetricData = (instance, cluster) => {
   const clusterSuffix1 = cluster ? `,${getClusterPrefix()}="${cluster.id}"` : '';
   const instanceSuffix = `instance=~"^${instance.replaceAll(".", "\.")}.*"`;
+  const encodedInstance = instance.replaceAll('.', '_');
   return {
     cpu: {
       title: intl.get('device.cpu'),
       valueType: VALUE_TYPE.percentage,
-      viewPath: "/machine/cpu",
+      viewPath: `/machine-metric/cpu/${encodedInstance}`,
       queries: [
         {
           refId: 'cpu_total_used',
@@ -319,7 +320,7 @@ export const getMachineMetricData = (instance, cluster) => {
     memory: {
       title: intl.get('device.memory'),
       valueType: VALUE_TYPE.byte,
-      viewPath: "/machine/memory",
+      viewPath: `/machine-metric/memory/${encodedInstance}`,
       queries: [
         {
           refId: 'memory_total',
@@ -346,7 +347,7 @@ export const getMachineMetricData = (instance, cluster) => {
     load: {
       title: intl.get('device.load'),
       valuetype: VALUE_TYPE.number,
-      viewPath: "/machine/load",
+      viewPath: `/machine-metric/load/${encodedInstance}`,
       queries: [
         {
           refId: 'cpu_load_1',
@@ -365,7 +366,7 @@ export const getMachineMetricData = (instance, cluster) => {
     diskIO: {
       title: intl.get('device.diskIO'),
       valueType: VALUE_TYPE.diskIONet,
-      viewPath: "/machine/disk",
+      viewPath: `/machine-metric/diskIO/${encodedInstance}`,
       queries: [
         {
           refId: 'disk_read_rate',
@@ -380,7 +381,7 @@ export const getMachineMetricData = (instance, cluster) => {
     diskIONum: {
       title: intl.get('device.diskIONum'),
       valueType: VALUE_TYPE.byteSecondNet,
-      viewPath: "/machine/disk",
+      viewPath: `/machine-metric/diskIONum/${encodedInstance}`,
       queries: [
         {
           refId: 'disk_read_rate',
@@ -395,7 +396,7 @@ export const getMachineMetricData = (instance, cluster) => {
     network: {
       title: intl.get('device.network'),
       valueType: VALUE_TYPE.byteSecondNet,
-      viewPath: "/machine/network",
+      viewPath: `/machine-metric/network/${encodedInstance}`,
       queries: [
         {
           refId: 'network_in',
@@ -410,6 +411,7 @@ export const getMachineMetricData = (instance, cluster) => {
     openFileDesc: {
       title: intl.get('device.openfiledesc'),
       valueType: VALUE_TYPE.number,
+      viewPath: `/machine-metric/openFileDesc/${encodedInstance}`,
       queries: [
         {
           refId: 'open_file_desc',
