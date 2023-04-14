@@ -4,7 +4,7 @@ import intl from 'react-intl-universal';
 import dayjs from 'dayjs';
 
 import {
-  Metric_TIMEOPTIONS, TIME_OPTION_TYPE,
+  MetricTIMEOPTIONS, TIME_OPTION_TYPE,
 } from '@/utils/dashboard';
 
 import styles from './index.module.less';
@@ -55,7 +55,7 @@ const TimeSelect = (props: IProps) => {
   const timeRangeByOption = useMemo(() => {
     if (curTimeOption) {
       const now = new Date().getTime();
-      const nowPeriod = (timeOptions || Metric_TIMEOPTIONS).find(option => option.name === curTimeOption);
+      const nowPeriod = (timeOptions || MetricTIMEOPTIONS).find(option => option.name === curTimeOption);
       if (nowPeriod) {
         return [dayjs(now - nowPeriod.value), dayjs(now)];
       }
@@ -71,7 +71,7 @@ const TimeSelect = (props: IProps) => {
         onChange={handleTimeButtonClick}
         value={curTimeOption}
       >
-        {(timeOptions || Metric_TIMEOPTIONS).map(option => (
+        {(timeOptions || MetricTIMEOPTIONS).map(option => (
           <Radio.Button key={option.value} value={option.name}>
             {intl.get(`component.dashboardDetail.${option.name}`)}
           </Radio.Button>

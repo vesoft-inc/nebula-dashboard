@@ -304,7 +304,7 @@ export const TIME_OPTION_MAP = {
   },
 }
 
-export const Metric_TIMEOPTIONS = [
+export const MetricTIMEOPTIONS = [
   TIME_OPTION_MAP.MIN5,
   TIME_OPTION_MAP.HOUR1,
   TIME_OPTION_MAP.HOUR6,
@@ -315,7 +315,7 @@ export const Metric_TIMEOPTIONS = [
   // TIME_OPTION_MAP.DAY14,
 ];
 
-export const Other_TIMEOPTIONS = [
+export const OtherTIMEOPTIONS = [
   TIME_OPTION_MAP.HOUR1,
   TIME_OPTION_MAP.HOUR6,
   TIME_OPTION_MAP.HOUR12,
@@ -348,7 +348,7 @@ export let NEED_ADD_SUM_QUERYS = [
 export const calcTimeRange = (timeRange: TIME_OPTION_TYPE | [number, number]): [number, number] => {
   const end = Date.now();
   if (typeof timeRange === 'string') {
-    const value = Metric_TIMEOPTIONS.concat(Other_TIMEOPTIONS).find(t => t.name === timeRange)?.value!;
+    const value = MetricTIMEOPTIONS.concat(OtherTIMEOPTIONS).find(t => t.name === timeRange)?.value!;
     return [end - value, end];
   } else if (typeof timeRange === 'object' && timeRange.length === 2) {
     return timeRange;
