@@ -4,18 +4,18 @@ import intl from 'react-intl-universal';
 import { Button, Spin } from 'antd';
 
 import TimeSelect from '@/components/TimeSelect';
-import { TIME_OPTION_TYPE } from '@/utils/dashboard';
+import { calcTimeRange, TIME_OPTION_TYPE } from '@/utils/dashboard';
 import Icon from '@/components/Icon';
 
 import { ServiceName } from '@/utils/interface';
-import { ClusterServiceNameMap } from '@/utils/metric';
 import { defaultServicePanelConfigData, ServicePanelConfig, ServicePanelConfigItem } from './defaultPanelConfig';
 import ServiceOverview from './ServiceOverview';
 
 import styles from './index.module.less';
 import OverviewTable from './OverviewTable';
 
-const mapDispatch: any = (_dispatch: any) => ({
+const mapDispatch: any = (dispatch: any) => ({
+  asyncGetSpaces: dispatch.serviceMetric.asyncGetSpaces,
 });
 
 const mapState = (state: any) => ({
@@ -46,7 +46,7 @@ export type ServicePanelType = {
 };
 
 function ServiceDashboard(props: IProps) {
-  const { cluster, enableAddPanel, onAddPanel, panelConfigs, onEditPanel } = props;
+  const { cluster, enableAddPanel, onAddPanel, panelConfigs, onEditPanel, asyncGetSpaces } = props;
 
   const [timeRange, setTimeRange] = useState<TIME_OPTION_TYPE | [number, number]>(TIME_OPTION_TYPE.HOUR1);
 
@@ -54,13 +54,24 @@ function ServiceDashboard(props: IProps) {
     setTimeRange(value);
   }
 
-  const [curServiceMap, setCurServiceMap] = useState<ServicePanelType>({});
+  const [curServiceMap, setCurServiceMap] = useState<ServicePanelType>({} as ServicePanelType);
 
   useEffect(() => {
     if (cluster.id) {
       getServiceNames();
     }
   }, [cluster]);
+
+  useEffect(() => {
+    const [start, end] = calcTimeRange(timeRange);
+    if (cluster?.id) {
+      asyncGetSpaces({
+        clusterID: cluster.id,
+        start,
+        end
+      })
+    }
+  }, [timeRange, cluster])
 
   const [curPanelConfigs, setCurPanelConfigs] = useState<ServicePanelConfigItem[]>(panelConfigs || defaultServicePanelConfigData);
 
@@ -71,10 +82,9 @@ function ServiceDashboard(props: IProps) {
   }, [panelConfigs])
 
   const getServiceNames = () => {
-    const serviceTypeMap: ServicePanelType = {};
+    const serviceTypeMap: ServicePanelType = {} as ServicePanelType;
     ServicePanels.forEach((panel: string) => {
       serviceTypeMap[panel] = (cluster[panel] || []).map(i => i.name);
-      // serviceTypeMap = services.concat(cluster[panel].map(i => i.name))
     });
     setCurServiceMap(serviceTypeMap);
   }

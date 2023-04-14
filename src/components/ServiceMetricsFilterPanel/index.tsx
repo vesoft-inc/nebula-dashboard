@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useRef } from 'react';
 import { Form } from 'antd';
 import intl from 'react-intl-universal';
 
-import { AGGREGATION_OPTIONS, TIME_INTERVAL_OPTIONS } from '@/utils/dashboard';
 import { ServiceName } from '@/utils/interface';
 import MetricsFilterPanel from '../MetricsFilterPanel';
 import { DashboardSelect, Option } from '../DashboardSelect';

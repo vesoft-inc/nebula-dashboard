@@ -5,6 +5,8 @@ import { BatchQueryItem, ServiceName } from '@/utils/interface';
 export interface ServicePanelConfig {
   title: string;
   valueType: VALUE_TYPE;
+  space?: string;
+  showIndex?: number;
   queries: BatchQueryItem[];
 }
 
@@ -20,6 +22,7 @@ export const defaultServicePanelConfigData: ServicePanelConfigItem[] = [
       {
         title: intl.get('metric_description.graphd_latency'),
         valueType: VALUE_TYPE.latency,
+        space: '',
         queries: [
           {
             refId: 'slow_query_latency',
@@ -38,6 +41,7 @@ export const defaultServicePanelConfigData: ServicePanelConfigItem[] = [
       {
         title: intl.get('metric_description.graphd_sessions'),
         valueType: VALUE_TYPE.number,
+        space: '',
         queries: [
           {
             refId: 'active_sessions',
@@ -64,6 +68,7 @@ export const defaultServicePanelConfigData: ServicePanelConfigItem[] = [
       {
         title: intl.get('metric_description.graphd_queries'),
         valueType: VALUE_TYPE.number,
+        space: '',
         queries: [
           {
             refId: 'active_queries',
@@ -94,6 +99,7 @@ export const defaultServicePanelConfigData: ServicePanelConfigItem[] = [
       {
         title: intl.get('metric_description.process_disk'),
         valueType: VALUE_TYPE.byte,
+        space: '',
         queries: [
           {
             refId: 'read_bytes_total',
