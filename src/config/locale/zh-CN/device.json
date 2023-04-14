@@ -4,6 +4,7 @@
 	"cpu": "CPU",
 	"disk": "磁盘",
 	"memory": "内存",
+  "memoryPercentage": "内存使用率",
   "diskIO": "磁盘读写速率(IOPS)",
   "openfiledesc": "打开文件描述符&上下文切换",
   "diskIONum": "磁盘读写容量",

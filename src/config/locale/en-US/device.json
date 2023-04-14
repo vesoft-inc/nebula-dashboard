@@ -7,6 +7,7 @@
   "openfiledesc": "Open File Desc & Context Switch",
   "diskIONum": "Disk IO Capacity",
 	"memory": "Memory",
+  "memoryPercentage": "Memory Utilization",
 	"load": "Load",
 	"network": "Network",
 	"networkIn": "Network In",

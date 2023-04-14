@@ -317,6 +317,29 @@ export const getMachineMetricData = (instance, cluster) => {
         }
       ]
     },
+    memory_utilization: {
+      title: intl.get('device.memoryPercentage'),
+      valueType: VALUE_TYPE.percentage,
+      viewPath: `/machine-metric/memory_utilization/${encodedInstance}`,
+      queries: [
+        {
+          refId: 'memory_currnet_used_utilization',
+          query: `(node_memory_MemTotal_bytes{${instanceSuffix}${clusterSuffix1}} - node_memory_MemAvailable_bytes{${instanceSuffix}${clusterSuffix1}}) / (node_memory_MemTotal_bytes{${instanceSuffix}${clusterSuffix1}}) * 100`,
+        },
+        {
+          refId: 'memory_avaliable_utilization',
+          query: `node_memory_MemAvailable_bytes{${instanceSuffix}${clusterSuffix1}} / (node_memory_MemTotal_bytes{${instanceSuffix}${clusterSuffix1}}) * 100`,
+        },
+        {
+          refId: 'memory_cached_utilization',
+          query: `(node_memory_Buffers_bytes{${instanceSuffix}${clusterSuffix1}} + node_memory_Cached_bytes{${instanceSuffix}${clusterSuffix1}}) / (node_memory_MemTotal_bytes{${instanceSuffix}${clusterSuffix1}}) * 100`,
+        },
+        {
+          refId: 'memory_swap_utilization',
+          query: `(node_memory_SwapTotal_bytes{${instanceSuffix}${clusterSuffix1}} - node_memory_SwapFree_bytes{${instanceSuffix}${clusterSuffix1}}) / (node_memory_MemTotal_bytes{${instanceSuffix}${clusterSuffix1}}) * 100`,
+        },
+      ]
+    },
     memory: {
       title: intl.get('device.memory'),
       valueType: VALUE_TYPE.byte,
