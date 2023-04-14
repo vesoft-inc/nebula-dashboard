@@ -245,7 +245,7 @@ function MachineDashboard(props: IProps) {
             <Col span={12}>
               <DashboardCard
                 title={intl.get('device.disk')}
-                viewPath={getViewPath("/machine/disk")}
+                viewPath={getViewPath(`/machine-metric/disk/${curInstance}`)}
               >
                 <DiskCard ref={diskCardRef} cluster={cluster} instance={curInstance} asyncBatchQueries={asyncBatchQueries} />
               </DashboardCard >

@@ -30,12 +30,12 @@ function NodeResourceOverview(props: IProps) {
     {
       title: intl.get('device.nodeResource.ip'),
       dataIndex: "host",
-      render: (text, _) => <div className={styles.tableCell}>{text}</div>
+      render: (text, _) => <div title={text} className={styles.tableCell}>{text}</div>
     },
     {
       title: intl.get('device.nodeResource.nodeName'),
       dataIndex: "nodeName",
-      render: (text, _) => <div className={styles.tableCell}>{text}</div>
+      render: (text, _) => <div title={text} className={styles.tableCell}>{text}</div>
     },
     {
       title: intl.get('device.nodeResource.runtime'),

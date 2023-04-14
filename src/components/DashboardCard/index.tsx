@@ -1,7 +1,6 @@
 import React from 'react';
 import { RouteComponentProps, useHistory, withRouter } from 'react-router-dom';
 import Icon from '../Icon';
-import { trackPageView } from '@/utils/stat';
 import './index.less';
 
 interface IProps extends RouteComponentProps {
@@ -14,10 +13,9 @@ interface IProps extends RouteComponentProps {
 function DashboardCard(props: IProps) {
   const { viewPath, title, children, onConfigPanel } = props;
   const history = useHistory();
-  
+
   const handleViewDetail = () => {
     if (!viewPath) return;
-    trackPageView(viewPath);
     history.push(viewPath);
   };
 
