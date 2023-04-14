@@ -108,15 +108,16 @@ function ServiceOverview(props: IProps) {
         const aggregation = metricItem.aggregations.includes(AggregationType.Sum)
           ? AggregationType.Sum
           : (metricItem.aggregations[0] as AggregationType);
+        const spaceSuffix = configItem.space != undefined ? `,space="${configItem.space}"` : '';
         let query = getQueryByMetricType(metricItem, aggregation, '5');
         const clusterSuffix1 = cluster ? `,${getClusterPrefix()}="${cluster.id}"` : '';
         if (aggregation === AggregationType.Sum && !metricItem.isRawMetric) {
-          query = `sum_over_time(${query}{instanceName="${curServiceName}"${clusterSuffix1}}[${15}s])`;
+          query = `sum_over_time(${query}{instanceName="${curServiceName}"${clusterSuffix1}${spaceSuffix}}[${15}s])`;
         } else {
           if (query.includes('cpu_seconds_total')) {
             query = `avg by (instanceName) (rate(${query}{instanceName="${curServiceName}"${clusterSuffix1}}[5m])) * 100`
           } else {
-            query = `${query}{instanceName="${curServiceName}"${clusterSuffix1}}`;
+            query = `${query}{instanceName="${curServiceName}"${clusterSuffix1}${spaceSuffix}}`;
           }
         }
         return {
@@ -171,6 +172,14 @@ function ServiceOverview(props: IProps) {
     return `/clusters/${cluster.id}/service-metric/${serviceType}/${serviceName}/${encodeURIComponent(panelName)}`;
   }
 
+  const sortedPanels = (panels: ServicePanelConfig[]) => {
+    return panels.sort((panelA, panelB) => {
+      const AIndex = panelA.showIndex ? +panelA.showIndex : Number.MAX_VALUE;
+      const BIndex = panelB.showIndex ? +panelB.showIndex : Number.MAX_VALUE;
+      return AIndex - BIndex;
+    });
+  }
+
   return (
     <div className={styles.serviceTableItem}>
       <ServiceHeader serviceType={serviceType} title={
@@ -210,7 +219,7 @@ function ServiceOverview(props: IProps) {
           <Spin spinning={loading}>
             <div className={styles.serviceTableItemContent}>
               {
-                panelConfigData.map((configItem: ServicePanelConfig, index) => (
+                sortedPanels(panelConfigData).map((configItem: ServicePanelConfig, index) => (
                   <DashboardCard
                     title={configItem.title}
                     key={index}

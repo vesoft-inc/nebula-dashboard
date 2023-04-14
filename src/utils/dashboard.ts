@@ -405,7 +405,7 @@ export const getMaxNumAndLength = (payload: {
       if (valueType === VALUE_TYPE.byteSecond) {
         maxNumLen = unit.length + value.toString().length + 2;
       }
-      maxNumLen = unit.length + value.toString().length;
+      maxNumLen = (unit?.length || 0) + (value?.toString()?.length || 0);
       break;
     }
     case VALUE_TYPE.byteSecondNet:
