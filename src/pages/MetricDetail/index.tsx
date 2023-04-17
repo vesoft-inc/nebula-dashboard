@@ -9,14 +9,14 @@ import { IDispatch, IRootState } from '@/store';
 import styles from './index.module.less';
 import LineChart from '@/components/Charts/LineChart';
 import { useParams } from 'react-router-dom';
-import { calcTimeRange, getBaseLineByUnit, getDataByType, getDiskData, getMetricsUniqName, getProperStep, getProperTickInterval, getTickIntervalByGap } from '@/utils/dashboard';
-import { MetricScene, ServiceName } from '@/utils/interface';
+import { AggregationType, calcTimeRange, getBaseLineByUnit, getDataByType, getDiskData, getMetricsUniqName, getProperStep, getProperTickInterval, getTickIntervalByGap } from '@/utils/dashboard';
+import { IServiceMetricItem, MetricScene, ServiceName } from '@/utils/interface';
 import { SUPPORT_METRICS } from '@/utils/promQL';
 import { shouldCheckCluster } from '@/utils';
-import { Popover, Spin } from 'antd';
+import { Popover, Select, Spin } from 'antd';
 import Icon from '@/components/Icon';
 import BaseLineEditModal from '@/components/BaseLineEditModal';
-import { getQueryByMetricType } from '@/utils/metric';
+import { getQueryByMetricType, isLatencyMetric } from '@/utils/metric';
 
 interface Props
   extends ReturnType<typeof mapDispatch>,
@@ -201,7 +201,7 @@ function MetricDetail(props: Props) {
     const values = data.map(d => d.value) as number[];
     const maxNum = values.length > 0 ? Math.floor(Math.max(...values) * 100) / 100 : undefined;
     const minNum = values.length > 0 ? Math.floor(Math.min(...values) * 100) / 100 : undefined;
-    const realRange = data.length>0?(data[data.length-1].time - data[0].time):0;
+    const realRange = data.length > 0 ? (data[data.length - 1].time - data[0].time) : 0;
     let tickInterval = getTickIntervalByGap(Math.floor(realRange / 10)); // 10 ticks max
     metricChart.chartRef.updateDetailChart({
       type,
@@ -214,6 +214,7 @@ function MetricDetail(props: Props) {
 
   const getData = async () => {
     const [startTimestamps, endTimestamps] = calcTimeRange(curMetricsFilterValues.timeRange);
+    
     if (isServiceMetric(metricType)) {
       const { space } = curMetricsFilterValues;
       if (metricChart.metric.metric.length) {
@@ -284,6 +285,67 @@ function MetricDetail(props: Props) {
     metricChart.chartRef.updateBaseline(metricChart.baseLine);
   };
 
+  const handleMetricAggChange = (metricChart: any) => (value: string) => {
+    const [metric, agg] = value.split('$$');
+    metricChart.metric = {
+      ...metricChart.metric,
+      metric,
+      aggregations: [agg as AggregationType],
+    }
+    getData();
+    // asyncGetMetricsData(true, [metricChart]);
+  }
+
+  const renderChartTitle = (metricItem: IServiceMetricItem, metricChart: any) => {
+    if (isLatencyMetric(metricItem.metric)) {
+      const metrics = [AggregationType.Avg, AggregationType.P99, AggregationType.P95].map(agg => ({
+        ...metricItem,
+        metric: `${metricItem.metric}$$${agg}`,
+        aggregations: [agg]
+      }))
+      return (
+        <div className='chart-title'>
+          <Select
+            bordered={false}
+            value={metricItem.metric + '$$' + metricItem.aggregations[0]}
+            onChange={handleMetricAggChange(metricChart)}
+          >
+            {
+              metrics.map(metric => (
+                <Select.Option key={metric.metric} value={metric.metric}>
+                  <div className={styles.chartTitleOption}>
+                    <span title={metric.metric.replaceAll('$$', '_')} style={{ fontWeight: 'bold' }}>{metric.metric.replaceAll('$$', '_')}</span>
+                    <Popover
+                      className={"chart-title-popover"}
+                      content={
+                        <div>{intl.get(`metric_description.${metricItem.metric}`)}</div>
+                      }
+                    >
+                      <Icon className="metric-info-icon blue chart-title-desc" icon="#iconnav-serverInfo" />
+                    </Popover>
+                  </div>
+                </Select.Option>
+              ))
+            }
+          </Select>
+        </div>
+      )
+    }
+    return (
+      <div className='chart-title'>
+        <span title={metricItem.metric}>{metricItem.metric}</span>
+        <Popover
+          className={"chart-title-popover"}
+          content={
+            <div>{intl.get(`metric_description.${metricChart.metric?.metric}`)}</div>
+          }
+        >
+          <Icon className="metric-info-icon blue chart-title-desc" icon="#iconnav-serverInfo" />
+        </Popover>
+      </div>
+    )
+  }
+
   return (
     <Spin spinning={showLoading}>
       <div className={styles.dashboardDetail}>
@@ -309,7 +371,10 @@ function MetricDetail(props: Props) {
         </div>
         <div className={styles.detailContent}>
           <div className={styles.chartItem}>
-            <div className='chart-title'>
+            {
+              renderChartTitle(metricChart.metric, metricChart)
+            }
+            {/* <div className='chart-title'>
               {metricChart.metric?.metric}
               <Popover
                 className={"chart-title-popover"}
@@ -319,7 +384,7 @@ function MetricDetail(props: Props) {
               >
                 <Icon className="metric-info-icon blue chart-title-desc" icon="#iconnav-serverInfo" />
               </Popover>
-            </div>
+            </div> */}
             <div className={styles.chartContent}>
               <LineChart
                 // options={{ padding: [10, 70, 70, 70] }}
