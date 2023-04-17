@@ -1,6 +1,6 @@
 import _ from 'loadsh';
 
-import { VALUE_TYPE } from '@/utils/promQL';
+import { getClusterPrefix, VALUE_TYPE } from '@/utils/promQL';
 import { INTERVAL_FREQUENCY_LIST, SERVICE_QUERY_PERIOD } from './service';
 import { AggregationType, AGGREGATION_OPTIONS, getAutoLatency, getProperByteDesc, getProperStep, TIME_OPTION_TYPE } from './dashboard';
 import { IServiceMetricItem, ServiceName } from './interface';
@@ -238,20 +238,11 @@ export const getRawServiceMetricQueryMap = (metricItem: IServiceMetricItem) => {
   return map;
 }
 
-export const getQueryByMetricType = (metricItem: IServiceMetricItem, metricType: AggregationType | 'all', period: string): string | string[] => {
-  if (metricType === 'all') {
-    if (metricItem.isRawMetric) {
-      return metricItem.aggregations.map(agg => getRawServiceMetricQueryMap(metricItem)[metricItem.metric][agg]);
-    } else {
-      return metricItem.aggregations.map(agg => `${metricItem.prefixMetric}_${metricItem.metric}_${agg}_${period}`);
-    }
+export const getQueryByMetricType = (metricItem: IServiceMetricItem, metricType: AggregationType, period: string): string => {
+  if (metricItem.isRawMetric) {
+    return `${metricItem.prefixMetric}_${metricItem.metric}`
   } else {
-    if (metricItem.isRawMetric) {
-      // return getRawServiceMetricQueryMap(metricItem)[metricItem.metric][metricType]
-      return `${metricItem.prefixMetric}_${metricItem.metric}`
-    } else {
-      return `${metricItem.prefixMetric}_${metricItem.metric}_${metricType}_${period}`
-    }
+    return `${metricItem.prefixMetric}_${metricItem.metric}_${metricType}_${period}`
   }
 }
 
@@ -446,3 +437,5 @@ export const updateChartByValueType = (options, chartInstance) => {
     default:
   }
 }
+
+export const isLatencyMetric = metric => metric.includes('latency');

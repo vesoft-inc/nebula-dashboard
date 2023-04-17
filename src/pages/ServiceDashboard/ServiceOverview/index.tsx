@@ -11,7 +11,7 @@ import MetricCard, { PromResultMetric } from '@/components/MetricCard';
 
 import styles from './index.module.less';
 import { getClusterPrefix } from '@/utils/promQL';
-import { getQueryByMetricType } from '@/utils/metric';
+import { getQueryByMetricType, isLatencyMetric } from '@/utils/metric';
 import DashboardCard from '@/components/DashboardCard';
 
 import { Spin } from 'antd';
@@ -102,14 +102,26 @@ function ServiceOverview(props: IProps) {
 
   const getQueries = (configItem: ServicePanelConfig) => {
     const queries = configItem.queries
-      .filter((queryItem: BatchQueryItem) => metricOptions.find((item: IServiceMetricItem) => item.metric === queryItem.query))
+      .filter((queryItem: BatchQueryItem) => metricOptions.find((item: IServiceMetricItem) => item.metric === queryItem.query.split('$$')[0]))
       .map((queryItem: BatchQueryItem) => {
-        const metricItem = metricOptions.find((item: IServiceMetricItem) => item.metric === queryItem.query)!;
-        const aggregation = metricItem.aggregations.includes(AggregationType.Sum)
-          ? AggregationType.Sum
-          : (metricItem.aggregations[0] as AggregationType);
+        let metricName: string = queryItem.query ;
+        let aggregation: AggregationType | undefined;
+        if (isLatencyMetric(queryItem.query)) {
+          const [_query, _aggregation] = queryItem.query.split('$$');
+          metricName = _query;
+          aggregation = _aggregation as AggregationType;
+        }
+        const metricItem = metricOptions.find((item: IServiceMetricItem) => item.metric === metricName)!;
+        if (!aggregation) {
+          aggregation = metricItem.aggregations.includes(AggregationType.Sum)
+            ? AggregationType.Sum
+            : (metricItem.aggregations[0] as AggregationType);
+        }
         const spaceSuffix = configItem.space != undefined ? `,space="${configItem.space}"` : '';
-        let query = getQueryByMetricType(metricItem, aggregation, '5');
+        let query = getQueryByMetricType({
+          ...metricItem,
+          metric: metricName || metricItem.metric,
+        }, aggregation, '5');
         const clusterSuffix1 = cluster ? `,${getClusterPrefix()}="${cluster.id}"` : '';
         if (aggregation === AggregationType.Sum && !metricItem.isRawMetric) {
           query = `sum_over_time(${query}{instanceName="${curServiceName}"${clusterSuffix1}${spaceSuffix}}[${15}s])`;
@@ -149,7 +161,7 @@ function ServiceOverview(props: IProps) {
     if (resultNum > 1) {
       return `${resultMetric.instanceName} - ${key}`
     }
-    return key;
+    return key.replaceAll('$$', '_');
   }
 
   const handleInstanceChange = (serviceName: string) => {
@@ -230,7 +242,7 @@ function ServiceOverview(props: IProps) {
                       ref={ref => metricRefs[index + 1] = ref}
                       valueType={configItem.valueType}
                       onChangeBrush={(brush) => {
-                        onChangeBrush(index+1,brush);
+                        onChangeBrush(index + 1, brush);
                       }}
                       queries={getQueries(configItem)}
                       timeRange={timeRange}
