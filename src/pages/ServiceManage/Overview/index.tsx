@@ -56,7 +56,6 @@ let interval;
 const Overview: React.FC<IProps> = (props: IProps) => {
 
   const { cluster, currentSpace, spaces, baseRouter = '/management'  } = props;
-  const [balancing, setBalancing] = useState(false);
   const modalHandler = useRef<any>();
   const [hosts, setHosts] = useState([]);
   const nebulaRef = useRef<{
@@ -95,7 +94,6 @@ const Overview: React.FC<IProps> = (props: IProps) => {
     if (code === 0) {
       message.success(intl.get('common.successDelay'));
       props.asyncGetServices();
-      getBalanceStatus();
     }
   };
 
@@ -120,33 +118,12 @@ const Overview: React.FC<IProps> = (props: IProps) => {
         if (code === 0) {
           message.success(intl.get('common.successDelay'));
           props.asyncGetServices();
-          getBalanceStatus();
         }
         handleModalClose();
       }
     });
    
-  };
-
-  const getBalanceStatus = async () => {
-    if (!nebulaRef.current.currentSpace) return false;
-    const { code,data } = await props.getJobs();
-    if (code === 0) {
-      const hasRunningBalance = data.tables.find(item => item.Command.indexOf("BALANCE") && item.status === 'RUNNING');
-      setBalancing(hasRunningBalance);
-    } else {
-      clearInterval(interval);
-    }
-  }
-
-  useEffect(() => {
-    interval = setInterval(() => {
-        getBalanceStatus();
-    }, 2000);
-    return ()=>{
-      clearInterval(interval);
-    }
-  },[])
+  }; 
 
   const handleModalShow = async () => {
     if (modalHandler && modalHandler.current) {
@@ -207,19 +184,17 @@ const Overview: React.FC<IProps> = (props: IProps) => {
                 <Button
                   type="primary"
                   onClick={handleBalance}
-                  loading={balancing}
                   disabled={!versionFeature?.dataBalance || !currentSpace}
                 >
-                  Balance Data { balancing? intl.get("common.running") : ''}
+                  Balance Data 
                 </Button>
                 <Button
                   type="primary"
                   onClick={handleModalShow}
-                  loading={balancing}
                   ghost
                   disabled={!versionFeature?.dataBalance || !currentSpace}
                 >
-                  Balance Data Remove { balancing? intl.get("common.running") : ''}
+                  Balance Data Remove 
                 </Button>
               </>
             )
