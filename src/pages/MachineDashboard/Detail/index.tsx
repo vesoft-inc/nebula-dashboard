@@ -14,13 +14,21 @@ import {
 } from '@/utils/dashboard';
 import { IDispatch, IRootState } from '@/store';
 
-import { shouldCheckCluster } from '@/utils';
+import { getQueryRangeInfo } from '@/utils';
 import MetricsFilterPanel from '@/components/MetricsFilterPanel';
 import Icon from '@/components/Icon';
 import BaseLineEditModal from '@/components/BaseLineEditModal';
+import { LINUX as PROMQL } from '@/utils/promQL';
 import './index.less';
-import { IMachineMetricOption } from '@/utils/interface';
+import { BatchQueryItem, IMachineMetricOption } from '@/utils/interface';
 import { RouteProps, useHistory } from 'react-router-dom';
+import { asyncBatchQueries } from '@/requests';
+
+interface MetricChartItem {
+  metric: IMachineMetricOption;
+  baseLine: any;
+  chartRef?: any;
+}
 
 const mapDispatch: any = (dispatch: IDispatch) => ({
   updateMetricsFiltervalues: dispatch.machine.updateMetricsFiltervalues,
@@ -36,22 +44,13 @@ interface IProps
   extends ReturnType<typeof mapState>,
   ReturnType<typeof mapDispatch>, RouteProps {
   type: string;
-  asyncGetDataSourceByRange: (params: {
-    start: number;
-    end: number;
-    metric: string;
-    clusterID?: string;
-  }) => Promise<any>;
   metricOptions: IMachineMetricOption[];
-  loading: true;
   dataTypeObj: any;
 }
 
 function Detail(props: IProps) {
 
-  const { metricOptions, loading, aliasConfig, asyncGetDataSourceByRange, cluster, instances, metricsFilterValues, updateMetricsFiltervalues, type, dataTypeObj } = props;
-
-  const [dataSources, setDataSources] = useState<any[]>([]);
+  const { metricOptions, aliasConfig, cluster, instances, metricsFilterValues, updateMetricsFiltervalues, type, dataTypeObj } = props;
 
   const [curMetricOptions, setMetricOptions] = useState<IMachineMetricOption[]>([]);
 
@@ -62,9 +61,8 @@ function Detail(props: IProps) {
   const pollingTimerRef = useRef<any>(null);
 
   const metricCharts: any = useMemo(() => (metricOptions || []).map(
-    (metric, i) => ({
+    (metric) => ({
       metric,
-      index: i,
       baseLine: undefined,
     })
   ), [metricOptions]);
@@ -74,38 +72,22 @@ function Detail(props: IProps) {
   ), [metricOptions]);
 
   useEffect(() => {
-    setShowLoading(loading && metricsFilterValues.frequency === 0)
-  }, [loading, metricsFilterValues.frequency])
-
-  useEffect(() => {
     setMetricOptions(metricOptions)
   }, [metricOptions])
 
   useEffect(() => {
-    clearPolling();
-    if (shouldCheckCluster()) {
-      if (cluster?.id) {
-        pollingData();
-      }
-    } else {
-      pollingData();
+    if (cluster?.id && instances.length > 0) {
+      getData(true);
     }
-  }, [cluster, metricsFilterValues.frequency, metricsFilterValues.timeRange])
+  }, [metricCharts, cluster, instances])
 
   useEffect(() => {
-    updateChart();
-  }, [metricsFilterValues.instanceList, dataSources, curMetricOptions])
-
-  useEffect(() => () => {
     clearPolling();
-  }, [])
-
-  useEffect(() => {
-    if (pollingTimerRef.current) {
+    pollingData();
+    return () => {
       clearPolling();
-      pollingData();
     }
-  }, [curMetricOptions])
+  }, [metricsFilterValues.frequency])
 
   const clearPolling = () => {
     if (pollingTimerRef.current) {
@@ -113,35 +95,31 @@ function Detail(props: IProps) {
     }
   };
 
-  const getData = async () => {
-    const [startTimestamps, endTimestamps] = calcTimeRange(metricsFilterValues.timeRange);
-    const getPromise = (chart) => {
-      return new Promise((resolve, reject) => {
-        asyncGetDataSourceByRange({
-          start: startTimestamps,
-          end: endTimestamps,
-          metric: chart.metric.metric,
-          clusterID: cluster?.id,
-        }).then(res => {
-          resolve(res);
-        }).catch(e => {
-          reject(e);
-        });
-      })
-    }
-    Promise.all(metricCharts.map((chart, i) => {
-      if (curMetricOptions.length === 0 || curMetricOptions.find(m => m.metric === chart.metric.metric)) {
-        return getPromise(chart);
-      } else {
-        return Promise.resolve(dataSources[i]);
-      }
-    })).then((dataSources) => {
-      setDataSources(dataSources)
+  const getData = async (showLoading: boolean = false, updateMetricCharts: MetricChartItem[] = metricCharts) => {
+    if (updateMetricCharts.length === 0 || !cluster?.id) return;
+    showLoading && setShowLoading(true);
+    // const finMetricCharts = updateMetricCharts.filter(chart => chart.visible);
+    const [startTime, endTime] = calcTimeRange(metricsFilterValues.timeRange);
+    const { start, end, step } = getQueryRangeInfo(startTime, endTime);
+    const queries: BatchQueryItem[] = updateMetricCharts.map((chart: MetricChartItem) => ({
+      refId: chart.metric.metric,
+      query: PROMQL(cluster.id)[chart.metric.metric],
+      start,
+      end,
+      step
+    }));
+    const data: any = await asyncBatchQueries(queries);
+    const { results } = data;
+    if (!results) return;
+    updateMetricCharts.forEach((chart: MetricChartItem) => {
+      const datasource = results[chart.metric.metric].result;
+      updateChart(chart, datasource);
     })
+    showLoading && setShowLoading(false);
   };
 
   const pollingData = () => {
-    getData();
+    getData(true);
     if (metricsFilterValues.frequency > 0) {
       pollingTimerRef.current = setInterval(getData, metricsFilterValues.frequency);
     }
@@ -169,36 +147,34 @@ function Detail(props: IProps) {
     });
   };
 
-  const updateChart = () => {
-    metricCharts.forEach((chart, i) => {
-      const data = type === 'disk' ?
-        getDiskData({
-          data: dataSources[i] || [],
-          type: metricsFilterValues.instanceList,
-          nameObj: dataTypeObj,
-          aliasConfig,
-          instanceList: instances,
-        }) :
-        getDataByType({
-          data: dataSources[i] || [],
-          type: metricsFilterValues.instanceList,
-          nameObj: dataTypeObj,
-          aliasConfig,
-          instanceList: instances, 
-        });
-      const values = data.map(d => d.value) as number[];
-      const maxNum = values.length > 0 ? Math.floor(Math.max(...values) * 100) / 100 : undefined;
-      const minNum = values.length > 0 ? Math.floor(Math.min(...values) * 100) / 100 : undefined;
-      const realRange = data.length>0?(data[data.length-1].time - data[0].time):0;
-      let tickInterval = getTickIntervalByGap(Math.floor(realRange / 10)); // 10 ticks max
-      chart.chartRef.updateDetailChart({
-        type,
-        valueType: chart.metric.valueType,
-        tickInterval,
-        maxNum,
-        minNum
-      }).changeData(data);
-    })
+  const updateChart = (metricChart: MetricChartItem, dataSource: any) => {
+    const data = type === 'disk' ?
+      getDiskData({
+        data: dataSource || [],
+        type: metricsFilterValues.instanceList,
+        nameObj: dataTypeObj,
+        aliasConfig,
+        instanceList: instances,
+      }) :
+      getDataByType({
+        data: dataSource || [],
+        type: metricsFilterValues.instanceList,
+        nameObj: dataTypeObj,
+        aliasConfig,
+        instanceList: instances,
+      });
+    const values = data.map(d => d.value) as number[];
+    const maxNum = values.length > 0 ? Math.floor(Math.max(...values) * 100) / 100 : undefined;
+    const minNum = values.length > 0 ? Math.floor(Math.min(...values) * 100) / 100 : undefined;
+    const realRange = data.length > 0 ? (data[data.length - 1].time - data[0].time) : 0;
+    let tickInterval = getTickIntervalByGap(Math.floor(realRange / 10)); // 10 ticks max
+    metricChart.chartRef.updateDetailChart({
+      type,
+      valueType: metricChart.metric.valueType,
+      tickInterval,
+      maxNum,
+      minNum
+    }).changeData(data);
   };
 
   const handleBaseLineEdit = (metricChart) => () => {
@@ -210,8 +186,7 @@ function Detail(props: IProps) {
   };
 
   const handleRefreshData = () => {
-    setShowLoading(loading);
-    getData();
+    getData(true);
   }
 
   const handleMetricsChange = (values) => {
@@ -268,7 +243,6 @@ function Detail(props: IProps) {
                 <div className='chart-content'>
                   <LineChart
                     baseLine={metricChart.baseLine}
-                    // options={{ padding: [10, 70, 70, 70] }}
                     ref={ref => metricChart.chartRef = ref}
                     renderChart={renderChart(i)}
                   />
