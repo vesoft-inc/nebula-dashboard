@@ -39,9 +39,7 @@ interface MetricChartItem {
 }
 
 const mapDispatch: any = (dispatch: IDispatch) => ({
-  asyncGetStatus: dispatch.service.asyncGetStatus,
   asyncGetSpaces: dispatch.serviceMetric.asyncGetSpaces,
-  // asyncFetchMetricsData: dispatch.service.asyncGetMetricsData,
   updateMetricsFiltervalues: dispatch.service.updateMetricsFiltervalues,
 });
 
@@ -51,7 +49,6 @@ const mapState = (state: IRootState) => ({
   cluster: (state as any)?.cluster?.cluster,
   metricsFilterValues: (state as any).service.metricsFilterValues as ServiceMetricsPanelValue,
   instanceList: (state as any).service.instanceList,
-  // loading: state.loading.models.service,
 });
 
 interface IProps
@@ -185,7 +182,6 @@ function ServiceDetail(props: IProps) {
         start,
         end,
         step
-        // space: serviceType === ServiceName.GRAPHD ? space : undefined,
       }
     });
     const data: any = await asyncBatchQueries(queries);
@@ -197,7 +193,7 @@ function ServiceDetail(props: IProps) {
       const datasource = results[chart.metric.metric].result;
       updateChart(chart, datasource);
     });
-    setShowLoading(false);
+    showLoading && setShowLoading(false);
   };
 
 

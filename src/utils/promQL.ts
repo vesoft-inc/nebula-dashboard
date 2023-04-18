@@ -393,11 +393,11 @@ export const getMachineMetricData = (instance, cluster) => {
       queries: [
         {
           refId: 'disk_read_rate',
-          query: `rate(node_disk_reads_completed_total{${instanceSuffix}${clusterSuffix1}}[30s])`,
+          query: `rate(node_disk_reads_completed_total{${instanceSuffix}${clusterSuffix1}}[1m])`,
         },
         {
           refId: 'disk_write_rate',
-          query: `rate(node_disk_writes_completed_total{${instanceSuffix}${clusterSuffix1}}[30s])`,
+          query: `rate(node_disk_writes_completed_total{${instanceSuffix}${clusterSuffix1}}[1m])`,
         },
       ]
     },
@@ -408,11 +408,11 @@ export const getMachineMetricData = (instance, cluster) => {
       queries: [
         {
           refId: 'disk_read_rate',
-          query: `rate(node_disk_read_bytes_total{${instanceSuffix}${clusterSuffix1}}[30s])`,
+          query: `rate(node_disk_read_bytes_total{${instanceSuffix}${clusterSuffix1}}[1m])`,
         },
         {
           refId: 'disk_write_rate',
-          query: `rate(node_disk_written_bytes_total{${instanceSuffix}${clusterSuffix1}}[30s])`,
+          query: `rate(node_disk_written_bytes_total{${instanceSuffix}${clusterSuffix1}}[1m])`,
         },
       ]
     },
