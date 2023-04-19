@@ -39,7 +39,7 @@ const MetricCard = forwardRef((props: IProps, ref) => {
   ), [queries, chartRef.current]);
 
   const defaultMetricTypeFn = (resultNum: number, refId: string, resultMetric: PromResultMetric) => {
-    return resultNum > 1 ? resultMetric.device + intl.get(`metric_description.${refId}`) : intl.get(`metric_description.${refId}`);
+    return resultNum > 1 ? resultMetric.device + intl.get(`metric_description.overview_label.${refId}`) : intl.get(`metric_description.overview_label.${refId}`);
   }
 
   const asyncGetMetricData = async (queries) => {
