@@ -26,25 +26,29 @@ export let SUPPORT_METRICS =
       valueType: VALUE_TYPE.percentage,
     },
     {
-      metric: 'cpu_wait',
+      metric: 'cpu_io_wait_used',
       valueType: VALUE_TYPE.percentage,
     },
     {
-      metric: 'cpu_user',
+      metric: 'cpu_user_used',
       valueType: VALUE_TYPE.percentage,
     },
     {
-      metric: 'cpu_system',
+      metric: 'cpu_system_used',
       valueType: VALUE_TYPE.percentage,
     },
   ],
   memory: [
-    // {
-    //   metric: 'memory_utilization',
-    //   valueType: VALUE_TYPE.percentage,
-    // },
     {
-      metric: 'memory_used_percentage',
+      metric: 'memory_used_utilization',
+      valueType: VALUE_TYPE.percentage,
+    },
+    {
+      metric: 'memory_cached_utilization',
+      valueType: VALUE_TYPE.percentage,
+    },
+    {
+      metric: 'memory_swap_utilization',
       valueType: VALUE_TYPE.percentage,
     },
     {
@@ -52,41 +56,29 @@ export let SUPPORT_METRICS =
       valueType: VALUE_TYPE.byte,
     },
     {
-      metric: 'memory_actual_used_percentage',
-      valueType: VALUE_TYPE.percentage,
-    },
-    {
-      metric: 'memory_actual_used',
+      metric: 'memory_cached',
       valueType: VALUE_TYPE.byte,
     },
     {
-      metric: 'memory_free',
+      metric: 'memory_swap_used',
       valueType: VALUE_TYPE.byte,
     },
     {
       metric: 'memory_swap_total',
       valueType: VALUE_TYPE.byte,
     },
-    {
-      metric: 'memory_cached_buffer_used',
-      valueType: VALUE_TYPE.byte,
-    },
-    {
-      metric: 'memory_cached_buffer_used_percentage',
-      valueType: VALUE_TYPE.percentage,
-    },
   ],
   load: [
     {
-      metric: 'load_15s',
+      metric: 'load_1',
       valueType: VALUE_TYPE.number,
     },
     {
-      metric: 'load_5m',
+      metric: 'load_5',
       valueType: VALUE_TYPE.number,
     },
     {
-      metric: 'load_15m',
+      metric: 'load_15',
       valueType: VALUE_TYPE.number,
     },
   ],
@@ -162,55 +154,70 @@ export const getClusterPrefix = () => {
 
 export const diskPararms = 'fstype=~"ext.*|xfs",mountpoint !~".*pod.*"';
 
-export let LINUX = (cluster?, device?: string): any => {
-  const clusterSuffix1 = cluster ? `,${getClusterPrefix()}='${cluster}'` : '';
-  const clusterSuffix2 = cluster ? `{${getClusterPrefix()}='${cluster}'}` : '';
-  const devicePararms = device ? `,device=~"${device}"` : '';
+const getPromqlLabel = (cluster?, device?: string, instance?: string) => {
+  const clusterSuffix = cluster ? `${getClusterPrefix()} = "${cluster}"` : '';
+  const devicePararmSuffix = device ? `device=~"${device}"` : '';
+  const instanceSuffix = instance ? `instance=~"^${instance.replaceAll(".", "\.")}.*"` : '';
+  const promqlLabel = [clusterSuffix, devicePararmSuffix, instanceSuffix].reduce((x, y) => {
+    if (x.length > 0 && y.length > 0) {
+      return `${x},${y}`;
+    }
+    return x + y;
+  });
+  return promqlLabel;
+}
 
-
+export let LINUX = (cluster?, device?: string, instance?: string): any => {
+  const suffix = getPromqlLabel(cluster, device, instance);
+  const suffix1 = suffix.length ? `,${suffix}` : '';
+  const suffix2 = suffix.length ? `{${suffix}}` : '';
   return {
     // cpu relative:
-    cpu_utilization: `100 - (avg by (instance) (irate(node_cpu_seconds_total{mode="idle"${clusterSuffix1}}[1m])) * 100)`,
-    cpu_idle: `avg by (instance) (irate(node_cpu_seconds_total{mode="idle"${clusterSuffix1}}[1m])) * 100`,
-    cpu_wait: `avg by (instance) (irate(node_cpu_seconds_total{mode="iowait"${clusterSuffix1}}[1m])) * 100`,
-    cpu_user: `avg by (instance) (irate(node_cpu_seconds_total{mode="user"${clusterSuffix1}}[1m])) * 100`,
-    cpu_system: `avg by (instance) (irate(node_cpu_seconds_total{mode="system"${clusterSuffix1}}[1m])) * 100`,
+    cpu_utilization: `100 - (avg by (instance) (irate(node_cpu_seconds_total{mode="idle"${suffix1}}[1m])) * 100)`,
+    cpu_idle: `avg by (instance) (irate(node_cpu_seconds_total{mode="idle"${suffix1}}[1m])) * 100`,
+    cpu_io_wait_used: `avg by (instance) (irate(node_cpu_seconds_total{mode="iowait"${suffix1}}[1m])) * 100`,
+    cpu_user_used: `avg by (instance) (irate(node_cpu_seconds_total{mode="user"${suffix1}}[1m])) * 100`,
+    cpu_system_used: `avg by (instance) (irate(node_cpu_seconds_total{mode="system"${suffix1}}[1m])) * 100`,
 
     // memory relative:
-    // memory_utilization: `(1 - node_memory_MemFree_bytes${clusterSuffix2} / node_memory_MemTotal_bytes${clusterSuffix2} )* 100`,
-    memory_used_percentage: `((node_memory_MemTotal_bytes${clusterSuffix2} - node_memory_MemFree_bytes${clusterSuffix2}) / node_memory_MemTotal_bytes${clusterSuffix2} )* 100`,
-    memory_used: `node_memory_MemTotal_bytes${clusterSuffix2} - node_memory_MemFree_bytes${clusterSuffix2}`,
-    memory_actual_used: `node_memory_MemTotal_bytes${clusterSuffix2} - node_memory_MemFree_bytes${clusterSuffix2} - node_memory_Buffers_bytes${clusterSuffix2} - node_memory_Cached_bytes${clusterSuffix2}`,
-    memory_actual_used_percentage: `((node_memory_MemTotal_bytes${clusterSuffix2} - node_memory_MemFree_bytes${clusterSuffix2} - node_memory_Buffers_bytes${clusterSuffix2} - node_memory_Cached_bytes${clusterSuffix2}) / node_memory_MemTotal_bytes${clusterSuffix2} )* 100`,
-    memory_free: `node_memory_MemFree_bytes${clusterSuffix2}`,
-    memory_cached_buffer_used: `node_memory_Buffers_bytes${clusterSuffix2} + node_memory_Cached_bytes${clusterSuffix2}`,
-    memory_cached_buffer_used_percentage: `((node_memory_Buffers_bytes${clusterSuffix2} + node_memory_Cached_bytes${clusterSuffix2}) / node_memory_MemTotal_bytes${clusterSuffix2} )* 100`,
-    memory_size: `node_memory_MemTotal_bytes${clusterSuffix2}`,
-    memory_swap_total: `node_memory_SwapTotal_bytes${clusterSuffix2}`,
+    memory_used_utilization: `((node_memory_MemTotal_bytes${suffix2} - node_memory_MemAvailable_bytes${suffix2}) / node_memory_MemTotal_bytes${suffix2} )* 100`,
+    memory_avaliable_utilization: `(node_memory_MemAvailable_bytes${suffix2}  / node_memory_MemTotal_bytes${suffix2} )* 100`,
+    memory_cached_utilization: `(node_memory_Buffers_bytes${suffix2} + node_memory_Cached_bytes${suffix2}) / node_memory_MemTotal_bytes${suffix2} * 100`,
+    memory_swap_utilization: `(node_memory_SwapTotal_bytes${suffix2} - node_memory_SwapFree_bytes${suffix2}) / node_memory_MemTotal_bytes${suffix2} * 100`,
+
+    memory_total: `node_memory_MemTotal_bytes${suffix2}`,
+    memory_used: `node_memory_MemTotal_bytes${suffix2} - node_memory_MemAvailable_bytes${suffix2}`,
+    memory_avaliable: `node_memory_MemAvailable_bytes${suffix2}`,
+    memory_cached: `node_memory_Buffers_bytes${suffix2} + node_memory_Cached_bytes${suffix2}`,
+    memory_swap_used: `node_memory_SwapTotal_bytes${suffix2} - node_memory_SwapFree_bytes${suffix2}`,
+    memory_swap_total: `node_memory_SwapTotal_bytes${suffix2}`,
 
     // node load relative:
-    load_15s: `node_load1${clusterSuffix2}`,
-    load_5m: `node_load5${clusterSuffix2}`,
-    load_15m: `node_load15${clusterSuffix2}`,
+    load_1: `node_load1${suffix2}`,
+    load_5: `node_load5${suffix2}`,
+    load_15: `node_load15${suffix2}`,
 
     // disk relative:
-    disk_used: `node_filesystem_size_bytes{${diskPararms}${devicePararms}${clusterSuffix1}} - node_filesystem_free_bytes{${diskPararms}${devicePararms}${clusterSuffix1}}`,
-    disk_free: `node_filesystem_avail_bytes{${diskPararms}${devicePararms}${clusterSuffix1}}`,
-    disk_readbytes: `irate(node_disk_read_bytes_total{${devicePararms ? devicePararms : 'device=~"(sd|nvme|hd)[a-z0-9]*"'}${clusterSuffix1}}[1m])`,
-    disk_writebytes: `irate(node_disk_written_bytes_total{${devicePararms ? devicePararms : 'device=~"(sd|nvme|hd)[a-z0-9]*"'}${clusterSuffix1}}[1m])`,
-    disk_readiops: `irate(node_disk_reads_completed_total{${devicePararms ? devicePararms : 'device=~"(sd|nvme|hd)[a-z0-9]*"'}${clusterSuffix1}}[1m])`,
-    disk_writeiops: `irate(node_disk_writes_completed_total{${devicePararms ? devicePararms : 'device=~"(sd|nvme|hd)[a-z0-9]*"'}${clusterSuffix1}}[1m])`,
-    inode_utilization: `(1- (node_filesystem_files_free{${diskPararms}${devicePararms}${clusterSuffix1}}) / (node_filesystem_files{mountpoint="/",fstype!="rootfs"${clusterSuffix1}})) * 100`,
-    disk_used_percentage: `(node_filesystem_size_bytes{${diskPararms}${devicePararms}${clusterSuffix1}}-node_filesystem_free_bytes{${diskPararms}${devicePararms}${clusterSuffix1}}) *100/(node_filesystem_avail_bytes {${diskPararms}${devicePararms}${clusterSuffix1}}+(node_filesystem_size_bytes{${diskPararms}${devicePararms}${clusterSuffix1}}-node_filesystem_free_bytes{${diskPararms}${devicePararms}${clusterSuffix1}}))`,
-    disk_size: `node_filesystem_size_bytes{${diskPararms}${devicePararms}${clusterSuffix1}}`,
-    root_fs_used_percentage: `100 - ((node_filesystem_avail_bytes{fstype!="rootfs"${clusterSuffix1}} * 100) / node_filesystem_size_bytes{mountpoint="/",fstype!="rootfs"${clusterSuffix1}})`,
+    disk_used: `node_filesystem_size_bytes${suffix2} - node_filesystem_free_bytes${suffix2}`,
+    disk_free: `node_filesystem_avail_bytes${suffix2}`,
+    disk_readbytes: `irate(node_disk_read_bytes_total${suffix2}[1m])`,
+    disk_writebytes: `irate(node_disk_written_bytes_total${suffix2}[1m])`,
+    disk_readiops: `irate(node_disk_reads_completed_total${suffix2}[1m])`,
+    disk_writeiops: `irate(node_disk_writes_completed_total${suffix2}[1m])`,
+    inode_utilization: `(1- (node_filesystem_files_free${suffix2}) / (node_filesystem_files{mountpoint="/",fstype!="rootfs"${suffix1}})) * 100`,
+    disk_used_percentage: `(node_filesystem_size_bytes${suffix2}-node_filesystem_free_bytes${suffix2}) *100/(node_filesystem_avail_bytes${suffix2}+(node_filesystem_size_bytes${suffix2}-node_filesystem_free_bytes${suffix2}))`,
+    disk_size: `node_filesystem_size_bytes${suffix2}`,
+    root_fs_used_percentage: `100 - ((node_filesystem_avail_bytes{fstype!="rootfs"${suffix1}} * 100) / node_filesystem_size_bytes{mountpoint="/",fstype!="rootfs"${suffix1}})`,
 
-    network_in_rate: `ceil(sum by(instance)(irate(node_network_receive_bytes_total{device=~"(eth|en)[a-z0-9]*"${clusterSuffix1}}[1m])))`,
-    network_out_rate: `ceil(sum by(instance)(irate(node_network_transmit_bytes_total{device=~"(eth|en)[a-z0-9]*"${clusterSuffix1}}[1m])))`,
-    network_in_errs: `ceil(sum by(instance)(irate(node_network_receive_errs_total{device=~"(eth|en)[a-z0-9]*"${clusterSuffix1}}[1m])))`,
-    network_out_errs: `ceil(sum by(instance)(irate(node_network_transmit_errs_total{device=~"(eth|en)[a-z0-9]*"${clusterSuffix1}}[1m])))`,
-    network_in_packets: `ceil(sum by(instance)(irate(node_network_receive_packets_total{device=~"(eth|en)[a-z0-9]*"${clusterSuffix1}}[1m])))`,
-    network_out_packets: `ceil(sum by(instance)(irate(node_network_transmit_packets_total{device=~"(eth|en)[a-z0-9]*"${clusterSuffix1}}[1m])))`,
+    network_in_rate: `ceil(sum by(instance)(irate(node_network_receive_bytes_total{device=~"(eth|en)[a-z0-9]*"${suffix1}}[1m])))`,
+    network_out_rate: `ceil(sum by(instance)(irate(node_network_transmit_bytes_total{device=~"(eth|en)[a-z0-9]*"${suffix1}}[1m])))`,
+    network_in_errs: `ceil(sum by(instance)(irate(node_network_receive_errs_total{device=~"(eth|en)[a-z0-9]*"${suffix1}}[1m])))`,
+    network_out_errs: `ceil(sum by(instance)(irate(node_network_transmit_errs_total{device=~"(eth|en)[a-z0-9]*"${suffix1}}[1m])))`,
+    network_in_packets: `ceil(sum by(instance)(irate(node_network_receive_packets_total{device=~"(eth|en)[a-z0-9]*"${suffix1}}[1m])))`,
+    network_out_packets: `ceil(sum by(instance)(irate(node_network_transmit_packets_total{device=~"(eth|en)[a-z0-9]*"${suffix1}}[1m])))`,
+    
+    open_file_desc: `node_filefd_allocated${suffix2}`,
+    context_switch_rate: `irate(node_context_switches_total${suffix2}[30s])`
   }
 };
 
@@ -260,19 +267,19 @@ export let getNodeInfoQueries = (clusterId?) => {
     },
     {
       refId: "diskMaxRead",
-      query: `max(rate(node_disk_read_bytes_total${clusterSuffix2}[30s])) by (instance)`
+      query: `max(irate(node_disk_read_bytes_total${clusterSuffix2}[30s])) by (instance)`
     },
     {
       refId: "diskMaxWrite",
-      query: `max(rate(node_disk_written_bytes_total${clusterSuffix2}[30s])) by (instance)`
+      query: `max(irate(node_disk_written_bytes_total${clusterSuffix2}[30s])) by (instance)`
     },
     {
       refId: "networkIn",
-      query: `max(rate(node_network_receive_bytes_total${clusterSuffix2}[30s])*8) by (instance)`
+      query: `max(irate(node_network_receive_bytes_total${clusterSuffix2}[30s])*8) by (instance)`
     },
     {
       refId: "networkOut",
-      query: `max(rate(node_network_transmit_bytes_total${clusterSuffix2}[30s])*8) by (instance)`
+      query: `max(irate(node_network_transmit_bytes_total${clusterSuffix2}[30s])*8) by (instance)`
     },
     {
       refId: "memoryUsed",
@@ -393,11 +400,11 @@ export const getMachineMetricData = (instance, cluster) => {
       queries: [
         {
           refId: 'disk_read_rate',
-          query: `rate(node_disk_reads_completed_total{${instanceSuffix}${clusterSuffix1}}[1m])`,
+          query: `irate(node_disk_reads_completed_total{${instanceSuffix}${clusterSuffix1}}[1m])`,
         },
         {
           refId: 'disk_write_rate',
-          query: `rate(node_disk_writes_completed_total{${instanceSuffix}${clusterSuffix1}}[1m])`,
+          query: `irate(node_disk_writes_completed_total{${instanceSuffix}${clusterSuffix1}}[1m])`,
         },
       ]
     },
@@ -408,11 +415,11 @@ export const getMachineMetricData = (instance, cluster) => {
       queries: [
         {
           refId: 'disk_read_rate',
-          query: `rate(node_disk_read_bytes_total{${instanceSuffix}${clusterSuffix1}}[1m])`,
+          query: `irate(node_disk_read_bytes_total{${instanceSuffix}${clusterSuffix1}}[1m])`,
         },
         {
           refId: 'disk_write_rate',
-          query: `rate(node_disk_written_bytes_total{${instanceSuffix}${clusterSuffix1}}[1m])`,
+          query: `irate(node_disk_written_bytes_total{${instanceSuffix}${clusterSuffix1}}[1m])`,
         },
       ]
     },
@@ -442,7 +449,7 @@ export const getMachineMetricData = (instance, cluster) => {
         },
         {
           refId: 'context_switch_rate',
-          query: `rate(node_context_switches_total{${instanceSuffix}${clusterSuffix1}}[30s])`,
+          query: `irate(node_context_switches_total{${instanceSuffix}${clusterSuffix1}}[30s])`,
         }
       ]
     }

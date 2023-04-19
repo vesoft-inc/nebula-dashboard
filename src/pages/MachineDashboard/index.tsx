@@ -1,11 +1,11 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import intl from 'react-intl-universal';
-import { Col, Row, Spin } from 'antd';
+import { Button, Col, Row, Spin } from 'antd';
 
-import { NodeResourceInfo } from '@/utils/interface';
+import { MachinePanelConfig, NodeResourceInfo } from '@/utils/interface';
 import NodeResourceOverview from './NodeResourceOverview';
-import { getMachineMetricData, getNodeInfoQueries } from '@/utils/promQL';
+import { getNodeInfoQueries } from '@/utils/promQL';
 import { getMachineRouterPath, getProperByteDesc, TIME_OPTION_TYPE } from '@/utils/dashboard';
 import EventBus from '@/utils/EventBus';
 import { DashboardSelect, Option } from '@/components/DashboardSelect';
@@ -15,19 +15,26 @@ import MetricCard from '@/components/MetricCard';
 import DiskCard from './Cards/DiskCard';
 import WaterLevelCard from './Cards/WaterLevelCard';
 import { asyncBatchQueries } from '@/requests';
+import { LINUX as PROMQL } from '@/utils/promQL';
 
 import styles from './index.module.less';
+import Icon from '@/components/Icon';
+import defaultMachinePanelConfig from './defaultMachinePanelConfig';
 
 const mapDispatch: any = (_dispatch: any) => ({
 });
 
 const mapState = (state: any) => ({
   instanceList: state.machine.instanceList as any,
+  cluster: state.cluster.cluster,
 });
 interface IProps
   extends ReturnType<typeof mapDispatch>,
   ReturnType<typeof mapState> {
-  cluster?: any;
+  enableAddPanel?: boolean;
+  onAddPanel?: () => void;
+  onEditPanel?: (panelItem: MachinePanelConfig) => void;
+  panelConfigs?: MachinePanelConfig[];
 }
 
 const formatValueByRefId = (refId: string, metricItem: any) => {
@@ -56,7 +63,7 @@ const formatValueByRefId = (refId: string, metricItem: any) => {
 
 function MachineDashboard(props: IProps) {
 
-  const { cluster, instanceList } = props;
+  const { cluster, instanceList, enableAddPanel, onAddPanel, onEditPanel, panelConfigs = defaultMachinePanelConfig } = props;
 
   const [resourceInfos, setResourceInfos] = useState<NodeResourceInfo[]>([]);
 
@@ -72,7 +79,6 @@ function MachineDashboard(props: IProps) {
   const diskCardRef = useRef<any>();
   const metricRefs = useMemo(() => ({}), []);
   const pollingTimerRef = useRef<any>(null);
-  const cardObj = useMemo(() => getMachineMetricData(curInstance, cluster), [curInstance, cluster]);
 
   useEffect(() => {
     if (cluster?.id && instanceList?.length) {
@@ -127,10 +133,10 @@ function MachineDashboard(props: IProps) {
   }
 
   useEffect(() => {
-    if (cluster?.id && curInstance) {
+    if (panelConfigs.length) {
       fetchSingleMonitorData(true);
     }
-  }, [curInstance, cluster, timeRange])
+  }, [timeRange, panelConfigs])
 
   const handleRefresh = () => {
     asyncGetResourceInfos(true);
@@ -138,14 +144,14 @@ function MachineDashboard(props: IProps) {
   }
 
   const fetchSingleMonitorData = (shouldLoading?: boolean) => {
+    if (!cluster?.id || !curInstance) return;
     shouldLoading && setSingleNodeLoading(true);
     diskCardRef.current?.handleRefresh?.();
-    Promise.all(
-      Object.keys(cardObj)
-        .map(key => metricRefs[key]?.handleRefresh?.()))
-      .then(() => {
-        shouldLoading && setSingleNodeLoading(false);
-      })
+    const promsises = panelConfigs.map(panelConfigItem => metricRefs[panelConfigItem.key]?.handleRefresh?.())
+   
+    Promise.all(promsises).then(() => {
+      shouldLoading && setSingleNodeLoading(false);
+    })
   }
 
   const clearPolling = () => {
@@ -179,27 +185,46 @@ function MachineDashboard(props: IProps) {
   const handleTimeSelectChange = (value: TIME_OPTION_TYPE | [number, number]) => {
     setTimeRange(value);
   }
-  const onChangeBrush = (metric: string, brush) => {
+  
+  const onChangeBrush = (panelKey: string, brush) => {
     Object.keys(metricRefs).forEach(key => {
-      if (key !== metric || !brush) {
+      if (key !== panelKey || !brush) {
         metricRefs[key].chartRef.changeBrushByRangeFilter(brush);
       }
     });
   }
+
+  const getMachineQueries = (refIds: string[]) => {
+    if (!cluster?.id) return [];
+    return refIds.map(refId => ({
+      refId,
+      query: PROMQL(cluster.id, '', curInstance)[refId]
+    }));
+  }
+
+  const sortedPanels = (panels: MachinePanelConfig[]) => {
+    return panels.sort((panelA, panelB) => {
+      const AIndex = panelA.showIndex ? +panelA.showIndex : Number.MAX_VALUE;
+      const BIndex = panelB.showIndex ? +panelB.showIndex : Number.MAX_VALUE;
+      return AIndex - BIndex;
+    });
+  }
+
   const renderCardContent = () => {
-    return Object.keys(cardObj).map(key => (
+    return sortedPanels(panelConfigs).map((panelConfigItem: MachinePanelConfig, index) => (
       <DashboardCard
-        key={key}
-        title={cardObj[key].title}
-        viewPath={cardObj[key].viewPath ? getViewPath(cardObj[key].viewPath) : undefined}
+        key={index}
+        title={panelConfigItem.title}
+        onConfigPanel={onEditPanel ? () => onEditPanel(panelConfigItem): undefined}
+        viewPath={getViewPath(`/machine-metric/${panelConfigItem.key}/${curInstance.replaceAll('.', '_')}`)}
       >
         <MetricCard
-          ref={ref => metricRefs[key] = ref}
+          ref={ref => metricRefs[panelConfigItem.key] = ref}
           onChangeBrush={(brush) => {
-            onChangeBrush(key,brush);
+            onChangeBrush(panelConfigItem.key, brush);
           }}
-          queries={cardObj[key].queries}
-          valueType={cardObj[key].valueType}
+          queries={getMachineQueries(panelConfigItem.refIds)}
+          valueType={panelConfigItem.valueType}
           timeRange={timeRange}
         />
       </DashboardCard >
@@ -231,6 +256,18 @@ function MachineDashboard(props: IProps) {
           </div>
           <div className={styles.action}>
             <TimeSelect value={timeRange} onChange={handleTimeSelectChange} />
+            {
+              enableAddPanel && (
+                <Button
+                  type="primary"
+                  onClick={onAddPanel}
+                  className={`${styles.primaryBtn} ${styles.addPanelBtn}`}
+                >
+                  <Icon icon="#iconPlus" />
+                  {intl.get('common.addPanel')}
+                </Button>
+              )
+            }
           </div>
         </div>
         <Spin spinning={singleNodeLoading}>
@@ -247,7 +284,7 @@ function MachineDashboard(props: IProps) {
                 title={intl.get('device.disk')}
                 viewPath={getViewPath(`/machine-metric/disk/${curInstance}`)}
               >
-                <DiskCard ref={diskCardRef} cluster={cluster} instance={curInstance} asyncBatchQueries={asyncBatchQueries} />
+                <DiskCard ref={diskCardRef} cluster={cluster} instance={curInstance} />
               </DashboardCard >
             </Col>
           </Row>

@@ -179,3 +179,11 @@ export interface BatchQueryItem {
   end?: number;
   step?: number;
 }
+
+export interface MachinePanelConfig {
+  key: string;
+  title: string;
+  valueType: VALUE_TYPE;
+  showIndex?: number;
+  refIds: string[];
+}
