@@ -4,3 +4,4 @@ declare module '*.module.less' {
 }
 
 declare var VERSION_TYPE: any;
+declare let CurrentClusterType: any;

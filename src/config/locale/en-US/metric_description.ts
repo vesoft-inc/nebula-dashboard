@@ -1,4 +1,4 @@
-{
+export default {
   "cpu_utilization": "The percentage of used CPU",
   "cpu_idle": "The percentage of idled CPU",
   "cpu_io_wait_used": "The percentage of CPU waiting for IO operations",
@@ -183,6 +183,7 @@
     "graphd_queries": "Graphd Query",
     "graphd_sessions": "Graphd Session",
     "process_memory": "Process Memory Usage",
+    "process_context_open_file_desc": "Context Switch & open file desc",
     "process_resource": "Process Disk Read/Write Bytes",
     "process_cpu": "Process Cpu Usage",
     "process_context_switch": "Process Context Switch & open file desc",

@@ -1,4 +1,4 @@
-{
+export default {
 	"account": "账户登录",
 	"login": "登录",
 	"logout": "登出",
@@ -42,7 +42,7 @@
 		"community": "社区版"
 	},
 	"noData": "没有数据",
-	"powerInfo": "版权归 NebulaGraph 所有",
+	"powerInfo": `版权归 NebulaGraph 所有`,
 	"configServer": {
 		"host": "Graphd IP 地址",
 		"port": "端口号"

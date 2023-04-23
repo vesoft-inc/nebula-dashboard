@@ -1,4 +1,4 @@
-{
+export default {
   "connect": "连接",
   "host": "Host",
   "username": "用户名",

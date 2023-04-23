@@ -1,4 +1,4 @@
-{
+export default {
 	"title": "机器",
 	"overview": "概览",
 	"cpu": "CPU",

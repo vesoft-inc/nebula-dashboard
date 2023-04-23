@@ -132,3 +132,12 @@ export const getQueryRangeInfo = (start: number, end: number) => {
     step,
   }
 }
+
+export const getNebulaProductName = () => {
+  const currentType = (window as any).CurrentClusterType;
+  if (!currentType) return process.env.PRODUCT_NAME || 'NebulaGraph';
+  if (currentType === NebulaVersionType.COMMUNITY) {
+    return process.env.COMMUNITY_PRODUCT_NAME || 'NebulaGraph';
+  }
+  return process.env.PRODUCT_NAME || 'NebulaGraph';
+}

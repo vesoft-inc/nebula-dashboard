@@ -1,4 +1,4 @@
-{
+export default {
 	"serviceStatus": "当前服务状态",
 	"normal": "正常",
 	"overload": "超负荷",

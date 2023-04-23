@@ -1,4 +1,4 @@
-{
+export default {
   "module":  "The name of the service",
   "moduleName":  "The name of the parameter",
   "moduleType":  "The data type of Value",

@@ -79,7 +79,7 @@ class ConfigServerForm extends React.Component<IProps> {
         <div className="right">
           <img src={nebulaLogo} className="logo" />
           <div className="title">
-            <p>NebulaGraph</p>
+            <p>{process.env.PRODUCT_NAME}</p>
             <p>Dashboard</p>
           </div>
           <p className="form-header">{intl.get('common.account')}</p>

@@ -1,4 +1,4 @@
-{
+export default {
   "baseLineModalTitle": "Baseline Edit",
   "spaceChartAllInstance": "All Instances",
   "spaceChartInstance": "instance",

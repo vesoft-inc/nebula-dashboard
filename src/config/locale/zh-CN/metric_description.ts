@@ -1,4 +1,4 @@
-{
+export default {
   "cpu_utilization": "CPU已使用百分比",
   "cpu_idle": "CPU总空闲百分比",
   "cpu_io_wait_used": "等待IO操作使用的CPU百分比",
