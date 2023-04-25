@@ -1,4 +1,4 @@
-{
+export default {
   "baseLineModalTitle": "基线设置",
   "spaceChartAllInstance": "全部实例",
   "spaceChartInstance": "实例",

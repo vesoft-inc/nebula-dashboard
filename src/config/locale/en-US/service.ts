@@ -1,4 +1,4 @@
-{
+export default {
 	"serviceStatus": "Status(now)",
 	"version": "Nebula version",
 	"normal": "Normal",

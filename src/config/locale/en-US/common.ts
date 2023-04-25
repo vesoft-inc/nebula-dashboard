@@ -1,4 +1,4 @@
-{
+export default {
 	"account": "Account Login",
 	"login": "Log In",
 	"logout": "Logout",
@@ -42,7 +42,7 @@
 		"community": "Community"
 	},
 	"noData": "No Data",
-	"powerInfo": "Powered by NebulaGraph",
+	"powerInfo": `Powered by NebulaGraph`,
 	"configServer": {
 		"host": "Graphd IP address",
 		"port": "Port"

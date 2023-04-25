@@ -1,4 +1,4 @@
-{
+export default {
   "connect": "Connect",
   "host": "Host",
   "username": "Username",

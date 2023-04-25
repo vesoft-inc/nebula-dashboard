@@ -1,4 +1,4 @@
-{
+export default {
   "dashboardDetail": {
     "5min": "5分钟",
     "1hour": "1小时",

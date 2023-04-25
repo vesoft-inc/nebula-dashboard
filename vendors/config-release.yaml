@@ -9,7 +9,7 @@ stats-exporter:
   nebulaPort: 9200 
   https: false  # Whether to enable HTTPS.
 node-exporter:
-  - ip: nebulaHostIP # The IP of the machine where the NebulaGraph is deployed.
+  - ip: nebulaHostIP # The IP of the machine where the database is deployed.
     port: 9100
     https: false # Whether to enable HTTPS.
 # - ip: nebulaHostIP_2

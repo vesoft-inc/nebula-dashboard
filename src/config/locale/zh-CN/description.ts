@@ -1,4 +1,4 @@
-{
+export default {
   "module":  "服务",
   "moduleName":  "参数名称",
   "moduleType":  "参数类型",

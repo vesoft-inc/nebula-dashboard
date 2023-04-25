@@ -1,4 +1,4 @@
-{
+export default {
 	"title": "Machine",
 	"overview": "Overview",
 	"cpu": "CPU",

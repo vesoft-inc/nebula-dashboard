@@ -21,7 +21,7 @@ export const defaultServicePanelConfigData: ServicePanelConfigItem[] = [
     type: ServiceName.GRAPHD,
     panels: [
       {
-        title: intl.get('metric_description.graphd_latency'),
+        title: intl.get('metric_description.overview_label.graphd_latency'),
         valueType: VALUE_TYPE.latency,
         space: '',
         key: 'graphd_latency',
@@ -41,7 +41,7 @@ export const defaultServicePanelConfigData: ServicePanelConfigItem[] = [
         ]
       },
       {
-        title: intl.get('metric_description.graphd_sessions'),
+        title: intl.get('metric_description.overview_label.graphd_sessions'),
         valueType: VALUE_TYPE.number,
         space: '',
         key: 'graphd_sessions',
@@ -69,7 +69,7 @@ export const defaultServicePanelConfigData: ServicePanelConfigItem[] = [
         ]
       },
       {
-        title: intl.get('metric_description.graphd_queries'),
+        title: intl.get('metric_description.overview_label.graphd_queries'),
         valueType: VALUE_TYPE.number,
         space: '',
         key: 'graphd_queries',
@@ -101,7 +101,7 @@ export const defaultServicePanelConfigData: ServicePanelConfigItem[] = [
         ]
       },
       {
-        title: intl.get('metric_description.process_disk'),
+        title: intl.get('metric_description.overview_label.process_disk'),
         valueType: VALUE_TYPE.byte,
         key: 'process_disk',
         space: '',
@@ -117,7 +117,7 @@ export const defaultServicePanelConfigData: ServicePanelConfigItem[] = [
         ]
       },
       {
-        title: intl.get('metric_description.process_cpu'),
+        title: intl.get('metric_description.overview_label.process_cpu'),
         valueType: VALUE_TYPE.percentage,
         key: 'process_cpu',
         queries: [
@@ -128,7 +128,7 @@ export const defaultServicePanelConfigData: ServicePanelConfigItem[] = [
         ]
       },
       {
-        title: intl.get('metric_description.process_memory'),
+        title: intl.get('metric_description.overview_label.process_memory'),
         valueType: VALUE_TYPE.byte,
         key: 'process_memory',
         queries: [
@@ -139,7 +139,7 @@ export const defaultServicePanelConfigData: ServicePanelConfigItem[] = [
         ]
       },
       {
-        title: intl.get('metric_description.process_context_open_file_desc'),
+        title: intl.get('metric_description.overview_label.process_context_open_file_desc'),
         valueType: VALUE_TYPE.number,
         key: 'process_context_open_file_desc',
         queries: [
@@ -159,7 +159,7 @@ export const defaultServicePanelConfigData: ServicePanelConfigItem[] = [
     type: ServiceName.METAD,
     panels: [
       {
-        title: intl.get('metric_description.metad_latency'),
+        title: intl.get('metric_description.overview_label.metad_latency'),
         valueType: VALUE_TYPE.latency,
         key: 'metad_latency',
         queries: [
@@ -194,7 +194,7 @@ export const defaultServicePanelConfigData: ServicePanelConfigItem[] = [
         ]
       },
       {
-        title: intl.get('metric_description.metad_nums'),
+        title: intl.get('metric_description.overview_label.metad_nums'),
         valueType: VALUE_TYPE.number,
         key: 'metad_nums',
         queries: [
@@ -217,7 +217,7 @@ export const defaultServicePanelConfigData: ServicePanelConfigItem[] = [
         ]
       },
       {
-        title: intl.get('metric_description.process_disk'),
+        title: intl.get('metric_description.overview_label.process_disk'),
         valueType: VALUE_TYPE.byte,
         key: 'process_disk',
         queries: [
@@ -232,7 +232,7 @@ export const defaultServicePanelConfigData: ServicePanelConfigItem[] = [
         ]
       },
       {
-        title: intl.get('metric_description.process_cpu'),
+        title: intl.get('metric_description.overview_label.process_cpu'),
         valueType: VALUE_TYPE.percentage,
         key: 'process_cpu',
         queries: [
@@ -243,7 +243,7 @@ export const defaultServicePanelConfigData: ServicePanelConfigItem[] = [
         ]
       },
       {
-        title: intl.get('metric_description.process_memory'),
+        title: intl.get('metric_description.overview_label.process_memory'),
         valueType: VALUE_TYPE.byte,
         key: 'process_memory',
         queries: [
@@ -254,7 +254,7 @@ export const defaultServicePanelConfigData: ServicePanelConfigItem[] = [
         ]
       },
       {
-        title: intl.get('metric_description.process_context_open_file_desc'),
+        title: intl.get('metric_description.overview_label.process_context_open_file_desc'),
         valueType: VALUE_TYPE.number,
         key: 'process_context_open_file_desc',
         queries: [
@@ -274,7 +274,7 @@ export const defaultServicePanelConfigData: ServicePanelConfigItem[] = [
     type: ServiceName.STORAGED,
     panels: [
       {
-        title: intl.get('metric_description.storage_latency'),
+        title: intl.get('metric_description.overview_label.storage_latency'),
         valueType: VALUE_TYPE.latency,
         key: 'storage_latency',
         queries: [
@@ -325,7 +325,7 @@ export const defaultServicePanelConfigData: ServicePanelConfigItem[] = [
         ]
       },
       {
-        title: intl.get('metric_description.storaged_edge_nums'),
+        title: intl.get('metric_description.overview_label.storaged_edge_nums'),
         valueType: VALUE_TYPE.number,
         key: 'storaged_edge_nums',
         queries: [
@@ -340,7 +340,7 @@ export const defaultServicePanelConfigData: ServicePanelConfigItem[] = [
         ]
       },
       {
-        title: intl.get('metric_description.storaged_vertices_nums'),
+        title: intl.get('metric_description.overview_label.storaged_vertices_nums'),
         valueType: VALUE_TYPE.number,
         key: 'storaged_vertices_nums',
         queries: [
@@ -355,7 +355,7 @@ export const defaultServicePanelConfigData: ServicePanelConfigItem[] = [
         ]
       },
       {
-        title: intl.get('metric_description.storaged_tag_and_dst_nums'),
+        title: intl.get('metric_description.overview_label.storaged_tag_and_dst_nums'),
         valueType: VALUE_TYPE.number,
         key: 'storaged_tag_and_dst_nums',
         queries: [
@@ -378,7 +378,7 @@ export const defaultServicePanelConfigData: ServicePanelConfigItem[] = [
         ]
       },
       {
-        title: intl.get('metric_description.storaged_other_nums'),
+        title: intl.get('metric_description.overview_label.storaged_other_nums'),
         valueType: VALUE_TYPE.number,
         key: 'storaged_other_nums',
         queries: [
@@ -413,7 +413,7 @@ export const defaultServicePanelConfigData: ServicePanelConfigItem[] = [
         ]
       },
       {
-        title: intl.get('metric_description.process_disk'),
+        title: intl.get('metric_description.overview_label.process_disk'),
         valueType: VALUE_TYPE.byte,
         key: 'process_disk',
         queries: [
@@ -428,7 +428,7 @@ export const defaultServicePanelConfigData: ServicePanelConfigItem[] = [
         ]
       },
       {
-        title: intl.get('metric_description.process_cpu'),
+        title: intl.get('metric_description.overview_label.process_cpu'),
         valueType: VALUE_TYPE.percentage,
         key: 'process_cpu',
         queries: [
@@ -439,7 +439,7 @@ export const defaultServicePanelConfigData: ServicePanelConfigItem[] = [
         ]
       },
       {
-        title: intl.get('metric_description.process_memory'),
+        title: intl.get('metric_description.overview_label.process_memory'),
         valueType: VALUE_TYPE.byte,
         key: 'process_memory',
         queries: [
@@ -450,7 +450,7 @@ export const defaultServicePanelConfigData: ServicePanelConfigItem[] = [
         ]
       },
       {
-        title: intl.get('metric_description.process_context_open_file_desc'),
+        title: intl.get('metric_description.overview_label.process_context_open_file_desc'),
         valueType: VALUE_TYPE.number,
         key: 'process_context_open_file_desc',
         queries: [
