@@ -15,6 +15,12 @@ import { calcNodeHealty } from '@/utils';
 
 interface OverviewTableData {
   serviceName: string;
+  context_switches_total?: string;
+  count?: string;
+  cpu_seconds_total?: string;
+  open_filedesc_gauge?: string;
+  read_bytes_total?: string;
+  write_bytes_total?: string;
 }
 
 const metrics = [
@@ -174,13 +180,19 @@ function OverviewTable(props: IProps) {
     {
       title: intl.get('device.serviceResource.cpu_seconds_total'),
       dataIndex: "cpu_seconds_total",
-      render: (text, _) => renderCell(text, VALUE_TYPE.percentage, true),
+      render: (text, record) => {
+        if (record.count !== '1') {
+          return <div className={`${styles.tableCell}`}>-</div>
+        }
+        return renderCell(text, VALUE_TYPE.percentage, true);
+      },
       width: CellWidth
     },
     {
       title: intl.get('device.serviceResource.memory_bytes_gauge'),
       dataIndex: "memory_bytes_gauge",
       render: (text, record) => {
+        if (!text) return <div className={`${styles.tableCell}`}>-</div>
         const value = getProperByteDesc(parseInt(text)).desc;
         const percent = (parseInt(text) / parseInt(record['memory_total']) as any).toFixed(3) * 100;
         const level: CellHealtyLevel = calcNodeHealty(percent, Percent_Range);
