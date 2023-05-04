@@ -33,7 +33,7 @@ export default {
 		"cpuCore": "CPU(核数)",
 		"memory": "内存(GB)",
 		"disk": "磁盘(GB)",
-		"load5s": "Load_5s",
+		"load5s": "5分钟负载",
 		"cpu_utilization": "CPU使用率",
 		"memory_utilization": "内存使用率",
 		"disk_utilization": "磁盘使用率",
