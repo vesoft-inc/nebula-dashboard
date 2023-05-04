@@ -42,7 +42,7 @@ export default {
 		"disk_max_write": "Disk Write",
 		"disk_max_read": "Disk Read",
 		"day": "day",
-		"singleNodeTitle": "Single Node Monitor",
+		"singleNodeTitle": "Node Monitor",
 		"waterLevel": "Resrouce water level",
     "core": "Core"
 	},
