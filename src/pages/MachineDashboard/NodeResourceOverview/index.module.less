@@ -4,7 +4,7 @@
       font-size: 80%;
     }
 
-    .ant-table-cell{
+    .ant-table-cell {
       padding: 0;
       padding-right: 2px;
       padding-bottom: 1px;
@@ -13,6 +13,15 @@
     .ant-table-thead .ant-table-cell {
       padding: 16px !important;
     }
+  }
+
+  .labelTag {
+    background: #ECF0FF;
+    border-radius: 12px;
+    padding: 5px 8px;
+    width: auto;
+    font-weight: bold;
+    text-align: center;
   }
 
   .tableCell {
@@ -24,18 +33,24 @@
     text-overflow: ellipsis;
   }
 
+  @media screen and (max-width: 1960px) and (min-width: 1200px) {
+    .tableCell {
+      padding: 8px;
+    }
+  }
+
   .normal {
-    background-color:rgba(50, 172, 45, 0.97);
+    background-color: rgba(50, 172, 45, 0.97);
     color: #fff;
   }
 
   .warning {
-    background-color:rgba(237, 129, 40, 0.89);
+    background-color: rgba(237, 129, 40, 0.89);
     color: #fff;
   }
 
   .danger {
-    background-color:rgba(245, 54, 54, 0.9);
+    background-color: rgba(245, 54, 54, 0.9);
     color: #fff;
   }
 }

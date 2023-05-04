@@ -398,9 +398,9 @@ export const updateChartByValueType = (options, chartInstance) => {
       chartInstance.tooltip({
         customItems: items =>
           items.map(item => {
-            let value = item.value;
+            let value = (Math.round(+item.value * 100) / 100).toString();
             if (options.valueType === VALUE_TYPE.numberSecond) {
-              value = `${Math.round(+value * 100) / 100}/s`;
+              value = `${value}/s`;
             }
             return {
               ...item,

@@ -30,7 +30,8 @@ function NodeResourceOverview(props: IProps) {
     {
       title: intl.get('device.nodeResource.ip'),
       dataIndex: "host",
-      render: (text, _) => <div title={text} className={styles.tableCell}>{text}</div>
+      width: 140,
+      render: (text, _) => <div title={text} className={`${styles.tableCell}`}><div className={styles.labelTag}>{text}</div></div>
     },
     {
       title: intl.get('device.nodeResource.nodeName'),
@@ -40,6 +41,7 @@ function NodeResourceOverview(props: IProps) {
     {
       title: intl.get('device.nodeResource.runtime'),
       dataIndex: "runtime",
+      render: (text, _) => <div title={text} className={styles.tableCell}>{text}</div>
     },
     {
       title: intl.get('device.nodeResource.cpuCore'),
@@ -51,14 +53,13 @@ function NodeResourceOverview(props: IProps) {
       dataIndex: "memory",
       render: (text, _) => <div className={styles.tableCell}>{text}</div>
     },
-    // {
-    //   title: intl.get('device.nodeResource.disk'),
-    //   dataIndex: "disk",
-    // },
     {
       title: intl.get('device.nodeResource.load5s'),
       dataIndex: "load5s",
-      render: (text, _) => <div className={styles.tableCell}>{text}</div>
+      render: (text, record) => {
+        const value = (parseFloat(text) / parseInt(record.cpuCore) as any).toFixed(2) * 100;
+        return renderCell(value + '%');
+      }
     },
     {
       title: intl.get('device.nodeResource.cpu_utilization'),

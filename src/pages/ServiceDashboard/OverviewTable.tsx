@@ -21,6 +21,7 @@ interface OverviewTableData {
   open_filedesc_gauge?: string;
   read_bytes_total?: string;
   write_bytes_total?: string;
+  serviceType?: ServiceName;
 }
 
 const metrics = [
@@ -32,6 +33,12 @@ const metrics = [
   'open_filedesc_gauge',
   'count',
 ]
+
+const ServiceLabelColor = {
+  [ServiceName.GRAPHD]: '#ECF0FF',
+  [ServiceName.STORAGED]: '#FDEAF4',
+  [ServiceName.METAD]: '#E2F8F7'
+}
 
 const mapDispatch: any = (_dispatch: any) => ({
 });
@@ -148,7 +155,14 @@ function OverviewTable(props: IProps) {
     {
       title: intl.get('device.serviceResource.serviceName'),
       dataIndex: "serviceName",
-      render: (text, _) => <div className={styles.tableCell}>{text || '-'}</div>,
+      width: 210,
+      render: (text, record) => (
+        <div className={styles.tableCell}>
+          <div className={styles.labelTag} style={{
+            backgroundColor: record.serviceType ? ServiceLabelColor[record.serviceType] : undefined
+          }}>{text || '-'}</div>
+        </div>
+      ),
     },
     {
       title: intl.get('device.serviceResource.context_switches_total'),
@@ -288,6 +302,7 @@ function OverviewTable(props: IProps) {
           const curItem = curDataSources.find(item => item.serviceName === metric.instanceName);
           if (curItem) {
             curItem[metricName] = value[1];
+            curItem["serviceType"] = metric.componentType as ServiceName;
           } else {
             curDataSources.push({
               serviceName: metric.instanceName,

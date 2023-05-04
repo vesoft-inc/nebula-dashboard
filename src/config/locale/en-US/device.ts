@@ -33,7 +33,7 @@ export default {
 		"cpuCore": "CPU(Core)",
 		"memory": "Memory(GB)",
 		"disk": "Disk(GB)",
-		"load5s": "Load_5s",
+		"load5s": "Load 5(min)",
 		"cpu_utilization": "CPU Utilization",
 		"memory_utilization": "Memory Utilization",
 		"disk_utilization": "Disk Utilization",
