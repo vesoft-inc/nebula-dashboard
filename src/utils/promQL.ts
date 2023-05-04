@@ -198,8 +198,8 @@ export let LINUX = (cluster?, device?: string, instance?: string): any => {
     load_15: `node_load15${suffix2}`,
 
     // disk relative:
-    disk_used: `node_filesystem_size_bytes${suffix2} - node_filesystem_free_bytes${suffix2}`,
-    disk_free: `node_filesystem_avail_bytes${suffix2}`,
+    disk_used: `sum(node_filesystem_size_bytes${suffix2} - node_filesystem_free_bytes${suffix2}) by (device,instance)`,
+    disk_free: `sum(node_filesystem_avail_bytes${suffix2}) by (device,instance)`,
     disk_readbytes: `irate(node_disk_read_bytes_total${suffix2}[1m])`,
     disk_writebytes: `irate(node_disk_written_bytes_total${suffix2}[1m])`,
     disk_readiops: `irate(node_disk_reads_completed_total${suffix2}[1m])`,
@@ -215,7 +215,7 @@ export let LINUX = (cluster?, device?: string, instance?: string): any => {
     network_out_errs: `ceil(sum by(instance)(irate(node_network_transmit_errs_total{device=~"(eth|en)[a-z0-9]*"${suffix1}}[1m])))`,
     network_in_packets: `ceil(sum by(instance)(irate(node_network_receive_packets_total{device=~"(eth|en)[a-z0-9]*"${suffix1}}[1m])))`,
     network_out_packets: `ceil(sum by(instance)(irate(node_network_transmit_packets_total{device=~"(eth|en)[a-z0-9]*"${suffix1}}[1m])))`,
-    
+
     open_file_desc: `node_filefd_allocated${suffix2}`,
     context_switch_rate: `irate(node_context_switches_total${suffix2}[30s])`
   }

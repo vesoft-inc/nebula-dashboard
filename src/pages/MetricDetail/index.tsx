@@ -21,6 +21,7 @@ import { getQueryByMetricType, isLatencyMetric } from '@/utils/metric';
 interface Props
   extends ReturnType<typeof mapDispatch>,
   ReturnType<typeof mapState> {
+  type:string
 }
 
 enum MetricTypeName {
@@ -69,7 +70,7 @@ const mapState = (state: IRootState) => ({
   machineLoading: state.loading.models.machine,
 });
 
-const mapDispatch: any = (dispatch: IDispatch) => ({
+const mapDispatch = (dispatch: IDispatch) => ({
   updateMetricsFiltervalues: dispatch.machine.updateMetricsFiltervalues,
   updateServiceMetricsFiltervalues: dispatch.service.updateMetricsFiltervalues,
   asyncFetchMachineMetricsData: dispatch.machine.asyncGetMetricsData,
@@ -408,4 +409,4 @@ function MetricDetail(props: Props) {
   )
 }
 
-export default connect(mapState, mapDispatch)(MetricDetail);
+export default connect(mapState, mapDispatch as any)(MetricDetail);
