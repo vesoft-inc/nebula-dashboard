@@ -57,7 +57,7 @@ function NodeResourceOverview(props: IProps) {
       title: intl.get('device.nodeResource.load5s'),
       dataIndex: "load5s",
       render: (text, record) => {
-        const value = (parseFloat(text) / parseInt(record.cpuCore) as any).toFixed(2) * 100;
+        const value = (parseFloat(text) / parseInt(record.cpuCore) * 100 as any).toFixed(2);
         return renderCell(value + '%');
       }
     },

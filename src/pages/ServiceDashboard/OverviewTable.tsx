@@ -208,7 +208,7 @@ function OverviewTable(props: IProps) {
       render: (text, record) => {
         if (!text) return <div className={`${styles.tableCell}`}>-</div>
         const value = getProperByteDesc(parseInt(text)).desc;
-        const percent = (parseInt(text) / parseInt(record['memory_total']) as any).toFixed(3) * 100;
+        const percent = (parseInt(text) / parseInt(record['memory_total']) * 100 as any).toFixed(3);
         const level: CellHealtyLevel = calcNodeHealty(percent, Percent_Range);
         return (
           <div className={`${styles.tableCell} ${styles[level]}`}>{value} ({percent}%)</div>
