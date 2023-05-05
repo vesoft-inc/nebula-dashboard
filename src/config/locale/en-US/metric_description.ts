@@ -183,6 +183,7 @@ export default {
     "graphd_queries": "Graphd Query",
     "graphd_sessions": "Graphd Session",
     "process_memory": "Process Memory Usage",
+    "process_disk": "Process Disk Read/Write Bytes",
     "process_context_open_file_desc": "Context Switch & open file desc",
     "process_resource": "Process Disk Read/Write Bytes",
     "process_cpu": "Process Cpu Usage",
