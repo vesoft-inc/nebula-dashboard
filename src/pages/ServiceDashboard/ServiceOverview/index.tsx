@@ -217,14 +217,6 @@ function ServiceOverview(props: IProps) {
           }
         </div>
       }>
-        {
-          curPanelVisile && (
-            <div className="btn-icon-with-desc blue">
-              <Icon icon="#iconwatch" />
-              <span>{intl.get('common.view')}</span>
-            </div>
-          )
-        }
       </ServiceHeader>
       {
         curPanelVisile && (
