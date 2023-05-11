@@ -29,7 +29,7 @@
     "@antv/g2": "^4.1.29",
     "@rematch/core": "^1.4.0",
     "@rematch/loading": "^1.2.1",
-    "antd": "4.17.3",
+    "antd": "^4.24.10",
     "axios": "^0.21.4",
     "compare-versions": "^4.1.2",
     "config": "^3.3.7",

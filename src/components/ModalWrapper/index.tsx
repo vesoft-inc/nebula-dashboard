@@ -6,12 +6,10 @@ function ModalWrapper<T>(Component: React.FC<T>) {
   const hide = () => {
     setTimeout(() => {
       ReactDOM.unmountComponentAtNode(container);
-      document.body.removeChild(container);
     }, 200);
   };
 
   const show = (props: T) => {
-    document.body.appendChild(container);
     ReactDOM.render(<Component visible {...props} hide={hide} />, container);
   };
 
