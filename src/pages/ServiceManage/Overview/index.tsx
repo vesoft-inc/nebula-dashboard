@@ -147,9 +147,10 @@ const Overview: React.FC<IProps> = (props: IProps) => {
           </div>
           <div className={styles.serviceInfo}>
             <OverviewCardHeader
-              title={intl.get('common.serviceInfo')}
+              title={intl.get('common.StoragedInfo')}
               path={`service-info`}
             />
+            {/* @ts-ignore */}
             <ServiceInfo />
           </div>
         </div>
