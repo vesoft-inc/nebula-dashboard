@@ -11,6 +11,7 @@ export default {
 	"service": "Service",
 	"serviceManagement": "Management",
 	"serviceInfo": "Service Info",
+  "StoragedInfo": "Storaged Info",
 	"partitionInfo": "Partition Info",
 	"config": "Config",
 	"longTermTask": "Long-term Task",

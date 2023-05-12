@@ -11,6 +11,7 @@ export default {
 	"service": "服务",
 	"serviceManagement": "管理",
 	"serviceInfo": "服务信息",
+  "StoragedInfo": "Storaged信息",
 	"partitionInfo": "分片信息",
 	"config": "配置",
 	"longTermTask": "长时任务",

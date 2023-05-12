@@ -41,27 +41,6 @@ class ServiceInfo extends React.Component<IProps> {
       this.props.asyncGetServices();
     }
   }
-  // TODO: add balance data feature
-  // handleBalance = async () => {
-  //   if (shouldForbidAction()) {
-  //     return renderMessageTip(intl.get('common.playground.disableTip'));
-  //   }
-  //   const { cluster } = this.props;
-  //   if (compare(cluster.version, 'v3.0.0', '<')) {
-  //     // HACK: Balance successfully returns an error message
-  //     const { code } = (await serviceApi.balanceData({
-  //       clusterID: cluster.id,
-  //     })) as any;
-
-  //     if (code === 0 || code === 4000300) {
-  //       message.success(intl.get('common.succeed'));
-  //       this.props.asyncGetServices();
-  //     }
-  //   } else {
-  //     this.modalHandler.show();
-  //   }
-  // };
-
   // handleAddHosts = async (record) => {
   //   const code = this.props.asyncExecNGQL(`ADD HOSTS ${record.Host}:${record.Port}`)
   //   if (code === 0) {
@@ -164,12 +143,6 @@ class ServiceInfo extends React.Component<IProps> {
     ];
     return (
       <div className="service-info">
-        {/* TODO: add balance data feature */}
-        {/* <div className="common-header balance-data">
-          <Button type="primary" onClick={this.handleBalance}>
-            Balance Data
-          </Button>
-          </div> */}
         <Table
           rowKey={(record: any) => record.Host}
           dataSource={services}
