@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 
 function ModalWrapper<T>(Component: React.FC<T>) {
