@@ -375,17 +375,6 @@ function MetricDetail(props: Props) {
             {
               renderChartTitle(metricChart.metric, metricChart)
             }
-            {/* <div className='chart-title'>
-              {metricChart.metric?.metric}
-              <Popover
-                className={"chart-title-popover"}
-                content={
-                  <div>{intl.get(`metric_description.${metricChart.metric?.metric}`)}</div>
-                }
-              >
-                <Icon className="metric-info-icon blue chart-title-desc" icon="#iconnav-serverInfo" />
-              </Popover>
-            </div> */}
             <div className={styles.chartContent}>
               <LineChart
                 // options={{ padding: [10, 70, 70, 70] }}

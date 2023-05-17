@@ -32,21 +32,18 @@ export const CARD_HIGH_COLORS = 'rgba(230,113,113,1)';
 export const getProperStep = (start: number, end: number) => {
   const hours = Math.round((end - start) / (3600 * 1000));
   if (hours <= 1) {
-    return 15;//15s
+    return 5;//15s
   }
   if (hours <= 6) {
-    // 6 hour
-    return 60;//1min
+    return 30;
   }
   if (hours <= 12) {
-    // 12hour
-    return 300;//5min
+    return 60;
   }
   if (hours <= 72) {
-    // <3 day
-    return 600; //10min
+    return 300;
   }
-  return 3600;
+  return 600;
 };
 export const getTickIntervalByGap = (gap: number) => {
   if (gap <= 10*60) {// 15min

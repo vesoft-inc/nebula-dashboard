@@ -25,7 +25,7 @@ function LineCard(props: IProps) {
       updateChart();
     }
   }, [loading, chartRef.current]); 
- 
+
   useEffect(() => {
     if (chartRef.current) {
       chartRef.current.updateBaseline(baseLine);
