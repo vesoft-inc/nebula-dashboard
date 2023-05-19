@@ -30,7 +30,7 @@ const DiskCard = forwardRef((props: IProps, ref) => {
   
   const asyncGetDiskUsageDetails = async () => {
     const clusterSuffix1 = cluster ? `,${getClusterPrefix()}="${cluster.id}"` : '';
-    const instanceSuffix = `, instance=~"^${instance.replaceAll(".", "\.")}.*"`;
+    const instanceSuffix = instance!=='all'?`, instance=~"^${instance.replaceAll(".", "\.")}.*"`:'';
     const queries: any = [
       {
         refId: 'diskSize',
@@ -42,7 +42,7 @@ const DiskCard = forwardRef((props: IProps, ref) => {
       }
     ];
     const data = await asyncBatchQueries(queries);
-    const { results } = data;
+    const { results } = data as any;
     const details = results.diskSize.result.map(item => {
       const metricItem = results.diskUsed.result.find(usedItem => usedItem.metric.device === item.metric.device);
       let used = 0;
@@ -54,7 +54,7 @@ const DiskCard = forwardRef((props: IProps, ref) => {
         device: item.metric.device,
         mountpoint: item.metric.mountpoint,
         used,
-        name: instance,
+        name: item.metric.instance.split(':')[0],
       }
     });
     setDiskUsageDetails(details);
