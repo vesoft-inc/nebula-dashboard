@@ -144,6 +144,18 @@ export const getProperByteDesc = (bytes: number) => {
     desc: value + unit,
   }
 }
+
+export const getProperByUnit = (bytes: number, unit: string) => {
+  const sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'] as const;
+  const i = sizes.findIndex(s => s === unit);
+  const value = (bytes / Math.pow(1024, i)).toFixed(2)
+  return {
+    value:parseFloat(value),
+    unit,
+    desc: value + unit,
+  }
+}
+
 export const getAutoLatency = (latency: number) => {
   if (latency > 60 * 1000 * 1000) {
     // min
