@@ -8,6 +8,7 @@ interface IProps {
   percent: number;
   type: string;
   config?: any;
+  contentFormatter?:(p:number)=>string;
 }
 
 const ColorMap = {
@@ -17,7 +18,7 @@ const ColorMap = {
 }
 
 function RingProgressChart(props: IProps) {
-  const { percent, type, config } = props;
+  const { percent, type, config,contentFormatter } = props;
   
   const calcColor = () => {
     const level = calcNodeHealty(percent);
@@ -37,8 +38,8 @@ function RingProgressChart(props: IProps) {
           title: {
             style: {
               color: '#000',
-              fontSize: '12px',
-              lineHeight: '14px',
+              fontSize: '16px',
+              lineHeight: '16px',
             },
             formatter: () => type,
           },
@@ -46,10 +47,11 @@ function RingProgressChart(props: IProps) {
             style: {
               color: '#000',
               fontWeight: 'bold',
-              marginTop: '15px',
-              fontSize: '14px',
+              marginTop: '10px',
+              fontSize: '12px',
               lineHeight: '14px',
             },
+            formatter:contentFormatter
           }
         }
       }
