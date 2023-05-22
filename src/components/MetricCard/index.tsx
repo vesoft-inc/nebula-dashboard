@@ -3,19 +3,10 @@ import intl from 'react-intl-universal';
 
 import LineCard from '@/components/DashboardCard/LineCard';
 import { VALUE_TYPE } from '@/utils/promQL';
-import { ILineChartMetric } from '@/utils/interface';
+import { ILineChartMetric, PromResultMetric } from '@/utils/interface';
 import { asyncBatchQueries } from '@/requests';
 import { calcTimeRange, TIME_OPTION_TYPE } from '@/utils/dashboard';
 import { getQueryRangeInfo } from '@/utils';
-
-export interface PromResultMetric {
-  componentType: string;
-  instance: string;
-  instanceName: string;
-  nebula_cluster: string;
-  __name__: string;
-  device?: string;
-}
 
 interface IProps {
   valueType: VALUE_TYPE;
@@ -43,6 +34,7 @@ const MetricCard = forwardRef((props: IProps, ref) => {
   }
 
   const asyncGetMetricData = async (queries) => {
+    if (queries.length === 0) return;
     const curTimeRange = calcTimeRange(timeRange);
     const { start, end, step } = getQueryRangeInfo(curTimeRange[0], curTimeRange[1]);
     const data: any = await asyncBatchQueries(queries.map(q => ({
@@ -75,7 +67,7 @@ const MetricCard = forwardRef((props: IProps, ref) => {
     <LineCard
       data={metricData}
       onChangeBrush={props.onChangeBrush}
-      onRef={(ref)=>{chartRef.current = ref;}}
+      onRef={(ref) => { chartRef.current = ref; }}
       valueType={valueType}
       loading={false}
     />

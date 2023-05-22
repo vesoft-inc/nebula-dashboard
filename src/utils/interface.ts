@@ -187,3 +187,12 @@ export interface MachinePanelConfig {
   showIndex?: number;
   refIds: string[];
 }
+
+export interface PromResultMetric {
+  componentType: string;
+  instance: string;
+  instanceName: string;
+  nebula_cluster: string;
+  __name__: string;
+  device?: string;
+}

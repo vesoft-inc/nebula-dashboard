@@ -152,7 +152,7 @@ export const getClusterPrefix = () => {
   return 'nebula_cluster';
 }
 
-export const diskPararms = 'fstype=~"ext.*|xfs",mountpoint !~".*pod.*"';
+export const diskPararms = 'mountpoint !~".*pod.*"';
 
 const getPromqlLabel = (cluster?, device?: string, instance?: string) => {
   const clusterSuffix = cluster ? `${getClusterPrefix()} = "${cluster}"` : '';

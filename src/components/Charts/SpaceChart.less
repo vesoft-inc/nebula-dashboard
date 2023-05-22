@@ -82,6 +82,10 @@
 
 .disk-info-content {
   display: flex;
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 10;
 }
 
 .disk-th {
@@ -112,7 +116,7 @@
   justify-content: center;
 }
 
-.disk-tr-item > div:not(:last-child) {
+.disk-tr-item>div:not(:last-child) {
   margin-bottom: 20px;
 }
 
@@ -201,8 +205,9 @@
   position: absolute !important;
   top: 10px;
   right: 70px;
+
   // width: 200px;
-  > .ant-select-arrow {
+  >.ant-select-arrow {
     margin-top: -8px !important;
     color: #000 !important;
   }
