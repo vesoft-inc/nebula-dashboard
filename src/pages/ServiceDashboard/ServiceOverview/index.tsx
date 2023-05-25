@@ -2,12 +2,12 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import intl from 'react-intl-universal';
 import { connect } from 'react-redux';
 
-import { BatchQueryItem, IServiceMetricItem, ServiceName } from '@/utils/interface';
+import { BatchQueryItem, IServiceMetricItem, PromResultMetric, ServiceName } from '@/utils/interface';
 import ServiceHeader from '@/components/Service/ServiceHeader';
 import Icon from '@/components/Icon';
 import { AggregationType, TIME_OPTION_TYPE } from '@/utils/dashboard';
 import { ServicePanelConfig } from '../defaultPanelConfig';
-import MetricCard, { PromResultMetric } from '@/components/MetricCard';
+import MetricCard from '@/components/MetricCard';
 
 import styles from './index.module.less';
 import { getClusterPrefix } from '@/utils/promQL';
