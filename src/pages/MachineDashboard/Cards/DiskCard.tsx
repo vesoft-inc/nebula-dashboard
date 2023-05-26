@@ -17,7 +17,7 @@ const DiskCard = forwardRef((props: IProps, ref) => {
   const [diskUsageDetails, setDiskUsageDetails] = useState<DiskMetricInfo[]>([]);
 
   useEffect(() => {
-    if (cluster?.id && instance) {
+    if (cluster?.id) {
       asyncGetDiskUsageDetails();
     }
   }, [instance, cluster]);
@@ -29,6 +29,7 @@ const DiskCard = forwardRef((props: IProps, ref) => {
   ));
   
   const asyncGetDiskUsageDetails = async () => {
+    console.log('instance', instance)
     const clusterSuffix1 = cluster ? `,${getClusterPrefix()}="${cluster.id}"` : '';
     const instanceSuffix = instance!=='all'?`, instance=~"^${instance.replaceAll(".", "\.")}.*"`:'';
     const queries: any = [
