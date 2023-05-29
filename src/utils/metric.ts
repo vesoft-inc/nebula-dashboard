@@ -1,6 +1,6 @@
 import _ from 'loadsh';
 
-import { getClusterPrefix, VALUE_TYPE } from '@/utils/promQL';
+import { VALUE_TYPE } from '@/utils/promQL';
 import { INTERVAL_FREQUENCY_LIST, SERVICE_QUERY_PERIOD } from './service';
 import { AggregationType, AGGREGATION_OPTIONS, getAutoLatency, getProperByteDesc, getProperStep, TIME_OPTION_TYPE } from './dashboard';
 import { IServiceMetricItem, ServiceName } from './interface';
@@ -219,7 +219,6 @@ export const RawServiceMetrics = [
   "memory_bytes_gauge",
   "open_filedesc_gauge",
   "read_bytes_total",
-  "write_bytes_total",
 ]
 
 export const getQueryMap = (metricItem: IServiceMetricItem) => {
@@ -439,3 +438,5 @@ export const updateChartByValueType = (options, chartInstance) => {
 }
 
 export const isLatencyMetric = metric => metric.includes('latency');
+
+export const isProcessMetric = metric => RawServiceMetrics.some(rawMetric => metric.includes(rawMetric));
