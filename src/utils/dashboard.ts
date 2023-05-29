@@ -45,23 +45,24 @@ export const getProperStep = (start: number, end: number) => {
   }
   return 600;
 };
+
 export const getTickIntervalByGap = (gap: number) => {
-  if (gap <= 10*60) {// 15min
+  if (gap <= 60) {
+    return 60;
+  }
+  if (gap <= 10*60) {// 10min
     return 10*60;
+  } 
+  if (gap <= 60*60) {//<1hour
+    return  30*60;
   }
-  if (gap <= 30*60) {//30min
-    return 30*60;
+  if (gap <= 3 * 60 * 60) {//6hour
+    return gap - (gap % (60 * 60))
   }
-  if (gap <= 60*60*6) {//<3hour
-    return 60*60*2;
+  if (gap <= 6 * 60 * 60) {//10hour
+    return gap - (gap % (60 * 60*6))
   }
-  if (gap <= 10 * 60 * 60) {//6hour
-    return 60*60*6;
-  }
-  if (gap <= 24 * 60 * 60) {//10hour
-    return 60*60*24;
-  }
-  return gap - gap%60*60*24;
+  return gap - gap%(60*60*24);
 }
 
 export const renderUnit = type => {
