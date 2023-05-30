@@ -39,7 +39,7 @@ const DiskCard = forwardRef((props: IProps, ref) => {
       },
       {
         refId: 'diskUsed',
-        query: `node_filesystem_size_bytes{mountpoint !~".*pod.*"${clusterSuffix1}${instanceSuffix}} - node_filesystem_free_bytes{fstype=~"ext.*|xfs",mountpoint !~".*pod.*"${clusterSuffix1}${instanceSuffix}}`
+        query: `node_filesystem_size_bytes{mountpoint !~".*pod.*"${clusterSuffix1}${instanceSuffix}} - node_filesystem_free_bytes{mountpoint !~".*pod.*"${clusterSuffix1}${instanceSuffix}}`
       }
     ];
     const data = await asyncBatchQueries(queries);
