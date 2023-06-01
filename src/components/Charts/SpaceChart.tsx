@@ -1,20 +1,21 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import intl from 'react-intl-universal';
 
 import { getProperByteDesc, getWhichColor } from '@/utils/dashboard';
 import { DiskMetricInfo } from '@/utils/interface';
 import './SpaceChart.less';
 import _ from 'lodash';
-import { Popover, Select, Table } from 'antd';
+import { Popover, Select } from 'antd';
 import Icon from '../Icon';
 
 interface IProps {
   diskInfos: DiskMetricInfo[];
+  useInstanceSelect?: boolean;
 }
 
 
 function SpaceChart(props: IProps) {
-  const { diskInfos } = props;
+  const { diskInfos, useInstanceSelect } = props;
 
   const diskInfoMap = useMemo(() => _.groupBy(diskInfos, 'name'), [diskInfos])
 
@@ -53,14 +54,14 @@ function SpaceChart(props: IProps) {
     })
   }
 
-  // const handleInstanceShow = (instance: string | 'all') => {
-  //   if (instance === 'all') {
-  //     setCurInstances(instances);
-  //   } else {
-  //     setCurInstances([instance]);
-  //   }
-  //   setSeletedInstance(instance);
-  // }
+  const handleInstanceShow = (instance: string | 'all') => {
+    if (instance === 'all') {
+      setCurInstances(instances);
+    } else {
+      setCurInstances([instance]);
+    }
+    setSeletedInstance(instance);
+  }
 
   const renderDiskInfo = () => {
     return curInstances.map(instance => {
@@ -78,7 +79,6 @@ function SpaceChart(props: IProps) {
                 </Popover>
               </div>
             )
-          }
           {
             diskThs.device && (
               <div className='disk-tr-item'>
@@ -175,21 +175,25 @@ function SpaceChart(props: IProps) {
         </div>
         {renderDiskInfo()}
       </div>
-      {/* <Select
-        className="instance-select"
-        bordered={false}
-        value={seletedInstance}
-        onSelect={(value: any) => handleInstanceShow(value)}
-        dropdownMatchSelectWidth={200}
-        suffixIcon={<Icon className="select-icon" icon="#iconnav-foldTriangle" />}
-      >
-        <Select.Option key='all' value='all'>{intl.get('base.spaceChartAllInstance')}</Select.Option>
-        {
-          instances.map((instance) => (
-            <Select.Option key={instance} value={instance}>{instance}</Select.Option>
-          ))
-        }
-      </Select> */}
+      {
+        useInstanceSelect && (
+          <Select
+            className="instance-select"
+            bordered={false}
+            value={seletedInstance}
+            onSelect={(value: any) => handleInstanceShow(value)}
+            dropdownMatchSelectWidth={200}
+            suffixIcon={<Icon className="select-icon" icon="#iconnav-foldTriangle" />}
+          >
+            <Select.Option key='all' value='all'>{intl.get('base.spaceChartAllInstance')}</Select.Option>
+            {
+              instances.map((instance) => (
+                <Select.Option key={instance} value={instance}>{instance}</Select.Option>
+              ))
+            }
+          </Select>
+        )
+      }
     </div>
   );
 }
