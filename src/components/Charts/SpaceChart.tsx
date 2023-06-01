@@ -79,6 +79,7 @@ function SpaceChart(props: IProps) {
                 </Popover>
               </div>
             )
+          }
           {
             diskThs.device && (
               <div className='disk-tr-item'>
