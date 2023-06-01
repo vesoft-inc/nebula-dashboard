@@ -9,10 +9,11 @@ import { asyncBatchQueries } from '@/requests';
 interface IProps {
   cluster?: any;
   instance: string;
+  useInstanceSelect?: boolean;
 }
 
 const DiskCard = forwardRef((props: IProps, ref) => {
-  const { cluster, instance } = props;
+  const { cluster, instance, useInstanceSelect } = props;
 
   const [diskUsageDetails, setDiskUsageDetails] = useState<DiskMetricInfo[]>([]);
 
@@ -29,7 +30,6 @@ const DiskCard = forwardRef((props: IProps, ref) => {
   ));
   
   const asyncGetDiskUsageDetails = async () => {
-    console.log('instance', instance)
     const clusterSuffix1 = cluster ? `,${getClusterPrefix()}="${cluster.id}"` : '';
     const instanceSuffix = instance!=='all'?`, instance=~"^${instance.replaceAll(".", "\.")}.*"`:'';
     const queries: any = [
@@ -64,7 +64,7 @@ const DiskCard = forwardRef((props: IProps, ref) => {
 
   return (
     <div className="disk-detail detail-card">
-      <SpaceChart diskInfos={diskUsageDetails} />
+      <SpaceChart diskInfos={diskUsageDetails} useInstanceSelect={useInstanceSelect} />
     </div>
   );
 }) 
