@@ -91,7 +91,7 @@ export const DEPENDENCY_PROCESS_TYPES = [
   ServiceName.MetadListener,
   ServiceName.StoragedListener,
   ServiceName.Drainer,
-] as const;
+];
 
 export const ClusterServiceNameMap = {
   [ServiceName.MetadListener]: 'metadListener',

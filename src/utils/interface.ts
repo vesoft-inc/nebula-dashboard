@@ -194,5 +194,6 @@ export interface PromResultMetric {
   instanceName: string;
   nebula_cluster: string;
   __name__: string;
+  space?: string;
   device?: string;
 }
