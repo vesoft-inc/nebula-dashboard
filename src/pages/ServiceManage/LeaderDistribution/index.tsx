@@ -144,6 +144,7 @@ const LeaderDistribution: React.FC<IProps> = (props: IProps) => {
     [isOverview],
   );
 
+  const totalLeader = data.reduce((acc, cur) => acc + cur.count, 0);
   return (
     <Spin delay={200} spinning={!!loading}>
       <div className="leader-distribution">
@@ -172,7 +173,7 @@ const LeaderDistribution: React.FC<IProps> = (props: IProps) => {
             'content-overview': isOverview,
           })}
         >
-          {data.length > 0 ? (
+          {totalLeader > 0 ? (
               <PieChart options={options} renderChart={renderChart} />
             ) : (
               <Empty description={intl.get('common.noData')} />
