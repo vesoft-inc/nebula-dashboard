@@ -37,13 +37,13 @@ export const getProperStep = (start: number, end: number) => {
   if (hours <= 6) {
     return 30;
   }
-  if (hours <= 12) {
-    return 60;
-  }
-  if (hours <= 72) {
-    return 300;
-  }
-  return 600;
+  // if (hours <= 12) {
+  //   return 30;
+  // }
+  // if (hours <= 72) {
+  //   return 300;
+  // }
+  return 30;
 };
 
 export const getTickIntervalByGap = (gap: number) => {

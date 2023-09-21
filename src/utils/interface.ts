@@ -84,6 +84,7 @@ export enum MetricScene {
   DISK,
   MEMORY,
   LOAD,
+  SPACE,
 }
 
 export interface IMachineMetricOption {
