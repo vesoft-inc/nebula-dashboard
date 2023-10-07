@@ -53,7 +53,7 @@ export default {
 	"running": "Running",
 	"panelName": "Panel Name",
 	"panelNamePlaceholder": "Please enter a panel name",
-	"panelMetricType": "Metric Type",
+	"panelMetricType": "Unit",
 	"panelMetricModal": {
 		"PERCENTAGE": "percentage",
 		"BYTE": "byte",
