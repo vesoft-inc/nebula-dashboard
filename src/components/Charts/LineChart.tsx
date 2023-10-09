@@ -23,15 +23,29 @@ function LineChart(props: IProps, ref) {
 
   const chartInstanceRef = useRef<Chart>();
 
+  const timeRangeRef = useRef<any>();
+
   const onChangeBrushEvent = () => {
     if (!chartInstanceRef.current) return;
     const chart = chartInstanceRef.current;
+    chartInstanceRef.current.scale({
+      time: {
+        // tickInterval: options.tickInterval,
+        min: undefined,
+        max: undefined,
+      },
+    }).render(true)
     const filterTime = chart.getOptions().filters?.time as FilterCondition;
     onChangeBrush&&onChangeBrush(filterTime)
   }
 
   const onClearBrush = () => {
     if (!chartInstanceRef.current) return;
+    chartInstanceRef.current.scale({
+      time: {
+        ...timeRangeRef.current,
+      },
+    }).render(true)
     onChangeBrush&&onChangeBrush(null)
   }
 
@@ -234,6 +248,8 @@ function LineChart(props: IProps, ref) {
       statSizes?: any;
       maxNum?: number;
       minNum?: number;
+      startTime?: number;
+      endTime?: number;
     },
   ) => {
     if (!chartInstanceRef.current) return;
@@ -241,8 +257,14 @@ function LineChart(props: IProps, ref) {
     chartInstanceRef.current.scale({
       time: {
         tickInterval: options.tickInterval,
+        min: options.startTime,
+        max: options.endTime,
       },
     });
+    timeRangeRef.current = {
+      min: options.startTime,
+      max: options.endTime,
+    };
     const { maxNum, minNum } = options
     // for y axis
     const { min, max, tickInterval } = calcScaleOption(maxNum, minNum, options.valueType);
