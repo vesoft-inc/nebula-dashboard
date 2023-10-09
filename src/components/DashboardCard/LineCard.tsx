@@ -12,6 +12,7 @@ interface IProps {
   valueType: VALUE_TYPE;
   loading?: boolean;
   baseLine?: number;
+  timeRange?: [number, number];
   onChangeBrush?: (range: FilterCondition | null) => void;
   onRef?: (ref: any) => void;
 }
@@ -19,7 +20,7 @@ interface IProps {
 function LineCard(props: IProps) {
   const chartRef = useRef<any>();
 
-  const { loading, data = [], valueType, baseLine } = props;
+  const { loading, data = [], valueType, baseLine, timeRange } = props;
   useEffect(() => {
     if (!loading && chartRef.current) {
       updateChart();
@@ -56,7 +57,8 @@ function LineCard(props: IProps) {
       maxNum: getMaxNum(data),
       minNum: getMinNum(data),
       tickInterval,
-      valueType,
+      startTime: timeRange?.[0],
+      endTime: timeRange?.[1]
     }).changeData(data);
   };
 

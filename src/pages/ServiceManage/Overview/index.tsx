@@ -113,7 +113,7 @@ const Overview: React.FC<IProps> = (props: IProps) => {
       cancelText: intl.get('common.cancel'),
       onOk: async () => {
          const { code } = await props.asyncExecNGQL(
-          `submit job balance data remove ${host}`,
+          `submit job balance data remove "${host}"`,
         );
         if (code === 0) {
           message.success(intl.get('common.successDelay'));
