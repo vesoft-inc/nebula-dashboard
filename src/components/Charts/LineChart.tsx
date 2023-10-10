@@ -30,7 +30,6 @@ function LineChart(props: IProps, ref) {
     const chart = chartInstanceRef.current;
     chartInstanceRef.current.scale({
       time: {
-        // tickInterval: options.tickInterval,
         min: undefined,
         max: undefined,
       },
@@ -121,33 +120,8 @@ function LineChart(props: IProps, ref) {
     changeBrushByRangeFilter,
     updateDetailChart,
     configDetailChart,
-    autoAdjustPadding,
     changeData,
   }));
-
-  const autoAdjustPadding = (type: VALUE_TYPE) => {
-    if (!chartInstanceRef.current) return;
-    const max = yMax.current;
-    const min = yMin.current;
-    const mid = ((max + min) / 2).toFixed(2);
-    let leftOffset = 0;
-    if (type === VALUE_TYPE.byte) {
-      const { desc } = getProperByteDesc(Number(mid));
-      leftOffset = desc === '0' ? 36 : (desc.length) * 12;
-    } else if (type === VALUE_TYPE.byteSecond || type == VALUE_TYPE.byteSecondNet) {
-      const { desc } = getProperByteDesc(Number(mid));
-      leftOffset = desc === '0' ? 36 : (desc.length) * 12;
-    } else if (type = VALUE_TYPE.number) {
-      leftOffset = (mid.toString().length) * 8;
-    } else {
-      leftOffset = (mid.toString().length + 2) * 10;
-    }
-    if (options?.padding) {
-      options.padding[3] = leftOffset;
-    }
-    chartInstanceRef.current.padding = options.padding as any;
-    chartInstanceRef.current.render(true);
-  }
 
   const calcScaleOption = (max: number = 100, min: number = 0, valueType: VALUE_TYPE) => {
     if (valueType === VALUE_TYPE.percentage) {
@@ -236,7 +210,6 @@ function LineChart(props: IProps, ref) {
       .color('type', LINE_CHART_COLORS);
 
       updateChartByValueType(options, chartInstanceRef.current)
-    // autoAdjustPadding(options.valueType!);
     return chartInstanceRef.current;
   };
 
@@ -300,6 +273,16 @@ function LineChart(props: IProps, ref) {
     }
   };
 
+  const getMaxLabelLength = () => {
+    const ticks = (chartInstanceRef.current as any).getGeometryScales().value.ticks
+    if (ticks?.length) {
+      const formatter = (chartInstanceRef.current as any).axis().options.axes.value.label.formatter
+      const maxLength = Math.max(...ticks.map(tick => formatter(tick).toString().length))
+      return maxLength;
+    }
+    return 5;
+  }
+
   const updateChart = (curbaseLine?) => {
     let baseLine = curbaseLine
     if (!chartInstanceRef.current) return;
@@ -317,10 +300,9 @@ function LineChart(props: IProps, ref) {
       });
       showScaleByBaseLine(baseLine);
     }
-    // HACK: updateOptions not work, https://github.com/antvis/G2/issues/2844
-    if (options) {
-      chartInstanceRef.current.padding = options.padding as any;
-    }
+
+    const maxYLabelLength = getMaxLabelLength();
+    chartInstanceRef.current.padding = [20, 20, 60, 6 * maxYLabelLength + 30];
     // HACK: G2 Chart autoFit don't take effect , refer: https://github.com/antvis/g2/commit/92d607ec5408d1ec949ebd95209c84b04c73b944, but not work
     if (chartInstanceRef.current.height < 100) {
       const e = document.createEvent('Event');
