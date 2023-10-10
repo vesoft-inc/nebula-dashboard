@@ -62,15 +62,6 @@ function LineCard(props: IProps) {
     }).changeData(data);
   };
 
-  const maxNumLen = useMemo(() => {
-    const { maxNumLen } = getMaxNumAndLength({
-      data,
-      valueType,
-      baseLine,
-    })
-    return maxNumLen;
-  }, [data, valueType, baseLine])
-
   return (
     loading ? <Spin /> : (
     <LineChart
@@ -80,7 +71,7 @@ function LineCard(props: IProps) {
         chartRef.current = ref;
         props.onRef && props.onRef(ref);
       }}
-      options={{ padding: [20, 20, 60, 6 * maxNumLen + 30] }}
+      options={{ padding: [20, 20, 60, 60] }}
     />)
   );
 }
