@@ -4,7 +4,6 @@ import { ChartCfg, FilterCondition } from '@antv/g2/lib/interface';
 import dayjs from 'dayjs';
 import { VALUE_TYPE } from '@/utils/promQL';
 import { LINE_CHART_COLORS } from '@/utils/chart/chart';
-import { getProperByteDesc } from '@/utils/dashboard';
 import { ServiceName } from '@/utils/interface';
 import { updateChartByValueType } from '@/utils/metric';
 export interface IProps {
@@ -28,23 +27,13 @@ function LineChart(props: IProps, ref) {
   const onChangeBrushEvent = () => {
     if (!chartInstanceRef.current) return;
     const chart = chartInstanceRef.current;
-    chartInstanceRef.current.scale({
-      time: {
-        min: undefined,
-        max: undefined,
-      },
-    }).render(true)
     const filterTime = chart.getOptions().filters?.time as FilterCondition;
+    clearTimeAreaLimit();
     onChangeBrush&&onChangeBrush(filterTime)
   }
 
   const onClearBrush = () => {
     if (!chartInstanceRef.current) return;
-    chartInstanceRef.current.scale({
-      time: {
-        ...timeRangeRef.current,
-      },
-    }).render(true)
     onChangeBrush&&onChangeBrush(null)
   }
 
@@ -58,8 +47,30 @@ function LineChart(props: IProps, ref) {
     chart.filter('time', action);
     chart.render(true);
     if (!action) {
+      revertTimeAreaLimit();
       buttonAction.hide();
+    } else {
+      clearTimeAreaLimit();
     }
+  }
+
+  const clearTimeAreaLimit = () => {
+    if (!chartInstanceRef.current) return ;
+    chartInstanceRef.current.scale({
+      time: {
+        min: undefined,
+        max: undefined,
+      },
+    }).render(true)
+  }
+
+  const revertTimeAreaLimit = () => {
+    if (!chartInstanceRef.current) return;
+    chartInstanceRef.current.scale({
+      time: {
+        ...timeRangeRef.current,
+      },
+    }).render(true)
   }
 
   const renderChartContent = () => {
