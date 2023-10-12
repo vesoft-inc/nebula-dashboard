@@ -93,6 +93,7 @@ export interface IMachineMetricOption {
 }
 
 export interface IServiceMetricItem {
+  name?: string;
   metric: string;
   valueType: VALUE_TYPE;
   isSpaceMetric: boolean;
