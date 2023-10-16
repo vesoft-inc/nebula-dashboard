@@ -440,27 +440,3 @@ export const updateChartByValueType = (options, chartInstance) => {
 export const isLatencyMetric = metric => metric.includes('latency');
 
 export const isProcessMetric = metric => RawServiceMetrics.some(rawMetric => metric.includes(rawMetric));
-
-export const getServiceMetricOptions = (rawMetrics: IServiceMetricItem[]) => {
-  const metricOptions: IServiceMetricItem[] = [];
-  rawMetrics.forEach((metric: IServiceMetricItem) => {
-    metric.name = `${metric.prefixMetric}_${metric.metric}`;
-    metricOptions.push(metric);
-    if (isLatencyMetric(metric.metric)) {
-      metricOptions.push({
-        ...metric,
-        metric: metric.metric,
-        name: `${metric.name}_p95`,
-        aggregations: [AggregationType.P95],
-      });
-      metricOptions.push({
-        ...metric,
-        metric: metric.metric,
-        name: `${metric.name}_p99`,
-        aggregations: [AggregationType.P99],
-      });
-      metric.name = `${metric.name}_avg`;
-    }
-  });
-  return metricOptions;
-}

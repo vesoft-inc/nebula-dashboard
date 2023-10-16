@@ -45,7 +45,7 @@ const DiskCard = forwardRef((props: IProps, ref) => {
     const data = await asyncBatchQueries(queries);
     const { results } = data as any;
     const details = results.diskSize.result.map(item => {
-      const metricItem = results.diskUsed.result.find(usedItem => usedItem.metric.device === item.metric.device && usedItem.metric.instance === item.metric.instance);
+      const metricItem = results.diskUsed.result.find(usedItem => usedItem.metric.device === item.metric.device && usedItem.metric.mountpoint == item.metric.mountpoint && usedItem.metric.instance === item.metric.instance);
       let used = 0;
       if (metricItem) {
         used = parseInt(metricItem.value[1]);
