@@ -104,7 +104,7 @@ export function MetricModelWrapper(serviceApi) {
       },
       async asyncDevices(clusterID) {
         const { data: res } = (await service.getDevices({
-          'match[]': clusterID ? `{${diskPararms}, ${getClusterPrefix()}='${clusterID}'}` : undefined,
+          'match[]': clusterID ? `node_filesystem_size_bytes{${diskPararms}, ${getClusterPrefix()}='${clusterID}'}` : undefined,
         })) as any;
         if (Array.isArray(res)) {
           this.update({

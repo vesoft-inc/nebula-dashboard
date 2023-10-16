@@ -73,6 +73,8 @@ export const renderUnit = type => {
       return ['/s'];
     case VALUE_TYPE.percentage:
       return ['%'];
+    case VALUE_TYPE.latency:
+      return ['μs', 'ms', 's'];
     default:
       return [];
   }
@@ -86,15 +88,17 @@ export const getBaseLineByUnit = (config: {
 }) => {
   const { baseLine, unit, valueType } = config;
   let conversion = 1024;
-  if (valueType === VALUE_TYPE.byteSecondNet) {
+  if (valueType === VALUE_TYPE.byteSecondNet || valueType === VALUE_TYPE.latency) {
     conversion = 1000;
   }
   switch (unit) {
     case 'KB':
     case 'KB/s':
+    case 'ms':
       return conversion * baseLine;
     case 'MB':
     case 'MB/s':
+    case 's':
       return conversion * conversion * baseLine;
     case 'GB':
     case 'GB/s':

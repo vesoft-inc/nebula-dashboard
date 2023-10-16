@@ -43,7 +43,7 @@ export interface IMetricType {
 
 export interface IMetricOption {
   metric: string;
-  isSpaceMetric: boolean;
+  isSpaceMetric?: boolean;
   metricType: IMetricType[];
   valueType: VALUE_TYPE;
 }
@@ -96,7 +96,7 @@ export interface IServiceMetricItem {
   name?: string;
   metric: string;
   valueType: VALUE_TYPE;
-  isSpaceMetric: boolean;
+  isSpaceMetric?: boolean;
   isRawMetric: boolean;
   aggregations: string[];
   prefixMetric: string;
