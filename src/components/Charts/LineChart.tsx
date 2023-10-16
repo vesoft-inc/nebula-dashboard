@@ -138,7 +138,7 @@ function LineChart(props: IProps, ref) {
     if (valueType === VALUE_TYPE.percentage) {
       return {
         min: 0,
-        max: 100,
+        max: Math.max(100, max),
         tickInterval: 10,
       }
     }

@@ -395,47 +395,6 @@ export const getMinNum = data => {
   return min ? min.value : 0;
 };
 
-export const getMaxNumAndLength = (payload: {
-  data: any[];
-  valueType: string;
-  baseLine?: number;
-}) => {
-  const { data = [], valueType, baseLine } = payload;
-  const maxNum = getMaxNum(data);
-  let maxString =  maxNum === 0 && baseLine
-      ? baseLine.toString()
-      : maxNum.toString();
-  let maxNumLen = maxString.length;
-  switch (valueType) {
-    case VALUE_TYPE.percentage:
-      maxNumLen = 5;
-      break;
-    case VALUE_TYPE.byte:
-    case VALUE_TYPE.byteSecond: {
-      const { value, unit } = getProperByteDesc(maxNum);
-      if (valueType === VALUE_TYPE.byteSecond) {
-        maxNumLen = unit.length + value.toString().length + 2;
-      }
-      maxNumLen = (unit?.length || 0) + (value?.toString()?.length || 0);
-      break;
-    }
-    case VALUE_TYPE.byteSecondNet:
-    case VALUE_TYPE.diskIONet:
-    {
-      const { value, unit } = getProperByteDesc(maxNum);
-      maxNumLen = unit.length + value.toString().length + 2;
-      break;
-    }
-    case VALUE_TYPE.number:
-    case VALUE_TYPE.numberSecond:
-      maxNumLen = maxString.split('.')[0].length ;
-      break;
-    default:
-      break;
-  }
-  return { maxNum, maxNumLen };
-};
-
 export function compareVersion(v1, v2) {
   // if not version format, return -1;
   if (!v1.match(VERSION_REGEX) || !v2.match(VERSION_REGEX)) {
