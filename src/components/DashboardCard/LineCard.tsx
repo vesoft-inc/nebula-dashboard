@@ -1,10 +1,10 @@
-import React, {useEffect, useMemo, useRef } from 'react';
+import React, {useEffect, useRef } from 'react';
 import _ from 'lodash';
 import { Spin } from 'antd';
 import LineChart from '@/components/Charts/LineChart';
 import { ILineChartMetric } from '@/utils/interface';
 import { VALUE_TYPE } from '@/utils/promQL';
-import { getMaxNum, getMaxNumAndLength, getMinNum, getTickIntervalByGap } from '@/utils/dashboard';
+import { getMaxNum, getMinNum, getTickIntervalByGap } from '@/utils/dashboard';
 import { FilterCondition } from '@antv/g2/lib/interface';
 
 interface IProps {
@@ -57,6 +57,7 @@ function LineCard(props: IProps) {
       maxNum: getMaxNum(data),
       minNum: getMinNum(data),
       tickInterval,
+      valueType,
       startTime: timeRange?.[0],
       endTime: timeRange?.[1]
     }).changeData(data);
