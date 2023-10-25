@@ -37,10 +37,11 @@ interface IHaderProps {
 }
 interface IProps
   extends ReturnType<typeof mapState>,
-  ReturnType<typeof mapDispatch>,
-  RouteComponentProps {
+    ReturnType<typeof mapDispatch>,
+    RouteComponentProps {
   baseRouter?: string;
   cluster?: any;
+  enableZone?: boolean;
 }
 
 const OverviewCardHeader = (props: IHaderProps) => {
@@ -54,8 +55,7 @@ const OverviewCardHeader = (props: IHaderProps) => {
 };
 let interval;
 const Overview: React.FC<IProps> = (props: IProps) => {
-
-  const { cluster, currentSpace, spaces, baseRouter = '/management'  } = props;
+  const { cluster, currentSpace, spaces, baseRouter = '/management' } = props;
   const modalHandler = useRef<any>();
   const [hosts, setHosts] = useState([]);
   const nebulaRef = useRef<{
@@ -66,9 +66,9 @@ const Overview: React.FC<IProps> = (props: IProps) => {
   nebulaRef.current.currentSpace = currentSpace;
   useEffect(() => {
     props.clear();
-  },[cluster])
+  }, [cluster]);
   useEffect(() => {
-      asyncGetHostsInfo();
+    asyncGetHostsInfo();
   }, []);
 
   const handleSpaceChange = async space => {
@@ -81,7 +81,7 @@ const Overview: React.FC<IProps> = (props: IProps) => {
   const asyncGetHostsInfo = async () => {
     const res = await props.asyncGetHostsInfo();
     setHosts(res);
-  }
+  };
 
   const handleModalClose = () => {
     if (modalHandler.current) {
@@ -90,7 +90,11 @@ const Overview: React.FC<IProps> = (props: IProps) => {
   };
 
   const balanceData = async () => {
-    const { code } = await props.asyncExecNGQL('submit job balance data');
+    const { code } = await props.asyncExecNGQL(
+      props.enableZone
+        ? 'submit job balance data in zone'
+        : 'submit job balance data',
+    );
     if (code === 0) {
       message.success(intl.get('common.successDelay'));
       props.asyncGetServices();
@@ -112,18 +116,19 @@ const Overview: React.FC<IProps> = (props: IProps) => {
       okText: intl.get('common.confirm'),
       cancelText: intl.get('common.cancel'),
       onOk: async () => {
-         const { code } = await props.asyncExecNGQL(
-          `submit job balance data remove "${host}"`,
+        const { code } = await props.asyncExecNGQL(
+          props.enableZone
+            ? `submit job balance data remove in zone "${host}"`
+            : `submit job balance data remove "${host}"`,
         );
         if (code === 0) {
           message.success(intl.get('common.successDelay'));
           props.asyncGetServices();
         }
         handleModalClose();
-      }
+      },
     });
-   
-  }; 
+  };
 
   const handleModalShow = async () => {
     if (modalHandler && modalHandler.current) {
@@ -136,14 +141,17 @@ const Overview: React.FC<IProps> = (props: IProps) => {
     return getVersionFeatures(version, cluster?.nebulaType);
   }, [cluster]);
 
-
   return (
     <div>
       <div className={styles.top}>
         <div className={styles.left}>
           <div className={styles.leader}>
             {/* @ts-ignore */}
-            <LeaderDistribution isOverview baseRouter={baseRouter} cluster={cluster}/>
+            <LeaderDistribution
+              isOverview
+              baseRouter={baseRouter}
+              cluster={cluster}
+            />
           </div>
           <div className={styles.serviceInfo}>
             <OverviewCardHeader
@@ -179,27 +187,25 @@ const Overview: React.FC<IProps> = (props: IProps) => {
               </Option>
             ))}
           </DashboardSelect>
-          {
-            !isCommunityVersion() && (
-              <>
-                <Button
-                  type="primary"
-                  onClick={handleBalance}
-                  disabled={!versionFeature?.dataBalance || !currentSpace}
-                >
-                  Balance Data 
-                </Button>
-                <Button
-                  type="primary"
-                  onClick={handleModalShow}
-                  ghost
-                  disabled={!versionFeature?.dataBalance || !currentSpace}
-                >
-                  Balance Data Remove 
-                </Button>
-              </>
-            )
-          }
+          {!isCommunityVersion() && (
+            <>
+              <Button
+                type="primary"
+                onClick={handleBalance}
+                disabled={!versionFeature?.dataBalance || !currentSpace}
+              >
+                Balance Data
+              </Button>
+              <Button
+                type="primary"
+                onClick={handleModalShow}
+                ghost
+                disabled={!versionFeature?.dataBalance || !currentSpace}
+              >
+                Balance Data Remove
+              </Button>
+            </>
+          )}
         </div>
         <div className={styles.distribution}>
           <OverviewCardHeader
