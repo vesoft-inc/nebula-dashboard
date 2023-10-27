@@ -53,7 +53,7 @@ const OverviewCardHeader = (props: IHaderProps) => {
     </div>
   );
 };
-let interval;
+
 const Overview: React.FC<IProps> = (props: IProps) => {
   const { cluster, currentSpace, spaces, baseRouter = '/management' } = props;
   const modalHandler = useRef<any>();
@@ -118,8 +118,8 @@ const Overview: React.FC<IProps> = (props: IProps) => {
       onOk: async () => {
         const { code } = await props.asyncExecNGQL(
           props.enableZone
-            ? `submit job balance data remove in zone "${host}"`
-            : `submit job balance data remove "${host}"`,
+            ? `submit job balance data remove in zone ${host}`
+            : `submit job balance data remove ${host}`,
         );
         if (code === 0) {
           message.success(intl.get('common.successDelay'));
@@ -238,10 +238,10 @@ const Overview: React.FC<IProps> = (props: IProps) => {
           }}
         >
           {
-            hosts.map((host: any) => (
+            hosts.map((host: any, index) => (
               <Option
-                value={`${host.Host}:${host.Port}`}
-                key={`${host.Host}:${host.Port}`}
+                value={`"${host.Host}":${host.Port}`}
+                key={index}
               >
                 {host.Host}
               </Option>
