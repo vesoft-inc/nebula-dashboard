@@ -118,7 +118,7 @@ const Overview: React.FC<IProps> = (props: IProps) => {
       onOk: async () => {
         const { code } = await props.asyncExecNGQL(
           props.enableZone
-            ? `submit job balance data remove in zone ${host}`
+            ? `submit job balance data in zone remove ${host}`
             : `submit job balance data remove ${host}`,
         );
         if (code === 0) {

@@ -171,7 +171,7 @@ export enum CellHealtyLevel {
 export const Percent_Range = {
   [CellHealtyLevel.normal]: [0, 50],
   [CellHealtyLevel.warning]: [50, 90],
-  [CellHealtyLevel.danger]: [90, 100],
+  [CellHealtyLevel.danger]: [90, 101],
 }
 
 export interface BatchQueryItem {

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { RingProgress, RingProgressConfig } from '@ant-design/plots';
+import { RingProgress } from '@ant-design/plots';
 import { calcNodeHealty } from '@/utils';
 import { CellHealtyLevel } from '@/utils/interface';
 
