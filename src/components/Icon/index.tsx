@@ -4,13 +4,14 @@ import './index.less';
 interface IProps extends SVGProps<any> {
   icon: string;
   className?: string;
+  spin?: boolean;
 }
 
 const Icon = (props: IProps) => {
-  const { icon, className, ...others } = props;
+  const { icon, className, spin, ...others } = props;
   return (
     <svg
-      className={`dashboard-icon iconpark-icon ${className || ''}`}
+      className={`dashboard-icon iconpark-icon ${spin ? 'icon-spin': ''} ${className || ''}`}
       aria-hidden="true"
       {...others}
     >
