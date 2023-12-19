@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { Table } from 'antd';
 import { connect } from 'react-redux';
 import dayjs from 'dayjs';

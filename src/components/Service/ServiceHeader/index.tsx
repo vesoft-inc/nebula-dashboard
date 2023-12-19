@@ -1,4 +1,4 @@
-import React from 'react';
+import { PureComponent } from 'react';
 import Icon from '@/components/Icon';
 import metadIcon from '@/static/images/Metad-icon60.png';
 import graphdIcon from '@/static/images/Graphd-icon60.png';
@@ -11,7 +11,7 @@ interface IProps {
   title: string | React.ReactNode;
   icon?: string;
 }
-class ServiceHeader extends React.PureComponent<IProps> {
+class ServiceHeader extends PureComponent<IProps> {
   getLogo = () => {
     const { serviceType } = this.props;
     switch (serviceType) {

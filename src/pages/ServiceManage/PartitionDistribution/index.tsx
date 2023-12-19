@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import { Empty, Spin, Table } from 'antd';
 import intl from 'react-intl-universal';
 import { connect } from 'react-redux';
@@ -39,7 +39,7 @@ interface IState {
   }[];
 }
 
-class PartitionDistribution extends React.Component<IProps, IState> {
+class PartitionDistribution extends Component<IProps, IState> {
   chartInstance: Chart;
 
   constructor(props: IProps) {

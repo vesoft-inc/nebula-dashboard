@@ -1,4 +1,3 @@
-import React from 'react';
 import { RouteComponentProps, useHistory, withRouter } from 'react-router-dom';
 import Icon from '../Icon';
 import './index.less';

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Table, TableColumnType } from 'antd';
 import intl from 'react-intl-universal';
 

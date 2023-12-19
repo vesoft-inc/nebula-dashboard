@@ -1,5 +1,5 @@
 import { Empty, Popover, Select, Spin } from 'antd';
-import React, { useEffect, useMemo, useState, useRef } from 'react';
+import { useEffect, useMemo, useState, useRef } from 'react';
 import intl from 'react-intl-universal';
 import { RouteComponentProps, useHistory, useLocation, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';

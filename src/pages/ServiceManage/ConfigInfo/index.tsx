@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Radio, Input, Table, Spin } from 'antd';
 import intl from 'react-intl-universal';
 import { connect } from 'react-redux';
@@ -16,7 +16,7 @@ const mapState = (state: IRootState) => ({
 
 const mapDispatch = (dispatch: IDispatch) => ({
   asyncGetServiceConfigs: dispatch.nebula.asyncGetServiceConfigs,
-}) as any;
+} as any);
 interface IProps
   extends ReturnType<typeof mapState>,
   ReturnType<typeof mapDispatch> { }

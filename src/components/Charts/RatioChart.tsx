@@ -1,5 +1,5 @@
 import { Chart, registerShape } from '@antv/g2';
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 function RatioChart({
   data,

@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import { Dropdown, Layout, Menu } from 'antd';
 import { connect } from 'react-redux';
 import intl from 'react-intl-universal';
@@ -65,7 +65,7 @@ const clusterInfoList = [
   'long-term-task'
 ]
 
-class MainPage extends React.Component<IProps, IState> {
+class MainPage extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = {

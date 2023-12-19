@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import { DashboardSelect, Option } from '@/components/DashboardSelect';
 import { IDispatch, IRootState } from '@/store';
 import intl from 'react-intl-universal';
@@ -20,7 +20,7 @@ interface IProps
   onHide?: () => void;
 }
 
-class SelectSpace extends React.Component<IProps> {
+class SelectSpace extends Component<IProps> {
   componentDidMount() {
     this.props.asyncGetSpaces();
   }

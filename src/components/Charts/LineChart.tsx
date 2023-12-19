@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import { Chart,  registerInteraction } from '@antv/g2';
 import { ChartCfg, FilterCondition } from '@antv/g2/lib/interface';
 import dayjs from 'dayjs';

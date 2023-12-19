@@ -1,5 +1,5 @@
 import { Spin, Table } from 'antd';
-import React from 'react';
+import { PureComponent } from 'react';
 import intl from 'react-intl-universal';
 import { groupBy, round } from 'lodash';
 import { Chart } from '@antv/g2';
@@ -30,7 +30,7 @@ const mapState = (state: IRootState) => ({
   loading: state.loading.models.service,
 });
 
-class VersionItem extends React.PureComponent<IProps, IState> {
+class VersionItem extends PureComponent<IProps, IState> {
   chartInstance: Chart;
 
   componentDidUpdate() {

@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import _ from 'lodash';
 import './BatteryChart.less';
 import { getProperByteDesc } from '@/utils/dashboard';
@@ -77,7 +77,7 @@ interface IChartDataItem {
 interface IBatterChartProps {
   data: IChartDataItem[];
 }
-class BatteryChart extends React.Component<IBatterChartProps> {
+class BatteryChart extends Component<IBatterChartProps> {
   render() {
     const { data } = this.props;
     return (

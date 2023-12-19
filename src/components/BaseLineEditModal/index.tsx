@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Button, Form, InputNumber, Modal, Select } from 'antd';
 import intl from 'react-intl-universal';
 import { renderUnit } from '@/utils/dashboard';

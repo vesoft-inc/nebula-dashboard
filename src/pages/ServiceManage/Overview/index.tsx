@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState, useEffect } from 'react';
+import { useMemo, useRef, useState, useEffect } from 'react';
 import { Button, Modal as AntModal, message } from 'antd';
 import { connect } from 'react-redux';
 import intl from 'react-intl-universal';

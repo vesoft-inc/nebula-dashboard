@@ -1,4 +1,3 @@
-import React from 'react';
 import { Select as AntSelect, SelectProps } from 'antd';
 import Icon from '../Icon';
 import './index.less';

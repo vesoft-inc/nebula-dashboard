@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
 import { Col, Row, Input } from 'antd';
 import intl from 'react-intl-universal';
 

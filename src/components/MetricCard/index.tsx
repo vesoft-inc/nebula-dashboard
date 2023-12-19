@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useImperativeHandle } from 'react';
+import { useRef, useState, forwardRef, useEffect, useImperativeHandle } from 'react';
 import intl from 'react-intl-universal';
 
 import LineCard from '@/components/DashboardCard/LineCard';
@@ -19,8 +19,8 @@ interface IProps {
 const MetricCard = forwardRef((props: IProps, ref) => {
 
   const { valueType, queries, metricTypeFn, timeRange } = props;
-  const chartRef = React.useRef();
-  const [metricData, setMetricData] = React.useState<ILineChartMetric[]>([]);
+  const chartRef = useRef();
+  const [metricData, setMetricData] = useState<ILineChartMetric[]>([]);
 
   useImperativeHandle(ref, () => (
     {
@@ -73,5 +73,7 @@ const MetricCard = forwardRef((props: IProps, ref) => {
     />
   )
 });
+
+MetricCard.displayName = 'MetricCard';
 
 export default MetricCard;

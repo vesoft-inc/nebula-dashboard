@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import _ from 'lodash';
 
 import SpaceChart from '@/components/Charts/SpaceChart';

@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import { Progress } from 'antd';
 import './GaugeChart.less';
 import { getWhichColor } from '@/utils/dashboard';
@@ -7,7 +7,7 @@ interface IProps {
   percent: number;
 }
 
-class GaugeChart extends React.Component<IProps> {
+class GaugeChart extends Component<IProps> {
   render() {
     const { percent } = this.props;
     const color = getWhichColor(percent);

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Select } from 'antd';
 
 import { IntervalFrequencyItem, INTERVAL_FREQUENCY_LIST } from '@/utils/service';
