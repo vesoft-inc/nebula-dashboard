@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useMemo } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useMemo } from 'react';
 import { Form, FormInstance, Select, TreeSelect } from 'antd';
 import intl from 'react-intl-universal';
 

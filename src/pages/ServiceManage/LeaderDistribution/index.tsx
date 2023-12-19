@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Button, Empty, Spin, Table, message } from 'antd';
 import intl from 'react-intl-universal';
 import { IDispatch, IRootState } from '@/store';
@@ -44,7 +44,7 @@ const LeaderDistribution: React.FC<IProps> = (props: IProps) => {
   const [data, setData] = useState<IChaerData[]>([]);
   const [chartInstance, setChartInstance] = useState<Chart>();
 
-  const { nebulaConnect, cluster = {} as ICluster, loading, isOverview, baseRouter = '/management' } = props;
+  const { nebulaConnect, cluster = {}, loading, isOverview, baseRouter = '/management' } = props;
 
   useEffect(() => {
     if (isCommunityVersion() || nebulaConnect) {

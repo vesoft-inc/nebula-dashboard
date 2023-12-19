@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import intl from 'react-intl-universal';
 import { Button, Spin } from 'antd';

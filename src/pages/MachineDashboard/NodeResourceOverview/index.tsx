@@ -1,4 +1,3 @@
-import React from 'react';
 import { Table, TableColumnType } from 'antd';
 import intl from 'react-intl-universal';
 

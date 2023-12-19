@@ -1,4 +1,3 @@
-import React from 'react';
 import { Form, Popover } from 'antd';
 import cookies from 'js-cookie';
 import intl from 'react-intl-universal';

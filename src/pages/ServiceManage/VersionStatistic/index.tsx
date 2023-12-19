@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import { IRootState, IDispatch } from '@/store';
 import intl from 'react-intl-universal'
 import { connect } from 'react-redux';
@@ -26,7 +26,7 @@ interface IState {
   meta: IVersionItem[];
 }
 
-class VersionStatistic extends React.Component<IProps, IState> {
+class VersionStatistic extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = {

@@ -1,6 +1,5 @@
 import { Button, Form, Input, Select } from 'antd';
-// import { FormInstance, FormProps } from 'antd/lib/form/Form';
-import React from 'react';
+import { Component } from 'react';
 import intl from 'react-intl-universal';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
@@ -48,7 +47,7 @@ interface IProps
   extends ReturnType<typeof mapState>,
   ReturnType<typeof mapDispatch>,
   RouteComponentProps { }
-class ConfigServerForm extends React.Component<IProps> {
+class ConfigServerForm extends Component<IProps> {
   componentDidMount() {
     this.props.asyncGetAppInfo();
     this.props.asyncGetCustomConfig();

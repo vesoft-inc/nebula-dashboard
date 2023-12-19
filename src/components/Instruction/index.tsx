@@ -1,5 +1,4 @@
 import { Tooltip } from 'antd';
-import React from 'react';
 import Icon from '@/components/Icon';
 
 import './index.less';

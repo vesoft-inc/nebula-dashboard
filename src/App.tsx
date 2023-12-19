@@ -1,6 +1,6 @@
 import { Spin } from 'antd';
 import cookies from 'js-cookie';
-import React, { Suspense, lazy } from 'react';
+import { Component, Suspense, lazy } from 'react';
 import { hot } from 'react-hot-loader/root';
 import intl from 'react-intl-universal';
 import {
@@ -29,7 +29,7 @@ const MainPage = lazy(() => import('@/pages/MainPage/index'));
 
 type IProps = RouteComponentProps;
 
-class App extends React.Component<IProps> {
+class App extends Component<IProps> {
   currentLocale;
 
   constructor(props: IProps) {

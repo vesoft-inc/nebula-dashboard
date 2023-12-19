@@ -1,4 +1,4 @@
-import React, {useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import _ from 'lodash';
 import { Spin } from 'antd';
 import LineChart from '@/components/Charts/LineChart';

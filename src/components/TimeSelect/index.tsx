@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { DatePicker, Radio } from 'antd';
 import intl from 'react-intl-universal';
 import dayjs from 'dayjs';

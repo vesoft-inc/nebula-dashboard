@@ -1,6 +1,6 @@
 import { Modal as AntModal } from 'antd';
 import { ModalProps } from 'antd/lib/modal';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface IModalHandler {
   show: (callback?: any) => void;

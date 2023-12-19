@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import LineCard from '@/components/DashboardCard/LineCard';
 import { VALUE_TYPE } from '@/utils/promQL';
 import { ILineChartMetric, ServiceName } from '@/utils/interface';
@@ -10,7 +10,7 @@ interface IProps {
   serviceType: ServiceName;
 }
 
-class Card extends React.Component<IProps> {
+class Card extends Component<IProps> {
   render() {
     const { data, baseLine, loading, serviceType } = this.props;
     return (

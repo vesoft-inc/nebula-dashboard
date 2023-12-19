@@ -1,5 +1,5 @@
 import { PageHeader, Radio } from 'antd';
-import React from 'react';
+import { PureComponent } from 'react';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import Icon from '@/components/Icon';
 import { trackPageView } from '@/utils/stat';
@@ -20,7 +20,7 @@ interface IState {
   collapsed: boolean;
 }
 
-class Header extends React.PureComponent<IProps, IState> {
+class Header extends PureComponent<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = {

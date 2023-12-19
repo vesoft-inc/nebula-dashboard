@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import _ from 'lodash';
 import { Input, Table } from 'antd';
 import { connect } from 'react-redux';

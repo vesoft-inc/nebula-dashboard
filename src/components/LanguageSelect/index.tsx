@@ -1,5 +1,5 @@
 import { Select } from 'antd';
-import React from 'react';
+import { PureComponent } from 'react';
 import { INTL_LOCALE_SELECT } from '@/config';
 import Icon from '@/components/Icon';
 import './index.less';
@@ -13,7 +13,7 @@ interface IProps {
   toggleLanguage: (lang: string) => void;
 }
 
-export default class OutputCsv extends React.PureComponent<IProps> {
+export default class OutputCsv extends PureComponent<IProps> {
   render() {
     const { mode, showIcon, currentLocale, toggleLanguage } = this.props;
     return (

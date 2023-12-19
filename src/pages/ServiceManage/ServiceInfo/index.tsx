@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import React from 'react';
+import { Component } from 'react';
 import { Button, Table, message } from 'antd';
 import { connect } from 'react-redux';
 import { IDispatch, IRootState } from '@/store';
@@ -25,7 +25,7 @@ interface IProps
   extends ReturnType<typeof mapState>,
   ReturnType<typeof mapDispatch> { }
 
-class ServiceInfo extends React.Component<IProps> {
+class ServiceInfo extends Component<IProps> {
   modalHandler;
 
   componentDidMount() {

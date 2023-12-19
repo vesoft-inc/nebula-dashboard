@@ -1,21 +1,21 @@
 import { Chart } from '@antv/g2';
 import { ChartCfg } from '@antv/g2/lib/interface';
 
-import React from 'react';
+import { createRef, Component } from 'react';
 
 interface IProps {
   renderChart: (chartInstance: Chart) => void;
   options?: Partial<ChartCfg>;
 }
 
-class PieChart extends React.Component<IProps> {
+class PieChart extends Component<IProps> {
   chartRef: any;
 
   chartInstance: Chart;
 
   constructor(props: IProps) {
     super(props);
-    this.chartRef = React.createRef();
+    this.chartRef = createRef();
   }
 
   componentDidMount() {
