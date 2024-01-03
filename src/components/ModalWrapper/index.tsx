@@ -4,14 +4,12 @@ function ModalWrapper<T>(Component: React.FC<T>) {
 
   const modalRoot = document.createElement('div');
   let appRoot: Root;
-  const modalRef: any = { current: null };
 
   const destroyContainer = () => {
     appRoot.unmount();
   }
 
   const hide = () => {
-    modalRef.current?.close();
     setTimeout(() => {
       destroyContainer();
     }, 200);
@@ -22,7 +20,6 @@ function ModalWrapper<T>(Component: React.FC<T>) {
     appRoot.render((
       <Component
         afterClose={destroyContainer}
-        ref={ref => modalRef.current = ref}
         visible 
         {...props}
         hide={hide}
