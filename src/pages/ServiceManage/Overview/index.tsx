@@ -164,7 +164,7 @@ const Overview: React.FC<IProps> = (props: IProps) => {
         <div className={styles.pratHeader}>
           <SelectSpace />
           {!isCommunityVersion() && (
-            <>
+            <div>
               <Button
                 type="primary"
                 onClick={handleBalance}
@@ -180,7 +180,7 @@ const Overview: React.FC<IProps> = (props: IProps) => {
               >
                 Balance Data Remove
               </Button>
-            </>
+            </div>
           )}
         </div>
         <div className={styles.distribution}>

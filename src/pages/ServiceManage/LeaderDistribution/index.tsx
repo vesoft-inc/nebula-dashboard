@@ -196,8 +196,13 @@ const LeaderDistribution: React.FC<IProps> = (props: IProps) => {
         handlerRef={handler => (modalHandler.current = handler)}
         footer={null}
       >
-        {/* @ts-ignore */}
-        <SelectSpace onHide={handleHide} />
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center'
+        }}>
+          {/* @ts-ignore */}
+          <SelectSpace onHide={handleHide} />
+        </div>
       </Modal>
     </Spin>
   );

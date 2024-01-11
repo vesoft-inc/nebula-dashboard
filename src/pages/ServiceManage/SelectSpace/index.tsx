@@ -3,7 +3,6 @@ import { DashboardSelect, Option } from '@/components/DashboardSelect';
 import { IDispatch, IRootState } from '@/store';
 import intl from 'react-intl-universal';
 import { connect } from 'react-redux';
-import styles from './index.module.less';
 
 const mapDispatch: any = (dispatch: IDispatch) => ({
   asyncUseSpaces: dispatch.nebula.asyncUseSpaces,
@@ -37,7 +36,7 @@ function SelectSpace(props: IProps) {
   };
 
   return (
-    <div className={styles.space} style={{...style}}>
+    <div style={{...style}}>
       <DashboardSelect
         placeholder={intl.get('service.chooseSpace')}
         onChange={handleSpaceChange}
