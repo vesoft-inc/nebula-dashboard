@@ -155,7 +155,13 @@ class ServiceInfo extends Component<IProps> {
           handlerRef={handler => (this.modalHandler = handler)}
           footer={null}
         >
-          <SelectSpace onHide={this.handleHide} />
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center'
+          }}>
+            {/* @ts-ignore */}
+            <SelectSpace onHide={this.handleHide} />
+          </div>
         </Modal>
       </div>
     );
