@@ -1,0 +1,64 @@
+.top {
+  display: flex;
+}
+.top .left {
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  margin-right: 20px;
+  max-width: 75%;
+  overflow: auto;
+}
+.top .left .service-info {
+  margin-top: 20px;
+  flex: 1;
+  background-color: #fff;
+}
+.top .left .leader {
+  flex: 1;
+}
+.top .right {
+  flex: 1;
+  background-color: #fff;
+  overflow: auto;
+}
+.prat {
+  margin-top: 20px;
+  background-color: #fff;
+  padding: 20px;
+}
+.prat .distribution,
+.prat .info {
+  border: 1px solid #E0E0E0;
+  border-radius: 1px;
+}
+.prat .info {
+  margin-top: 20px;
+}
+.prat .prat-header {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+.prat .prat-header button {
+  float: right;
+  margin-left: 15px;
+}
+.header {
+  border-bottom: 1px solid #E0E0E0;
+  line-height: 50px;
+  padding: 0 20px;
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: bold;
+  font-size: 16px;
+}
+.header a {
+  float: right;
+  font-family: "Roboto";
+  font-weight: normal;
+  font-size: 14px;
+}
+.modal :global .ant-modal-body {
+  text-align: center;
+}

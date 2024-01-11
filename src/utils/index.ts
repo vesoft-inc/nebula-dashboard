@@ -141,3 +141,9 @@ export const getNebulaProductName = () => {
   }
   return process.env.PRODUCT_NAME || 'NebulaGraph';
 }
+
+export const handleEscape = (name: string) => name.replace(/\\/gm, '\\\\').replace(/`/gm, '\\`');
+
+export const getUseSapceNgql = (space: string) => {
+  return `USE \`${handleEscape(space)}\``;
+}

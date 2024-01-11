@@ -3,12 +3,12 @@ import { useEffect } from 'react';
 import { Table } from 'antd';
 import { connect } from 'react-redux';
 import dayjs from 'dayjs';
+import intl from 'react-intl-universal';
 
 import { IDispatch, IRootState } from '@/store';
-import intl from 'react-intl-universal';
 import { TitleInstruction } from '@/components/Instruction';
-import { DashboardSelect, Option } from '@/components/DashboardSelect';
 import { compareVersion, getDefaultNebulaVersion, getVersion } from '@/utils/dashboard';
+import SelectSpace from '../SelectSpace';
 
 import './index.less';
 
@@ -21,8 +21,6 @@ const mapState = (state: IRootState) => ({
 
 const mapDispatch: any = (dispatch: IDispatch) => ({
   asyncGetJobs: dispatch.nebula.asyncGetJobs,
-  asyncGetSpaces: dispatch.nebula.asyncGetSpaces,
-  asyncUseSpaces: dispatch.nebula.asyncUseSpaces,
 });
 interface IProps
   extends ReturnType<typeof mapState>,
@@ -31,19 +29,15 @@ interface IProps
     }
 
 const LongTermTask: React.FC<IProps> = props => {
-  const { currentSpace, spaces, jobs, loading, cluster = {} } = props;
+  const { currentSpace, jobs, loading, cluster = {} } = props;
 
-  const handleSpaceChange = async space => {
-    const { code } = await props.asyncUseSpaces(space);
-    if (code === 0) {
-      await props.asyncGetJobs();
-    }
-  };
+  useEffect(() => {
+    init();
+  }, [currentSpace])
 
   const init = async () => {
     // HAKC: Compatible processing version 2.6.0
     if (compareVersion(getVersion(cluster?.version || getDefaultNebulaVersion()), '2.6.0') >= 0) {
-      await props.asyncGetSpaces();
       if (currentSpace) {
         props.asyncGetJobs();
       }
@@ -121,20 +115,7 @@ const LongTermTask: React.FC<IProps> = props => {
         <div className="common-header">
           <div className="select-space">
             <span>{intl.get('service.spaces')}:</span>
-            <DashboardSelect
-              placeholder={intl.get('service.chooseSpace')}
-              value={currentSpace || undefined}
-              onChange={handleSpaceChange}
-              style={{
-                width: 220,
-              }}
-            >
-              {spaces.map((space: any) => (
-                <Option value={space.Name} key={space.Name}>
-                  {space.Name}
-                </Option>
-              ))}
-            </DashboardSelect>
+            <SelectSpace />
           </div>
         </div>
       )}

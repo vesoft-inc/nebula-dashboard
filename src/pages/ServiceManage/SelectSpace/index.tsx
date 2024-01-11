@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useEffect } from 'react';
 import { DashboardSelect, Option } from '@/components/DashboardSelect';
 import { IDispatch, IRootState } from '@/store';
 import intl from 'react-intl-universal';
@@ -12,45 +12,47 @@ const mapDispatch: any = (dispatch: IDispatch) => ({
 
 const mapState = (state: IRootState) => ({
   spaces: state.nebula.spaces,
+  currentSpace: state.nebula.currentSpace,
 });
 
 interface IProps
   extends ReturnType<typeof mapState>,
     ReturnType<typeof mapDispatch> {
   onHide?: () => void;
+  style?: any;
 }
 
-class SelectSpace extends Component<IProps> {
-  componentDidMount() {
-    this.props.asyncGetSpaces();
-  }
+function SelectSpace(props: IProps) {
+  const { asyncGetSpaces, asyncUseSpaces, spaces, style = {}, currentSpace, onHide } = props;
+  
+  useEffect(() => {
+    asyncGetSpaces();
+  }, [])
 
-  handleSpaceChange = async space => {
-    const { code } = await this.props.asyncUseSpaces(space);
+  const handleSpaceChange = async space => {
+    const { code } = await asyncUseSpaces(space);
     if (code === 0) {
-      this.props.onHide?.();
+      onHide?.();
     }
   };
 
-  render() {
-    const { spaces } = this.props;
-    return (
-      <div className={styles.space}>
-        <DashboardSelect
-          placeholder={intl.get('service.chooseSpace')}
-          onChange={this.handleSpaceChange}
-          style={{
-            width: 220,
-          }}
-        >
-          {spaces.map((space: any) => (
-            <Option value={space.Name} key={space.Name}>
-              {space.Name}
-            </Option>
-          ))}
-        </DashboardSelect>
-      </div>
-    );
-  }
+  return (
+    <div className={styles.space} style={{...style}}>
+      <DashboardSelect
+        placeholder={intl.get('service.chooseSpace')}
+        onChange={handleSpaceChange}
+        style={{
+          width: 220,
+        }}
+        value={currentSpace}
+      >
+        {spaces.map((space: any) => (
+          <Option value={space.Name} key={space.Name}>
+            {space.Name}
+          </Option>
+        ))}
+      </DashboardSelect>
+    </div>
+  );
 }
 export default connect(mapState, mapDispatch)(SelectSpace);
