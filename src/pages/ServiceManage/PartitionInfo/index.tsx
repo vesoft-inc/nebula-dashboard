@@ -31,34 +31,40 @@ interface IProps
 }
 
 const PartitionInfo: React.FC<IProps> = (props: IProps) => {
-  const { nebulaConnect, currentSpace, loading, parts, spaces, isOverview, asyncGetSpaces, asyncGetParts } =
+  const { nebulaConnect, currentSpace, loading, parts, spaces, isOverview, asyncGetSpaces, asyncGetParts, asyncUseSpaces } =
     props;
 
   useEffect(() => {
     if (nebulaConnect) {
       asyncGetSpaces();
       if (currentSpace) {
-        asyncGetParts();
+        asyncGetParts({
+          space: currentSpace
+        });
       }
     }
   }, [nebulaConnect, currentSpace]);
 
   useEffect(() => {
     if (spaces.length > 0 && !currentSpace) {
-      props.asyncUseSpaces(spaces[0].Name);
+      asyncUseSpaces(spaces[0].Name);
     }
   }, [spaces])
 
   const handleSpaceChange = async space => {
-    const { code } = (await props.asyncUseSpaces(space)) as any;
+    const { code } = (await asyncUseSpaces(space)) as any;
     if (code === 0) {
-      props.asyncGetParts();
+      asyncGetParts({
+        space,
+      });
       trackEvent('partition_info', 'select_space');
     }
   };
 
   const handleSearchPartitionId = value => {
-    props.asyncGetParts(value);
+    asyncGetParts({
+      partId: value,
+    });
     trackEvent('partition_info', 'search_partitionId');
   };
 

@@ -24,6 +24,7 @@ const mapDispatch: any = (dispatch: IDispatch) => ({
 const mapState = (state: IRootState) => ({
   loading: state.loading.effects.nebula.asyncGetHostsInfo,
   nebulaConnect: (state.nebula as any).nebulaConnect,
+  currentSpace: state.nebula.currentSpace,
 });
 
 interface IProps
@@ -44,17 +45,18 @@ const LeaderDistribution: React.FC<IProps> = (props: IProps) => {
   const [data, setData] = useState<IChaerData[]>([]);
   const [chartInstance, setChartInstance] = useState<Chart>();
 
-  const { nebulaConnect, cluster = {}, loading, isOverview, baseRouter = '/management' } = props;
+  const { nebulaConnect, cluster = {}, currentSpace, loading, isOverview, baseRouter = '/management' } = props;
 
   useEffect(() => {
     if (isCommunityVersion() || nebulaConnect) {
-      getStorageInfo();
+      if (currentSpace) {
+        getStorageInfo();
+      }
     }
-    return () => setData([]);
-  }, [nebulaConnect]);
+  }, [nebulaConnect, currentSpace]);
 
   useEffect(() => {
-    if (chartInstance) {
+    if (data.length && chartInstance) {
       updateChart();
     }
   }, [data, chartInstance]);
@@ -75,24 +77,24 @@ const LeaderDistribution: React.FC<IProps> = (props: IProps) => {
   };
 
   const updateChart = () => {
-    if (data.length > 0) {
-      const lastItem = last(data);
-      const hostList =
-        lastItem!.name === 'Total' ? data.slice(0, data.length - 1) : data;
-      const total = hostList.reduce((acc, cur) => acc + cur.count, 0);
-      const chartData = hostList.map(item => ({
-        type: item.name,
-        value: Number((item.count/total * 100).toFixed(1))
-      }));
-      chartInstance?.tooltip({
-        customItems: (items) => {
-          return items.map((item) => {
-            return {...item,value: `${item.value}%`};
-          })
-        }
-      })
-      chartInstance?.data(chartData).render();
-    }
+    if (!chartInstance) return;
+    if (data.length === 0) return;
+    const lastItem = last(data);
+    const hostList =
+      lastItem!.name === 'Total' ? data.slice(0, data.length - 1) : data;
+    const total = hostList.reduce((acc, cur) => acc + cur.count, 0);
+    const chartData = hostList.map(item => ({
+      type: item.name,
+      value: Number((item.count / total * 100).toFixed(1))
+    }));
+    chartInstance?.tooltip({
+      customItems: (items) => {
+        return items.map((item) => {
+          return { ...item, value: `${item.value}%` };
+        })
+      }
+    })
+    chartInstance.data(chartData).render();
   };
 
   const handleBalance = async () => {
@@ -131,7 +133,7 @@ const LeaderDistribution: React.FC<IProps> = (props: IProps) => {
         dataIndex: 'distribution',
         render: distribution => (
           <div className="distribution-table">
-            {distribution.split(',').map(each => <div  key={each} className="leader-item">{each.trim()}</div>)}
+            {distribution.split(',').map(each => <div key={each} className="leader-item">{each.trim()}</div>)}
           </div>
         ),
       },
@@ -174,10 +176,10 @@ const LeaderDistribution: React.FC<IProps> = (props: IProps) => {
           })}
         >
           {totalLeader > 0 ? (
-              <PieChart options={options} renderChart={renderChart} />
-            ) : (
-              <Empty description={intl.get('common.noData')} />
-            )}
+            <PieChart options={options} renderChart={renderChart} />
+          ) : (
+            <Empty description={intl.get('common.noData')} />
+          )}
           <Table
             className={classnames('leader-table', {
               'table-overview': isOverview,

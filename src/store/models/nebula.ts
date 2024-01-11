@@ -3,7 +3,7 @@ import _ from 'lodash';
 import service from '@/config/service';
 import { getVersion } from "@/utils/dashboard";
 import { NebulaVersionType, ServiceName } from '@/utils/interface';
-import { SessionStorageUtil } from '@/utils';
+import { getUseSapceNgql } from '@/utils';
 
 interface IState {
   configs: any[];
@@ -80,20 +80,22 @@ export function NebulaModelWrapper(serviceApi, state, _effects) {
 
       async asyncUseSpaces(space) {
         const { code, data } = (await serviceApi.execNGQL({
-          gql: `USE \`${space}\``,
+          gql: getUseSapceNgql(space),
         })) as any;
         if (code === 0) {
           (this as any).update({
             currentSpace: space,
           });
-          SessionStorageUtil.setItem('currentSpace', space);
         }
         return { code, data };
       },
 
-      async asyncGetParts(partId?: string) {
+      async asyncGetParts(params?: {
+        partId?: string,
+        space: string
+      }) {
         const { code, data } = (await serviceApi.execNGQL({
-          gql: partId ? `SHOW PARTS ${partId}` : 'SHOW PARTS',
+          gql: `${params?.space ? getUseSapceNgql(params.space) + ';' : '' }${params?.partId ? `SHOW PARTS ${params.partId}` : 'SHOW PARTS'}`,
         })) as any;
         if (code === 0 && data.tables) {
           this.update({

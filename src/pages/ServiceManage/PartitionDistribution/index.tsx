@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Empty, Spin, Table } from 'antd';
 import intl from 'react-intl-universal';
 import { connect } from 'react-redux';
@@ -8,18 +8,17 @@ import classnames from 'classnames';
 import { IDispatch, IRootState } from '@/store';
 import PieChart from '@/components/Charts/PieChart';
 import { renderPieChartTpl } from '@/utils/chart/chart';
-import { DashboardSelect, Option } from '@/components/DashboardSelect';
 
 import './index.less';
 import { isCommunityVersion } from '@/utils';
+import SelectSpace from '../SelectSpace';
 
 const mapDispatch: any = (dispatch: IDispatch) => ({
-  asyncGetSpaces: dispatch.nebula.asyncGetSpaces,
   asyncUseSpaces: dispatch.nebula.asyncUseSpaces,
   asyncGetParts: dispatch.nebula.asyncGetParts,
 });
 
-const mapState = (state: IRootState) => ({
+const mapState: any = (state: IRootState) => ({
   spaces: state.nebula.spaces,
   loading: state.loading.models.nebula,
   currentSpace: state.nebula.currentSpace,
@@ -28,69 +27,36 @@ const mapState = (state: IRootState) => ({
 
 interface IProps
   extends ReturnType<typeof mapState>,
-    ReturnType<typeof mapDispatch> {
+  ReturnType<typeof mapDispatch> {
   isOverview: boolean;
 }
 
-interface IState {
-  data: {
+function PartitionDistribution(props: IProps) {
+  const chartInstance = useRef<Chart>();
+
+  const { nebulaConnect, asyncGetParts,
+    currentSpace, loading, isOverview } = props;
+  const [data, setData] = useState<{
     name: string;
     count: number;
-  }[];
-}
+  }[]>([])
 
-class PartitionDistribution extends Component<IProps, IState> {
-  chartInstance: Chart;
+  useEffect(() => {
+    updateChart();
+  }, [data])
 
-  constructor(props: IProps) {
-    super(props);
-    this.state = {
-      data: [],
-    };
-  }
-
-  async componentDidMount() {
-    const { nebulaConnect } = this.props;
+  useEffect(() => {
     if (isCommunityVersion() || nebulaConnect) {
-      await this.props.asyncGetSpaces();
-      const { currentSpace } = this.props;
       if (currentSpace) {
-        await this.getParts();
+        getParts(currentSpace)
       }
     }
-  }
+  }, [nebulaConnect, currentSpace])
 
-  async componentDidUpdate(prevProps) {
-    const { nebulaConnect, currentSpace } = this.props;
-    if (nebulaConnect !== prevProps.nebulaConnect) {
-      if (isCommunityVersion() || nebulaConnect) {
-        await this.props.asyncGetSpaces();
-        const { currentSpace } = this.props;
-        if (currentSpace) {
-          await this.getParts();
-        }
-      }
-    }
-    if (prevProps.currentSpace !== currentSpace) {
-      if (currentSpace) {
-        await this.getParts();
-      }
-    }
-  }
-
-  componentWillUnmount() {
-    this.setState = () => false;
-  }
-
-  handleSpaceChange = async space => {
-    const { code } = await this.props.asyncUseSpaces(space);
-    if (code === 0) {
-      await this.getParts();
-    }
-  };
-
-  getParts = async () => {
-    const res = await this.props.asyncGetParts();
+  const getParts = async (space: string) => {
+    const res = await asyncGetParts({
+      space,
+    });
     const groupRes = {};
     res.forEach(item => {
       item.Peers.split(', ').forEach(peers => {
@@ -102,109 +68,92 @@ class PartitionDistribution extends Component<IProps, IState> {
       name: item,
       count: groupRes[item],
     })).sort((a, b) => b.name < a.name ? 1 : -1);
-    this.setState({ data }, this.updateChart);
+    setData(data);
+    // this.setState({ data }, this.updateChart);
   };
 
-  renderChart = (chartInstance: Chart) => {
-    this.chartInstance = chartInstance;
-    renderPieChartTpl(chartInstance);
+  const renderChart = (instance: Chart) => {
+    chartInstance.current = instance;
+    renderPieChartTpl(chartInstance.current);
   };
 
-  updateChart = () => {
-    const { data } = this.state;
+  const updateChart = () => {
     if (data.length > 0) {
       const total = sum(data.map(i => i.count));
       const chartData = data.map(item => ({
         type: item.name,
-        value: round(item.count*100 / total, 2),
+        value: round(item.count * 100 / total, 2),
       }));
-      this.chartInstance?.tooltip({
+      chartInstance.current?.tooltip({
         customItems: (items) => {
           return items.map((item) => {
-            return {...item,value: `${item.value}%`};
+            return { ...item, value: `${item.value}%` };
           })
         }
       })
-      this.chartInstance.data(chartData).render();
+      chartInstance.current?.data(chartData).render();
     }
   };
 
-  render() {
-    const { data } = this.state;
-    const { loading } = this.props;
-    const columns = [
-      {
-        title: intl.get('common.service'),
-        dataIndex: 'name',
-      },
-      {
-        title: intl.get('service.partitionNum'),
-        dataIndex: 'count',
-      },
-    ];
+  const columns = useMemo(() => [
+    {
+      title: intl.get('common.service'),
+      dataIndex: 'name',
+    },
+    {
+      title: intl.get('service.partitionNum'),
+      dataIndex: 'count',
+    },
+  ], []);
 
-    const { isOverview, currentSpace, spaces } = this.props;
-    return (
-      <Spin delay={200} spinning={!!loading}>
-        <div className="partition-distribution">
-          {!isOverview && (
-            <div className="common-header">
-              <span>
-                {currentSpace} Partition {intl.get('service.distribution')}
-              </span>
-              <div className="select-space">
-                <span>{intl.get('service.spaces')}:</span>
-                <DashboardSelect
-                  placeholder={intl.get('service.chooseSpace')}
-                  value={currentSpace || undefined}
-                  onChange={this.handleSpaceChange}
-                  style={{
-                    width: 220,
-                  }}
-                >
-                  {spaces.map((space: any) => (
-                    <Option value={space.Name} key={space.Name}>
-                      {space.Name}
-                    </Option>
-                  ))}
-                </DashboardSelect>
-              </div>
+  return (
+    <Spin delay={200} spinning={!!loading}>
+      <div className="partition-distribution">
+        {!isOverview && (
+          <div className="common-header">
+            <span>
+              {currentSpace} Partition {intl.get('service.distribution')}
+            </span>
+            <div className="select-space">
+              <span>{intl.get('service.spaces')}:</span>
+              <SelectSpace />
             </div>
-          )}
-          <div
-            className={classnames('leader-content', {
-              'leader-overview': isOverview,
-            })}
-          >
-            {data.length > 0 ? (
-              <PieChart
-                options={
-                  isOverview
-                    ? { width: 350, height: 226 }
-                    : { width: 500, height: 286 }
-                }
-                renderChart={this.renderChart}
-              />
-            ) : (
-              <Empty
-                className={classnames({ 'empty-overview': isOverview })}
-                description={intl.get('common.noData')}
-              />
-            )}
-            <Table
-              className={classnames('leader-table', {
-                'table-overview': isOverview,
-              })}
-              columns={columns}
-              dataSource={data}
-              pagination={false}
-              rowKey="name"
-            />
           </div>
+        )}
+        <div
+          className={classnames('leader-content', {
+            'leader-overview': isOverview,
+          })}
+        >
+          {data.length > 0 ? (
+            <PieChart
+              options={
+                isOverview
+                  ? { width: 350, height: 226 }
+                  : { width: 500, height: 286 }
+              }
+              renderChart={renderChart}
+            />
+          ) : (
+            <Empty
+              className={classnames({ 'empty-overview': isOverview })}
+              description={intl.get('common.noData')}
+            />
+          )}
+          <Table
+            className={classnames('leader-table', {
+              'table-overview': isOverview,
+            })}
+            columns={columns}
+            dataSource={data}
+            pagination={false}
+            rowKey="name"
+          />
         </div>
-      </Spin>
-    );
-  }
+      </div>
+    </Spin>
+  );
 }
+
 
 export default connect(mapState, mapDispatch)(PartitionDistribution);

@@ -14,11 +14,11 @@ import Modal from '@/components/Modal';
 import { IDispatch, IRootState } from '@/store';
 import { formatVersion } from '@/utils/dashboard';
 import { isCommunityVersion } from '@/utils';
+import SelectSpace from '../SelectSpace';
 
 import styles from './index.module.less';
 
 const mapDispatch: any = (dispatch: IDispatch) => ({
-  asyncUseSpaces: dispatch.nebula.asyncUseSpaces,
   asyncGetHostsInfo: dispatch.nebula.asyncGetHostsInfo,
   asyncGetServices: dispatch.nebula.asyncGetServices,
   asyncExecNGQL: dispatch.nebula.asyncExecNGQL,
@@ -55,28 +55,17 @@ const OverviewCardHeader = (props: IHaderProps) => {
 };
 
 const Overview: React.FC<IProps> = (props: IProps) => {
-  const { cluster, currentSpace, spaces, baseRouter = '/management' } = props;
+  const { cluster, currentSpace, baseRouter = '/management' } = props;
   const modalHandler = useRef<any>();
   const [hosts, setHosts] = useState([]);
-  const nebulaRef = useRef<{
-    currentSpace: any;
-  }>({
-    currentSpace,
-  });
-  nebulaRef.current.currentSpace = currentSpace;
+
   useEffect(() => {
     props.clear();
   }, [cluster]);
+  
   useEffect(() => {
     asyncGetHostsInfo();
-  }, []);
-
-  const handleSpaceChange = async space => {
-    const { code } = await props.asyncUseSpaces(space);
-    if (code === 0) {
-      asyncGetHostsInfo();
-    }
-  };
+  }, [currentSpace]);
 
   const asyncGetHostsInfo = async () => {
     const res = await props.asyncGetHostsInfo();
@@ -173,20 +162,7 @@ const Overview: React.FC<IProps> = (props: IProps) => {
       </div>
       <div className={styles.prat}>
         <div className={styles.pratHeader}>
-          <DashboardSelect
-            placeholder={intl.get('service.chooseSpace')}
-            value={currentSpace || undefined}
-            onChange={handleSpaceChange}
-            style={{
-              width: 220,
-            }}
-          >
-            {spaces.map((space: any) => (
-              <Option value={space.Name} key={space.Name}>
-                {space.Name}
-              </Option>
-            ))}
-          </DashboardSelect>
+          <SelectSpace />
           {!isCommunityVersion() && (
             <>
               <Button
