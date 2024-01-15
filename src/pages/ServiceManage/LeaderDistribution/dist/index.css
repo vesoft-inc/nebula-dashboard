@@ -1,0 +1,68 @@
+.leader-distribution {
+  background-color: #fff;
+}
+.leader-distribution .leader-content {
+  padding: 50px 90px;
+}
+.leader-distribution .leader-content .nebula-chart {
+  display: flex;
+  align-items: center;
+}
+.leader-distribution .leader-content .leader-table {
+  margin-top: 55px;
+  width: 100%;
+}
+.leader-distribution .leader-content .leader-table .distribution-table {
+  max-height: 300px;
+  display: flex;
+  flex-wrap: wrap;
+  overflow: auto;
+}
+.leader-distribution .leader-content .leader-table .distribution-table div {
+  margin: 5px 0;
+  white-space: break-spaces;
+  word-break: break-all;
+}
+.leader-distribution .content-overview {
+  display: flex;
+  padding: 20px 30px 20px 0;
+  justify-content: space-between;
+}
+.leader-distribution .content-overview .table-overview {
+  flex: 1;
+  margin-top: 20px;
+}
+.leader-distribution .content-overview .ant-empty-normal {
+  margin: 0;
+}
+.leader-distribution .overview-header {
+  display: block;
+  line-height: 50px;
+  padding: 0 20px;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: bold;
+  height: 50px;
+}
+.leader-distribution .overview-header span {
+  font-size: 16px;
+}
+.leader-distribution .overview-header .ant-btn {
+  float: right;
+  margin: 9px 20px;
+}
+.leader-distribution .overview-header .ant-btn span {
+  font-size: 14px;
+}
+.leader-distribution .overview-header a {
+  float: right;
+  font-weight: normal;
+  font-size: 14px;
+}
+.leader-distribution .ant-empty {
+  height: 286px;
+  line-height: 286px;
+}
+.leader-distribution .ant-empty-normal {
+  margin: 0;
+}

@@ -142,7 +142,7 @@ const LeaderDistribution: React.FC<IProps> = (props: IProps) => {
 
   const options = useMemo(
     () =>
-      isOverview ? { width: 320, height: 226 } : { width: 500, height: 286 },
+      isOverview ? { width: 350, height: 226 } : { width: 500, height: 286 },
     [isOverview],
   );
 
