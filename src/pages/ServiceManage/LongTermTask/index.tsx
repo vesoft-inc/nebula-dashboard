@@ -115,7 +115,8 @@ const LongTermTask: React.FC<IProps> = props => {
         <div className="common-header">
           <div className="select-space">
             <span>{intl.get('service.spaces')}:</span>
-            <SelectSpace />
+            {/* @ts-ignore */}
+            <SelectSpace currentSpace={currentSpace} />
           </div>
         </div>
       )}

@@ -136,8 +136,7 @@ const Overview: React.FC<IProps> = (props: IProps) => {
         <div className={styles.left}>
           <div className={styles.leader}>
             {/* @ts-ignore */}
-            <LeaderDistribution
-              isOverview
+            <LeaderDistribution isOverview
               baseRouter={baseRouter}
               cluster={cluster}
             />
@@ -162,7 +161,8 @@ const Overview: React.FC<IProps> = (props: IProps) => {
       </div>
       <div className={styles.prat}>
         <div className={styles.pratHeader}>
-          <SelectSpace />
+        {/* @ts-ignore */}
+        <SelectSpace currentSpace={currentSpace} />
           {!isCommunityVersion() && (
             <div>
               <Button
