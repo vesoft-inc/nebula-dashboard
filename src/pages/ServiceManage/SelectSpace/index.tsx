@@ -11,7 +11,6 @@ const mapDispatch: any = (dispatch: IDispatch) => ({
 
 const mapState = (state: IRootState) => ({
   spaces: state.nebula.spaces,
-  currentSpace: state.nebula.currentSpace,
 });
 
 interface IProps
@@ -19,6 +18,7 @@ interface IProps
     ReturnType<typeof mapDispatch> {
   onHide?: () => void;
   style?: any;
+  currentSpace?: string;
 }
 
 function SelectSpace(props: IProps) {

@@ -116,7 +116,8 @@ function PartitionDistribution(props: IProps) {
             </span>
             <div className="select-space">
               <span>{intl.get('service.spaces')}:</span>
-              <SelectSpace />
+              {/* @ts-ignore */}
+            <SelectSpace currentSpace={currentSpace} />
             </div>
           </div>
         )}
