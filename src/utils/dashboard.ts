@@ -18,6 +18,14 @@ export enum AggregationType {
   P99 = 'p99',
   P999 = 'p999',
 }
+
+export enum AggregationInterval {
+  '5s' = '5',
+  '60s' = '60',
+  '600s' = '600',
+  '3600s' = '3600',
+}
+
 export const AGGREGATION_OPTIONS = Object.values(AggregationType);
 
 export const THRESHOLDS = {
@@ -35,7 +43,7 @@ export const getProperStep = (start: number, end: number) => {
     return 5;//15s
   }
   if (hours <= 12) {
-    return 30;
+    return 60;
   }
   if (hours <= 48) {
     return 60;

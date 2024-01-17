@@ -2,7 +2,7 @@ import _ from 'loadsh';
 
 import { VALUE_TYPE } from '@/utils/promQL';
 import { INTERVAL_FREQUENCY_LIST, SERVICE_QUERY_PERIOD } from './service';
-import { AggregationType, AGGREGATION_OPTIONS, getAutoLatency, getProperByteDesc, getProperStep, TIME_OPTION_TYPE } from './dashboard';
+import { AggregationType, AGGREGATION_OPTIONS, getAutoLatency, getProperByteDesc, getProperStep, TIME_OPTION_TYPE, AggregationInterval } from './dashboard';
 import { IServiceMetricItem, ServiceName } from './interface';
 import dayjs from 'dayjs';
 
@@ -102,9 +102,11 @@ export const ClusterServiceNameMap = {
 export const calcMetricInfo = (rawMetric: string) => {
   if (METRIC_FUNCTIONS.some(fn => rawMetric.includes(fn))) {
     const metricFieldArr = rawMetric.split(`_`);
-    const key: AggregationType = metricFieldArr?.splice(-2, 2)[0] as AggregationType; // sum / avg / p99 ~
+    const lastIndex = metricFieldArr.length - 1;
+    const aggregation: AggregationType = metricFieldArr[lastIndex - 1] as AggregationType; // sum / avg / p99 ~
+    const interval: AggregationInterval = metricFieldArr[lastIndex] as AggregationInterval; // 5 / 60 / 600 / 3600
     const metricValue = metricFieldArr.join('_'); // nebula_graphd_num_queries
-    return { key, metricValue }
+    return { aggregation, metricValue, interval }
   } else {
     return { metricValue: rawMetric }
   }
@@ -129,6 +131,20 @@ const calcServiceMetricValueType = (metricName: string): VALUE_TYPE => {
   return VALUE_TYPE.number;
 }
 
+const isUsefulAggregation = (metricName: string, aggregation?: AggregationType) => {
+  if (RawServiceMetrics.some(rawMetric => metricName.includes(rawMetric))) {
+    return true;
+  }
+  if (!aggregation) return false;
+  if (isLatencyMetric(metricName)) {
+    return [AggregationType.P75, AggregationType.P95, AggregationType.P99, AggregationType.P999].includes(aggregation)
+  }
+  if (isNumMetric(metricName)) {
+    return [AggregationType.Rate].includes(aggregation)
+  }
+  return false;
+}
+
 export const filterServiceMetrics = (payload: {
   metricList: string[];
   spaceMetricList: string[];
@@ -140,28 +156,34 @@ export const filterServiceMetrics = (payload: {
   metricList.map(item => {
     const [metricFieldType, metricFields] = item.split(`_${componentType.replace('-', '_')}_`); // Example: nebula_graphd_num_queries_sum_60 =>  nebula, num_queries_sum_60
     if (metricFieldType && metricFields) {
-      const { key, metricValue } = calcMetricInfo(metricFields)
+      const { aggregation, metricValue, interval } = calcMetricInfo(metricFields)
       const metricItem = _.find(metrics, m => m.metric === metricValue);
-      if (_.includes(FILTER_METRICS, metricValue)) {
+      if (_.includes(FILTER_METRICS, metricValue) || !isUsefulAggregation(metricValue, aggregation)) {
         // is filter metric
         return;
       }
+
       const isSpaceMetric = _.findLast(spaceMetricList, metric =>
         metric.includes(metricValue),
       );
       // push data into metrics
       if (metricItem) {
-        if (key) {
+        if (aggregation) {
           const metricTypeItem = _.find(
             metricItem.aggregations,
-            _item => _item === key,
+            _item => _item === aggregation,
           );
           if (!metricTypeItem) {
-            if (key === 'sum') {// make sum the first
-              metricItem.aggregations.unshift(key);
-              return;
-            }
-            metricItem.aggregations.push(key);
+            metricItem.aggregations.push(aggregation!);
+          }
+        }
+        if (interval) {
+          const metricTypeItem = _.find(
+            metricItem.intervals,
+            _item => _item === interval,
+          );
+          if (!metricTypeItem) {
+            metricItem.intervals.push(interval).sort((x, y) => x.length - y.length);
           }
         }
       } else {
@@ -169,9 +191,10 @@ export const filterServiceMetrics = (payload: {
           metric: metricValue,
           valueType: calcServiceMetricValueType(metricValue),
           isSpaceMetric: !!isSpaceMetric,
-          isRawMetric: !key, // if metrics don't have sum / avg / p99 
+          isRawMetric: !interval, // if metrics don't have 5/60/600/3600, it's raw metric
           prefixMetric: `${metricFieldType}_${componentType.replace('-', '_')}`,
-          aggregations: key ? [key] : [],
+          aggregations: aggregation ? [aggregation!] : [],
+          intervals: interval ? [interval] : [],
         });
       }
     }
@@ -221,21 +244,21 @@ export const RawServiceMetrics = [
   "read_bytes_total",
 ]
 
-export const getQueryMap = (metricItem: IServiceMetricItem) => {
-  const res = {};
-  METRIC_FUNCTIONS.forEach(mf => {
-    res[mf] = getRawQueryByAggregation(mf, `${metricItem.prefixMetric}_${metricItem.metric}`)
-  })
-  return res;
-}
+// export const getQueryMap = (metricItem: IServiceMetricItem) => {
+//   const res = {};
+//   METRIC_FUNCTIONS.forEach(mf => {
+//     res[mf] = getRawQueryByAggregation(mf, `${metricItem.prefixMetric}_${metricItem.metric}`)
+//   })
+//   return res;
+// }
 
-export const getRawServiceMetricQueryMap = (metricItem: IServiceMetricItem) => {
-  const map = {};
-  RawServiceMetrics.forEach(m => {
-    map[m] = getQueryMap(metricItem)
-  })
-  return map;
-}
+// export const getRawServiceMetricQueryMap = (metricItem: IServiceMetricItem) => {
+//   const map = {};
+//   RawServiceMetrics.forEach(m => {
+//     map[m] = getQueryMap(metricItem)
+//   })
+//   return map;
+// }
 
 export const getQueryByMetricType = (metricItem: IServiceMetricItem, metricType: AggregationType, period: string): string => {
   if (metricItem.isRawMetric) {
@@ -438,5 +461,9 @@ export const updateChartByValueType = (options, chartInstance) => {
 }
 
 export const isLatencyMetric = metric => metric.includes('latency');
+
+export const isNumMetric = metric => metric.includes('num');
+
+export const isBytesMetric = metric => metric.includes('bytes');
 
 export const isProcessMetric = metric => RawServiceMetrics.some(rawMetric => metric.includes(rawMetric));
