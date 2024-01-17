@@ -1,4 +1,4 @@
-import { AggregationType, TIME_OPTION_TYPE } from "./dashboard";
+import { AggregationInterval, AggregationType, TIME_OPTION_TYPE } from "./dashboard";
 import { VALUE_TYPE } from "./promQL";
 
 export interface IMetric {
@@ -98,7 +98,8 @@ export interface IServiceMetricItem {
   valueType: VALUE_TYPE;
   isSpaceMetric?: boolean;
   isRawMetric: boolean;
-  aggregations: string[];
+  aggregations: AggregationType[];
+  intervals: AggregationInterval[];
   prefixMetric: string;
   metricFunction?: string;
 }
